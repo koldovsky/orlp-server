@@ -12,29 +12,45 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "user_id")
-    private long id;
+    private long userId;
+
     @OneToOne
+    @JoinColumn(name = "account_id")
     private Account account;
+
     @OneToOne
+    @JoinColumn(name = "person_id")
     private Person person;
+
     @OneToOne
+    @JoinColumn(name = "folder_id")
     private Folder folder;
-    @OneToMany()
-    @JoinTable(name = "user_course", joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "course_id"))
-    private List<Course> courses;
-    @Column(name = "deleted")
+
+
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinTable(name = "user_course", joinColumns = {
+            @JoinColumn(name = "user_id", nullable = false, updatable = false)},
+            inverseJoinColumns = {@JoinColumn(name = "course_id",
+                    nullable = false, updatable = false)})
+    private List <Course> courses;
+
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "deckOwner")
+    private List <Deck> listOfCreatedDecks;
+
+    @Column(name = "deleted", columnDefinition = "INT(1) DEFAULT '0'")
     private boolean isDeleted;
+
 
     public User() {
     }
 
-    public long getId() {
-        return id;
+    public long getUserId() {
+        return userId;
     }
 
-    public void setId(long id) {
-        this.id = id;
+    public void setUserId(long userId) {
+        this.userId = userId;
     }
 
     public Account getAccount() {
@@ -61,11 +77,11 @@ public class User {
         this.folder = folder;
     }
 
-    public List<Course> getCourses() {
+    public List <Course> getCourses() {
         return courses;
     }
 
-    public void setCourses(List<Course> courses) {
+    public void setCourses(List <Course> courses) {
         this.courses = courses;
     }
 

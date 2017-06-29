@@ -2,40 +2,46 @@ package com.softserve.academy.spaced.repetition.domain;
 
 import javax.persistence.*;
 
-/**
- * Created by jarki on 6/28/2017.
- */
 
 @Entity
 @Table(name = "Card")
 public class Card {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "card_id")
-    private long id;
-    @Column(name = "question")
+    private long cardId;
+
+    @Column(name = "question", nullable = false)
     private String question;
-    @Column(name = "answer")
+
+    @Column(name = "answer", nullable = false)
     private String answer;
+
     @Column(name = "rating")
     private int rating;
-    @ManyToOne
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "deck_id")
     private Deck deck;
-    @OneToOne
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
     private User createdBy;
-    @Column(name = "deleted")
+
+    @Column(name = "deleted", columnDefinition = "INT(1) DEFAULT '0'")
     private boolean isDeleted;
+
 
     public Card() {
     }
 
-    public long getId() {
-        return id;
+    public long getCardId() {
+        return cardId;
     }
 
-    public void setId(long id) {
-        this.id = id;
+    public void setCardId(long cardId) {
+        this.cardId = cardId;
     }
 
     public String getQuestion() {

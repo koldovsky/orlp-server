@@ -3,33 +3,37 @@ package com.softserve.academy.spaced.repetition.domain;
 import javax.persistence.*;
 
 
-
 @Entity
 @Table(name = "Account")
-public class Account{
+public class Account {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "account_id")
-    private long id;
-    @Column(name = "login")
+    @Column(name = "account_id", nullable = false)
+    private long accountId;
+
+    @Column(name = "login", nullable = false)
     private String login;
-    @Column(name = "password")
+
+    @Column(name = "password", nullable = false)
     private String password;
-    @Column(name = "email")
+
+    @Column(name = "email", nullable = false)
     private String email;
-    @Column(name = "deleted")
+
+    @Column(name = "deleted", columnDefinition = "INT(1) DEFAULT '0'")
     private boolean isDeleted;
+
 
     public Account() {
     }
 
 
-    public long getId() {
-        return id;
+    public long getAccountId() {
+        return accountId;
     }
 
-    public void setId(long id) {
-        this.id = id;
+    public void setAccountId(long accountId) {
+        this.accountId = accountId;
     }
 
     public String getLogin() {
