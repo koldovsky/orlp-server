@@ -13,14 +13,25 @@ public class Folder {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "folder_id")
     private long id;
-    @Column(name = "name")
+
+    @Column(name = "name", nullable = false)
     private String name;
-    @OneToMany
-    @JoinTable(name = "folder_deck", joinColumns = @JoinColumn(name = "folder_id"),
-            inverseJoinColumns = @JoinColumn(name = "deck_id"))
-    private List<Deck> decks;
-    @Column(name = "deleted")
+
+
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinTable(name = "deck_folder", joinColumns = {
+            @JoinColumn(name = "folder_id", nullable = false, updatable = false)},
+            inverseJoinColumns = {@JoinColumn(name = "deck_id",
+                    nullable = false, updatable = false)})
+    private List <Deck> decks;
+
+
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "folder")
+    private User user;
+
+    @Column(name = "deleted", columnDefinition = "INT(1) DEFAULT '0'")
     private boolean isDeleted;
+
 
     public Folder() {
     }
@@ -41,11 +52,11 @@ public class Folder {
         this.name = name;
     }
 
-    public List<Deck> getDecks() {
+    public List <Deck> getDecks() {
         return decks;
     }
 
-    public void setDecks(List<Deck> decks) {
+    public void setDecks(List <Deck> decks) {
         this.decks = decks;
     }
 

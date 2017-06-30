@@ -3,9 +3,7 @@ package com.softserve.academy.spaced.repetition.domain;
 import javax.persistence.*;
 import java.util.List;
 
-/**
- * Created by jarki on 6/28/2017.
- */
+
 @Entity
 @Table(name = "Course")
 public class Course {
@@ -13,17 +11,29 @@ public class Course {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "course_id")
     private long id;
-    @Column(name = "name")
+
+    @Column(name = "name", nullable = false)
     private String name;
-    @Column(name = "description")
+
+    @Column(name = "description", nullable = false)
     private String description;
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "")
-    private List<Deck> decks;
-    @ManyToOne()
-    @JoinColumn(name = "courses")
+
+
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinTable(name = "deck_course", joinColumns = {
+            @JoinColumn(name = "course_id", nullable = false, updatable = false)},
+            inverseJoinColumns = {@JoinColumn(name = "deck_id",
+                    nullable = false, updatable = false)})
+    private List <Deck> decks;
+
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id")
     private Category category;
-    @Column(name = "deleted")
+
+    @Column(name = "deleted", columnDefinition = "INT(1) DEFAULT '0'")
     private boolean isDeleted;
+
 
     public Course() {
     }
@@ -52,11 +62,11 @@ public class Course {
         this.description = description;
     }
 
-    public List<Deck> getDecks() {
+    public List <Deck> getDecks() {
         return decks;
     }
 
-    public void setDecks(List<Deck> decks) {
+    public void setDecks(List <Deck> decks) {
         this.decks = decks;
     }
 

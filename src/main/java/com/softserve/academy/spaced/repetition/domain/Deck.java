@@ -13,22 +13,32 @@ public class Deck {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "deck_id")
     private long id;
-    @Column(name = "name")
+
+    @Column(name = "name", nullable = false)
     private String name;
-    @Column(name = "description")
+
+    @Column(name = "description", nullable = false)
     private String description;
-    @OneToOne
-    private User owner;
-    @ManyToOne()
-    @JoinColumn(name = "deck_id", insertable = false, updatable = false)
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User deckOwner;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id")
     private Category category;
-    @OneToMany(mappedBy = "deck")
-    private List<Card> cards;
-    @ManyToOne()
-    @JoinColumn(name = "decks")
-    private Course course;
-    @Column(name = "deleted")
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "deck")
+    private List <Card> cards;
+
+
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "decks")
+    private List <Course> course;
+
+
+    @Column(name = "deleted", columnDefinition = "INT(1) DEFAULT '0'")
     private boolean isDeleted;
+
 
     public Deck() {
     }
@@ -57,12 +67,16 @@ public class Deck {
         this.description = description;
     }
 
-    public User getOwner() {
-        return owner;
+    public User getDeckOwner() {
+        return deckOwner;
     }
 
-    public void setOwner(User owner) {
-        this.owner = owner;
+    public void setDeckOwner(User deckOwner) {
+        this.deckOwner = deckOwner;
+    }
+
+    public void setCourse(List <Course> course) {
+        this.course = course;
     }
 
     public Category getCategory() {
@@ -73,20 +87,16 @@ public class Deck {
         this.category = category;
     }
 
-    public List<Card> getCards() {
+    public List <Card> getCards() {
         return cards;
     }
 
-    public void setCards(List<Card> cards) {
+    public void setCards(List <Card> cards) {
         this.cards = cards;
     }
 
-    public Course getCourse() {
+    public List <Course> getCourse() {
         return course;
-    }
-
-    public void setCourse(Course course) {
-        this.course = course;
     }
 
     public boolean isDeleted() {
