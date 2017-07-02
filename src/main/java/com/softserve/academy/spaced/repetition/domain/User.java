@@ -92,4 +92,5 @@ public class User {
     public void setDeleted(boolean deleted) {
         isDeleted = deleted;
     }
+
 }
