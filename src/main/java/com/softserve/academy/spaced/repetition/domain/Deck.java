@@ -39,6 +39,8 @@ public class Deck {
     @Column(name = "deleted", columnDefinition = "INT(1) DEFAULT '0'")
     private boolean isDeleted;
 
+    @Column (name = "deckRating")
+    private int deckRating;
 
     public Deck() {
     }
@@ -105,5 +107,13 @@ public class Deck {
 
     public void setDeleted(boolean deleted) {
         isDeleted = deleted;
+    }
+
+    public int getDeckRating() {
+        return deckRating;
+    }
+
+    public void setDeckRating(int deckRating) {
+        this.deckRating = deckRating;
     }
 }

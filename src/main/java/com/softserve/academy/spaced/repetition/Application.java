@@ -3,6 +3,8 @@ package com.softserve.academy.spaced.repetition;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+import javax.persistence.EntityManager;
+
 /**
  * Created by jarki on 6/26/2017.
  */
