@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api")
@@ -15,9 +16,9 @@ public class DeckController {
     @Autowired
     private DeckService deckService;
 
-    @RequestMapping(value = "/decks", method = RequestMethod.GET)
-    public Collection<Deck> getAllDecks() {
-        return deckService.getAllDecks();
+    @RequestMapping(value = "/category/decks/{id}", method = RequestMethod.GET)
+    public List<Deck> getAllDecksByCategoryId(@PathVariable Long id) {
+        return deckService.getAllDecksByCategoryId(id);
     }
 
     @RequestMapping(value = "/decks/{id}", method = RequestMethod.GET)

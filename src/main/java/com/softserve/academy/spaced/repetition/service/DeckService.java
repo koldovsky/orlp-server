@@ -7,16 +7,15 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 @Service
 public class DeckService {
     @Autowired
     private DeckRepository deckRepository;
 
-    public Collection<Deck> getAllDecks() {
-        Collection<Deck> decks = new ArrayList<>();
-        deckRepository.findAll().forEach(decks::add);
-        return decks;
+    public List<Deck> getAllDecksByCategoryId(Long id) {
+        return deckRepository.getAllDecksByCategoryId(id);
     }
 
     public Deck getDeck(Long id) {

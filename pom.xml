@@ -63,13 +63,13 @@
 
     <repositories>
         <repository>
-            <accountId>spring-releases</accountId>
+            <id>spring-releases</id>
             <url>https://repo.spring.io/libs-release</url>
         </repository>
     </repositories>
     <pluginRepositories>
         <pluginRepository>
-            <accountId>spring-releases</accountId>
+            <id>spring-releases</id>
             <url>https://repo.spring.io/libs-release</url>
         </pluginRepository>
     </pluginRepositories>

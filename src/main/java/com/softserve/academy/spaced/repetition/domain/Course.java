@@ -18,7 +18,6 @@ public class Course {
     @Column(name = "description", nullable = false)
     private String description;
 
-
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(name = "deck_course", joinColumns = {
             @JoinColumn(name = "course_id", nullable = false, updatable = false)},

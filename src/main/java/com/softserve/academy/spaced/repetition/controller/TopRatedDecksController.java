@@ -18,6 +18,5 @@ public class TopRatedDecksController {
     @RequestMapping(value = "/topRatedDecks", method = RequestMethod.GET)
     public List <Deck> topRatedDecks() {
         return topRatedDecksService.getTopRatedDecks();
-
     }
 }

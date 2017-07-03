@@ -38,4 +38,11 @@ public class CardService {
     public void deleteCard(Long id) {
         cardRepository.delete(id);
     }
+
+    public void updateCardAnswerAndQuestion(Long id, String question, String answer) {
+        Card card = getCard(id);
+        card.setAnswer(answer);
+        card.setQuestion(question);
+        cardRepository.save(card);
+    }
 }

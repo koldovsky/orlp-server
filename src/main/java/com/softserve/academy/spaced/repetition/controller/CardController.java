@@ -32,13 +32,13 @@ public class CardController {
         return new ResponseEntity<String>(HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/cards/{id}", method = RequestMethod.PUT)
-    public void updateCard(@PathVariable Long id, @RequestBody Card card) {
-        cardService.updateCard(id, card);
-    }
-
     @RequestMapping(value = "/cards/{id}", method = RequestMethod.DELETE)
     public void deleteCard(@PathVariable Long id) {
         cardService.deleteCard(id);
+    }
+
+    @RequestMapping(value = "/cards/{id}", method = RequestMethod.PUT)
+    public void updateCardAnswerAndQuestion(@PathVariable Long id, @RequestBody String question, @RequestBody String answer) {
+        cardService.updateCardAnswerAndQuestion(id,question, answer);
     }
 }
