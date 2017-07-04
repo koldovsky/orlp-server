@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 /**
  * Created by askol on 6/30/2017.
@@ -17,10 +18,8 @@ public class CardService {
     @Autowired
     private CardRepository cardRepository;
 
-    public Collection<Card> getAllCards() {
-        Collection<Card> cards = new ArrayList<>();
-        cardRepository.findAll().forEach(cards::add);
-        return cards;
+    public List<Card> getAllCards() {
+        return cardRepository.findAll();
     }
 
     public Card getCard(Long id) {

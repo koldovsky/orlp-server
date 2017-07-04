@@ -2,14 +2,14 @@ package com.softserve.academy.spaced.repetition.domain;
 
 import javax.persistence.*;
 
-
 @Entity
 @Table(name = "Account")
 public class Account {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "account_id", nullable = false)
-    private long accountId;
+    private long id;
 
     @Column(name = "login", nullable = false)
     private String login;
@@ -20,20 +20,15 @@ public class Account {
     @Column(name = "email", nullable = false)
     private String email;
 
-    @Column(name = "deleted", columnDefinition = "INT(1) DEFAULT '0'")
-    private boolean isDeleted;
-
-
     public Account() {
     }
 
-
-    public long getAccountId() {
-        return accountId;
+    public long getId() {
+        return id;
     }
 
-    public void setAccountId(long accountId) {
-        this.accountId = accountId;
+    public void setId(long id) {
+        this.id = id;
     }
 
     public String getLogin() {
@@ -58,13 +53,5 @@ public class Account {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public boolean isDeleted() {
-        return isDeleted;
-    }
-
-    public void setDeleted(boolean deleted) {
-        isDeleted = deleted;
     }
 }

@@ -1,12 +1,13 @@
 package com.softserve.academy.spaced.repetition.domain;
 
-import javax.persistence.*;
-import java.util.List;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import javax.persistence.*;
 
 @Entity
 @Table(name = "Course")
 public class Course {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "course_id")
@@ -18,21 +19,15 @@ public class Course {
     @Column(name = "description", nullable = false)
     private String description;
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinTable(name = "deck_course", joinColumns = {
-            @JoinColumn(name = "course_id", nullable = false, updatable = false)},
-            inverseJoinColumns = {@JoinColumn(name = "deck_id",
-                    nullable = false, updatable = false)})
-    private List <Deck> decks;
-
-
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
     private Category category;
 
-    @Column(name = "deleted", columnDefinition = "INT(1) DEFAULT '0'")
-    private boolean isDeleted;
-
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
 
     public Course() {
     }
@@ -61,14 +56,6 @@ public class Course {
         this.description = description;
     }
 
-    public List <Deck> getDecks() {
-        return decks;
-    }
-
-    public void setDecks(List <Deck> decks) {
-        this.decks = decks;
-    }
-
     public Category getCategory() {
         return category;
     }
@@ -77,11 +64,11 @@ public class Course {
         this.category = category;
     }
 
-    public boolean isDeleted() {
-        return isDeleted;
+    public User getUser() {
+        return user;
     }
 
-    public void setDeleted(boolean deleted) {
-        isDeleted = deleted;
+    public void setUser(User user) {
+        this.user = user;
     }
 }

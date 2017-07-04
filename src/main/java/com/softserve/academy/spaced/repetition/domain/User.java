@@ -6,13 +6,15 @@ import java.util.List;
 /**
  * Created by jarki on 6/28/2017.
  */
+
 @Entity
 @Table(name = "User")
 public class User {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "user_id")
-    private long userId;
+    private long id;
 
     @OneToOne
     @JoinColumn(name = "account_id")
@@ -26,31 +28,15 @@ public class User {
     @JoinColumn(name = "folder_id")
     private Folder folder;
 
-
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinTable(name = "user_course", joinColumns = {
-            @JoinColumn(name = "user_id", nullable = false, updatable = false)},
-            inverseJoinColumns = {@JoinColumn(name = "course_id",
-                    nullable = false, updatable = false)})
-    private List <Course> courses;
-
-
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "deckOwner")
-    private List <Deck> listOfCreatedDecks;
-
-    @Column(name = "deleted", columnDefinition = "INT(1) DEFAULT '0'")
-    private boolean isDeleted;
-
-
     public User() {
     }
 
-    public long getUserId() {
-        return userId;
+    public long getId() {
+        return id;
     }
 
-    public void setUserId(long userId) {
-        this.userId = userId;
+    public void setId(long id) {
+        this.id = id;
     }
 
     public Account getAccount() {
@@ -75,21 +61,5 @@ public class User {
 
     public void setFolder(Folder folder) {
         this.folder = folder;
-    }
-
-    public List <Course> getCourses() {
-        return courses;
-    }
-
-    public void setCourses(List <Course> courses) {
-        this.courses = courses;
-    }
-
-    public boolean isDeleted() {
-        return isDeleted;
-    }
-
-    public void setDeleted(boolean deleted) {
-        isDeleted = deleted;
     }
 }

@@ -9,10 +9,11 @@ import javax.persistence.*;
 @Entity
 @Table(name = "Person")
 public class Person {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "person_id")
-    private long personId;
+    private long id;
 
     @Column(name = "first_name")
     private String firstName;
@@ -20,22 +21,15 @@ public class Person {
     @Column(name = "last_name")
     private String lastName;
 
-    @Column(name = "age")
-    private int age;
-
-    @Column(name = "deleted", columnDefinition = "INT(1) DEFAULT '0'")
-    private boolean isDeleted;
-
     public Person() {
     }
 
-
-    public long getPersonId() {
-        return personId;
+    public long getId() {
+        return id;
     }
 
-    public void setPersonId(long personId) {
-        this.personId = personId;
+    public void setId(long id) {
+        this.id = id;
     }
 
     public String getFirstName() {
@@ -52,21 +46,5 @@ public class Person {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
-    }
-
-    public int getAge() {
-        return age;
-    }
-
-    public void setAge(int age) {
-        this.age = age;
-    }
-
-    public boolean isDeleted() {
-        return isDeleted;
-    }
-
-    public void setDeleted(boolean deleted) {
-        isDeleted = deleted;
     }
 }

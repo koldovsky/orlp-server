@@ -6,32 +6,15 @@ import java.util.List;
 /**
  * Created by jarki on 6/28/2017.
  */
+
 @Entity
 @Table(name = "Folder")
 public class Folder {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "folder_id")
     private long id;
-
-    @Column(name = "name", nullable = false)
-    private String name;
-
-
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinTable(name = "deck_folder", joinColumns = {
-            @JoinColumn(name = "folder_id", nullable = false, updatable = false)},
-            inverseJoinColumns = {@JoinColumn(name = "deck_id",
-                    nullable = false, updatable = false)})
-    private List <Deck> decks;
-
-
-    @OneToOne(fetch = FetchType.LAZY, mappedBy = "folder")
-    private User user;
-
-    @Column(name = "deleted", columnDefinition = "INT(1) DEFAULT '0'")
-    private boolean isDeleted;
-
 
     public Folder() {
     }
@@ -42,29 +25,5 @@ public class Folder {
 
     public void setId(long id) {
         this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public List <Deck> getDecks() {
-        return decks;
-    }
-
-    public void setDecks(List <Deck> decks) {
-        this.decks = decks;
-    }
-
-    public boolean isDeleted() {
-        return isDeleted;
-    }
-
-    public void setDeleted(boolean deleted) {
-        isDeleted = deleted;
     }
 }

@@ -1,7 +1,8 @@
 package com.softserve.academy.spaced.repetition.domain;
 
-import javax.persistence.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import javax.persistence.*;
 
 @Entity
 @Table(name = "Card")
@@ -10,7 +11,7 @@ public class Card {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "card_id")
-    private long cardId;
+    private long id;
 
     @Column(name = "question", nullable = false)
     private String question;
@@ -18,30 +19,20 @@ public class Card {
     @Column(name = "answer", nullable = false)
     private String answer;
 
-    @Column(name = "rating")
-    private int rating;
-
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "deck_id")
     private Deck deck;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User createdBy;
-
-    @Column(name = "deleted", columnDefinition = "INT(1) DEFAULT '0'")
-    private boolean isDeleted;
-
-
     public Card() {
     }
 
-    public long getCardId() {
-        return cardId;
+    public long getId() {
+        return id;
     }
 
-    public void setCardId(long cardId) {
-        this.cardId = cardId;
+    public void setId(long id) {
+        this.id = id;
     }
 
     public String getQuestion() {
@@ -60,35 +51,11 @@ public class Card {
         this.answer = answer;
     }
 
-    public int getRating() {
-        return rating;
-    }
-
-    public void setRating(int rating) {
-        this.rating = rating;
-    }
-
     public Deck getDeck() {
         return deck;
     }
 
     public void setDeck(Deck deck) {
         this.deck = deck;
-    }
-
-    public User getCreatedBy() {
-        return createdBy;
-    }
-
-    public void setCreatedBy(User createdBy) {
-        this.createdBy = createdBy;
-    }
-
-    public boolean isDeleted() {
-        return isDeleted;
-    }
-
-    public void setDeleted(boolean deleted) {
-        isDeleted = deleted;
     }
 }
