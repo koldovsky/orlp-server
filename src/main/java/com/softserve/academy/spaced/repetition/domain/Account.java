@@ -11,9 +11,6 @@ public class Account {
     @Column(name = "account_id", nullable = false)
     private long id;
 
-    @Column(name = "login", nullable = false)
-    private String login;
-
     @Column(name = "password", nullable = false)
     private String password;
 
@@ -29,14 +26,6 @@ public class Account {
 
     public void setId(long id) {
         this.id = id;
-    }
-
-    public String getLogin() {
-        return login;
-    }
-
-    public void setLogin(String login) {
-        this.login = login;
     }
 
     public String getPassword() {

@@ -122,3 +122,6 @@ fabric.properties
 .idea/sonarlint
 
 # End of https://www.gitignore.io/api/eclipse,intellij
+/.idea/
+/target/
+/Spaced.Repetition.iml

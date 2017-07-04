@@ -3,6 +3,7 @@ package com.softserve.academy.spaced.repetition.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
+import java.util.List;
 
 /**
  * Created by jarki on 6/28/2017.
@@ -23,25 +24,16 @@ public class Deck {
     @Column(name = "description", nullable = false)
     private String description;
 
-    @JsonIgnore
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "folder_id")
-    private Folder folder;
-
-    @JsonIgnore
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User deckOwner;
-
-    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
     private Category category;
 
-    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "course_id")
-    private Course course;
+    @JoinColumn(name = "user_id")
+    private User deckOwner;
+
+    @OneToMany(fetch = FetchType.LAZY)
+    private List<Card> cards;
 
     public Deck() {
     }
@@ -70,12 +62,12 @@ public class Deck {
         this.description = description;
     }
 
-    public Folder getFolder() {
-        return folder;
+    public Category getCategory() {
+        return category;
     }
 
-    public void setFolder(Folder folder) {
-        this.folder = folder;
+    public void setCategory(Category category) {
+        this.category = category;
     }
 
     public User getDeckOwner() {
@@ -86,19 +78,11 @@ public class Deck {
         this.deckOwner = deckOwner;
     }
 
-    public Category getCategory() {
-        return category;
+    public List<Card> getCards() {
+        return cards;
     }
 
-    public void setCategory(Category category) {
-        this.category = category;
-    }
-
-    public Course getCourse() {
-        return course;
-    }
-
-    public void setCourse(Course course) {
-        this.course = course;
+    public void setCards(List<Card> cards) {
+        this.cards = cards;
     }
 }
