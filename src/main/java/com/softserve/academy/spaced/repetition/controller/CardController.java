@@ -7,40 +7,42 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import java.util.Collection;
 
 /**
  * Created by askol on 6/30/2017.
  */
 @RestController
-@RequestMapping("/api")
+@RequestMapping(value ="/api")
 public class CardController {
+
     @Autowired
     private CardService cardService;
 
-    @RequestMapping(value = "/cards", method = RequestMethod.GET)
-    public List<Card> getAllCards() {
-        return cardService.getAllCards();
+
+    @RequestMapping(value ={"/catalogs/{catalogId}/decks/{id}/cards" , "/courses/{courseId}/decks/{id}/cards"} , method = RequestMethod.GET)
+    public Collection<Card> getAllCards(@PathVariable Long id) {
+        return cardService.getAllCards(id);
     }
 
-    @RequestMapping(value = "/cards/{id}", method = RequestMethod.GET)
+    @RequestMapping(value ={"/catalogs/{catalogId}/decks/{deckId}/cards/{id}" , "/courses/{courseId}/decks/{deckId}/cards/{id}"}, method = RequestMethod.GET)
     public Card getCard(@PathVariable Long id) {
         return cardService.getCard(id);
     }
 
-    @RequestMapping(value = "/cards", method = RequestMethod.POST)
+    @RequestMapping(value ={"/catalogs/{catalogId}/decks/{deckId}/cards" , "/courses/{courseId}/decks/{deckId}/cards"}, method = RequestMethod.POST)
     public ResponseEntity<?> addCard(@RequestBody Card card) {
         cardService.addCard(card);
         return new ResponseEntity<String>(HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/cards/{id}", method = RequestMethod.DELETE)
-    public void deleteCard(@PathVariable Long id) {
-        cardService.deleteCard(id);
+    @RequestMapping(value ={"/catalogs/{catalogId}/decks/{deckId}/cards/{id}" , "/courses/{courseId}/decks/{deckId}/cards/{id}"}, method = RequestMethod.PUT)
+    public void updateCard(@PathVariable Long id, @RequestBody Card card) {
+        cardService.updateCard(id, card);
     }
 
-    @RequestMapping(value = "/cards/{id}", method = RequestMethod.PUT)
-    public void updateCardAnswerAndQuestion(@PathVariable Long id, @RequestBody String question, @RequestBody String answer) {
-        cardService.updateCardAnswerAndQuestion(id,question, answer);
+    @RequestMapping(value ={"/catalogs/{catalogId}/decks/{deckId}/cards/{id}" , "/courses/{courseId}/decks/{deckId}/cards/{id}"}, method = RequestMethod.DELETE)
+    public void deleteCard(@PathVariable Long id) {
+        cardService.deleteCard(id);
     }
 }

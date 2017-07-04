@@ -9,9 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-/**
- * Created by askol on 6/30/2017.
- */
+
 @Repository
 public interface DeckRepository extends JpaRepository<Deck, Long> {
 

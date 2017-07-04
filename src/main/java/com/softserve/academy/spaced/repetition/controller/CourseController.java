@@ -3,8 +3,6 @@ package com.softserve.academy.spaced.repetition.controller;
 import com.softserve.academy.spaced.repetition.domain.Course;
 import com.softserve.academy.spaced.repetition.service.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
@@ -32,9 +30,8 @@ public class CourseController {
     }
 
     @RequestMapping(value = "/courses", method = RequestMethod.POST)
-    public ResponseEntity<?> addCourse(@RequestBody Course course) {
+    public void addCourse(@RequestBody Course course) {
         courseService.addCourse(course);
-        return new ResponseEntity<String>(HttpStatus.OK);
     }
 
     @RequestMapping(value = "/courses/{id}", method = RequestMethod.PUT)

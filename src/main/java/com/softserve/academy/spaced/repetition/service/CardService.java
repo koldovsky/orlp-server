@@ -8,18 +8,20 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 /**
  * Created by askol on 6/30/2017.
  */
 @Service
 public class CardService {
+
     @Autowired
     private CardRepository cardRepository;
 
-    public List<Card> getAllCards() {
-        return cardRepository.findAll();
+    public Collection<Card> getAllCards(Long id) {
+       // Collection<Card> cards = new ArrayList<>();
+        return cardRepository.getAllCardsByDeckId(id);//.forEach(cards::add);
+       // return cards;
     }
 
     public Card getCard(Long id) {
@@ -36,12 +38,5 @@ public class CardService {
 
     public void deleteCard(Long id) {
         cardRepository.delete(id);
-    }
-
-    public void updateCardAnswerAndQuestion(Long id, String question, String answer) {
-        Card card = getCard(id);
-        card.setAnswer(answer);
-        card.setQuestion(question);
-        cardRepository.save(card);
     }
 }

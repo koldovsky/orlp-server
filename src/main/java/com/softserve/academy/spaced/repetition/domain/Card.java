@@ -19,6 +19,10 @@ public class Card {
     @Column(name = "answer", nullable = false)
     private String answer;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "deck_id")
+    private Deck deck;
+
     public Card() {
     }
 
