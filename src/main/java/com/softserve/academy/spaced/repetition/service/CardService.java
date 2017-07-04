@@ -18,11 +18,11 @@ public class CardService {
     @Autowired
     private CardRepository cardRepository;
 
-    public Collection<Card> getAllCards(Long id) {
-       // Collection<Card> cards = new ArrayList<>();
-        return cardRepository.getAllCardsByDeckId(id);//.forEach(cards::add);
-       // return cards;
-    }
+//    public Collection<Card> getAllCards(Long id) {
+//       // Collection<Card> cards = new ArrayList<>();
+//        return cardRepository.getAllCardsByDeckId(id);//.forEach(cards::add);
+//       // return cards;
+//    }
 
     public Card getCard(Long id) {
         return cardRepository.findOne(id);

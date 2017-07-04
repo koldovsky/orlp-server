@@ -20,10 +20,10 @@ public class CardController {
     private CardService cardService;
 
 
-    @RequestMapping(value ={"/catalogs/{catalogId}/decks/{id}/cards" , "/courses/{courseId}/decks/{id}/cards"} , method = RequestMethod.GET)
-    public Collection<Card> getAllCards(@PathVariable Long id) {
-        return cardService.getAllCards(id);
-    }
+//    @RequestMapping(value ={"/category/{catalogId}/decks/{id}/cards" , "/courses/{courseId}/decks/{id}/cards"} , method = RequestMethod.GET)
+//    public Collection<Card> getAllCards(@PathVariable Long id) {
+//        return cardService.getAllCards(id);
+//    }
 
     @RequestMapping(value ={"/catalogs/{catalogId}/decks/{deckId}/cards/{id}" , "/courses/{courseId}/decks/{deckId}/cards/{id}"}, method = RequestMethod.GET)
     public Card getCard(@PathVariable Long id) {
