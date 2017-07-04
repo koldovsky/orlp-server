@@ -20,7 +20,6 @@ public class Course {
     @Column(name = "description", nullable = false)
     private String description;
 
-    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
     private Category category;
