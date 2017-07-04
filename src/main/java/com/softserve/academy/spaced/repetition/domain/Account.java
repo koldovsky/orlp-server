@@ -4,7 +4,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "Account")
-public class Account implements AccountPublicPassword {
+public class Account {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
