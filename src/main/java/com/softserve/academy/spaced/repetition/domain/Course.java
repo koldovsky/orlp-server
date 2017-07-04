@@ -3,6 +3,7 @@ package com.softserve.academy.spaced.repetition.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "Course")
@@ -24,10 +25,8 @@ public class Course {
     @JoinColumn(name = "category_id")
     private Category category;
 
-    @JsonIgnore
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
+    @OneToMany(fetch = FetchType.LAZY)
+    private List<Deck> decks;
 
     public Course() {
     }
@@ -64,11 +63,11 @@ public class Course {
         this.category = category;
     }
 
-    public User getUser() {
-        return user;
+    public List<Deck> getDecks() {
+        return decks;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setDecks(List<Deck> decks) {
+        this.decks = decks;
     }
 }

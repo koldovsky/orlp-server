@@ -28,6 +28,9 @@ public class User {
     @JoinColumn(name = "folder_id")
     private Folder folder;
 
+    @OneToMany(fetch = FetchType.LAZY)
+    private List<Course> courses;
+
     public User() {
     }
 
@@ -61,5 +64,13 @@ public class User {
 
     public void setFolder(Folder folder) {
         this.folder = folder;
+    }
+
+    public List<Course> getCourses() {
+        return courses;
+    }
+
+    public void setCourses(List<Course> courses) {
+        this.courses = courses;
     }
 }

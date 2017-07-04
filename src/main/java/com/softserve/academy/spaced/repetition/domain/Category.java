@@ -1,6 +1,7 @@
 package com.softserve.academy.spaced.repetition.domain;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "Category")
@@ -16,6 +17,12 @@ public class Category {
 
     @Column(name = "description", nullable = false)
     private String description;
+
+    @OneToMany(fetch = FetchType.LAZY)
+    private List<Course> courses;
+
+    @OneToMany(fetch = FetchType.LAZY)
+    private List<Deck> decks;
 
     public Category() {
     }
@@ -42,5 +49,21 @@ public class Category {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public List<Course> getCourses() {
+        return courses;
+    }
+
+    public void setCourses(List<Course> courses) {
+        this.courses = courses;
+    }
+
+    public List<Deck> getDecks() {
+        return decks;
+    }
+
+    public void setDecks(List<Deck> decks) {
+        this.decks = decks;
     }
 }
