@@ -20,6 +20,11 @@ public class Account {
     public Account() {
     }
 
+    public Account(String password, String email) {
+        this.password = password;
+        this.email = email;
+    }
+
     public long getId() {
         return id;
     }

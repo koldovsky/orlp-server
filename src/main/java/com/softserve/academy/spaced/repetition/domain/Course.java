@@ -28,6 +28,13 @@ public class Course implements CourseNameDescriptionPublic {
     public Course() {
     }
 
+    public Course(String name, String description, Category category, List<Deck> decks) {
+        this.name = name;
+        this.description = description;
+        this.category = category;
+        this.decks = decks;
+    }
+
     public long getId() {
         return id;
     }

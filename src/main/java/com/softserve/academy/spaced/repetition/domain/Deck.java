@@ -38,6 +38,14 @@ public class Deck implements DeckNameDescriptionPublic {
     public Deck() {
     }
 
+    public Deck(String name, String description, Category category, User deckOwner, List<Card> cards) {
+        this.name = name;
+        this.description = description;
+        this.category = category;
+        this.deckOwner = deckOwner;
+        this.cards = cards;
+    }
+
     public long getId() {
         return id;
     }

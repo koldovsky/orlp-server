@@ -16,15 +16,15 @@ public class User {
     @Column(name = "user_id")
     private long id;
 
-    @OneToOne
+    @OneToOne(cascade = {CascadeType.REFRESH, CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST})
     @JoinColumn(name = "account_id")
     private Account account;
 
-    @OneToOne
+    @OneToOne(cascade = {CascadeType.REFRESH, CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST})
     @JoinColumn(name = "person_id")
     private Person person;
 
-    @OneToOne
+    @OneToOne(cascade = {CascadeType.REFRESH, CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST})
     @JoinColumn(name = "folder_id")
     private Folder folder;
 
@@ -32,6 +32,12 @@ public class User {
     private List<Course> courses;
 
     public User() {
+    }
+
+    public User(Account account, Person person, Folder folder) {
+        this.account = account;
+        this.person = person;
+        this.folder = folder;
     }
 
     public long getId() {
