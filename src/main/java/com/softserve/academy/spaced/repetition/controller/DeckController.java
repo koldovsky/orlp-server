@@ -15,7 +15,7 @@ public class DeckController {
     @Autowired
     private DeckService deckService;
 
-    @RequestMapping(value = "/category/decks/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/category/{id}/decks", method = RequestMethod.GET)
     public List<Deck> getAllDecksByCategoryId(@PathVariable Long id) {
         return deckService.getAllDecksByCategoryId(id);
     }

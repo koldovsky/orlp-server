@@ -11,7 +11,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "Deck")
-public class Deck {
+public class Deck implements DeckNameDescriptionPublic {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

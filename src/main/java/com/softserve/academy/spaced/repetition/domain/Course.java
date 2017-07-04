@@ -1,13 +1,11 @@
 package com.softserve.academy.spaced.repetition.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import javax.persistence.*;
 import java.util.List;
 
 @Entity
 @Table(name = "Course")
-public class Course {
+public class Course implements CourseNameDescriptionPublic {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -38,6 +36,7 @@ public class Course {
         this.id = id;
     }
 
+    @Override
     public String getName() {
         return name;
     }
@@ -46,6 +45,7 @@ public class Course {
         this.name = name;
     }
 
+    @Override
     public String getDescription() {
         return description;
     }

@@ -19,8 +19,7 @@ public class CategoryService {
 		List<Category> categories = categoryRepository.findAll(); 		
 		return categories;
 	}
-	
-	
+
 	public Category getCategoryById(Long id){		
 		Category categories = categoryRepository.findById(id);
 		return categories;
@@ -30,5 +29,4 @@ public class CategoryService {
 		List<Category> categories = categoryRepository.findTop4ByOrderById(); 		
 		return categories;
 	}
-	
 }

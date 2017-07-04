@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api")
@@ -15,8 +16,13 @@ public class CourseController {
     @Autowired
     private CourseService courseService;
 
+    @RequestMapping(value = "/category/{id}/courses", method = RequestMethod.GET)
+    public List<Course> getAllCoursesByCategoryId(@PathVariable Long id) {
+        return courseService.getAllCoursesByCategoryId(id);
+    }
+
     @RequestMapping(value = "/courses", method = RequestMethod.GET)
-    public Collection<Course> getAllCourses() {
+    public List<Course> getAllCourses() {
         return courseService.getAllCourses();
     }
 
