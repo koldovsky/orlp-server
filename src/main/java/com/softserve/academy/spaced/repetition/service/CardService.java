@@ -2,12 +2,16 @@ package com.softserve.academy.spaced.repetition.service;
 
 import com.softserve.academy.spaced.repetition.domain.Card;
 import com.softserve.academy.spaced.repetition.domain.Course;
+import com.softserve.academy.spaced.repetition.domain.Deck;
 import com.softserve.academy.spaced.repetition.repository.CardRepository;
+import com.softserve.academy.spaced.repetition.repository.DeckRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 /**
  * Created by askol on 6/30/2017.
@@ -17,12 +21,6 @@ public class CardService {
 
     @Autowired
     private CardRepository cardRepository;
-
-//    public Collection<Card> getAllCards(Long id) {
-//       // Collection<Card> cards = new ArrayList<>();
-//        return cardRepository.getAllCardsByDeckId(id);//.forEach(cards::add);
-//       // return cards;
-//    }
 
     public Card getCard(Long id) {
         return cardRepository.findOne(id);

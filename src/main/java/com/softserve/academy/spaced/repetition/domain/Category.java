@@ -34,6 +34,10 @@ public class Category implements CategoryPublic{
         this.description = description;
     }
 
+    public Category(Long id) {
+        this.id = id;
+    }
+
     public long getId() {
         return id;
     }

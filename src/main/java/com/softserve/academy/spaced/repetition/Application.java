@@ -85,7 +85,7 @@ public class Application {
 //        cardRepository.save(cards);
 //        cards = cardRepository.findAll();
 //
-//        List<Deck> decks = new ArrayList<>();
+//        List<DeckDTO> decks = new ArrayList<>();
 //        Resource deckResource = new ClassPathResource("/Data/deck.txt");
 //        BufferedReader deckReader = new BufferedReader(new FileReader(deckResource.getFile()));
 //        Stream<String> deckStream = deckReader.lines();
@@ -97,7 +97,7 @@ public class Application {
 //        int m = 8;
 //        for (String l: deckList) {
 //            String s[] = l.split("~");
-//            Deck deck = new Deck(s[0], s[1], categories.get(i), users.get(o), cards.subList(n, m));
+//            DeckDTO deck = new DeckDTO(s[0], s[1], categories.get(i), users.get(o), cards.subList(n, m));
 //            if (i < 9) {
 //                i++;
 //            }else i = 0;

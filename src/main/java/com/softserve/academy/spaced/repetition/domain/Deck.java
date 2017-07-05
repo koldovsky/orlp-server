@@ -11,12 +11,12 @@ import java.util.List;
 
 @Entity
 @Table(name = "Deck")
-public class Deck implements DeckNameDescriptionPublic {
+public class Deck {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "deck_id")
-    private long id;
+    private Long id;
 
     @Column(name = "name", nullable = false)
     private String name;
@@ -38,7 +38,14 @@ public class Deck implements DeckNameDescriptionPublic {
     public Deck() {
     }
 
-    public Deck(String name, String description, Category category, User deckOwner, List<Card> cards) {
+    public Deck(Long id, String name, String description) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+    }
+
+    public Deck(Long id, String name, String description, Category category, User deckOwner, List<Card> cards) {
+        this.id = id;
         this.name = name;
         this.description = description;
         this.category = category;
@@ -46,11 +53,11 @@ public class Deck implements DeckNameDescriptionPublic {
         this.cards = cards;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
