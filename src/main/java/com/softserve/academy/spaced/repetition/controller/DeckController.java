@@ -25,32 +25,36 @@ public class DeckController {
     @RequestMapping(value = "/category/{id}/decks", method = RequestMethod.GET)
     public List<DeckPublic> getAllDecksByCategoryId(@PathVariable Long id) {
         List<Deck> decks = deckService.getAllDecksByCategoryId(id);
-        List<DeckPublicDTO> decksPublicDTO = new ArrayList<>();
+        List<DeckPublic> decksPublic = new ArrayList<>();
         for (Deck deck : decks) {
-            decksPublicDTO.add(new DeckPublicDTO(deck));
+            decksPublic.add(new DeckPublicDTO(deck));
         }
-        List<DeckPublic> deckDTO = new ArrayList<>();
-        deckDTO.addAll(decksPublicDTO);
-
-        return deckDTO;
+        return decksPublic;
     }
 
     @RequestMapping(value = "/decks/{id}", method = RequestMethod.GET)
     public DeckPublic getDeck(@PathVariable Long id) {
-        DeckPublicDTO deckPublicDTO = new DeckPublicDTO(deckService.getDeck(id));
-        return deckPublicDTO;
+        DeckPublic deckPublic = new DeckPublicDTO(deckService.getDeck(id));
+        return deckPublic;
+    }
+
+    @RequestMapping(value = "/topRatedDecks", method = RequestMethod.GET)
+    public List <DeckPublic> topRatedDecks() {
+        List<Deck> decks = deckService.findTop4ByOrderById();
+        List<DeckPublic> decksPublic = new ArrayList<>();
+        for (Deck deck : decks) {
+            decksPublic.add(new DeckPublicDTO(deck));
+        }
+        return decksPublic;
     }
 
     @RequestMapping(value = "/category/{category_id}/deck/{deck_id}/cards", method = RequestMethod.GET)
     public List<CardPublic> getCardsByDeckId(@PathVariable Long deck_id) {
         List<Card> cards = deckService.getAllCardsByDeckId(deck_id);
-        List<CardPublicDTO> cardsPublicDTO = new ArrayList<>();
-        for (Card card: cards) {
-            cardsPublicDTO.add(new CardPublicDTO(card));
-        }
         List<CardPublic> cardsPublic = new ArrayList<>();
-        cardsPublic.addAll(cardsPublicDTO);
-
+        for (Card card: cards) {
+            cardsPublic.add(new CardPublicDTO(card));
+        }
         return cardsPublic;
     }
 
@@ -59,19 +63,6 @@ public class DeckController {
         deck.setCategory(new Category(category_id));
         deckService.addDeck(deck);
         return new ResponseEntity<String>(HttpStatus.OK);
-    }
-
-    @RequestMapping(value = "/topRatedDecks", method = RequestMethod.GET)
-    public List <DeckPublic> topRatedDecks() {
-        List<Deck> decks = deckService.findTop4ByOrderById();
-        List<DeckPublicDTO> decksPublicDTO = new ArrayList<>();
-        for (Deck deck : decks) {
-            decksPublicDTO.add(new DeckPublicDTO(deck));
-        }
-        List<DeckPublic> deckDTO = new ArrayList<>();
-        deckDTO.addAll(decksPublicDTO);
-
-        return deckDTO;
     }
 
 //    @RequestMapping(value = "/decks/{id}", method = RequestMethod.PUT)

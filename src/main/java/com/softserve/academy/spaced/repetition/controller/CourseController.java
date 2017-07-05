@@ -1,10 +1,13 @@
 package com.softserve.academy.spaced.repetition.controller;
 
+import com.softserve.academy.spaced.repetition.DTO.CoursePublic;
+import com.softserve.academy.spaced.repetition.DTO.impl.CoursePublicDTO;
 import com.softserve.academy.spaced.repetition.domain.Course;
 import com.softserve.academy.spaced.repetition.service.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -15,13 +18,13 @@ public class CourseController {
     private CourseService courseService;
 
     @RequestMapping(value = "/category/{id}/courses", method = RequestMethod.GET)
-    public List<Course> getAllCoursesByCategoryId(@PathVariable Long id) {
-        return courseService.getAllCoursesByCategoryId(id);
-    }
-
-    @RequestMapping(value = "/courses", method = RequestMethod.GET)
-    public List<Course> getAllCourses() {
-        return courseService.getAllCourses();
+    public List<CoursePublic> getAllCoursesByCategoryId(@PathVariable Long id) {
+        List<Course> courses = courseService.getAllCoursesByCategoryId(id);
+        List<CoursePublic> coursesPublic = new ArrayList<>();
+        for (Course course : courses) {
+            coursesPublic.add(new CoursePublicDTO(course));
+        }
+        return coursesPublic;
     }
 
     @RequestMapping(value = "/courses/{id}", method = RequestMethod.GET)

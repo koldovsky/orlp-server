@@ -19,10 +19,6 @@ public class CourseService {
         return courseRepository.getAllCoursesByCategoryId(id);
     }
 
-    public List<Course> getAllCourses() {
-        return courseRepository.findAll();
-    }
-
     public Course getCourse(Long id) {
         return courseRepository.findOne(id);
     }
