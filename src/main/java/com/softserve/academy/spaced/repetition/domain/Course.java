@@ -5,7 +5,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "Course")
-public class Course implements CourseNameDescriptionPublic {
+public class Course {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -43,7 +43,6 @@ public class Course implements CourseNameDescriptionPublic {
         this.id = id;
     }
 
-    @Override
     public String getName() {
         return name;
     }
@@ -52,7 +51,6 @@ public class Course implements CourseNameDescriptionPublic {
         this.name = name;
     }
 
-    @Override
     public String getDescription() {
         return description;
     }

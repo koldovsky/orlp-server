@@ -1,18 +1,18 @@
 package com.softserve.academy.spaced.repetition.domain;
 
-
+import com.softserve.academy.spaced.repetition.DTO.CategoryPublic;
 
 import javax.persistence.*;
 import java.util.List;
 
 @Entity
 @Table(name = "Category")
-public class Category{
+public class Category {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "category_id")
-    private Long id;
+    private long id;
 
     @Column(name = "name", nullable = false)
     private String name;
@@ -29,22 +29,23 @@ public class Category{
     public Category() {
     }
 
-    public Category(String name, String description) {
-        this.name = name;
-        this.description = description;
-    }
-
-    public Category(Long id,String name, String description) {
+    public Category( Long id, String name, String description) {
         this.id = id;
         this.name = name;
         this.description = description;
     }
 
-    public Long getId() {
+
+
+    public Category(Long id) {
+        this.id = id;
+    }
+
+    public long getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(long id) {
         this.id = id;
     }
 
