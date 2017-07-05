@@ -25,16 +25,16 @@ import java.util.stream.Stream;
 @SpringBootApplication
 public class Application {
 
-    @Autowired
-    CategoryRepository categoryRepository;
-    @Autowired
-    UserRepository userRepository;
-    @Autowired
-    DeckRepository deckRepository;
-    @Autowired
-    CourseRepository courseRepository;
-    @Autowired
-    CardRepository cardRepository;
+//    @Autowired
+//    CategoryRepository categoryRepository;
+//    @Autowired
+//    UserRepository userRepository;
+//    @Autowired
+//    DeckRepository deckRepository;
+//    @Autowired
+//    CourseRepository courseRepository;
+//    @Autowired
+//    CardRepository cardRepository;
 
 
     public static void main(String[] args) {
@@ -131,7 +131,7 @@ public class Application {
 //        }
 //
 //        courseRepository.save(courses);
-//
-//
-//    }
+
+
+  //  }
 }

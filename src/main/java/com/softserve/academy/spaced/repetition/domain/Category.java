@@ -1,11 +1,13 @@
 package com.softserve.academy.spaced.repetition.domain;
 
+import com.softserve.academy.spaced.repetition.DTO.CategoryPublic;
+
 import javax.persistence.*;
 import java.util.List;
 
 @Entity
 @Table(name = "Category")
-public class Category {
+public class Category implements CategoryPublic{
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

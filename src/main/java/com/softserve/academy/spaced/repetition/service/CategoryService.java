@@ -29,4 +29,11 @@ public class CategoryService {
 		List<Category> categories = categoryRepository.findTop4ByOrderById(); 		
 		return categories;
 	}
+	public void addCategory(Category category){
+		categoryRepository.save(category);
+	}
+
+	public void updateCategory(Category category){
+		categoryRepository.save(category);
+	}
 }
