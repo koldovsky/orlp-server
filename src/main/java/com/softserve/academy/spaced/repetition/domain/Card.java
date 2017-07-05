@@ -22,6 +22,11 @@ public class Card {
     public Card() {
     }
 
+    public Card(String question, String answer) {
+        this.question = question;
+        this.answer = answer;
+    }
+
     public Card(Long id, String question, String answer) {
         this.id = id;
         this.question = question;
