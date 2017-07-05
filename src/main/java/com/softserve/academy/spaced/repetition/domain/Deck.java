@@ -3,6 +3,7 @@ package com.softserve.academy.spaced.repetition.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -11,7 +12,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "Deck")
-public class Deck implements DeckNameDescriptionPublic {
+public class Deck implements Serializable{
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -46,11 +47,11 @@ public class Deck implements DeckNameDescriptionPublic {
         this.cards = cards;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
