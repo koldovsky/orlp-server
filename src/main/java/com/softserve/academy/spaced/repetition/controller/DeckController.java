@@ -32,7 +32,7 @@ public class DeckController {
         return decksPublic;
     }
 
-    @RequestMapping(value = "/decks/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/category/{id}/decks/{id}", method = RequestMethod.GET)
     public DeckPublic getDeck(@PathVariable Long id) {
         DeckPublic deckPublic = new DeckPublicDTO(deckService.getDeck(id));
         return deckPublic;
@@ -48,7 +48,7 @@ public class DeckController {
         return decksPublic;
     }
 
-    @RequestMapping(value = "/category/{category_id}/deck/{deck_id}/cards", method = RequestMethod.GET)
+    @RequestMapping(value = "/category/{category_id}/decks/{deck_id}/cards", method = RequestMethod.GET)
     public List<CardPublic> getCardsByDeckId(@PathVariable Long deck_id) {
         List<Card> cards = deckService.getAllCardsByDeckId(deck_id);
         List<CardPublic> cardsPublic = new ArrayList<>();
@@ -58,7 +58,7 @@ public class DeckController {
         return cardsPublic;
     }
 
-    @RequestMapping(value = "/category/{category_id}/deck", method = RequestMethod.POST)
+    @RequestMapping(value = "/category/{category_id}/decks", method = RequestMethod.POST)
     public ResponseEntity<?> addCourse(@RequestBody Deck deck, @PathVariable Long category_id) {
         deck.setCategory(new Category(category_id));
         deckService.addDeck(deck);

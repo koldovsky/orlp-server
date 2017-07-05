@@ -1,13 +1,10 @@
 package com.softserve.academy.spaced.repetition.service;
 
 import com.softserve.academy.spaced.repetition.domain.Course;
-import com.softserve.academy.spaced.repetition.domain.Deck;
 import com.softserve.academy.spaced.repetition.repository.CourseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 @Service
@@ -27,11 +24,11 @@ public class CourseService {
         courseRepository.save(course);
     }
 
-    public void updateCourse(Long id, Course course) {
+   /* public void updateCourse(Long id, Course course) {
         courseRepository.save(course);
     }
 
     public void deleteCourse(Long id) {
         courseRepository.delete(id);
-    }
+    }*/
 }
