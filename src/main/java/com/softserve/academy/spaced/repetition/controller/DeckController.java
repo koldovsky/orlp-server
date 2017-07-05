@@ -1,5 +1,6 @@
 package com.softserve.academy.spaced.repetition.controller;
 
+import com.softserve.academy.spaced.repetition.domain.Category;
 import com.softserve.academy.spaced.repetition.domain.Deck;
 import com.softserve.academy.spaced.repetition.service.DeckService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api")
+@CrossOrigin
 public class DeckController {
     @Autowired
     private DeckService deckService;
@@ -25,8 +27,9 @@ public class DeckController {
         return deckService.getDeck(id);
     }
 
-    @RequestMapping(value = "/decks", method = RequestMethod.POST)
-    public ResponseEntity<?> addCourse(@RequestBody Deck deck) {
+    @RequestMapping(value = "/category/{categoryId}/decks", method = RequestMethod.POST)
+    public ResponseEntity<?> addCourse(@RequestBody Deck deck, @PathVariable Long categoryId) {
+        deck.setCategory(new Category( categoryId, "", ""));
         deckService.addDeck(deck);
         return new ResponseEntity<String>(HttpStatus.OK);
     }
