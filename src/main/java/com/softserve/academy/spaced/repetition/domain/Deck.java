@@ -53,6 +53,14 @@ public class Deck {
         this.cards = cards;
     }
 
+    public Deck(String name, String description, Category category, User deckOwner, List<Card> cards) {
+        this.name = name;
+        this.description = description;
+        this.category = category;
+        this.deckOwner = deckOwner;
+        this.cards = cards;
+    }
+
     public Long getId() {
         return id;
     }
