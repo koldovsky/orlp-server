@@ -36,7 +36,7 @@ public class DeckService {
         return deckRepository.findTop4ByOrderById();
     }
 
-    /*public void updateDeck(Long id, DeckDTO deck) {
+    /*public void updateDeck(Long id, DeckPublic deck) {
         deckRepository.save(deck);
     }
 

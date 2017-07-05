@@ -1,11 +1,12 @@
 package com.softserve.academy.spaced.repetition.controller;
 
-import com.softserve.academy.spaced.repetition.DTO.DeckDTO;
-import com.softserve.academy.spaced.repetition.DTO.impl.DeckDTOImpl;
+import com.softserve.academy.spaced.repetition.DTO.CardPublic;
+import com.softserve.academy.spaced.repetition.DTO.DeckPublic;
+import com.softserve.academy.spaced.repetition.DTO.impl.CardPublicDTO;
+import com.softserve.academy.spaced.repetition.DTO.impl.DeckPublicDTO;
 import com.softserve.academy.spaced.repetition.domain.Card;
 import com.softserve.academy.spaced.repetition.domain.Category;
 import com.softserve.academy.spaced.repetition.domain.Deck;
-import com.softserve.academy.spaced.repetition.service.CardService;
 import com.softserve.academy.spaced.repetition.service.DeckService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,27 +23,35 @@ public class DeckController {
     private DeckService deckService;
 
     @RequestMapping(value = "/category/{id}/decks", method = RequestMethod.GET)
-    public List<DeckDTO> getAllDecksByCategoryId(@PathVariable Long id) {
+    public List<DeckPublic> getAllDecksByCategoryId(@PathVariable Long id) {
         List<Deck> decks = deckService.getAllDecksByCategoryId(id);
-        List<DeckDTOImpl> decksDTOImpl = new ArrayList<>();
+        List<DeckPublicDTO> decksPublicDTO = new ArrayList<>();
         for (Deck deck : decks) {
-            decksDTOImpl.add(new DeckDTOImpl(deck));
+            decksPublicDTO.add(new DeckPublicDTO(deck));
         }
-        List<DeckDTO> deckDTO = new ArrayList<>();
-        deckDTO.addAll(decksDTOImpl);
+        List<DeckPublic> deckDTO = new ArrayList<>();
+        deckDTO.addAll(decksPublicDTO);
 
         return deckDTO;
     }
 
     @RequestMapping(value = "/decks/{id}", method = RequestMethod.GET)
-    public DeckDTO getDeck(@PathVariable Long id) {
-        DeckDTOImpl deckDTOImpl = new DeckDTOImpl(deckService.getDeck(id));
-        return deckDTOImpl;
+    public DeckPublic getDeck(@PathVariable Long id) {
+        DeckPublicDTO deckPublicDTO = new DeckPublicDTO(deckService.getDeck(id));
+        return deckPublicDTO;
     }
 
     @RequestMapping(value = "/category/{category_id}/deck/{deck_id}/cards", method = RequestMethod.GET)
-    public List<Card> getCardsByDeckId(@PathVariable Long deck_id) {
-        return deckService.getAllCardsByDeckId(deck_id);
+    public List<CardPublic> getCardsByDeckId(@PathVariable Long deck_id) {
+        List<Card> cards = deckService.getAllCardsByDeckId(deck_id);
+        List<CardPublicDTO> cardsPublicDTO = new ArrayList<>();
+        for (Card card: cards) {
+            cardsPublicDTO.add(new CardPublicDTO(card));
+        }
+        List<CardPublic> cardsPublic = new ArrayList<>();
+        cardsPublic.addAll(cardsPublicDTO);
+
+        return cardsPublic;
     }
 
     @RequestMapping(value = "/category/{category_id}/deck", method = RequestMethod.POST)
@@ -53,20 +62,20 @@ public class DeckController {
     }
 
     @RequestMapping(value = "/topRatedDecks", method = RequestMethod.GET)
-    public List <DeckDTO> topRatedDecks() {
+    public List <DeckPublic> topRatedDecks() {
         List<Deck> decks = deckService.findTop4ByOrderById();
-        List<DeckDTOImpl> decksDTOImpl = new ArrayList<>();
+        List<DeckPublicDTO> decksPublicDTO = new ArrayList<>();
         for (Deck deck : decks) {
-            decksDTOImpl.add(new DeckDTOImpl(deck));
+            decksPublicDTO.add(new DeckPublicDTO(deck));
         }
-        List<DeckDTO> deckDTO = new ArrayList<>();
-        deckDTO.addAll(decksDTOImpl);
+        List<DeckPublic> deckDTO = new ArrayList<>();
+        deckDTO.addAll(decksPublicDTO);
 
         return deckDTO;
     }
 
 //    @RequestMapping(value = "/decks/{id}", method = RequestMethod.PUT)
-//    public void updateDeck(@PathVariable Long id, @RequestBody DeckDTO deck) {
+//    public void updateDeck(@PathVariable Long id, @RequestBody DeckPublic deck) {
 //        deckService.updateDeck(id, deck);
 //    }
 //
