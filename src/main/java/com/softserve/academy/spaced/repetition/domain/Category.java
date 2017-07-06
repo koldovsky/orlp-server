@@ -23,6 +23,9 @@ public class Category {
     @Column(name = "imagebase64",columnDefinition ="LONGTEXT",nullable = false)
     private String imagebase64;
 
+    @Column(name="raiting")
+    private int raiting;
+
     @OneToMany(fetch = FetchType.LAZY)
     private List<Course> courses;
 
