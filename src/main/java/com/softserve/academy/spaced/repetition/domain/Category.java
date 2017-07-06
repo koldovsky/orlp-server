@@ -7,7 +7,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "Category")
-public class Category implements CategoryPublic{
+public class Category {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -30,6 +30,10 @@ public class Category implements CategoryPublic{
     private List<Deck> decks;
 
     public Category() {
+    }
+
+    public Category(Long id) {
+        this.id = id;
     }
 
     public Category(String name, String description, String imagebase64) {
