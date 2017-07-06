@@ -32,7 +32,14 @@ public class Category implements CategoryPublic{
     public Category() {
     }
 
-    public Category(String name,String description,String imagebase64) {
+    public Category(String name, String description, String imagebase64) {
+        this.name = name;
+        this.description = description;
+        this.imagebase64 = imagebase64;
+    }
+
+    public Category(Long id, String name, String description, String imagebase64) {
+        this.id=id;
         this.name = name;
         this.description = description;
         this.imagebase64 = imagebase64;

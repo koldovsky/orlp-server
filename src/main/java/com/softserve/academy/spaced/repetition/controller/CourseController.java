@@ -38,7 +38,7 @@ public class CourseController {
 
     @RequestMapping(value = "/category/{category_id}/courses", method = RequestMethod.POST)
     public ResponseEntity<?> addCourse(@RequestBody Course course, @PathVariable Long category_id) {
-        course.setCategory(new Category(category_id));
+        course.setCategory(new Category(category_id, "", "", ""));
         courseService.addCourse(course);
         return new ResponseEntity<String>(HttpStatus.OK);
     }

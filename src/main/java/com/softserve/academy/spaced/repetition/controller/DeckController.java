@@ -60,7 +60,7 @@ public class DeckController {
 
     @RequestMapping(value = "/category/{category_id}/decks", method = RequestMethod.POST)
     public ResponseEntity<?> addCourse(@RequestBody Deck deck, @PathVariable Long category_id) {
-        deck.setCategory(new Category(category_id));
+        deck.setCategory(new Category(category_id,"","",""));
         deckService.addDeck(deck);
         return new ResponseEntity<String>(HttpStatus.OK);
     }
