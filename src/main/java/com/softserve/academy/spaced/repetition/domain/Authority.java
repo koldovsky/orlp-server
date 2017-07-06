@@ -20,6 +20,9 @@ public class Authority {
     @Enumerated(EnumType.STRING)
     private AuthorityName name;
 
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "authorities")
+    List<Account> accounts;
+
     public Authority(AuthorityName name) {
         this.name = name;
     }
@@ -43,4 +46,11 @@ public class Authority {
         this.name = name;
     }
 
+    public List<Account> getAccounts() {
+        return accounts;
+    }
+
+    public void setAccounts(List<Account> accounts) {
+        this.accounts = accounts;
+    }
 }

@@ -17,7 +17,8 @@ public class Account {
     @Column(name = "password", nullable = false)
     private String password;
 
-    @Column(name = "email", nullable = false)
+
+    @Column(name = "email", unique = true, nullable = false)
     private String email;
 
     @Column(name = "LASTPASSWORDRESETDATE")
@@ -25,9 +26,10 @@ public class Account {
     @NotNull
     private Date lastPasswordResetDate;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinTable(name = "user_authority", joinColumns = @JoinColumn(name = "account_id"),
-            inverseJoinColumns = @JoinColumn(name = "authority_id"))
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinTable(name = "account_authority", joinColumns = {
+            @JoinColumn(name = "account_id")},
+            inverseJoinColumns = {@JoinColumn(name = "authority_id")})
     private List<Authority> authorities;
 
     public Account() {
