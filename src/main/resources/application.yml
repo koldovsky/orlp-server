@@ -7,7 +7,7 @@ spring:
   jpa:
     show-sql: true
     hibernate:
-      ddl-auto: create
+      ddl-auto: validate
 jwt:
   header: Authorization
   secret: mySecret
@@ -17,4 +17,4 @@ jwt:
       path: auth
       refresh: refresh
 server:
-  port: 8088
+  port: 8080

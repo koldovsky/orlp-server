@@ -12,7 +12,7 @@ import java.util.List;
 @JsonSerialize(as = CategoryPublic.class)
 public interface CategoryPublic {
 
-    public long getId();
+//    public long getId();
     public String getName();
     public String getDescription();
     public String getImagebase64();

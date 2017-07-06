@@ -3,9 +3,7 @@ package com.softserve.academy.spaced.repetition.DTO.impl;
 import com.softserve.academy.spaced.repetition.DTO.CategoryPublic;
 import com.softserve.academy.spaced.repetition.domain.Category;
 
-/**
- * Created by askol on 7/5/2017.
- */
+
 public class CategoryPublicDTO extends Category implements CategoryPublic {
 
     public CategoryPublicDTO() {
@@ -16,7 +14,7 @@ public class CategoryPublicDTO extends Category implements CategoryPublic {
 //    }
 
     public CategoryPublicDTO(Category category) {
-        super(category.getId(), category.getName(), category.getDescription(), category.getLink());
+        super(category.getName(), category.getDescription(), category.getImagebase64(), category.getLink());
 
 
 

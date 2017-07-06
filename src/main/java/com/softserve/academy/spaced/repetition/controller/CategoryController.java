@@ -35,10 +35,10 @@ public class CategoryController {
         List<CategoryPublic> categories = new ArrayList<>();
         List<Category> categoryList = categoryService.getAllCategory();
 
-//        for ( Category category : categoryList) {
-//            category.add(linkTo(methodOn(CategoryController.class).getCategoryById(category.getId())).withSelfRel());
-//            categories.add(new CategoryPublicDTO(category));
-//        }
+        for ( Category category : categoryList) {
+            category.add(linkTo(methodOn(CategoryController.class).getCategoryById(category.getId())).withSelfRel());
+            categories.add(new CategoryPublicDTO(category));
+        }
         return categories;
     }
 
