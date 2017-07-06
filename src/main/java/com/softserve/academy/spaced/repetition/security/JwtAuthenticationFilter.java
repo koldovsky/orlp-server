@@ -22,7 +22,6 @@ import java.io.IOException;
 /**
  * Created by jarki on 7/4/2017.
  */
-///
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Autowired
