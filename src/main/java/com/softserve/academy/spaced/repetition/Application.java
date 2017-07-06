@@ -1,5 +1,7 @@
 package com.softserve.academy.spaced.repetition;
 
+import com.softserve.academy.spaced.repetition.DTO.CategoryPublic;
+import com.softserve.academy.spaced.repetition.DTO.impl.CategoryPublicDTO;
 import com.softserve.academy.spaced.repetition.domain.*;
 import com.softserve.academy.spaced.repetition.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,12 +37,12 @@ public class Application {
 //    CourseRepository courseRepository;
 //    @Autowired
 //    CardRepository cardRepository;
-
-
+//
+//
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
     }
-
+//
 //    @PostConstruct
 //    public void addTestData() throws IOException {
 //        List<Category> categories = new ArrayList<>();

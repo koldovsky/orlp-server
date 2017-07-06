@@ -11,7 +11,7 @@ public class Card {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "card_id")
-    private long id;
+    private Long id;
 
     @Column(name = "question", nullable = false)
     private String question;
@@ -27,11 +27,17 @@ public class Card {
         this.answer = answer;
     }
 
-    public long getId() {
+    public Card(Long id, String question, String answer) {
+        this.id = id;
+        this.question = question;
+        this.answer = answer;
+    }
+
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

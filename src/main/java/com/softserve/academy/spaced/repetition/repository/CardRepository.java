@@ -6,10 +6,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-
 @Repository
 public interface CardRepository extends JpaRepository<Card, Long> {
 
-    //List<Card> getAllCardsByDeckId(Long id);
-    //void save(Long id, Card card);
 }

@@ -1,7 +1,10 @@
 package com.softserve.academy.spaced.repetition.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import com.softserve.academy.spaced.repetition.DTO.CategoryPublic;
+import com.softserve.academy.spaced.repetition.DTO.impl.CategoryPublicDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.bind.annotation.*;
@@ -18,19 +21,35 @@ public class CategoryController {
     @Autowired
     private CategoryService categoryService;
 
+//    @RequestMapping(value = "/category", method = RequestMethod.GET)
+//    public List<Category> getCategories() {
+//        return categoryService.getAllCategory();
+//    }
+
     @RequestMapping(value = "/category", method = RequestMethod.GET)
-    public List<Category> getCategories() {
-        return categoryService.getAllCategory();
+    public List<CategoryPublic> getCategories() {
+        List<CategoryPublic> categories = new ArrayList<>();
+        List<Category> categoryList = categoryService.getAllCategory();
+        for ( Category category:categoryList) {
+            categories.add(new CategoryPublicDTO(category));
+        }
+        return categories;
     }
 
     @RequestMapping(value = "/category/{id}", method = RequestMethod.GET)
     public Category getCategoryById(@PathVariable Long id) {
-        return categoryService.getCategoryById(id);
+        CategoryPublicDTO publicDTO = new CategoryPublicDTO(categoryService.getCategoryById(id));
+        return publicDTO;
     }
 
-    @RequestMapping(value = "/topcategory", method = RequestMethod.GET)
-    public List<Category> get4Categories() {
-        return categoryService.get4Category();
+    @RequestMapping(value = "/topcategories", method = RequestMethod.GET)
+    public List<CategoryPublic> get4Categories() {
+        List<CategoryPublic> categories = new ArrayList<>();
+        List<Category> categoryList = categoryService.get4Category();
+        for ( Category category:categoryList) {
+            categories.add(new CategoryPublicDTO(category));
+        }
+        return categories;
     }
 
     @RequestMapping(value = "/admin/add/category", method = RequestMethod.POST)
