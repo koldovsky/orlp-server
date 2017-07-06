@@ -16,6 +16,8 @@ public class CategoryPublicDTO extends Category implements CategoryPublic {
 //    }
 
     public CategoryPublicDTO(Category category) {
-        super(category.getId(), category.getName(), category.getDescription(), category.getLink());
+
+
+        super(category.getId(), category.getName(), category.getDescription());
     }
 }

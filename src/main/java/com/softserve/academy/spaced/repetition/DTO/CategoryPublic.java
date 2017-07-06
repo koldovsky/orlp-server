@@ -17,7 +17,6 @@ public interface CategoryPublic {
 
   //  public String getDescription();
     public String getImagebase64();
-
-    public Link getLink();
+    //public Link getLink();
 
 }

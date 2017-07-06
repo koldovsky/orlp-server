@@ -23,8 +23,6 @@ public class Category {
     @Column(name = "imagebase64",columnDefinition ="LONGTEXT",nullable = false)
     private String imagebase64;
 
-    @Column(name="raiting")
-    private int raiting;
 
     @OneToMany(fetch = FetchType.LAZY)
     private List<Course> courses;
@@ -39,7 +37,7 @@ public class Category {
         this.id = id;
     }
 
-    public Category(String name, String description, String imagebase64) {
+    public Category(Long id,String name, String description) {
         this.name = name;
         this.description = description;
         this.imagebase64 = imagebase64;
