@@ -49,8 +49,8 @@ public class Application {
 //        Stream<String> categoryStream = categoryReader.lines();
 //
 //        categoryStream.map(line -> {
-//            String[] s = line.split("#");
-//            Category category = new Category(s[0].trim(), s[1]);
+//            String[] s = line.split("~");
+//            Category category = new Category(s[0], s[1],s[2]);
 //            return category;
 //        }).forEach(categories::add);
 //
@@ -131,7 +131,7 @@ public class Application {
 //        }
 //
 //        courseRepository.save(courses);
-
-
-  //  }
+//
+//
+//    }
 }

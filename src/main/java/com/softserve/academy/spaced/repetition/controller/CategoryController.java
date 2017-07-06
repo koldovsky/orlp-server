@@ -33,14 +33,14 @@ public class CategoryController {
         return categoryService.get4Category();
     }
 
-    @RequestMapping(value = "/admin/add/category/", method = RequestMethod.POST)
+    @RequestMapping(value = "/admin/add/category", method = RequestMethod.POST)
     public void addCategory(@RequestBody Category category) {
         categoryService.addCategory(category);
     }
 
     @RequestMapping(value = "/admin/add/category/{id}", method = RequestMethod.PUT)
-    public void addCategory(@RequestBody Category category, @PathVariable Long id) {
-        categoryService.updateCategory(category);
+    public void updateCategory(@RequestBody Category category, @PathVariable Long id) {
+        categoryService.updateCategory(category,id);
     }
 
 }
