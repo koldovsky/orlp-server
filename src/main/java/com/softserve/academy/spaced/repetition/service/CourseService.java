@@ -1,5 +1,6 @@
 package com.softserve.academy.spaced.repetition.service;
 
+import com.softserve.academy.spaced.repetition.domain.Category;
 import com.softserve.academy.spaced.repetition.domain.Course;
 import com.softserve.academy.spaced.repetition.repository.CourseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,23 +13,25 @@ public class CourseService {
     @Autowired
     private CourseRepository courseRepository;
 
-    public List<Course> getAllCoursesByCategoryId(Long id) {
-        return courseRepository.getAllCoursesByCategoryId(id);
+    public List<Course> getAllCoursesByCategoryId(Long category_id) {
+        return courseRepository.getAllCoursesByCategoryId(category_id);
     }
 
-    public Course getCourse(Long id) {
-        return courseRepository.findOne(id);
+    public Course getCourse(Long course_id) {
+        return courseRepository.findOne(course_id);
     }
 
-    public void addCourse(Course course) {
+    public void addCourse(Course course, Long category_id) {
+        course.setCategory(new Category(category_id));
         courseRepository.save(course);
     }
 
-   /* public void updateCourse(Long id, Course course) {
+    public void updateCourse(Long course_id, Course course) {
+        course.setId(course_id);
         courseRepository.save(course);
     }
 
-    public void deleteCourse(Long id) {
-        courseRepository.delete(id);
-    }*/
+    public void deleteCourse(Long course_id) {
+        courseRepository.delete(course_id);
+    }
 }

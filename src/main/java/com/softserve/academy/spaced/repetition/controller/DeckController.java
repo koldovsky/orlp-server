@@ -5,7 +5,6 @@ import com.softserve.academy.spaced.repetition.DTO.DeckPublic;
 import com.softserve.academy.spaced.repetition.DTO.impl.CardPublicDTO;
 import com.softserve.academy.spaced.repetition.DTO.impl.DeckPublicDTO;
 import com.softserve.academy.spaced.repetition.domain.Card;
-import com.softserve.academy.spaced.repetition.domain.Category;
 import com.softserve.academy.spaced.repetition.domain.Deck;
 import com.softserve.academy.spaced.repetition.service.DeckService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,9 +21,9 @@ public class DeckController {
     @Autowired
     private DeckService deckService;
 
-    @RequestMapping(value = "/category/{id}/decks", method = RequestMethod.GET)
-    public List<DeckPublic> getAllDecksByCategoryId(@PathVariable Long id) {
-        List<Deck> decks = deckService.getAllDecksByCategoryId(id);
+    @RequestMapping(value = "/category/{category_id}/decks", method = RequestMethod.GET)
+    public List<DeckPublic> getAllDecksByCategoryId(@PathVariable Long category_id) {
+        List<Deck> decks = deckService.getAllDecksByCategoryId(category_id);
         List<DeckPublic> decksPublic = new ArrayList<>();
         for (Deck deck : decks) {
             decksPublic.add(new DeckPublicDTO(deck));
@@ -32,13 +31,13 @@ public class DeckController {
         return decksPublic;
     }
 
-    @RequestMapping(value = "/category/{id}/decks/{id}", method = RequestMethod.GET)
-    public DeckPublic getDeck(@PathVariable Long id) {
-        DeckPublic deckPublic = new DeckPublicDTO(deckService.getDeck(id));
+    @RequestMapping(value = "/category/{category_id}/decks/{deck_id}", method = RequestMethod.GET)
+    public DeckPublic getDeck(@PathVariable Long deck_id) {
+        DeckPublic deckPublic = new DeckPublicDTO(deckService.getDeck(deck_id));
         return deckPublic;
     }
 
-    @RequestMapping(value = "/topRatedDecks", method = RequestMethod.GET)
+    @RequestMapping(value = "/topDecks", method = RequestMethod.GET)
     public List <DeckPublic> topRatedDecks() {
         List<Deck> decks = deckService.findTop4ByOrderById();
         List<DeckPublic> decksPublic = new ArrayList<>();
@@ -59,19 +58,18 @@ public class DeckController {
     }
 
     @RequestMapping(value = "/category/{category_id}/decks", method = RequestMethod.POST)
-    public ResponseEntity<?> addCourse(@RequestBody Deck deck, @PathVariable Long category_id) {
-        deck.setCategory(new Category(category_id));
-        deckService.addDeck(deck);
-        return new ResponseEntity<String>(HttpStatus.OK);
+    public ResponseEntity<DeckPublic> addDeck(@RequestBody Deck deck, @PathVariable Long category_id) {
+        deckService.addDeck(deck, category_id);
+        return new ResponseEntity<>(new DeckPublicDTO(deck), HttpStatus.OK);
     }
 
-//    @RequestMapping(value = "/decks/{id}", method = RequestMethod.PUT)
-//    public void updateDeck(@PathVariable Long id, @RequestBody DeckPublic deck) {
-//        deckService.updateDeck(id, deck);
-//    }
-//
-//    @RequestMapping(value = "/decks/{id}", method = RequestMethod.DELETE)
-//    public void deleteDeck(@PathVariable Long id) {
-//        deckService.deleteDeck(id);
-//    }
+    @RequestMapping(value = "/user/{user_id}/decks/{deck_id}", method = RequestMethod.PUT)
+    public void updateDeck(@RequestBody Deck deck, @PathVariable Long deck_id) {
+        deckService.updateDeck(deck, deck_id);
+    }
+
+    @RequestMapping(value = "/user/{user_id}/decks/{deck_id}", method = RequestMethod.DELETE)
+    public void deleteDeck(@PathVariable Long deck_id) {
+        deckService.deleteDeck(deck_id);
+    }
 }
