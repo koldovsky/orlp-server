@@ -7,20 +7,27 @@ import com.softserve.academy.spaced.repetition.DTO.impl.DeckPublicDTO;
 import com.softserve.academy.spaced.repetition.domain.Card;
 import com.softserve.academy.spaced.repetition.domain.Category;
 import com.softserve.academy.spaced.repetition.domain.Deck;
+import com.softserve.academy.spaced.repetition.service.CardService;
 import com.softserve.academy.spaced.repetition.service.DeckService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.*;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
 @RestController
 @RequestMapping("/api")
 public class DeckController {
     @Autowired
     private DeckService deckService;
+
+    @Autowired
+    private CardService cardService;
 
     @RequestMapping(value = "/category/{id}/decks", method = RequestMethod.GET)
     public List<DeckPublic> getAllDecksByCategoryId(@PathVariable Long id) {
@@ -54,6 +61,7 @@ public class DeckController {
         List<CardPublic> cardsPublic = new ArrayList<>();
         for (Card card: cards) {
             cardsPublic.add(new CardPublicDTO(card));
+            card.add(linkTo(methodOn(CardController.class).getCard(card.getId())).withSelfRel());
         }
         return cardsPublic;
     }

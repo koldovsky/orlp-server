@@ -7,10 +7,14 @@ import com.softserve.academy.spaced.repetition.DTO.CategoryPublic;
 import com.softserve.academy.spaced.repetition.DTO.impl.CategoryPublicDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.hateoas.Link;
 import org.springframework.web.bind.annotation.*;
 
 import com.softserve.academy.spaced.repetition.domain.Category;
 import com.softserve.academy.spaced.repetition.service.CategoryService;
+
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
 @RestController
 @RequestMapping("/api")
@@ -30,7 +34,9 @@ public class CategoryController {
     public List<CategoryPublic> getCategories() {
         List<CategoryPublic> categories = new ArrayList<>();
         List<Category> categoryList = categoryService.getAllCategory();
-        for ( Category category:categoryList) {
+
+        for ( Category category : categoryList) {
+            category.add(linkTo(methodOn(CategoryController.class).getCategoryById(category.getId())).withSelfRel());
             categories.add(new CategoryPublicDTO(category));
         }
         return categories;

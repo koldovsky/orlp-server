@@ -1,13 +1,15 @@
 package com.softserve.academy.spaced.repetition.domain;
 
 import com.softserve.academy.spaced.repetition.DTO.CategoryPublic;
+import org.springframework.hateoas.Link;
+import org.springframework.hateoas.ResourceSupport;
 
 import javax.persistence.*;
 import java.util.List;
 
 @Entity
 @Table(name = "Category")
-public class Category {
+public class Category extends HATEOASSupport{
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -29,10 +31,11 @@ public class Category {
     public Category() {
     }
 
-    public Category( Long id, String name, String description) {
+    public Category( Long id, String name, String description, Link link) {
         this.id = id;
         this.name = name;
         this.description = description;
+        super.link = link;
     }
 
     public Category(String name, String description) {
@@ -44,7 +47,7 @@ public class Category {
         this.id = id;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
