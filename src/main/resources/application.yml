@@ -7,4 +7,6 @@ spring:
   jpa:
     show-sql: true
     hibernate:
-      ddl-auto: validate
+      ddl-auto: create
+#server:
+#  port: 8088

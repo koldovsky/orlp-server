@@ -7,7 +7,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "Category")
-public class Category {
+public class Category implements CategoryPublic{
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -17,8 +17,11 @@ public class Category {
     @Column(name = "name", nullable = false)
     private String name;
 
-    @Column(name = "description", nullable = false)
+    @Column(name = "description",nullable = false)
     private String description;
+
+    @Column(name = "imagebase64",columnDefinition ="LONGTEXT",nullable = false)
+    private String imagebase64;
 
     @OneToMany(fetch = FetchType.LAZY)
     private List<Course> courses;
@@ -29,19 +32,17 @@ public class Category {
     public Category() {
     }
 
-    public Category( Long id, String name, String description) {
-        this.id = id;
+    public Category(String name, String description, String imagebase64) {
         this.name = name;
         this.description = description;
+        this.imagebase64 = imagebase64;
     }
 
-    public Category(String name, String description) {
+    public Category(Long id, String name, String description, String imagebase64) {
+        this.id=id;
         this.name = name;
         this.description = description;
-    }
-
-    public Category(Long id) {
-        this.id = id;
+        this.imagebase64 = imagebase64;
     }
 
     public long getId() {
@@ -83,4 +84,11 @@ public class Category {
     public void setDecks(List<Deck> decks) {
         this.decks = decks;
     }
+    public String getImagebase64() {
+        return imagebase64;
+    }
+    public void setImagebase64(String imagebase64) {
+        this.imagebase64 = imagebase64;
+    }
+
 }
