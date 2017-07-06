@@ -1,7 +1,5 @@
 package com.softserve.academy.spaced.repetition.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import javax.persistence.*;
 
 @Entity

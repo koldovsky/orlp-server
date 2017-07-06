@@ -1,7 +1,7 @@
-Solarbreeze~proin interdum mauris non ligula pellentesque ultrices phasellus id sapien in sapien iaculis congue vivamus
-Aerified~phasellus sit amet erat nulla tempus vivamus in felis eu sapien cursus vestibulum proin eu mi
-Namfix~cursus id turpis integer aliquet massa id lobortis convallis tortor risus dapibus augue vel accumsan tellus nisi eu
-Sonsing~scelerisque mauris sit amet eros suspendisse accumsan tortor quis turpis sed ante vivamus tortor duis
+Javaforbeginers~proin interdum mauris non ligula pellentesque ultrices phasellus id sapien in sapien iaculis congue vivamus
+C++forbeginers~phasellus sit amet erat nulla tempus vivamus in felis eu sapien cursus vestibulum proin eu mi
+C#forbeginers~cursus id turpis integer aliquet massa id lobortis convallis tortor risus dapibus augue vel accumsan tellus nisi eu
+JavaScriptforbeginers~scelerisque mauris sit amet eros suspendisse accumsan tortor quis turpis sed ante vivamus tortor duis
 Bigtax~primis in faucibus orci luctus et ultrices posuere cubilia curae duis faucibus accumsan odio curabitur convallis
 Kanlam~ultrices posuere cubilia curae duis faucibus accumsan odio curabitur convallis duis consequat dui nec nisi volutpat eleifend donec
 Tres-Zap~augue vel accumsan tellus nisi eu orci mauris lacinia sapien quis libero nullam sit amet turpis elementum ligula

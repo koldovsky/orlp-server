@@ -1,13 +1,7 @@
 package com.softserve.academy.spaced.repetition.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import javax.persistence.*;
 import java.util.List;
-
-/**
- * Created by jarki on 6/28/2017.
- */
 
 @Entity
 @Table(name = "Deck")

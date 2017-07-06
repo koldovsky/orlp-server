@@ -15,6 +15,7 @@ public interface CategoryPublic {
     public String getName();
 
     public String getDescription();
+    public String getImagebase64();
 
     public Link getLink();
 

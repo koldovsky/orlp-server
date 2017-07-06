@@ -3,10 +3,6 @@ package com.softserve.academy.spaced.repetition.domain;
 import javax.persistence.*;
 import java.util.List;
 
-/**
- * Created by jarki on 6/28/2017.
- */
-
 @Entity
 @Table(name = "User")
 public class User {
@@ -16,7 +12,7 @@ public class User {
     @Column(name = "user_id")
     private long id;
 
-    @OneToOne(cascade = {CascadeType.REFRESH, CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST})
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "account_id")
     private Account account;
 

@@ -2,10 +2,6 @@ package com.softserve.academy.spaced.repetition.domain;
 
 import javax.persistence.*;
 
-/**
- * Created by jarki on 6/28/2017.
- */
-
 @Entity
 @Table(name = "Person")
 public class Person {
