@@ -15,6 +15,5 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
 
 	 List<Category> findTop4ByOrderById();
 
-	 @Query("select c from Category c order by c.id")
-	List<Category> findTop4By();
+
 }
