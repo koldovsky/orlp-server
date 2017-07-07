@@ -26,7 +26,7 @@ public class CategoryService {
 		
 	}
 	public List<Category> get4Category(){
-		List<Category> categories = categoryRepository.findTop4ByOrderById(); 		
+		List<Category> categories = categoryRepository.findTop4ByOrderById();
 		return categories;
 	}
 	public void addCategory(Category category){

@@ -8,9 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.ArrayList;
-import java.util.List;
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.*;
 
 
 @RestController
@@ -23,12 +21,13 @@ public class CardController {
     @RequestMapping(value = {"/category/{categoryId}/decks/{deckId}/cards/{id}", "/courses/{courseId}/decks/{deckId}/cards/{id}"}, method = RequestMethod.GET)
     public CardPublic getCard(@PathVariable Long id) {
         CardPublicDTO card = new CardPublicDTO(cardService.getCard(id));
+//       card.add(linkTo(methodOn(CardController.class)).withSelfRel());
         return card;
     }
 
     @RequestMapping(value = {"/category/{categoryId}/decks/{deckId}/cards", "/courses/{courseId}/decks/{deckId}/cards"}, method = RequestMethod.POST)
-    public ResponseEntity<?> addCard(@RequestBody Card card) {
-        cardService.addCard(card);
+    public ResponseEntity<?> addCard(@RequestBody Card card, @PathVariable Long deckId) {
+        cardService.addCard(card, deckId);
         return new ResponseEntity<String>(HttpStatus.OK);
     }
 
