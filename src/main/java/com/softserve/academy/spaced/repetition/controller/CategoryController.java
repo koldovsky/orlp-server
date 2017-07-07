@@ -35,7 +35,7 @@ public class CategoryController {
         List<CategoryPublic> categories = new ArrayList<>();
         List<Category> categoryList = categoryService.getAllCategory();
 
-        for ( Category category : categoryList) {
+        for (Category category : categoryList) {
             category.add(linkTo(methodOn(CategoryController.class).getCategoryById(category.getId())).withSelfRel());
             categories.add(new CategoryPublicDTO(category));
         }
@@ -44,7 +44,9 @@ public class CategoryController {
 
     @RequestMapping(value = "/category/{id}", method = RequestMethod.GET)
     public Category getCategoryById(@PathVariable Long id) {
-        CategoryPublicDTO publicDTO = new CategoryPublicDTO(categoryService.getCategoryById(id));
+        Category category = categoryService.getCategoryById(id);
+        category.add(linkTo(methodOn(CategoryController.class).getCategoryById(category.getId())).withSelfRel());
+        CategoryPublicDTO publicDTO = new CategoryPublicDTO(category);
         return publicDTO;
     }
 
@@ -52,7 +54,7 @@ public class CategoryController {
     public List<CategoryPublic> get4Categories() {
         List<CategoryPublic> categories = new ArrayList<>();
         List<Category> categoryList = categoryService.get4Category();
-        for ( Category category:categoryList) {
+        for (Category category : categoryList) {
             categories.add(new CategoryPublicDTO(category));
         }
         return categories;
@@ -65,7 +67,7 @@ public class CategoryController {
 
     @RequestMapping(value = "/admin/add/category/{id}", method = RequestMethod.PUT)
     public void updateCategory(@RequestBody Category category, @PathVariable Long id) {
-        categoryService.updateCategory(category,id);
+        categoryService.updateCategory(category, id);
     }
 
 }
