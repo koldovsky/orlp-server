@@ -46,7 +46,7 @@ public class Application {
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
     }
-
+/*
     @PostConstruct
     public void addTestData() throws IOException {
         List<Category> categories = new ArrayList<>();
@@ -149,5 +149,5 @@ public class Application {
         courseRepository.save(courses);
 
 
-    }
+    }*/
 }
