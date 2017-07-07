@@ -20,9 +20,7 @@ public class RegistrationService {
     @Autowired
     private AccountRepository accountRepository;
 
-    public List<User> getAllUsers() {
-        return userRepository.getAllUsers();
-    }
+
 
     public User getUser(Long user_id) {
         return userRepository.findOne(user_id);
