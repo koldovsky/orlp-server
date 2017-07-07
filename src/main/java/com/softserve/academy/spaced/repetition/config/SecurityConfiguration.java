@@ -59,7 +59,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
                 .authorizeRequests()
                 .antMatchers(HttpMethod.POST, "/auth/login").permitAll()
-                .antMatchers("/test").authenticated()
+                .antMatchers("/test").hasRole("USER")
                 .anyRequest().permitAll();
 
         // Custom JWT based security filter

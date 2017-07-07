@@ -21,18 +21,27 @@ public class CardService {
     @Autowired
     private CardRepository cardRepository;
 
+    @Autowired
+    private DeckRepository deckRepository;
+
+    @Transactional
     public Card getCard(Long id) {
         return cardRepository.findOne(id);
     }
 
-    public void addCard(Card card) {
+    @Transactional
+    public void addCard(Card card, Long id) {
+        Deck deck = deckRepository.findOne(id);
+        deck.getCards().add(cardRepository.save(card));
+    }
+
+    @Transactional
+    public void updateCard(Long id, Card card)  {
+        card.setId(id);
         cardRepository.save(card);
     }
 
-    public void updateCard(Long id, Card card) {
-        cardRepository.save(card);
-    }
-
+    @Transactional
     public void deleteCard(Long id) {
         cardRepository.delete(id);
     }
