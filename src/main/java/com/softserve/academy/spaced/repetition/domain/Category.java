@@ -46,13 +46,14 @@ public class Category extends HATEOASSupport {
         this.imagebase64 = imagebase64;
     }
 
-    public Category(Long id, String name, String description) {
+    public Category(Long id, String name, String imagebase64) {
         this.id = id;
         this.name = name;
-        this.description = description;
+       this.imagebase64=imagebase64;
     }
 
-    public Category(String name, String description,String imagebase64, Link link) {
+    public Category(Long id,String name, String description,String imagebase64, Link link) {
+        this.id = id;
         this.name = name;
         this.description = description;
         this.imagebase64 = imagebase64;

@@ -9,12 +9,12 @@ public class CategoryPublicDTO extends Category implements CategoryPublic {
     public CategoryPublicDTO() {
     }
 
-//    public CategoryPublicDTO(Long id, String name, String description) {
-//        super(id, name, description);
+//    public CategoryPublicDTO(Long id, String name, String ) {
+//        super (id, name, description);
 //    }
 
     public CategoryPublicDTO(Category category) {
-        super(category.getName(), category.getDescription(), category.getImagebase64(), category.getLink());
+        super(category.getId(),category.getName(), category.getDescription(), category.getImagebase64(), category.getLink());
 
 
 
