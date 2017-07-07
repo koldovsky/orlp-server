@@ -7,6 +7,7 @@ import com.softserve.academy.spaced.repetition.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 
 
@@ -21,22 +22,23 @@ public class RegistrationService {
     private AccountRepository accountRepository;
 
 
-
     public User getUser(Long user_id) {
         return userRepository.findOne(user_id);
     }
 
 
-    public int validateEmail(String email) {
-        Account account = accountRepository.findByEmail(email);
-        return 0;
+    public boolean validateEmail(String email) {
+        if (email != null && email.equals("")) {
+            if (accountRepository.findByEmail(email) != null) {
+                return true;
+            }
+        }
+        return false;
     }
 
-    public void addUser(User user) {
-        //user
+    public void addUser(User user, boolean isValid) {
         userRepository.save(user);
     }
-
 
 
 }

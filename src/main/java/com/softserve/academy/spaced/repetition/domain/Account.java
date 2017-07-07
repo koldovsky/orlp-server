@@ -35,6 +35,10 @@ public class Account {
     public Account() {
     }
 
+    public Account( String email) {
+        this.email = email;
+    }
+
     public Account(String password, String email) {
         this.password = password;
         this.email = email;
