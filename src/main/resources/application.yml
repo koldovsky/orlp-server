@@ -17,5 +17,3 @@ jwt:
     authentication:
       path: auth
       refresh: refresh
-#server:
-#  port: 8088
