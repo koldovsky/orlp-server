@@ -18,7 +18,7 @@ public class Course {
     @Column(name = "description", nullable = false)
     private String description;
 
-    @Column(name = "imagebase64",columnDefinition ="LONGTEXT")
+    @Column(name = "imagebase64", columnDefinition ="LONGTEXT")
     private String imagebase64;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -29,14 +29,6 @@ public class Course {
     private List<Deck> decks;
 
     public Course() {
-    }
-
-    public Course(String name, String description, Category category, List<Deck> decks) {
-        this.name = name;
-        this.description = description;
-        this.category = category;
-        this.decks = decks;
-        this.imagebase64=imagebase64;
     }
 
     public long getId() {

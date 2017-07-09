@@ -1,6 +1,5 @@
 package com.softserve.academy.spaced.repetition.controller;
 
-import com.softserve.academy.spaced.repetition.DTO.CoursePublic;
 import com.softserve.academy.spaced.repetition.DTO.impl.CoursePublicDTO;
 import com.softserve.academy.spaced.repetition.domain.Course;
 import com.softserve.academy.spaced.repetition.service.CourseService;
@@ -19,9 +18,9 @@ public class CourseController {
     private CourseService courseService;
 
     @RequestMapping(value = "/category/{category_id}/courses", method = RequestMethod.GET)
-    public List<CoursePublic> getAllCoursesByCategoryId(@PathVariable Long category_id) {
+    public List<CoursePublicDTO> getAllCoursesByCategoryId(@PathVariable Long category_id) {
         List<Course> courses = courseService.getAllCoursesByCategoryId(category_id);
-        List<CoursePublic> coursesPublic = new ArrayList<>();
+        List<CoursePublicDTO> coursesPublic = new ArrayList<>();
         for (Course course : courses) {
             coursesPublic.add(new CoursePublicDTO(course));
         }
@@ -29,13 +28,13 @@ public class CourseController {
     }
 
     @RequestMapping(value = "/category/{category_id}/courses/{course_id}", method = RequestMethod.GET)
-    public CoursePublic getCourse(@PathVariable Long course_id) {
-        CoursePublic coursePublic = new CoursePublicDTO(courseService.getCourse(course_id));
+    public CoursePublicDTO getCourse(@PathVariable Long course_id) {
+        CoursePublicDTO coursePublic = new CoursePublicDTO(courseService.getCourse(course_id));
         return coursePublic;
     }
 
     @RequestMapping(value = "/category/{category_id}/courses", method = RequestMethod.POST)
-    public ResponseEntity<CoursePublic> addCourse(@RequestBody Course course, @PathVariable Long category_id) {
+    public ResponseEntity<CoursePublicDTO> addCourse(@RequestBody Course course, @PathVariable Long category_id) {
         courseService.addCourse(course, category_id);
         return new ResponseEntity<>(new CoursePublicDTO(course), HttpStatus.OK);
     }

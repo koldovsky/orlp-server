@@ -1,10 +1,18 @@
 package com.softserve.academy.spaced.repetition.DTO.impl;
 
-import com.softserve.academy.spaced.repetition.DTO.DeckPublic;
+import com.softserve.academy.spaced.repetition.DTO.DTO;
 import com.softserve.academy.spaced.repetition.domain.Deck;
 
-public class DeckPublicDTO extends Deck implements DeckPublic {
+public class DeckPublicDTO extends DTO<Deck> {
     public DeckPublicDTO(Deck deck) {
-        super(deck.getId(), deck.getName(), deck.getDescription(), deck.getCategory(), deck.getDeckOwner(), deck.getCards());
+        super(deck);
+    }
+
+    public String getName() {
+        return getEntity().getName();
+    }
+
+    public String getDescription() {
+        return getEntity().getDescription();
     }
 }

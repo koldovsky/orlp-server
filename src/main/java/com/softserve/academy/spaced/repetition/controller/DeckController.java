@@ -1,7 +1,6 @@
 package com.softserve.academy.spaced.repetition.controller;
 
 import com.softserve.academy.spaced.repetition.DTO.CardPublic;
-import com.softserve.academy.spaced.repetition.DTO.DeckPublic;
 import com.softserve.academy.spaced.repetition.DTO.impl.CardPublicDTO;
 import com.softserve.academy.spaced.repetition.DTO.impl.DeckPublicDTO;
 import com.softserve.academy.spaced.repetition.domain.Card;
@@ -22,25 +21,25 @@ public class DeckController {
     private DeckService deckService;
 
     @RequestMapping(value = "/category/{category_id}/decks", method = RequestMethod.GET)
-    public List<DeckPublic> getAllDecksByCategoryId(@PathVariable Long category_id) {
+    public List<DeckPublicDTO> getAllDecksByCategoryId(@PathVariable Long category_id) {
         List<Deck> decks = deckService.getAllDecksByCategoryId(category_id);
-        List<DeckPublic> decksPublic = new ArrayList<>();
+        List<DeckPublicDTO> decksPublicDTO = new ArrayList<>();
         for (Deck deck : decks) {
-            decksPublic.add(new DeckPublicDTO(deck));
+            decksPublicDTO.add(new DeckPublicDTO(deck));
         }
-        return decksPublic;
+        return decksPublicDTO;
     }
 
     @RequestMapping(value = "/category/{category_id}/decks/{deck_id}", method = RequestMethod.GET)
-    public DeckPublic getDeck(@PathVariable Long deck_id) {
-        DeckPublic deckPublic = new DeckPublicDTO(deckService.getDeck(deck_id));
-        return deckPublic;
+    public DeckPublicDTO getDeck(@PathVariable Long deck_id) {
+        DeckPublicDTO deckPublicDTO = new DeckPublicDTO(deckService.getDeck(deck_id));
+        return deckPublicDTO;
     }
 
     @RequestMapping(value = "/topDecks", method = RequestMethod.GET)
-    public List <DeckPublic> topRatedDecks() {
+    public List <DeckPublicDTO> topRatedDecks() {
         List<Deck> decks = deckService.findTop4ByOrderById();
-        List<DeckPublic> decksPublic = new ArrayList<>();
+        List<DeckPublicDTO> decksPublic = new ArrayList<>();
         for (Deck deck : decks) {
             decksPublic.add(new DeckPublicDTO(deck));
         }
@@ -58,7 +57,7 @@ public class DeckController {
     }
 
     @RequestMapping(value = "/category/{category_id}/decks", method = RequestMethod.POST)
-    public ResponseEntity<DeckPublic> addDeck(@RequestBody Deck deck, @PathVariable Long category_id) {
+    public ResponseEntity<DeckPublicDTO> addDeck(@RequestBody Deck deck, @PathVariable Long category_id) {
         deckService.addDeck(deck, category_id);
         return new ResponseEntity<>(new DeckPublicDTO(deck), HttpStatus.OK);
     }
