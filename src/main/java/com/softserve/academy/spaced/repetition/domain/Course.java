@@ -5,7 +5,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "Course")
-public class Course {
+public class Course extends HATEOASSupport{
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
