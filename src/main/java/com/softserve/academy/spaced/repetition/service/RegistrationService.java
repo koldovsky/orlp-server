@@ -1,5 +1,7 @@
 package com.softserve.academy.spaced.repetition.service;
 
+import com.softserve.academy.spaced.repetition.exceptions.BlankFieldException;
+import com.softserve.academy.spaced.repetition.exceptions.EmailUniquesException;
 import com.softserve.academy.spaced.repetition.domain.Folder;
 import com.softserve.academy.spaced.repetition.domain.User;
 import com.softserve.academy.spaced.repetition.repository.UserRepository;
@@ -17,6 +19,8 @@ import java.util.Calendar;
  */
 @Service
 public class RegistrationService {
+
+    User user;
     @Autowired
     private UserRepository userRepository;
     @Autowired
@@ -25,38 +29,41 @@ public class RegistrationService {
     PasswordEncoder passwordEncoder;
 
 
-    public ResponseEntity <?> validateAndCreateUser(User user) {
+    public ResponseEntity <User> validateAndCreateUser(User userFromForm) {
+        this.user = userFromForm;
         try {
-            blankFieldsValidation(user);
+            blankFieldsValidation();
         } catch (BlankFieldException e) {
             return new ResponseEntity(HttpStatus.BAD_REQUEST);
-        } catch (IdentityEmailException e) {
+        } catch (EmailUniquesException ex) {
             return new ResponseEntity(HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity(HttpStatus.CREATED);
+        return new ResponseEntity <User>(user, HttpStatus.CREATED);
 
     }
 
-    public void blankFieldsValidation(User user) {
-        if (user.getAccount().getPassword() != null && user.getAccount().getEmail() != null && user.getPerson().getFirstName() != null && user.getPerson().getLastName() != null) {
-            identityEmailValidation(user);
+    public void blankFieldsValidation() throws BlankFieldException, EmailUniquesException {
+        if (user.getAccount().getPassword() != null && user.getAccount().getEmail() != null && user.getPerson().getFirstName()
+                != null && user.getPerson().getLastName() != null) {
+            emailUniquesValidation();
+        } else {
+            throw new BlankFieldException();
         }
-        throw new BlankFieldException();
     }
 
-    public void identityEmailValidation(User user) {
+    public void emailUniquesValidation() throws EmailUniquesException {
         if (userRepository.findUserByAccount_Email(user.getAccount().getEmail()) == null) {
-            userService.addUser(user);
+            registerNewUser();
+        } else {
+            throw new EmailUniquesException();
         }
-        throw new IdentityEmailException();
     }
 
-    public void registerNewUser(User user) {
+    public void registerNewUser() {
         user.getAccount().setLastPasswordResetDate(Calendar.getInstance().getTime());
         user.setFolder(new Folder());
         user.getAccount().setPassword(passwordEncoder.encode(user.getAccount().getPassword()));
         userService.addUser(user);
-
 
 
     }
