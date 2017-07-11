@@ -13,6 +13,7 @@ import com.softserve.academy.spaced.repetition.service.CategoryService;
 
 
 @RestController
+@CrossOrigin
 public class CategoryController {
 
     @Autowired
