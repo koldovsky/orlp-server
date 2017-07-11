@@ -1,11 +1,13 @@
 package com.softserve.academy.spaced.repetition.domain;
 
+import com.softserve.academy.spaced.repetition.DTO.EntityInterface;
+
 import javax.persistence.*;
 import java.util.List;
 
 @Entity
 @Table(name = "Course")
-public class Course extends HATEOASSupport{
+public class Course extends HATEOASSupport implements EntityInterface{
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -31,7 +33,7 @@ public class Course extends HATEOASSupport{
     public Course() {
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 

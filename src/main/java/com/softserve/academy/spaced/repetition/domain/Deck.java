@@ -1,11 +1,13 @@
 package com.softserve.academy.spaced.repetition.domain;
 
+import com.softserve.academy.spaced.repetition.DTO.EntityInterface;
+
 import javax.persistence.*;
 import java.util.List;
 
 @Entity
 @Table(name = "Deck")
-public class Deck extends HATEOASSupport{
+public class Deck extends HATEOASSupport implements EntityInterface{
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
