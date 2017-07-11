@@ -1,19 +1,15 @@
 package com.softserve.academy.spaced.repetition.service;
 
-import com.softserve.academy.spaced.repetition.domain.Course;
 import com.softserve.academy.spaced.repetition.domain.Folder;
 import com.softserve.academy.spaced.repetition.domain.User;
-import com.softserve.academy.spaced.repetition.repository.AccountRepository;
 import com.softserve.academy.spaced.repetition.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.time.chrono.Chronology;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
 
 
 /**
@@ -26,12 +22,12 @@ public class RegistrationService {
     @Autowired
     private UserService userService;
     @Autowired
-    PasswordE
+    PasswordEncoder passwordEncoder;
 
 
-    public ResponseEntity <?> registerNewUser(User user) {
+    public ResponseEntity <?> validateAndCreateUser(User user) {
         try {
-             blankFieldsValidation(user);
+            blankFieldsValidation(user);
         } catch (BlankFieldException e) {
             return new ResponseEntity(HttpStatus.BAD_REQUEST);
         } catch (IdentityEmailException e) {
@@ -48,18 +44,20 @@ public class RegistrationService {
         throw new BlankFieldException();
     }
 
-    public void identityEmailValidation(User user){
-        if(userRepository.findUserByAccount_Email(user.getAccount().getEmail())==null){
+    public void identityEmailValidation(User user) {
+        if (userRepository.findUserByAccount_Email(user.getAccount().getEmail()) == null) {
             userService.addUser(user);
         }
         throw new IdentityEmailException();
     }
 
-    public void registerNewUser(User user){
-            user.getAccount().setLastPasswordResetDate(Calendar.getInstance().getTime());
-       user.setFolder(new Folder());
+    public void registerNewUser(User user) {
+        user.getAccount().setLastPasswordResetDate(Calendar.getInstance().getTime());
+        user.setFolder(new Folder());
+        user.getAccount().setPassword(passwordEncoder.encode(user.getAccount().getPassword()));
+        userService.addUser(user);
 
-            userService.addUser(userFromClient);
+
 
     }
 }

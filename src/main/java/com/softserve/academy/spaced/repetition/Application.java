@@ -22,31 +22,26 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-/**
- * Created by jarki on 6/26/2017.
- */
-
 @SpringBootApplication
 public class Application {
-
-    @Autowired
-    CategoryRepository categoryRepository;
-    @Autowired
-    UserRepository userRepository;
-    @Autowired
-    DeckRepository deckRepository;
-    @Autowired
-    CourseRepository courseRepository;
-    @Autowired
-    CardRepository cardRepository;
-
-    @Autowired
-    PasswordEncoder bCryptPasswordEncoder;
+//
+//    @Autowired
+//    CategoryRepository categoryRepository;
+//    @Autowired
+//    UserRepository userRepository;
+//    @Autowired
+//    DeckRepository deckRepository;
+//    @Autowired
+//    CourseRepository courseRepository;
+//    @Autowired
+//    CardRepository cardRepository;
+//
+//    @Autowired
+//    PasswordEncoder bCryptPasswordEncoder;
 
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
     }
-
 
 //    @PostConstruct
 //    public void addTestData() throws IOException {
@@ -64,12 +59,6 @@ public class Application {
 //        categoryRepository.save(categories);
 //        categories = categoryRepository.findAll();
 //
-//
-//
-//
-//
-//
-//
 //        List<User> users = new ArrayList<>();
 //        Resource userResource = new ClassPathResource("/Data/Users.txt");
 //        BufferedReader userReader = new BufferedReader(new FileReader(userResource.getFile()));
@@ -83,7 +72,6 @@ public class Application {
 //            User user = new User(new Account(bCryptPasswordEncoder.encode(s[0]), s[1], new Date(), authorities), new Person(s[2], s[3]), new Folder());
 //            users.add(user);
 //        }
-//
 //
 //        userRepository.save(users);
 //        users = userRepository.findAll();
@@ -114,7 +102,13 @@ public class Application {
 //        int m = 8;
 //        for (String l : deckList) {
 //            String s[] = l.split("~");
-//            Deck deck = new Deck(s[0], s[1], categories.get(i), users.get(o), cards.subList(n, m));
+//            // Insert into Deck table
+//            Deck deck = new Deck();
+//            deck.setName(s[0]);
+//            deck.setDescription(s[1]);
+//            deck.setCategory(categories.get(i));
+//            deck.setDeckOwner(users.get(o));
+//            deck.setCards(cards.subList(n, m));
 //            if (i < 9) {
 //                i++;
 //            } else i = 0;
@@ -137,7 +131,12 @@ public class Application {
 //        m = 1;
 //        for (String l : coursesList) {
 //            String s[] = l.split("~");
-//            Course course = new Course(s[0], s[1], categories.get(i), decks.subList(n, m));
+//            // Insert into Course table
+//            Course course = new Course();
+//            course.setName(s[0]);
+//            course.setDescription(s[1]);
+//            course.setCategory(categories.get(i));
+//            course.setDecks(decks.subList(n, m));
 //            courses.add(course);
 //            if (i < 9) {
 //                i++;
@@ -148,9 +147,5 @@ public class Application {
 //        }
 //
 //        courseRepository.save(courses);
-//
-//
 //    }
-
-
 }

@@ -5,9 +5,7 @@ import org.springframework.hateoas.Link;
 
 import java.util.List;
 
-/**
- * Created by Dementhor on 7/5/2017.
- */
+
 
 @JsonSerialize(as = CategoryPublic.class)
 public interface CategoryPublic {

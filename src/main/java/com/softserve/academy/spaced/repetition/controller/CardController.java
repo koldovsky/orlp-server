@@ -9,33 +9,39 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 
 @RestController
-@RequestMapping(value = "/api")
+@CrossOrigin
 public class CardController {
 
     @Autowired
     private CardService cardService;
 
-    @RequestMapping(value = {"/category/{categoryId}/decks/{deckId}/cards/{id}", "/courses/{courseId}/decks/{deckId}/cards/{id}"}, method = RequestMethod.GET)
-    public CardPublic getCard(@PathVariable Long id) {
-        CardPublicDTO card = new CardPublicDTO(cardService.getCard(id));
-//       card.add(linkTo(methodOn(CardController.class)).withSelfRel());
-        return card;
+    @RequestMapping(value = {"/api/category/{category_id}/decks/{deck_id}/cards/{card_id}",
+            "/api/category/{category_id}/courses/{course_id}/decks/{deck_id}/cards/{card_id}"}, method = RequestMethod.GET)
+    public CardPublicDTO getCard(@PathVariable Long card_id) {
+        Card card = cardService.getCard(card_id);
+        card.add(linkTo(DeckController.class).withSelfRel());
+        CardPublicDTO cardPublicDTO = new CardPublicDTO(card);
+        return cardPublicDTO;
     }
 
-    @RequestMapping(value = {"/category/{categoryId}/decks/{deckId}/cards", "/courses/{courseId}/decks/{deckId}/cards"}, method = RequestMethod.POST)
-    public ResponseEntity<?> addCard(@RequestBody Card card, @PathVariable Long deckId) {
+    @RequestMapping(value = {"/api/category/{categoryId}/decks/{deckId}/cards",
+            "/api/courses/{courseId}/decks/{deckId}/cards"}, method = RequestMethod.POST)
+    public ResponseEntity<CardPublicDTO> addCard(@RequestBody Card card, @PathVariable Long deckId) {
         cardService.addCard(card, deckId);
-        return new ResponseEntity<String>(HttpStatus.OK);
+        return new ResponseEntity<>(new CardPublicDTO(card), HttpStatus.OK);
     }
 
-    @RequestMapping(value = {"/category/{categoryId}/decks/{deckId}/cards/{id}", "/courses/{courseId}/decks/{deckId}/cards/{id}"}, method = RequestMethod.PUT)
+    @RequestMapping(value = {"/api/category/{categoryId}/decks/{deckId}/cards/{id}",
+            "/api/courses/{courseId}/decks/{deckId}/cards/{id}"}, method = RequestMethod.PUT)
     public void updateCard(@PathVariable Long id, @RequestBody Card card) {
         cardService.updateCard(id, card);
     }
 
-    @RequestMapping(value = {"/category/{categoryId}/decks/{deckId}/cards/{id}", "/courses/{courseId}/decks/{deckId}/cards/{id}"}, method = RequestMethod.DELETE)
+    @RequestMapping(value = {"/api/category/{categoryId}/decks/{deckId}/cards/{id}",
+            "/api/courses/{courseId}/decks/{deckId}/cards/{id}"}, method = RequestMethod.DELETE)
     public void deleteCard(@PathVariable Long id) {
         cardService.deleteCard(id);
     }

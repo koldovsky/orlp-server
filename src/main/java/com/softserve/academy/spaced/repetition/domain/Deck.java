@@ -32,29 +32,6 @@ public class Deck extends HATEOASSupport{
     public Deck() {
     }
 
-    public Deck(Long id, String name, String description) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
-    }
-
-    public Deck(Long id, String name, String description, Category category, User deckOwner, List<Card> cards) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
-        this.category = category;
-        this.deckOwner = deckOwner;
-        this.cards = cards;
-    }
-
-    public Deck(String name, String description, Category category, User deckOwner, List<Card> cards) {
-        this.name = name;
-        this.description = description;
-        this.category = category;
-        this.deckOwner = deckOwner;
-        this.cards = cards;
-    }
-
     public Long getId() {
         return id;
     }
