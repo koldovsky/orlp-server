@@ -1,18 +1,18 @@
 package com.softserve.academy.spaced.repetition.controller;
 
 
-import com.softserve.academy.spaced.repetition.domain.Account;
-import com.softserve.academy.spaced.repetition.domain.Folder;
-import com.softserve.academy.spaced.repetition.domain.Person;
 import com.softserve.academy.spaced.repetition.domain.User;
 import com.softserve.academy.spaced.repetition.service.RegistrationService;
 import com.softserve.academy.spaced.repetition.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
+import java.time.chrono.Chronology;
 import java.util.Calendar;
-import java.util.Date;
 
 @CrossOrigin
 @RestController
@@ -25,28 +25,31 @@ public class RegistrationController {
     private RegistrationService registrationService;
 
     @RequestMapping(value = "/registration", method = RequestMethod.POST)
-    public void addUser(@RequestBody User userFromClient) {
+    public ResponseEntity <?> addUser(@RequestBody User userFromClient) {
 
 
-        String email = userFromClient.getAccount().getEmail();
-        boolean isValidEmail = false;
-        isValidEmail = registrationService.validateEmail(email);
+//        String email = userFromClient.getAccount().getEmail();
+//        boolean isValidEmail = false;
+//        isValidEmail = registrationService.validateEmail(email);
 
+        HttpHeaders textPlainHeaders = new HttpHeaders();
+        textPlainHeaders.setContentType(MediaType.TEXT_PLAIN);
 
-        User user = new User();
-        Account account = new Account();
-        Person person = new Person();
-        account.setEmail(email);
-        account.setPassword("123456");
-        account.setLastPasswordResetDate(Calendar.getInstance().getTime());
-        person.setFirstName(userFromClient.getPerson().getFirstName());
-        person.setLastName(userFromClient.getPerson().getLastName());
-//        Folder folder = new Folder();
-//        folder.setDecks(new ArrayList <>());
-//        user.setFolder(folder);
-        user.setAccount(account);
-        user.setPerson(person);
-        registrationService.addUser(user, isValidEmail);
-        System.out.println(user);
+        if (userService.findUserByEmail(userFromClient.getAccount().getEmail()) != null) {
+            System.out.println(userService.findUserByEmail(userFromClient.getAccount().getEmail()));
+            return new ResponseEntity("email is already in use", textPlainHeaders, HttpStatus.BAD_REQUEST);
+        } else {
+
+            userFromClient.getAccount().setLastPasswordResetDate(Calendar.getInstance().getTime());
+            userService.addUser(userFromClient);
+            Chronology result;
+            return new ResponseEntity <User>(userFromClient, HttpStatus.CREATED);
+        }
     }
+
 }
+
+
+
+
+
