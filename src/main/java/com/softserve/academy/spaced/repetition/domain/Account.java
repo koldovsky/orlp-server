@@ -1,5 +1,7 @@
 package com.softserve.academy.spaced.repetition.domain;
 
+import com.softserve.academy.spaced.repetition.DTO.EntityInterface;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
@@ -7,7 +9,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "account")
-public class Account {
+public class Account implements EntityInterface{
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -51,7 +53,7 @@ public class Account {
         this.authorities = authorities;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 

@@ -1,26 +1,7 @@
 package com.softserve.academy.spaced.repetition;
 
-import com.softserve.academy.spaced.repetition.DTO.CategoryPublic;
-import com.softserve.academy.spaced.repetition.DTO.impl.CategoryPublicDTO;
-import com.softserve.academy.spaced.repetition.domain.*;
-import com.softserve.academy.spaced.repetition.repository.*;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
-import org.springframework.security.crypto.password.PasswordEncoder;
-
-import javax.annotation.PostConstruct;
-import javax.persistence.EntityManager;
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @SpringBootApplication
 public class Application {

@@ -31,12 +31,12 @@ public class CategoryService {
         return categories;
     }
 
-    public void addCategory(Category category) {
-        categoryRepository.save(category);
+    public Category addCategory(Category category) {
+        return categoryRepository.save(category);
     }
 
-    public void updateCategory(Category category, Long id) {
+    public Category updateCategory(Category category, Long id) {
         category.setId(id);
-        categoryRepository.save(category);
+        return categoryRepository.save(category);
     }
 }

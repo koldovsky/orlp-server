@@ -1,13 +1,12 @@
 package com.softserve.academy.spaced.repetition.domain;
 
-import org.springframework.hateoas.Link;
-
+import com.softserve.academy.spaced.repetition.DTO.EntityInterface;
 import javax.persistence.*;
 import java.util.List;
 
 @Entity
 @Table(name = "Category")
-public class Category extends HATEOASSupport {
+public class Category implements EntityInterface{
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -59,7 +58,7 @@ public class Category extends HATEOASSupport {
         this.imagebase64 = imagebase64;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
