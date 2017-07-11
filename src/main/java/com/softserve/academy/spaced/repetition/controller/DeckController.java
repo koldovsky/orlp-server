@@ -17,7 +17,7 @@ import java.util.List;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 
 @RestController
-
+@CrossOrigin
 public class DeckController {
     @Autowired
     private DeckService deckService;
