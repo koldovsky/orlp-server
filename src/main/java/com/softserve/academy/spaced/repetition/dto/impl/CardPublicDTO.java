@@ -8,8 +8,8 @@ import java.util.List;
 
 
 public class CardPublicDTO extends DTO<Card> {
-    public CardPublicDTO(Card card) {
-        super(card);
+    public CardPublicDTO(Card card, Link link) {
+        super(card, link);
     }
 
     public String getAnswer(){
@@ -20,7 +20,7 @@ public class CardPublicDTO extends DTO<Card> {
         return  getEntity().getQuestion();
     }
 
-    public List<Link> getLinks(){
-        return getEntity().getLinks();
-    }
+//    public List<Link> getLinks(){
+//        return getEntity().getLinks();
+//    }
 }
