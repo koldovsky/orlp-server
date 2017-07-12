@@ -7,7 +7,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "Course")
-public class Course extends HATEOASSupport implements EntityInterface{
+public class Course implements EntityInterface{
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

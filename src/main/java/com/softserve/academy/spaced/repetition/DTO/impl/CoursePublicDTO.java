@@ -7,8 +7,8 @@ import org.springframework.hateoas.Link;
 import java.util.List;
 
 public class CoursePublicDTO extends DTO<Course> {
-    public CoursePublicDTO(Course course) {
-        super(course);
+    public CoursePublicDTO(Course course, Link link ) {
+        super(course, link);
     }
 
     public String getName() {
@@ -19,7 +19,7 @@ public class CoursePublicDTO extends DTO<Course> {
         return getEntity().getDescription();
     }
 
-    public List<Link> getLinks(){
-        return getEntity().getLinks();
-    }
+//    public List<Link> getLinks(){
+//        return getEntity().getLinks();
+//    }
 }

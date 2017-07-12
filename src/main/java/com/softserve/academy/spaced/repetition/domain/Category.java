@@ -34,8 +34,6 @@ public class Category implements EntityInterface{
     public Category() {
     }
 
-
-
     public Category(Long id) {
         this.id = id;
     }
@@ -115,4 +113,5 @@ public class Category implements EntityInterface{
     public void setRating(int rating) {
         this.rating = rating;
     }
+
 }

@@ -4,6 +4,7 @@ import com.softserve.academy.spaced.repetition.DTO.impl.CoursePublicDTO;
 import com.softserve.academy.spaced.repetition.domain.Course;
 import com.softserve.academy.spaced.repetition.service.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.Link;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
 @RestController
 @CrossOrigin
@@ -24,8 +26,9 @@ public class CourseController {
         List<Course> courses = courseService.getAllCoursesByCategoryId(category_id);
         List<CoursePublicDTO> coursesPublic = new ArrayList<>();
         for (Course course : courses) {
-            course.add(linkTo(CourseController.class).slash(course.getId()).withSelfRel());
-            coursesPublic.add(new CoursePublicDTO(course));
+//            course.add(linkTo(CourseController.class).slash(course.getId()).withSelfRel());
+            Link selfLink = linkTo(methodOn(CourseController.class).getAllCoursesByCategoryId(course.getId())).withSelfRel();
+            coursesPublic.add(new CoursePublicDTO(course, selfLink));
         }
         return coursesPublic;
     }
@@ -33,15 +36,17 @@ public class CourseController {
     @RequestMapping(value = "/api/category/{category_id}/courses/{course_id}", method = RequestMethod.GET)
     public CoursePublicDTO getCourse(@PathVariable Long course_id) {
         Course course = courseService.getCourse(course_id);
-        course.add(linkTo(CourseController.class).withSelfRel());
-        CoursePublicDTO coursePublic = new CoursePublicDTO(course);
+//        course.add(linkTo(CourseController.class).withSelfRel());
+        Link selfLink = linkTo(methodOn(CourseController.class).getCourse(course.getId())).withSelfRel();
+        CoursePublicDTO coursePublic = new CoursePublicDTO(course, selfLink);
         return coursePublic;
     }
 
     @RequestMapping(value = "/api/category/{category_id}/courses", method = RequestMethod.POST)
     public ResponseEntity<CoursePublicDTO> addCourse(@RequestBody Course course, @PathVariable Long category_id) {
         courseService.addCourse(course, category_id);
-        return new ResponseEntity<>(new CoursePublicDTO(course), HttpStatus.OK);
+        Link selfLink = linkTo(methodOn(CourseController.class).getCourse(course.getId())).withSelfRel();
+        return new ResponseEntity<>(new CoursePublicDTO(course, selfLink), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/api/user/{user_id}/courses/{course_id}", method = RequestMethod.PUT)
