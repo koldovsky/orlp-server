@@ -1,5 +1,6 @@
 package com.softserve.academy.spaced.repetition.service;
 
+import com.softserve.academy.spaced.repetition.domain.AccauntStatus;
 import com.softserve.academy.spaced.repetition.exceptions.BlankFieldException;
 import com.softserve.academy.spaced.repetition.exceptions.EmailUniquesException;
 import com.softserve.academy.spaced.repetition.domain.Folder;
@@ -42,7 +43,7 @@ public class RegistrationService {
 
     }
 
-    public void blankFieldsValidation() throws BlankFieldException, EmailUniquesException {
+    private void blankFieldsValidation() throws BlankFieldException, EmailUniquesException {
         if (user.getAccount().getPassword() != null && user.getAccount().getEmail() != null && user.getPerson().getFirstName()
                 != null && user.getPerson().getLastName() != null) {
             emailUniquesValidation();
@@ -51,20 +52,22 @@ public class RegistrationService {
         }
     }
 
-    public void emailUniquesValidation() throws EmailUniquesException {
+    private void emailUniquesValidation() throws EmailUniquesException {
         if (userRepository.findUserByAccount_Email(user.getAccount().getEmail()) == null) {
-            registerNewUser();
+            createNewUser();
         } else {
             throw new EmailUniquesException();
         }
     }
 
-    public void registerNewUser() {
+    private void createNewUser() {
         user.getAccount().setLastPasswordResetDate(Calendar.getInstance().getTime());
         user.setFolder(new Folder());
+        user.getAccount().setStatus(AccauntStatus.INACTIVE);
         user.getAccount().setPassword(passwordEncoder.encode(user.getAccount().getPassword()));
         userService.addUser(user);
-
+    }
+    public void sendConfirmationEmailMessage(){
 
     }
 }

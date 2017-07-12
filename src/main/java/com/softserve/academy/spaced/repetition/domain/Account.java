@@ -9,7 +9,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "account")
-public class Account implements EntityInterface{
+public class Account implements EntityInterface {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -23,6 +23,11 @@ public class Account implements EntityInterface{
     @Column(name = "email", unique = true, nullable = false)
     private String email;
 
+    @Column(name = "status")
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    private AccauntStatus status;
+
     @Column(name = "LASTPASSWORDRESETDATE")
     @Temporal(TemporalType.TIMESTAMP)
     @NotNull
@@ -32,12 +37,12 @@ public class Account implements EntityInterface{
     @JoinTable(name = "account_authority", joinColumns = {
             @JoinColumn(name = "account_id")},
             inverseJoinColumns = {@JoinColumn(name = "authority_id")})
-    private List<Authority> authorities;
+    private List <Authority> authorities;
 
     public Account() {
     }
 
-    public Account( String email) {
+    public Account(String email) {
         this.email = email;
     }
 
@@ -46,7 +51,7 @@ public class Account implements EntityInterface{
         this.email = email;
     }
 
-    public Account(String password, String email, Date lastPasswordResetDate, List<Authority> authorities) {
+    public Account(String password, String email, Date lastPasswordResetDate, List <Authority> authorities) {
         this.password = password;
         this.email = email;
         this.lastPasswordResetDate = lastPasswordResetDate;
@@ -77,11 +82,11 @@ public class Account implements EntityInterface{
         this.email = email;
     }
 
-    public List<Authority> getAuthorities() {
+    public List <Authority> getAuthorities() {
         return authorities;
     }
 
-    public void setAuthorities(List<Authority> authorities) {
+    public void setAuthorities(List <Authority> authorities) {
         this.authorities = authorities;
     }
 
@@ -91,5 +96,13 @@ public class Account implements EntityInterface{
 
     public void setLastPasswordResetDate(Date lastPasswordResetDate) {
         this.lastPasswordResetDate = lastPasswordResetDate;
+    }
+
+    public AccauntStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(AccauntStatus status) {
+        this.status = status;
     }
 }
