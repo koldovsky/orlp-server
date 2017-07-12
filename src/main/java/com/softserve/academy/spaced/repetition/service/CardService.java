@@ -1,18 +1,13 @@
 package com.softserve.academy.spaced.repetition.service;
 
-import com.softserve.academy.spaced.repetition.controller.DeckController;
 import com.softserve.academy.spaced.repetition.domain.Card;
-import com.softserve.academy.spaced.repetition.domain.Course;
 import com.softserve.academy.spaced.repetition.domain.Deck;
 import com.softserve.academy.spaced.repetition.repository.CardRepository;
 import com.softserve.academy.spaced.repetition.repository.DeckRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+
 
 
 @Service
@@ -30,13 +25,13 @@ public class CardService {
     }
 
     @Transactional
-    public void addCard(Card card, Long id) {
-        Deck deck = deckRepository.findOne(id);
+    public void addCard(Card card, Long deckId) {
+        Deck deck = deckRepository.findOne(deckId);
         deck.getCards().add(cardRepository.save(card));
     }
 
     @Transactional
-    public void updateCard(Long id, Card card)  {
+    public void updateCard(Long id, Card card) {
         card.setId(id);
         cardRepository.save(card);
     }

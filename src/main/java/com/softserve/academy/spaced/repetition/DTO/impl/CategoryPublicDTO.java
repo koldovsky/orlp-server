@@ -1,23 +1,22 @@
 package com.softserve.academy.spaced.repetition.DTO.impl;
 
-import com.softserve.academy.spaced.repetition.DTO.CategoryPublic;
+import com.softserve.academy.spaced.repetition.DTO.DTO;
 import com.softserve.academy.spaced.repetition.domain.Category;
 
 
-public class CategoryPublicDTO extends Category implements CategoryPublic {
-
-    public CategoryPublicDTO() {
-    }
-
-//    public CategoryPublicDTO(Long id, String name, String ) {
-//        super (id, name, description);
-//    }
+public class CategoryPublicDTO extends DTO<Category> {
 
     public CategoryPublicDTO(Category category) {
-        super(category.getId(),category.getName(), category.getDescription(), category.getImagebase64(), category.getLink());
-
-
-
-
+        super(category);
     }
+    public String getName(){
+        return getEntity().getName();
+    }
+    public String getDescription(){
+        return  getEntity().getDescription();
+    }
+    public String getImagebase64(){
+        return  getEntity().getImagebase64();
+    }
+
 }

@@ -1,11 +1,13 @@
 package com.softserve.academy.spaced.repetition.domain;
 
+import com.softserve.academy.spaced.repetition.DTO.EntityInterface;
+
 import javax.persistence.*;
 import java.util.List;
 
 @Entity
 @Table(name = "Deck")
-public class Deck extends HATEOASSupport{
+public class Deck extends HATEOASSupport implements EntityInterface{
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -22,6 +24,11 @@ public class Deck extends HATEOASSupport{
     @JoinColumn(name = "category_id")
     private Category category;
 
+    @Column(name = "rating")
+    private int rating;
+
+
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User deckOwner;
@@ -30,29 +37,6 @@ public class Deck extends HATEOASSupport{
     private List<Card> cards;
 
     public Deck() {
-    }
-
-    public Deck(Long id, String name, String description) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
-    }
-
-    public Deck(Long id, String name, String description, Category category, User deckOwner, List<Card> cards) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
-        this.category = category;
-        this.deckOwner = deckOwner;
-        this.cards = cards;
-    }
-
-    public Deck(String name, String description, Category category, User deckOwner, List<Card> cards) {
-        this.name = name;
-        this.description = description;
-        this.category = category;
-        this.deckOwner = deckOwner;
-        this.cards = cards;
     }
 
     public Long getId() {
@@ -102,4 +86,14 @@ public class Deck extends HATEOASSupport{
     public void setCards(List<Card> cards) {
         this.cards = cards;
     }
+    public int getRating() {
+        return rating;
+    }
+
+    public void setRating(int rating) {
+        this.rating = rating;
+    }
+
+
+
 }

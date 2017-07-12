@@ -1,73 +1,80 @@
 package com.softserve.academy.spaced.repetition.controller;
 
-import java.util.ArrayList;
 import java.util.List;
-
-import com.softserve.academy.spaced.repetition.DTO.CategoryPublic;
+import com.softserve.academy.spaced.repetition.DTO.DTO;
+import com.softserve.academy.spaced.repetition.DTO.DTOBuilder;
 import com.softserve.academy.spaced.repetition.DTO.impl.CategoryPublicDTO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.hateoas.Link;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import com.softserve.academy.spaced.repetition.domain.Category;
 import com.softserve.academy.spaced.repetition.service.CategoryService;
 
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
 @RestController
-@RequestMapping("/api")
+@CrossOrigin
 public class CategoryController {
-    @Autowired
-    ApplicationContext applicationContext;
 
     @Autowired
     private CategoryService categoryService;
 
-//    @RequestMapping(value = "/category", method = RequestMethod.GET)
-//    public List<Category> getCategories() {
-//        return categoryService.getAllCategory();
-//    }
-
-    @RequestMapping(value = "/category", method = RequestMethod.GET)
-    public List<CategoryPublic> getCategories() {
-        List<CategoryPublic> categories = new ArrayList<>();
-        List<Category> categoryList = categoryService.getAllCategory();
-
-        for (Category category : categoryList) {
-            category.add(linkTo(methodOn(CategoryController.class).getCategoryById(category.getId())).withSelfRel());
-            categories.add(new CategoryPublicDTO(category));
+    @GetMapping("/api/category")
+    public ResponseEntity<List<CategoryPublicDTO>> getCategories() {
+        try {
+            List<Category> categoryList = categoryService.getAllCategory();
+            List<CategoryPublicDTO> categories = DTOBuilder.buildDtoListForCollection(categoryList,CategoryPublicDTO.class);
+            return new ResponseEntity<>(categories, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        return categories;
+
     }
 
-    @RequestMapping(value = "/category/{id}", method = RequestMethod.GET)
-    public Category getCategoryById(@PathVariable Long id) {
-        Category category = categoryService.getCategoryById(id);
-        category.add(linkTo(methodOn(CategoryController.class).getCategoryById(category.getId())).withSelfRel());
-        CategoryPublicDTO publicDTO = new CategoryPublicDTO(category);
-        return publicDTO;
+    @GetMapping("/api/category/{id}")
+    public ResponseEntity<DTO<Category>> getCategoryById(@PathVariable Long id) {
+        try {
+            Category category = categoryService.getCategoryById(id);
+            CategoryPublicDTO publicDTO = DTOBuilder.buildDtoForEntity(category, CategoryPublicDTO.class);
+            return new ResponseEntity<>(publicDTO, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
-    @RequestMapping(value = "/topcategories", method = RequestMethod.GET)
-    public List<CategoryPublic> get4Categories() {
-        List<CategoryPublic> categories = new ArrayList<>();
+    @GetMapping("/api/category/top/")
+    public ResponseEntity<List<CategoryPublicDTO>> get4Categories() {
+        try{
         List<Category> categoryList = categoryService.get4Category();
-        for (Category category : categoryList) {
-            categories.add(new CategoryPublicDTO(category));
+            List<CategoryPublicDTO> categories = DTOBuilder.buildDtoListForCollection(categoryList,CategoryPublicDTO.class);
+            return new ResponseEntity<>(categories, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        return categories;
     }
 
-    @RequestMapping(value = "/admin/add/category", method = RequestMethod.POST)
-    public void addCategory(@RequestBody Category category) {
-        categoryService.addCategory(category);
+    @PostMapping("/api/admin/add/category")
+    public ResponseEntity<DTO<Category>> addCategory(@RequestBody Category category) {
+        try {
+            category = categoryService.addCategory(category);
+            CategoryPublicDTO categoryDTO = DTOBuilder.buildDtoForEntity(category, CategoryPublicDTO.class);
+            return new ResponseEntity<>(categoryDTO, HttpStatus.CREATED);
+        } catch (Exception e){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
 
-    @RequestMapping(value = "/admin/add/category/{id}", method = RequestMethod.PUT)
-    public void updateCategory(@RequestBody Category category, @PathVariable Long id) {
-        categoryService.updateCategory(category, id);
+    @PutMapping("/api/admin/add/category/{id}")
+    public ResponseEntity<DTO<Category>> updateCategory(@RequestBody Category category, @PathVariable Long id) {
+        try {
+            category = categoryService.updateCategory(category, id);
+            CategoryPublicDTO categoryDTO = DTOBuilder.buildDtoForEntity(category, CategoryPublicDTO.class);
+            return new ResponseEntity<>(categoryDTO, HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
+
+
 
 }

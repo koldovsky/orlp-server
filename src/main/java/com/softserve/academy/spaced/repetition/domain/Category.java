@@ -1,14 +1,12 @@
 package com.softserve.academy.spaced.repetition.domain;
 
-import com.softserve.academy.spaced.repetition.DTO.CategoryPublic;
-import org.springframework.hateoas.Link;
-
+import com.softserve.academy.spaced.repetition.DTO.EntityInterface;
 import javax.persistence.*;
 import java.util.List;
 
 @Entity
 @Table(name = "Category")
-public class Category extends HATEOASSupport {
+public class Category implements EntityInterface{
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -24,8 +22,8 @@ public class Category extends HATEOASSupport {
     @Column(name = "imagebase64", columnDefinition = "LONGTEXT", nullable = false)
     private String imagebase64;
 
-    @Column(name = "raiting")
-    private int raiting;
+    @Column(name = "rating")
+    private int rating;
 
     @OneToMany(fetch = FetchType.LAZY)
     private List<Course> courses;
@@ -36,6 +34,8 @@ public class Category extends HATEOASSupport {
     public Category() {
     }
 
+
+
     public Category(Long id) {
         this.id = id;
     }
@@ -44,23 +44,23 @@ public class Category extends HATEOASSupport {
         this.name = name;
         this.description = description;
         this.imagebase64 = imagebase64;
+
     }
 
     public Category(Long id, String name, String imagebase64) {
         this.id = id;
         this.name = name;
-       this.imagebase64=imagebase64;
+        this.imagebase64 = imagebase64;
     }
 
-    public Category(Long id,String name, String description,String imagebase64, Link link) {
+    public Category(Long id, String name, String description, String imagebase64) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.imagebase64 = imagebase64;
-        super.link = link;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
@@ -108,4 +108,11 @@ public class Category extends HATEOASSupport {
         this.imagebase64 = imagebase64;
     }
 
+    public int getRating() {
+        return rating;
+    }
+
+    public void setRating(int rating) {
+        this.rating = rating;
+    }
 }

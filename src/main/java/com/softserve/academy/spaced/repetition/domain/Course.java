@@ -1,11 +1,13 @@
 package com.softserve.academy.spaced.repetition.domain;
 
+import com.softserve.academy.spaced.repetition.DTO.EntityInterface;
+
 import javax.persistence.*;
 import java.util.List;
 
 @Entity
 @Table(name = "Course")
-public class Course {
+public class Course extends HATEOASSupport implements EntityInterface{
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -18,8 +20,13 @@ public class Course {
     @Column(name = "description", nullable = false)
     private String description;
 
-    @Column(name = "imagebase64",columnDefinition ="LONGTEXT")
+    @Column(name = "imagebase64", columnDefinition ="LONGTEXT")
     private String imagebase64;
+
+    @Column(name = "rating")
+    private int rating;
+
+
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
@@ -31,15 +38,7 @@ public class Course {
     public Course() {
     }
 
-    public Course(String name, String description, Category category, List<Deck> decks) {
-        this.name = name;
-        this.description = description;
-        this.category = category;
-        this.decks = decks;
-        this.imagebase64=imagebase64;
-    }
-
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
@@ -84,5 +83,12 @@ public class Course {
 
     public void setImagebase64(String imagebase64) {
         this.imagebase64 = imagebase64;
+    }
+    public int getRating() {
+        return rating;
+    }
+
+    public void setRating(int rating) {
+        this.rating = rating;
     }
 }

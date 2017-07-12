@@ -16,10 +16,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.*;
 import javax.xml.ws.Response;
@@ -30,6 +27,7 @@ import static sun.audio.AudioDevice.device;
 /**
  * Created by jarki on 7/6/2017.
  */
+@CrossOrigin
 @RestController
 public class AuthenticationRestController {
 
