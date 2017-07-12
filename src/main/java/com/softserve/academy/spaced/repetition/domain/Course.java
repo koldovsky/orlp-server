@@ -23,6 +23,11 @@ public class Course extends HATEOASSupport implements EntityInterface{
     @Column(name = "imagebase64", columnDefinition ="LONGTEXT")
     private String imagebase64;
 
+    @Column(name = "rating")
+    private int rating;
+
+
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
     private Category category;
@@ -78,5 +83,12 @@ public class Course extends HATEOASSupport implements EntityInterface{
 
     public void setImagebase64(String imagebase64) {
         this.imagebase64 = imagebase64;
+    }
+    public int getRating() {
+        return rating;
+    }
+
+    public void setRating(int rating) {
+        this.rating = rating;
     }
 }

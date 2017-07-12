@@ -24,6 +24,11 @@ public class Deck extends HATEOASSupport implements EntityInterface{
     @JoinColumn(name = "category_id")
     private Category category;
 
+    @Column(name = "rating")
+    private int rating;
+
+
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User deckOwner;
@@ -81,4 +86,14 @@ public class Deck extends HATEOASSupport implements EntityInterface{
     public void setCards(List<Card> cards) {
         this.cards = cards;
     }
+    public int getRating() {
+        return rating;
+    }
+
+    public void setRating(int rating) {
+        this.rating = rating;
+    }
+
+
+
 }
