@@ -19,7 +19,4 @@ public class CoursePublicDTO extends DTO<Course> {
         return getEntity().getDescription();
     }
 
-//    public List<Link> getLinks(){
-//        return getEntity().getLinks();
-//    }
 }

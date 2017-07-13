@@ -39,6 +39,4 @@ public class CategoryService {
         category.setId(id);
         return categoryRepository.save(category);
     }
-
-
 }
