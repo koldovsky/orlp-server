@@ -43,7 +43,6 @@ public class Category implements EntityInterface {
         this.name = name;
         this.description = description;
         this.imagebase64 = imagebase64;
-
     }
 
     public Category(Long id, String name, String imagebase64) {
