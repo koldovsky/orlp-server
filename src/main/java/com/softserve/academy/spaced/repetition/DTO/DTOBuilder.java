@@ -1,7 +1,6 @@
 package com.softserve.academy.spaced.repetition.DTO;
 
 import org.springframework.hateoas.Link;
-
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;

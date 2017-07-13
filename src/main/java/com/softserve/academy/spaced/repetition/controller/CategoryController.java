@@ -1,7 +1,7 @@
 package com.softserve.academy.spaced.repetition.controller;
 
-
 import java.util.List;
+
 import com.softserve.academy.spaced.repetition.DTO.DTO;
 import com.softserve.academy.spaced.repetition.DTO.DTOBuilder;
 import com.softserve.academy.spaced.repetition.DTO.impl.CategoryPublicDTO;
@@ -15,7 +15,6 @@ import com.softserve.academy.spaced.repetition.service.CategoryService;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
-
 
 @RestController
 @CrossOrigin
@@ -31,12 +30,10 @@ public class CategoryController {
             Link collectionLink = linkTo(methodOn(CategoryController.class).getAllCategories()).withSelfRel();
             List<CategoryPublicDTO> categories = DTOBuilder.buildDtoListForCollection(categoryList,
                     CategoryPublicDTO.class, collectionLink);
-
             return new ResponseEntity<>(categories, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-
     }
 
     @GetMapping("/api/category/{id}")

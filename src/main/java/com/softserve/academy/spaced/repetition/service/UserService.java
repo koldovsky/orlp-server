@@ -4,7 +4,6 @@ import com.softserve.academy.spaced.repetition.domain.User;
 import com.softserve.academy.spaced.repetition.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 
 @Service

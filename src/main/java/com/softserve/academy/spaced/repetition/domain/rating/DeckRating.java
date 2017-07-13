@@ -11,17 +11,16 @@ public class DeckRating {
     @Column(name = "id")
     private long id;
 
-    @Column(name = "user_id",nullable = false)
+    @Column(name = "user_id", nullable = false)
     private int userId;
 
-    @Column(name = "deck_id",nullable = false)
+    @Column(name = "deck_id", nullable = false)
     private int deckId;
 
-    @Column(name = "rating",nullable = false)
+    @Column(name = "rating", nullable = false)
     private int rating;
 
     public DeckRating() {
-
     }
 
     public DeckRating(int userId, int deckId, int rating) {

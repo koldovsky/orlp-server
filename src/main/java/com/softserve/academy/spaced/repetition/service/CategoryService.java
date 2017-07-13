@@ -1,11 +1,8 @@
 package com.softserve.academy.spaced.repetition.service;
 
-
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import com.softserve.academy.spaced.repetition.domain.Category;
 import com.softserve.academy.spaced.repetition.repository.CategoryRepository;
 
@@ -23,7 +20,6 @@ public class CategoryService {
     public Category getCategoryById(Long id) {
         Category categories = categoryRepository.findById(id);
         return categories;
-
     }
 
     public List<Category> get4Category() {

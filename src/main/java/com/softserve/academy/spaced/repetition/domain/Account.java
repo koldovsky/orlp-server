@@ -9,7 +9,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "account")
-public class Account implements EntityInterface{
+public class Account implements EntityInterface {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -18,7 +18,6 @@ public class Account implements EntityInterface{
 
     @Column(name = "password", nullable = false)
     private String password;
-
 
     @Column(name = "email", unique = true, nullable = false)
     private String email;
@@ -37,7 +36,7 @@ public class Account implements EntityInterface{
     public Account() {
     }
 
-    public Account( String email) {
+    public Account(String email) {
         this.email = email;
     }
 

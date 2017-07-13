@@ -45,7 +45,7 @@ public class DeckController {
     }
 
     @RequestMapping(value = "/api/topDecks", method = RequestMethod.GET)
-    public List <DeckPublicDTO> topRatedDecks() {
+    public List<DeckPublicDTO> topRatedDecks() {
         List<Deck> decks = deckService.findTop4ByOrderById();
         List<DeckPublicDTO> decksPublic = new ArrayList<>();
         for (Deck deck : decks) {
@@ -60,7 +60,7 @@ public class DeckController {
     public List<CardPublicDTO> getCardsByDeckId(@PathVariable Long deck_id) {
         List<Card> cards = deckService.getAllCardsByDeckId(deck_id);
         List<CardPublicDTO> cardsPublic = new ArrayList<>();
-        for (Card card: cards) {
+        for (Card card : cards) {
             Link selfLink = linkTo(methodOn(DeckController.class).getDeck(card.getId())).withSelfRel();
             cardsPublic.add(new CardPublicDTO(card, selfLink));
         }
@@ -75,8 +75,8 @@ public class DeckController {
     }
 
     @RequestMapping(value = "/api/user/{user_id}/decks/{deck_id}", method = RequestMethod.PUT)
-        public void updateDeck(@RequestBody Deck deck, @PathVariable Long deck_id) {
-            deckService.updateDeck(deck, deck_id);
+    public void updateDeck(@RequestBody Deck deck, @PathVariable Long deck_id) {
+        deckService.updateDeck(deck, deck_id);
     }
 
     @RequestMapping(value = "/api/user/{user_id}/decks/{deck_id}", method = RequestMethod.DELETE)

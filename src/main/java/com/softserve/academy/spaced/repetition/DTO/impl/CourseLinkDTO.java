@@ -5,6 +5,7 @@ import com.softserve.academy.spaced.repetition.domain.Course;
 import org.springframework.hateoas.Link;
 
 public class CourseLinkDTO extends DTO<Course> {
+
     public CourseLinkDTO(Course course, Link parentLink) {
         super(course, parentLink);
     }

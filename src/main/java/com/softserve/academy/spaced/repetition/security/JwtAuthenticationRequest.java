@@ -2,9 +2,6 @@ package com.softserve.academy.spaced.repetition.security;
 
 import java.io.Serializable;
 
-/**
- * Created by jarki on 7/4/2017.
- */
 public class JwtAuthenticationRequest implements Serializable{
     private static final long serialVersionUID = -8445943548965154773L;
 

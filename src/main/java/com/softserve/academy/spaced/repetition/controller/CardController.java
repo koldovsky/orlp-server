@@ -23,7 +23,6 @@ public class CardController {
             "/api/category/{category_id}/courses/{course_id}/decks/{deck_id}/cards/{card_id}"}, method = RequestMethod.GET)
     public CardPublicDTO getCard(@PathVariable Long card_id) {
         Card card = cardService.getCard(card_id);
-//        card.add(linkTo(DeckController.class).withSelfRel());
         Link selfLink = linkTo(methodOn(CardController.class).getCard(card.getId())).withSelfRel();
         CardPublicDTO cardPublicDTO = new CardPublicDTO(card, selfLink);
         return cardPublicDTO;

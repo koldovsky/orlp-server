@@ -4,9 +4,8 @@ import com.softserve.academy.spaced.repetition.DTO.DTO;
 import com.softserve.academy.spaced.repetition.domain.Deck;
 import org.springframework.hateoas.Link;
 
-import java.util.List;
-
 public class DeckPublicDTO extends DTO<Deck> {
+
     public DeckPublicDTO(Deck deck, Link link) {
         super(deck, link);
     }

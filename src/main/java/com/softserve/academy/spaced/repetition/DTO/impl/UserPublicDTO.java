@@ -21,5 +21,4 @@ public class UserPublicDTO extends DTO<User> {
     public String getEmail() {
         return getEntity().getAccount().getEmail();
     }
-
 }

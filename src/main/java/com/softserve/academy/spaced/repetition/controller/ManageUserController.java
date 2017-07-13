@@ -28,17 +28,13 @@ public class ManageUserController {
     @Autowired
     private UserService userService;
 
-
     @GetMapping("/api/admin/users")
     public ResponseEntity<List<UserPublicDTO>> getUsersByFirstName() {
-
         List<User> userList = userService.getAllUsers();
         Link collectionLink = linkTo(methodOn(ManageUserController.class).getUsersByFirstName()).withSelfRel();
         List<UserPublicDTO> usersFilteredByFirstName = DTOBuilder.buildDtoListForCollection(userList,
                 UserPublicDTO.class, collectionLink);
-
         return new ResponseEntity<>(usersFilteredByFirstName, HttpStatus.OK);
-
     }
 
     public Boolean toggleUsersActiveState() {
@@ -48,5 +44,4 @@ public class ManageUserController {
     public Boolean toggleUsersBanState() {
         return null;
     }
-
 }

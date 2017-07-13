@@ -26,14 +26,6 @@ public class CourseController {
 
     @RequestMapping(value = "/api/category/{category_id}/courses", method = RequestMethod.GET)
     public ResponseEntity<List<CoursePublicDTO>> getAllCoursesByCategoryId(@PathVariable Long category_id) {
-//        List<Course> courses = courseService.getAllCoursesByCategoryId(category_id);
-//        List<CoursePublicDTO> coursesPublic = new ArrayList<>();
-//        for (Course course : courses) {
-//            Link selfLink = linkTo(methodOn(CourseController.class).getAllCoursesByCategoryId(course.getId())).withSelfRel();
-//            coursesPublic.add(new CoursePublicDTO(course, selfLink));
-//        }
-//        return coursesPublic;
-
         try {
             List<Course> courseList = courseService.getAllCoursesByCategoryId(category_id);
             Link collectionLink = linkTo(methodOn(CourseController.class).getAllCoursesByCategoryId(category_id)).withSelfRel();
@@ -48,14 +40,9 @@ public class CourseController {
 
     @RequestMapping(value = "/api/category/{category_id}/courses/{course_id}", method = RequestMethod.GET)
     public ResponseEntity<CoursePublicDTO> getCourse(@PathVariable Long category_id, @PathVariable Long course_id) {
-//        Course course = courseService.getCourse(course_id);
-////        course.add(linkTo(CourseController.class).withSelfRel());
-//        Link selfLink = linkTo(methodOn(CourseController.class).getCourse(course.getId())).withSelfRel();
-//        CoursePublicDTO coursePublic = new CoursePublicDTO(course, selfLink);
-//        return coursePublic;
         try {
             Course course = courseService.getCourse(course_id);
-            Link selfLink = linkTo(methodOn(CourseController.class).getCourse(category_id,course_id)).withSelfRel();
+            Link selfLink = linkTo(methodOn(CourseController.class).getCourse(category_id, course_id)).withSelfRel();
             CoursePublicDTO publicDTO = DTOBuilder.buildDtoForEntity(course, CoursePublicDTO.class, selfLink);
             return new ResponseEntity<>(publicDTO, HttpStatus.OK);
         } catch (Exception e) {

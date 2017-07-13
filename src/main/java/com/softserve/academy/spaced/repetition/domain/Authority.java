@@ -4,9 +4,6 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
-/**
- * Created by jarki on 7/6/2017.
- */
 @Entity
 @Table(name = "authority")
 public class Authority {

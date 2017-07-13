@@ -1,12 +1,13 @@
 package com.softserve.academy.spaced.repetition.domain;
 
 import com.softserve.academy.spaced.repetition.DTO.EntityInterface;
+
 import javax.persistence.*;
 import java.util.List;
 
 @Entity
 @Table(name = "Category")
-public class Category implements EntityInterface{
+public class Category implements EntityInterface {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -113,5 +114,4 @@ public class Category implements EntityInterface{
     public void setRating(int rating) {
         this.rating = rating;
     }
-
 }

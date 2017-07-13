@@ -26,7 +26,9 @@ public abstract class DTO<T extends EntityInterface> extends ResourceSupport {
     }
 
     @JsonIgnore
-    protected Link getSelfLink(){return selfLink;}
+    protected Link getSelfLink() {
+        return selfLink;
+    }
 
     @JsonIgnore
     public Link getLinkWithReplacedParentPart(Link link) {
