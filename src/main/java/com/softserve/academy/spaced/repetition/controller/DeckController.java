@@ -75,8 +75,8 @@ public class DeckController {
     }
 
     @RequestMapping(value = "/api/user/{user_id}/decks/{deck_id}", method = RequestMethod.PUT)
-    public void updateDeck(@RequestBody Deck deck, @PathVariable Long deck_id) {
-        deckService.updateDeck(deck, deck_id);
+        public void updateDeck(@RequestBody Deck deck, @PathVariable Long deck_id) {
+            deckService.updateDeck(deck, deck_id);
     }
 
     @RequestMapping(value = "/api/user/{user_id}/decks/{deck_id}", method = RequestMethod.DELETE)

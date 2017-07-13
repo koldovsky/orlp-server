@@ -26,6 +26,9 @@ public abstract class DTO<T extends EntityInterface> extends ResourceSupport {
     }
 
     @JsonIgnore
+    protected Link getSelfLink(){return selfLink;}
+
+    @JsonIgnore
     public Link getLinkWithReplacedParentPart(Link link) {
         String[] template = link.getHref().split(URL_DELIMETER);
         String[] self = selfLink.getHref().split(URL_DELIMETER);

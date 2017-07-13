@@ -28,6 +28,7 @@ public class Course implements EntityInterface{
 
 
 
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
     private Category category;

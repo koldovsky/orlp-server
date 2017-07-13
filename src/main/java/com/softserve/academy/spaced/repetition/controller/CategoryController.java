@@ -1,8 +1,7 @@
 package com.softserve.academy.spaced.repetition.controller;
 
-import java.util.ArrayList;
-import java.util.List;
 
+import java.util.List;
 import com.softserve.academy.spaced.repetition.DTO.DTO;
 import com.softserve.academy.spaced.repetition.DTO.DTOBuilder;
 import com.softserve.academy.spaced.repetition.DTO.impl.CategoryPublicDTO;
@@ -41,7 +40,7 @@ public class CategoryController {
     }
 
     @GetMapping("/api/category/{id}")
-    public ResponseEntity<DTO<Category>> getCategoryById(@PathVariable Long id) {
+    public ResponseEntity<CategoryPublicDTO> getCategoryById(@PathVariable Long id) {
         try {
             Category category = categoryService.getCategoryById(id);
             Link selfLink = linkTo(methodOn(CategoryController.class).getCategoryById(id)).withSelfRel();
@@ -66,7 +65,7 @@ public class CategoryController {
     }
 
     @PostMapping("/api/admin/add/category")
-    public ResponseEntity<DTO<Category>> addCategory(@RequestBody Category category) {
+    public ResponseEntity<CategoryPublicDTO> addCategory(@RequestBody Category category) {
         try {
             category = categoryService.addCategory(category);
             Link selfLink = linkTo(methodOn(CategoryController.class).getCategoryById(category.getId())).withSelfRel();
@@ -78,7 +77,7 @@ public class CategoryController {
     }
 
     @PutMapping("/api/admin/add/category/{id}")
-    public ResponseEntity<DTO<Category>> updateCategory(@RequestBody Category category, @PathVariable Long id) {
+    public ResponseEntity<CategoryPublicDTO> updateCategory(@RequestBody Category category, @PathVariable Long id) {
         try {
             category = categoryService.updateCategory(category, id);
             Link selfLink = linkTo(methodOn(CategoryController.class).getCategoryById(category.getId())).withSelfRel();
@@ -88,6 +87,4 @@ public class CategoryController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
-
-
 }
