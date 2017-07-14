@@ -32,8 +32,13 @@ public class ManageUserController {
     public ResponseEntity<List<UserPublicDTO>> getUsersByFirstName() {
         List<User> userList = userService.getAllUsers();
         Link collectionLink = linkTo(methodOn(ManageUserController.class).getUsersByFirstName()).withSelfRel();
-        List<UserPublicDTO> usersFilteredByFirstName = DTOBuilder.buildDtoListForCollection(userList,
-                UserPublicDTO.class, collectionLink);
+        List<UserPublicDTO> usersFilteredByFirstName = null;
+        try {
+            usersFilteredByFirstName = DTOBuilder.buildDtoListForCollection(userList,
+                    UserPublicDTO.class, collectionLink);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return new ResponseEntity<>(usersFilteredByFirstName, HttpStatus.OK);
     }
 
