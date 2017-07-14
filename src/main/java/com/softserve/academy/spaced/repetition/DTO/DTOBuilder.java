@@ -1,6 +1,7 @@
 package com.softserve.academy.spaced.repetition.DTO;
 
 import org.springframework.hateoas.Link;
+
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -19,6 +20,8 @@ public class DTOBuilder {
         T newInstance = null;
         try {
             newInstance = declaredConstructor.newInstance(entity, selfLink);
+        } catch (NullPointerException e){
+            e.printStackTrace();
         } catch (InstantiationException e) {
             e.printStackTrace();
         } catch (IllegalAccessException e) {
