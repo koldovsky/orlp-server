@@ -8,7 +8,6 @@ spring:
     show-sql: true
     hibernate:
       ddl-auto: validate
-
 jwt:
   header: Authorization
   secret: mySecret

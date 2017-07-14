@@ -26,7 +26,7 @@ public class Account implements EntityInterface {
     @Column(name = "status")
     @NotNull
     @Enumerated(EnumType.STRING)
-    private AccauntStatus status;
+    private AccountStatus status;
 
     @Column(name = "LASTPASSWORDRESETDATE")
     @Temporal(TemporalType.TIMESTAMP)
@@ -98,11 +98,11 @@ public class Account implements EntityInterface {
         this.lastPasswordResetDate = lastPasswordResetDate;
     }
 
-    public AccauntStatus getStatus() {
+    public AccountStatus getStatus() {
         return status;
     }
 
-    public void setStatus(AccauntStatus status) {
+    public void setStatus(AccountStatus status) {
         this.status = status;
     }
 }
