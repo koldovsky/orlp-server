@@ -1,11 +1,27 @@
 package com.softserve.academy.spaced.repetition;
 
+import com.softserve.academy.spaced.repetition.domain.*;
+import com.softserve.academy.spaced.repetition.repository.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+import org.springframework.security.crypto.password.PasswordEncoder;
+
+import javax.annotation.PostConstruct;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @SpringBootApplication
 public class Application {
-//
+
 //    @Autowired
 //    CategoryRepository categoryRepository;
 //    @Autowired
@@ -33,6 +49,7 @@ public class Application {
 //
 //        categoryStream.map(line -> {
 //            String[] s = line.split("~");
+//
 //            Category category = new Category(s[0].trim(), s[1], s[2]);
 //            return category;
 //        }).forEach(categories::add);
@@ -46,11 +63,12 @@ public class Application {
 //        Stream<String> userStream = userReader.lines();
 //        List<Authority> authorities = new ArrayList<>();
 //        authorities.add(new Authority(AuthorityName.ROLE_USER));
+//        AccountStatus status = AccountStatus.ACTIVE;
 //        List<String> userList = userStream.collect(Collectors.toList());
 //
 //        for (String l : userList) {
 //            String[] s = l.split("~");
-//            User user = new User(new Account(bCryptPasswordEncoder.encode(s[0]), s[1], new Date(), authorities), new Person(s[2], s[3]), new Folder());
+//            User user = new User(new Account(bCryptPasswordEncoder.encode(s[0]), s[1], new Date(), authorities, status), new Person(s[2], s[3]), new Folder());
 //            users.add(user);
 //        }
 //

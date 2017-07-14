@@ -7,7 +7,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "Course")
-public class Course extends HATEOASSupport implements EntityInterface{
+public class Course implements EntityInterface {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -20,8 +20,11 @@ public class Course extends HATEOASSupport implements EntityInterface{
     @Column(name = "description", nullable = false)
     private String description;
 
-    @Column(name = "imagebase64", columnDefinition ="LONGTEXT")
+    @Column(name = "imagebase64", columnDefinition = "LONGTEXT")
     private String imagebase64;
+
+    @Column(name = "rating")
+    private int rating;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
@@ -72,11 +75,20 @@ public class Course extends HATEOASSupport implements EntityInterface{
     public void setDecks(List<Deck> decks) {
         this.decks = decks;
     }
+
     public String getImagebase64() {
         return imagebase64;
     }
 
     public void setImagebase64(String imagebase64) {
         this.imagebase64 = imagebase64;
+    }
+
+    public int getRating() {
+        return rating;
+    }
+
+    public void setRating(int rating) {
+        this.rating = rating;
     }
 }

@@ -1,5 +1,9 @@
 package com.softserve.academy.spaced.repetition.DTO;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 public interface EntityInterface {
-    Long getId();
+
+    @JsonIgnore
+    public Long getId();
 }

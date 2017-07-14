@@ -5,6 +5,7 @@ import com.softserve.academy.spaced.repetition.domain.Course;
 import com.softserve.academy.spaced.repetition.repository.CourseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -13,10 +14,12 @@ public class CourseService {
     @Autowired
     private CourseRepository courseRepository;
 
+    @Transactional
     public List<Course> getAllCoursesByCategoryId(Long category_id) {
         return courseRepository.getAllCoursesByCategoryId(category_id);
     }
 
+    @Transactional
     public Course getCourse(Long course_id) {
         return courseRepository.findOne(course_id);
     }

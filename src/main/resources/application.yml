@@ -8,6 +8,13 @@ spring:
     show-sql: true
     hibernate:
       ddl-auto: validate
+  social:
+    google:
+      client-id: 109414995516-fftdn22fnpfdh80fgfsvpq1ht97hdkl5.apps.googleusercontent.com
+      client-secret: QyK5tYKCYN9KF40Lv--CWfY7
+      path: api/auth/google
+
+
 jwt:
   header: Authorization
   secret: mySecret

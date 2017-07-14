@@ -19,7 +19,6 @@ public class Account implements EntityInterface {
     @Column(name = "password", nullable = false)
     private String password;
 
-
     @Column(name = "email", unique = true, nullable = false)
     private String email;
 
@@ -39,6 +38,11 @@ public class Account implements EntityInterface {
             inverseJoinColumns = {@JoinColumn(name = "authority_id")})
     private List <Authority> authorities;
 
+    @Column(name = "status")
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    private AccountStatus status;
+
     public Account() {
     }
 
@@ -56,6 +60,14 @@ public class Account implements EntityInterface {
         this.email = email;
         this.lastPasswordResetDate = lastPasswordResetDate;
         this.authorities = authorities;
+    }
+
+    public Account(String password, String email, Date lastPasswordResetDate, List<Authority> authorities, AccountStatus accountStatus) {
+        this.password = password;
+        this.email = email;
+        this.lastPasswordResetDate = lastPasswordResetDate;
+        this.authorities = authorities;
+        this.status = accountStatus;
     }
 
     public Long getId() {

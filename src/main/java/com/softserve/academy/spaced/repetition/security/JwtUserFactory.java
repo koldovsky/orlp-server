@@ -2,17 +2,13 @@ package com.softserve.academy.spaced.repetition.security;
 
 import com.softserve.academy.spaced.repetition.domain.Account;
 import com.softserve.academy.spaced.repetition.domain.Authority;
-import com.softserve.academy.spaced.repetition.domain.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-
 import java.util.List;
 import java.util.stream.Collectors;
 
-/**
- * Created by jarki on 7/6/2017.
- */
 public final class JwtUserFactory {
+
     private JwtUserFactory() {
 
     }
@@ -32,5 +28,4 @@ public final class JwtUserFactory {
                 .map(authority -> new SimpleGrantedAuthority(authority.getName().name()))
                 .collect(Collectors.toList());
     }
-
 }

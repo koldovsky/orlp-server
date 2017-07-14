@@ -7,7 +7,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "Deck")
-public class Deck extends HATEOASSupport implements EntityInterface{
+public class Deck implements EntityInterface {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -23,6 +23,9 @@ public class Deck extends HATEOASSupport implements EntityInterface{
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
     private Category category;
+
+    @Column(name = "rating")
+    private int rating;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
@@ -80,5 +83,13 @@ public class Deck extends HATEOASSupport implements EntityInterface{
 
     public void setCards(List<Card> cards) {
         this.cards = cards;
+    }
+
+    public int getRating() {
+        return rating;
+    }
+
+    public void setRating(int rating) {
+        this.rating = rating;
     }
 }

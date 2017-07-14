@@ -6,7 +6,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "Card")
-public class Card extends HATEOASSupport implements EntityInterface{
+public class Card implements EntityInterface {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
