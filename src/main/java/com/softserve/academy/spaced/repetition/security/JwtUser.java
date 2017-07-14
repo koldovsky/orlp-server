@@ -3,13 +3,9 @@ package com.softserve.academy.spaced.repetition.security;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-
 import java.util.Collection;
 import java.util.Date;
 
-/**
- * Created by jarki on 7/6/2017.
- */
 public class JwtUser implements UserDetails {
     private final Long id;
     private final String email;

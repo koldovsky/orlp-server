@@ -19,11 +19,8 @@ public class RegistrationController {
     private RegistrationService registrationService;
 
     @RequestMapping(value = "/registration", method = RequestMethod.POST)
-    public ResponseEntity <?> addUser(@RequestBody User userFromClient) {
-
+    public ResponseEntity<?> addUser(@RequestBody User userFromClient) {
         return registrationService.validateAndCreateUser(userFromClient);
-
-
     }
 }
 

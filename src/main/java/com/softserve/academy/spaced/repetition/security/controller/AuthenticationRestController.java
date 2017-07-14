@@ -1,5 +1,8 @@
 package com.softserve.academy.spaced.repetition.security.controller;
 
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
+import com.softserve.academy.spaced.repetition.domain.*;
+import com.softserve.academy.spaced.repetition.security.GoogleAuthUtil;
 import com.softserve.academy.spaced.repetition.security.JwtAuthenticationRequest;
 import com.softserve.academy.spaced.repetition.security.JwtTokenUtil;
 import com.softserve.academy.spaced.repetition.security.JwtUser;
@@ -13,20 +16,16 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
-
 import javax.servlet.http.*;
-import javax.xml.ws.Response;
+import java.io.IOException;
+import java.security.GeneralSecurityException;
+import java.util.Arrays;
 
-
-import static sun.audio.AudioDevice.device;
-
-/**
- * Created by jarki on 7/6/2017.
- */
 @CrossOrigin
 @RestController
 public class AuthenticationRestController {
@@ -41,24 +40,39 @@ public class AuthenticationRestController {
     private JwtTokenUtil jwtTokenUtil;
 
     @Autowired
+    private GoogleAuthUtil googleAuthUtil;
+
+    @Autowired
     private UserDetailsService userDetailsService;
 
     @RequestMapping(value = "${jwt.route.authentication.path}", method = RequestMethod.POST)
     public ResponseEntity<String> createAuthenticationToken(@RequestBody JwtAuthenticationRequest authenticationRequest, Device device) throws AuthenticationException {
-
-        // Perform the security
         final Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(authenticationRequest.getUsername(), authenticationRequest.getPassword())
         );
         SecurityContextHolder.getContext().setAuthentication(authentication);
-
         // Reload password post-security so we can generate token
         final UserDetails userDetails = userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
         final String token = jwtTokenUtil.generateToken(userDetails, device);
-
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add("Set-Cookie", "Authentication="+token);
-        // Return the token
+        return new ResponseEntity<>(httpHeaders, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "${spring.social.google.path}", method = RequestMethod.POST)
+    public ResponseEntity<String> createAuthenticationTokenFromSocial(@RequestBody String idToken, Device device) throws GeneralSecurityException, IOException {
+        GoogleIdToken googleIdToken = googleAuthUtil.getGoogleIdToken(idToken);
+        String email = googleAuthUtil.getEmail(googleIdToken);
+        if(!googleAuthUtil.checkIfExistUser(email)){
+            googleAuthUtil.saveNewGoogleUser(googleIdToken);
+        }
+        final UsernamePasswordAuthenticationToken authentication =
+                new UsernamePasswordAuthenticationToken(email, null, Arrays.asList(new SimpleGrantedAuthority(AuthorityName.ROLE_USER.toString())));
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        final UserDetails userDetails = userDetailsService.loadUserByUsername(email);
+        final String token = jwtTokenUtil.generateToken(userDetails, device);
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.add("Set-Cookie", "Authentication="+token);
         return new ResponseEntity<>(httpHeaders, HttpStatus.OK);
     }
 
@@ -67,7 +81,6 @@ public class AuthenticationRestController {
         String token = request.getHeader(tokenHeader);
         String username = jwtTokenUtil.getUsernameFromToken(token);
         JwtUser user = (JwtUser) userDetailsService.loadUserByUsername(username);
-
         if (jwtTokenUtil.canTokenBeRefreshed(token, user.getLastPasswordResetDate())) {
             String refreshedToken = jwtTokenUtil.refreshToken(token);
             HttpHeaders httpHeaders = new HttpHeaders();

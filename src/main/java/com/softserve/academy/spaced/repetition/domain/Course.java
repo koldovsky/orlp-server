@@ -7,7 +7,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "Course")
-public class Course implements EntityInterface{
+public class Course implements EntityInterface {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -20,13 +20,11 @@ public class Course implements EntityInterface{
     @Column(name = "description", nullable = false)
     private String description;
 
-    @Column(name = "imagebase64", columnDefinition ="LONGTEXT")
+    @Column(name = "imagebase64", columnDefinition = "LONGTEXT")
     private String imagebase64;
 
     @Column(name = "rating")
     private int rating;
-
-
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
@@ -77,6 +75,7 @@ public class Course implements EntityInterface{
     public void setDecks(List<Deck> decks) {
         this.decks = decks;
     }
+
     public String getImagebase64() {
         return imagebase64;
     }
@@ -84,6 +83,7 @@ public class Course implements EntityInterface{
     public void setImagebase64(String imagebase64) {
         this.imagebase64 = imagebase64;
     }
+
     public int getRating() {
         return rating;
     }

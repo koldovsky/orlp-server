@@ -1,6 +1,5 @@
 package com.softserve.academy.spaced.repetition.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import com.softserve.academy.spaced.repetition.DTO.DTO;
@@ -17,7 +16,6 @@ import com.softserve.academy.spaced.repetition.service.CategoryService;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
-
 @RestController
 @CrossOrigin
 public class CategoryController {
@@ -32,16 +30,14 @@ public class CategoryController {
             Link collectionLink = linkTo(methodOn(CategoryController.class).getAllCategories()).withSelfRel();
             List<CategoryPublicDTO> categories = DTOBuilder.buildDtoListForCollection(categoryList,
                     CategoryPublicDTO.class, collectionLink);
-
             return new ResponseEntity<>(categories, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-
     }
 
     @GetMapping("/api/category/{id}")
-    public ResponseEntity<DTO<Category>> getCategoryById(@PathVariable Long id) {
+    public ResponseEntity<CategoryPublicDTO> getCategoryById(@PathVariable Long id) {
         try {
             Category category = categoryService.getCategoryById(id);
             Link selfLink = linkTo(methodOn(CategoryController.class).getCategoryById(id)).withSelfRel();
@@ -66,7 +62,7 @@ public class CategoryController {
     }
 
     @PostMapping("/api/admin/add/category")
-    public ResponseEntity<DTO<Category>> addCategory(@RequestBody Category category) {
+    public ResponseEntity<CategoryPublicDTO> addCategory(@RequestBody Category category) {
         try {
             category = categoryService.addCategory(category);
             Link selfLink = linkTo(methodOn(CategoryController.class).getCategoryById(category.getId())).withSelfRel();
@@ -78,7 +74,7 @@ public class CategoryController {
     }
 
     @PutMapping("/api/admin/add/category/{id}")
-    public ResponseEntity<DTO<Category>> updateCategory(@RequestBody Category category, @PathVariable Long id) {
+    public ResponseEntity<CategoryPublicDTO> updateCategory(@RequestBody Category category, @PathVariable Long id) {
         try {
             category = categoryService.updateCategory(category, id);
             Link selfLink = linkTo(methodOn(CategoryController.class).getCategoryById(category.getId())).withSelfRel();
@@ -88,6 +84,4 @@ public class CategoryController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
-
-
 }

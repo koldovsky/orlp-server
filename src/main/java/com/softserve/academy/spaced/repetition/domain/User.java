@@ -1,11 +1,13 @@
 package com.softserve.academy.spaced.repetition.domain;
 
+import com.softserve.academy.spaced.repetition.DTO.EntityInterface;
+
 import javax.persistence.*;
 import java.util.List;
 
 @Entity
 @Table(name = "User")
-public class User {
+public class User implements EntityInterface {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -36,7 +38,7 @@ public class User {
         this.folder = folder;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 

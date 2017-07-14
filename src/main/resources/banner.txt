@@ -1,11 +1,11 @@
-  /$$$$$$                                               /$$       /$$$$$$$                                  /$$     /$$   /$$     /$$
- /$$__  $$                                             | $$      | $$__  $$                                | $$    |__/  | $$    |__/
-| $$  \__/  /$$$$$$  /$$$$$$   /$$$$$$$  /$$$$$$   /$$$$$$$      | $$  \ $$  /$$$$$$   /$$$$$$   /$$$$$$  /$$$$$$   /$$ /$$$$$$   /$$  /$$$$$$  /$$$$$$$
-|  $$$$$$  /$$__  $$|____  $$ /$$_____/ /$$__  $$ /$$__  $$      | $$$$$$$/ /$$__  $$ /$$__  $$ /$$__  $$|_  $$_/  | $$|_  $$_/  | $$ /$$__  $$| $$__  $$
- \____  $$| $$  \ $$ /$$$$$$$| $$      | $$$$$$$$| $$  | $$      | $$__  $$| $$$$$$$$| $$  \ $$| $$$$$$$$  | $$    | $$  | $$    | $$| $$  \ $$| $$  \ $$
- /$$  \ $$| $$  | $$/$$__  $$| $$      | $$_____/| $$  | $$      | $$  \ $$| $$_____/| $$  | $$| $$_____/  | $$ /$$| $$  | $$ /$$| $$| $$  | $$| $$  | $$
-|  $$$$$$/| $$$$$$$/  $$$$$$$|  $$$$$$$|  $$$$$$$|  $$$$$$$      | $$  | $$|  $$$$$$$| $$$$$$$/|  $$$$$$$  |  $$$$/| $$  |  $$$$/| $$|  $$$$$$/| $$  | $$
- \______/ | $$____/ \_______/ \_______/ \_______/ \_______/      |__/  |__/ \_______/| $$____/  \_______/   \___/  |__/   \___/  |__/ \______/ |__/  |__/
-          | $$                                                                       | $$
-          | $$                                                                       | $$
-          |__/                                                                       |__/
+${AnsiColor.GREEN} .----------------. ${AnsiColor.RED} .----------------. ${AnsiColor.BLUE} .----------------. ${AnsiColor.BRIGHT_YELLOW} .----------------.
+${AnsiColor.GREEN}| .--------------. |${AnsiColor.RED}| .--------------. |${AnsiColor.BLUE}| .--------------. |${AnsiColor.BRIGHT_YELLOW}| .--------------. |
+${AnsiColor.GREEN}| |     ____     | |${AnsiColor.RED}| |  _______     | |${AnsiColor.BLUE}| |   _____      | |${AnsiColor.BRIGHT_YELLOW}| |   ______     | |
+${AnsiColor.GREEN}| |   .'    `.   | |${AnsiColor.RED}| | |_   __ \    | |${AnsiColor.BLUE}| |  |_   _|     | |${AnsiColor.BRIGHT_YELLOW}| |  |_   __ \   | |
+${AnsiColor.GREEN}| |  /  .--.  \  | |${AnsiColor.RED}| |   | |__) |   | |${AnsiColor.BLUE}| |    | |       | |${AnsiColor.BRIGHT_YELLOW}| |    | |__) |  | |
+${AnsiColor.GREEN}| |  | |    | |  | |${AnsiColor.RED}| |   |  __ /    | |${AnsiColor.BLUE}| |    | |   _   | |${AnsiColor.BRIGHT_YELLOW}| |    |  ___/   | |
+${AnsiColor.GREEN}| |  \  `--'  /  | |${AnsiColor.RED}| |  _| |  \ \_  | |${AnsiColor.BLUE}| |   _| |__/ |  | |${AnsiColor.BRIGHT_YELLOW}| |   _| |_      | |
+${AnsiColor.GREEN}| |   `.____.'   | |${AnsiColor.RED}| | |____| |___| | |${AnsiColor.BLUE}| |  |________|  | |${AnsiColor.BRIGHT_YELLOW}| |  |_____|     | |
+${AnsiColor.GREEN}| |              | |${AnsiColor.RED}| |              | |${AnsiColor.BLUE}| |              | |${AnsiColor.BRIGHT_YELLOW}| |              | |
+${AnsiColor.GREEN}| '--------------' |${AnsiColor.RED}| '--------------' |${AnsiColor.BLUE}| '--------------' |${AnsiColor.BRIGHT_YELLOW}| '--------------' |
+${AnsiColor.GREEN} '----------------' ${AnsiColor.RED} '----------------' ${AnsiColor.BLUE} '----------------' ${AnsiColor.BRIGHT_YELLOW} '----------------'

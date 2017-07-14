@@ -1,12 +1,13 @@
 package com.softserve.academy.spaced.repetition.domain;
 
 import com.softserve.academy.spaced.repetition.DTO.EntityInterface;
+
 import javax.persistence.*;
 import java.util.List;
 
 @Entity
 @Table(name = "Category")
-public class Category implements EntityInterface{
+public class Category implements EntityInterface {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -42,7 +43,6 @@ public class Category implements EntityInterface{
         this.name = name;
         this.description = description;
         this.imagebase64 = imagebase64;
-
     }
 
     public Category(Long id, String name, String imagebase64) {
@@ -113,5 +113,4 @@ public class Category implements EntityInterface{
     public void setRating(int rating) {
         this.rating = rating;
     }
-
 }
