@@ -38,11 +38,6 @@ public class Account implements EntityInterface {
             inverseJoinColumns = {@JoinColumn(name = "authority_id")})
     private List <Authority> authorities;
 
-    @Column(name = "status")
-    @NotNull
-    @Enumerated(EnumType.STRING)
-    private AccountStatus status;
-
     public Account() {
     }
 
