@@ -9,30 +9,16 @@ import java.util.List;
 
 public class DTOBuilder {
 
-    public static <M extends EntityInterface, T extends DTO<M>> T buildDtoForEntity(M entity, Class<T> dtoClass, Link selfLink) {
+    public static <M extends EntityInterface, T extends DTO<M>> T buildDtoForEntity(M entity, Class<T> dtoClass, Link selfLink) throws  Exception{
 
-        Constructor<T> declaredConstructor = null;
-        try {
-            declaredConstructor = dtoClass.getDeclaredConstructor(entity.getClass(), selfLink.getClass());
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-        }
-        T newInstance = null;
-        try {
-            newInstance = declaredConstructor.newInstance(entity, selfLink);
-        } catch (NullPointerException e){
-            e.printStackTrace();
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        }
+        Constructor<T> declaredConstructor = dtoClass.getDeclaredConstructor(entity.getClass(), selfLink.getClass());
+
+        T newInstance = declaredConstructor.newInstance(entity, selfLink);
+
         return newInstance;
     }
 
-    public static <M extends EntityInterface, T extends DTO<M>> List<T> buildDtoListForCollection(List<M> collection, Class<T> dtoClass, Link collectionLink) {
+    public static <M extends EntityInterface, T extends DTO<M>> List<T> buildDtoListForCollection(List<M> collection, Class<T> dtoClass, Link collectionLink) throws Exception{
         List<T> result = new ArrayList<T>();
         if (collection == null) {
             return result;
