@@ -28,7 +28,7 @@ public class CourseController {
     public ResponseEntity<List<CoursePublicDTO>> getAllCoursesByCategoryId(@PathVariable Long category_id) {
         try {
             List<Course> courseList = courseService.getAllCoursesByCategoryId(category_id);
-            Link collectionLink = linkTo(methodOn(CourseController.class).getAllCoursesByCategoryId(category_id)).withSelfRel();
+            Link collectionLink = linkTo(methodOn(CourseController.class).getAllCoursesByCategoryId(category_id)).withRel("course");
             List<CoursePublicDTO> courses = DTOBuilder.buildDtoListForCollection(courseList,
                     CoursePublicDTO.class, collectionLink);
 
@@ -42,7 +42,7 @@ public class CourseController {
     public ResponseEntity<CoursePublicDTO> getCourse(@PathVariable Long category_id, @PathVariable Long course_id) {
         try {
             Course course = courseService.getCourse(course_id);
-            Link selfLink = linkTo(methodOn(CourseController.class).getCourse(category_id, course_id)).withSelfRel();
+            Link selfLink = linkTo(methodOn(CourseController.class).getCourse(category_id, course_id)).withRel("course");
             CoursePublicDTO publicDTO = DTOBuilder.buildDtoForEntity(course, CoursePublicDTO.class, selfLink);
             return new ResponseEntity<>(publicDTO, HttpStatus.OK);
         } catch (Exception e) {
