@@ -38,7 +38,7 @@ public class DTOBuilder {
             return result;
         }
         for (M document : collection) {
-            Link selfLink = new Link(collectionLink.getHref() + "/" + document.getId()).withSelfRel();
+            Link selfLink = new Link(collectionLink.getHref() + "/" + document.getId());
             T dtoForEntity = buildDtoForEntity(document, dtoClass, selfLink);
             result.add(dtoForEntity);
         }
