@@ -9,5 +9,6 @@ public class CourseLinkDTO extends DTO<Course> {
 
     public CourseLinkDTO(Course course, Link parentLink) {
         super(course, parentLink);
+        add(parentLink.withRel("courses"));
     }
 }
