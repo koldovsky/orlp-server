@@ -1,0 +1,11 @@
+<html>
+<body>
+<h3>Dear  ${person.firstName} ${person.lastName} , you have been successfully registered.</h3>
+<div>
+    Please follow the link below to activate your account.
+</div>
+<span><a href="${url}/registrationConfirm?token=${token}" rel="link">Confirm email</a></span>
+
+
+</body>
+</html>

@@ -19,7 +19,7 @@ public class DTOBuilder {
         }
         T newInstance = null;
         try {
-            newInstance = declaredConstructor.newInstance(entity, selfLink);
+            newInstance = declaredConstructor.newInstance(entity, selfLink.withSelfRel());
         } catch (NullPointerException e){
             e.printStackTrace();
         } catch (InstantiationException e) {
@@ -38,7 +38,7 @@ public class DTOBuilder {
             return result;
         }
         for (M document : collection) {
-            Link selfLink = new Link(collectionLink.getHref() + "/" + document.getId());
+            Link selfLink = new Link(collectionLink.getHref() + "/" + document.getId()).withSelfRel();
             T dtoForEntity = buildDtoForEntity(document, dtoClass, selfLink);
             result.add(dtoForEntity);
         }

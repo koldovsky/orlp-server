@@ -1,70 +1,87 @@
 package com.softserve.academy.spaced.repetition.service;
 
+import com.softserve.academy.spaced.repetition.domain.AccountStatus;
+import com.softserve.academy.spaced.repetition.domain.Folder;
+import com.softserve.academy.spaced.repetition.domain.Person;
+import com.softserve.academy.spaced.repetition.domain.User;
 import com.softserve.academy.spaced.repetition.exceptions.BlankFieldException;
 import com.softserve.academy.spaced.repetition.exceptions.EmailUniquesException;
-import com.softserve.academy.spaced.repetition.domain.Folder;
-import com.softserve.academy.spaced.repetition.domain.User;
 import com.softserve.academy.spaced.repetition.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.MailException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Calendar;
 
 
-/**
- * Created by Yevhen on 06.07.2017.
- */
 @Service
 public class RegistrationService {
 
-    User user;
     @Autowired
     private UserRepository userRepository;
     @Autowired
     private UserService userService;
     @Autowired
     PasswordEncoder passwordEncoder;
+    @Autowired
+    MailService mailService;
 
 
-    public ResponseEntity <User> validateAndCreateUser(User userFromForm) {
-        this.user = userFromForm;
+    public ResponseEntity <Person> registerNewUser(User user, String url) {
         try {
-            blankFieldsValidation();
-        } catch (BlankFieldException e) {
-            return new ResponseEntity(HttpStatus.BAD_REQUEST);
-        } catch (EmailUniquesException ex) {
+            blankFieldsValidation(user);
+        } catch (BlankFieldException | EmailUniquesException ex) {
             return new ResponseEntity(HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity <User>(user, HttpStatus.CREATED);
-
+        try {
+            sendConfirmationEmailMessage(url, user);
+        } catch (MailException ex) {
+            return new ResponseEntity(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity(user.getPerson(), HttpStatus.CREATED);
     }
 
-    public void blankFieldsValidation() throws BlankFieldException, EmailUniquesException {
+    private void blankFieldsValidation(User user) throws BlankFieldException, EmailUniquesException {
         if (user.getAccount().getPassword() != null && user.getAccount().getEmail() != null && user.getPerson().getFirstName()
                 != null && user.getPerson().getLastName() != null) {
-            emailUniquesValidation();
+            emailUniquesValidation(user);
         } else {
             throw new BlankFieldException();
         }
     }
 
-    public void emailUniquesValidation() throws EmailUniquesException {
-        if (userRepository.findUserByAccount_Email(user.getAccount().getEmail()) == null) {
-            registerNewUser();
+    private void emailUniquesValidation(User user) throws EmailUniquesException {
+        if (userRepository.findUserByAccount_Email(user.getAccount().getEmail().toLowerCase()) == null) {
+            createNewUser(user);
         } else {
             throw new EmailUniquesException();
         }
     }
 
-    public void registerNewUser() {
+    private void createNewUser(User user) {
+        String firstName = wordCapitalization(user.getPerson().getFirstName());
+        String lastName = wordCapitalization(user.getPerson().getLastName());
         user.getAccount().setLastPasswordResetDate(Calendar.getInstance().getTime());
         user.setFolder(new Folder());
+        user.getPerson().setFirstName(user.getPerson().getFirstName());
+        user.getPerson().setFirstName(firstName);
+        user.getPerson().setLastName(lastName);
+        user.getAccount().setStatus(AccountStatus.INACTIVE);
+        user.getAccount().setEmail(user.getAccount().getEmail().toLowerCase());
         user.getAccount().setPassword(passwordEncoder.encode(user.getAccount().getPassword()));
         userService.addUser(user);
+    }
 
+    private String wordCapitalization(String string) {
+        return Character.toUpperCase(string.charAt(0)) + string.substring(1).toLowerCase();
+    }
 
+    public void sendConfirmationEmailMessage(String url, User user) {
+        mailService.sendMail(user, url);
     }
 }
+
+

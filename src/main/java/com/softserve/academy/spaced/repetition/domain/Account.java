@@ -22,6 +22,11 @@ public class Account implements EntityInterface {
     @Column(name = "email", unique = true, nullable = false)
     private String email;
 
+    @Column(name = "status")
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    private AccountStatus status;
+
     @Column(name = "LASTPASSWORDRESETDATE")
     @Temporal(TemporalType.TIMESTAMP)
     @NotNull
@@ -31,12 +36,7 @@ public class Account implements EntityInterface {
     @JoinTable(name = "account_authority", joinColumns = {
             @JoinColumn(name = "account_id")},
             inverseJoinColumns = {@JoinColumn(name = "authority_id")})
-    private List<Authority> authorities;
-
-    @Column(name = "status")
-    @NotNull
-    @Enumerated(EnumType.STRING)
-    private AccountStatus status;
+    private List <Authority> authorities;
 
     public Account() {
     }
@@ -50,7 +50,7 @@ public class Account implements EntityInterface {
         this.email = email;
     }
 
-    public Account(String password, String email, Date lastPasswordResetDate, List<Authority> authorities) {
+    public Account(String password, String email, Date lastPasswordResetDate, List <Authority> authorities) {
         this.password = password;
         this.email = email;
         this.lastPasswordResetDate = lastPasswordResetDate;
@@ -89,11 +89,11 @@ public class Account implements EntityInterface {
         this.email = email;
     }
 
-    public List<Authority> getAuthorities() {
+    public List <Authority> getAuthorities() {
         return authorities;
     }
 
-    public void setAuthorities(List<Authority> authorities) {
+    public void setAuthorities(List <Authority> authorities) {
         this.authorities = authorities;
     }
 

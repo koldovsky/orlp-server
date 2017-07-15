@@ -1,5 +1,6 @@
 package com.softserve.academy.spaced.repetition.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.softserve.academy.spaced.repetition.DTO.DTO;
@@ -37,11 +38,12 @@ public class CategoryController {
     }
 
     @GetMapping("/api/category/{id}")
-    public ResponseEntity<CategoryPublicDTO> getCategoryById(@PathVariable Long id) {
+    public ResponseEntity<List<CategoryPublicDTO>> getCategoryById(@PathVariable Long id) {
         try {
-            Category category = categoryService.getCategoryById(id);
+            List<Category> category = new ArrayList<>();
+                    category.add(categoryService.getCategoryById(id));
             Link selfLink = linkTo(methodOn(CategoryController.class).getCategoryById(id)).withRel("category");
-            CategoryPublicDTO publicDTO = DTOBuilder.buildDtoForEntity(category, CategoryPublicDTO.class, selfLink);
+            List<CategoryPublicDTO> publicDTO = DTOBuilder.buildDtoListForCollection(category, CategoryPublicDTO.class, selfLink);
             return new ResponseEntity<>(publicDTO, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
