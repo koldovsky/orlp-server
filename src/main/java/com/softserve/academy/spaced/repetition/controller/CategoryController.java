@@ -3,8 +3,8 @@ package com.softserve.academy.spaced.repetition.controller;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.softserve.academy.spaced.repetition.DTO.DTO;
 import com.softserve.academy.spaced.repetition.DTO.DTOBuilder;
+import com.softserve.academy.spaced.repetition.DTO.impl.CategoryLinkDTO;
 import com.softserve.academy.spaced.repetition.DTO.impl.CategoryPublicDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Link;
@@ -38,12 +38,12 @@ public class CategoryController {
     }
 
     @GetMapping("/api/category/{id}")
-    public ResponseEntity<List<CategoryPublicDTO>> getCategoryById(@PathVariable Long id) {
+    public ResponseEntity<List<CategoryLinkDTO>> getCategoryById(@PathVariable Long id) {
         try {
             List<Category> category = new ArrayList<>();
-                    category.add(categoryService.getCategoryById(id));
-            Link selfLink = linkTo(methodOn(CategoryController.class).getCategoryById(id)).withRel("category");
-            List<CategoryPublicDTO> publicDTO = DTOBuilder.buildDtoListForCollection(category, CategoryPublicDTO.class, selfLink);
+            category.add(categoryService.getCategoryById(id));
+            Link selfLink = linkTo(methodOn(CategoryController.class).getAllCategories()).withRel("category");
+            List<CategoryLinkDTO> publicDTO = DTOBuilder.buildDtoListForCollection(category, CategoryLinkDTO.class, selfLink);
             return new ResponseEntity<>(publicDTO, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -54,7 +54,7 @@ public class CategoryController {
     public ResponseEntity<List<CategoryPublicDTO>> get4Categories() {
         try {
             List<Category> categoryList = categoryService.get4Category();
-            Link collectionLink = linkTo(methodOn(CategoryController.class).get4Categories()).withSelfRel();
+            Link collectionLink = linkTo(methodOn(CategoryController.class).getAllCategories()).withSelfRel();
             List<CategoryPublicDTO> categories = DTOBuilder.buildDtoListForCollection(categoryList,
                     CategoryPublicDTO.class, collectionLink);
             return new ResponseEntity<>(categories, HttpStatus.OK);
