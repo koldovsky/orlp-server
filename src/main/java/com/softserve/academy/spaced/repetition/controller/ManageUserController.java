@@ -33,6 +33,14 @@ public class ManageUserController {
         return new ResponseEntity<>(usersDTOList, HttpStatus.OK);
     }
 
+    @GetMapping("/api/admin/users/{id}")
+    public ResponseEntity<UserPublicDTO> getUserById(@PathVariable Long userId) {
+        User user = userService.getUserById(userId);
+        Link collectionLink = linkTo(methodOn(ManageUserController.class).getUserById(userId)).withSelfRel();
+        UserPublicDTO userDTO = DTOBuilder.buildDtoForEntity(user, UserPublicDTO.class, collectionLink);
+        return new ResponseEntity<>(userDTO, HttpStatus.OK);
+    }
+
     @PutMapping("/api/admin/users/{id}")
     public ResponseEntity<UserPublicDTO> toggleUsersBlockStatus(@PathVariable Long id) {
         User userWithChangedStatus = userService.toggleUsersStatus(id, AccountStatus.BLOCKED);
@@ -49,6 +57,13 @@ public class ManageUserController {
         UserPublicDTO userPublicDTO = DTOBuilder.buildDtoForEntity(userWithChangedStatus, UserPublicDTO.class, collectionLink);
 
         return new ResponseEntity<>(userPublicDTO, HttpStatus.OK);
+    }
+
+    @PostMapping("/api/admin/users/{id}/deck/{id}")
+    public ResponseEntity<UserPublicDTO> addExistingDeckToUser(@PathVariable Long userId, @PathVariable Long deckId){
+        User user = userService.getUserById(userId);
+        UserPublicDTO userPublicDTO = null;// we have to change null
+        return new ResponseEntity<UserPublicDTO>(userPublicDTO, HttpStatus.OK);
     }
 
 }

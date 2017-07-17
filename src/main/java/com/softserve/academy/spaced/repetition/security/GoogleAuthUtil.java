@@ -10,9 +10,9 @@ import com.softserve.academy.spaced.repetition.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+
 import java.io.IOException;
 import java.security.GeneralSecurityException;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 
@@ -28,43 +28,38 @@ public class GoogleAuthUtil {
     @Autowired
     UserRepository userRepository;
 
-    public GoogleIdToken getGoogleIdToken(String idToken){
+    public GoogleIdToken getGoogleIdToken(String idToken) {
         GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(new NetHttpTransport(), new JacksonFactory())
                 .setAudience(Collections.singleton(clientId)).build();
         try {
-            GoogleIdToken googleIdToken = verifier.verify(idToken);
-            return googleIdToken;
+            return verifier.verify(idToken);
         } catch (GeneralSecurityException | IOException e) {
             e.printStackTrace();
             return null;
         }
     }
 
-    public String getEmail(GoogleIdToken googleIdToken){
+    public String getEmail(GoogleIdToken googleIdToken) {
         GoogleIdToken.Payload payload = googleIdToken.getPayload();
         return payload.getEmail();
     }
 
-    public boolean checkIfExistUser(String email){
+    public boolean checkIfExistUser(String email) {
         Account account = accountRepository.findByEmail(email);
-        if (account != null){
-            return true;
-        }else {
-            return false;
-        }
+        return account != null;
     }
 
-    public String getFirstName(GoogleIdToken googleIdToken){
+    public String getFirstName(GoogleIdToken googleIdToken) {
         GoogleIdToken.Payload payload = googleIdToken.getPayload();
         return (String) payload.get("given_name");
     }
 
-    public String getLastName(GoogleIdToken googleIdToken){
+    public String getLastName(GoogleIdToken googleIdToken) {
         GoogleIdToken.Payload payload = googleIdToken.getPayload();
         return (String) payload.get("family_name");
     }
 
-    public void saveNewGoogleUser(GoogleIdToken googleIdToken){
+    public void saveNewGoogleUser(GoogleIdToken googleIdToken) {
         GoogleIdToken.Payload payload = googleIdToken.getPayload();
         User user = new User();
         Account account = new Account();
@@ -73,7 +68,8 @@ public class GoogleAuthUtil {
         account.setEmail(payload.getEmail());
         account.setPassword("-1");
         account.setLastPasswordResetDate(new Date());
-        account.setAuthorities(Arrays.asList(new Authority(AuthorityName.ROLE_USER)));
+        account.setStatus(AccountStatus.ACTIVE);
+        account.setAuthorities(Collections.singleton(new Authority(AuthorityName.ROLE_USER)));
         person.setFirstName((String) payload.get("given_name"));
         person.setLastName((String) payload.get("family_name"));
         user.setAccount(account);

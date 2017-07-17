@@ -1,8 +1,6 @@
 package com.softserve.academy.spaced.repetition.security;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mobile.device.Device;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -36,7 +34,7 @@ public class JwtTokenUtil implements Serializable {
         try {
             final Claims claims = getClaimsFromToken(token);
             username = claims.getSubject();
-        } catch (Exception e) { // Ex....
+        } catch (NullPointerException e) {
             username = null;
         }
         return username;
@@ -49,7 +47,7 @@ public class JwtTokenUtil implements Serializable {
                     .setSigningKey(secret)
                     .parseClaimsJws(token)
                     .getBody();
-        } catch (Exception e) {
+        } catch (ExpiredJwtException | MalformedJwtException | SignatureException | IllegalArgumentException | UnsupportedJwtException e) {
             claims = null;
         }
         return claims;
@@ -60,7 +58,7 @@ public class JwtTokenUtil implements Serializable {
         try {
             final Claims claims = getClaimsFromToken(token);
             created = new Date((Long) claims.get(CLAIM_KEY_CREATED));
-        } catch (Exception e) {
+        } catch (NullPointerException e) {
             created = null;
         }
         return created;
@@ -71,7 +69,7 @@ public class JwtTokenUtil implements Serializable {
         try {
             final Claims claims = getClaimsFromToken(token);
             expiration = claims.getExpiration();
-        } catch (Exception e) {
+        } catch (NullPointerException e) {
             expiration = null;
         }
         return expiration;
@@ -82,7 +80,7 @@ public class JwtTokenUtil implements Serializable {
         try {
             final Claims claims = getClaimsFromToken(token);
             audience = (String) claims.get(CLAIM_KEY_AUDIENCE);
-        } catch (Exception e) {
+        } catch (NullPointerException e) {
             audience = null;
         }
         return audience;
