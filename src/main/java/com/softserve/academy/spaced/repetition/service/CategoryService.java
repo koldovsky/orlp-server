@@ -36,7 +36,7 @@ public class CategoryService {
 
     }
 
-    public List<Category> get4Category() {
+    public List<Category> getTopCategory() {
         List<Category> categories = categoryRepository.findTop4ByOrderById();
         return categories;
     }
