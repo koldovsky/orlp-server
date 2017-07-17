@@ -1,9 +1,6 @@
 package com.softserve.academy.spaced.repetition.service;
 
-import com.softserve.academy.spaced.repetition.domain.AccountStatus;
-import com.softserve.academy.spaced.repetition.domain.Folder;
-import com.softserve.academy.spaced.repetition.domain.Person;
-import com.softserve.academy.spaced.repetition.domain.User;
+import com.softserve.academy.spaced.repetition.domain.*;
 import com.softserve.academy.spaced.repetition.exceptions.BlankFieldException;
 import com.softserve.academy.spaced.repetition.exceptions.EmailUniquesException;
 import com.softserve.academy.spaced.repetition.repository.UserRepository;
@@ -14,7 +11,9 @@ import org.springframework.mail.MailException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 
 @Service
@@ -64,12 +63,15 @@ public class RegistrationService {
     private void createNewUser(User user) {
         String firstName = wordCapitalization(user.getPerson().getFirstName());
         String lastName = wordCapitalization(user.getPerson().getLastName());
+        List <Authority> listOfAuthorities = new ArrayList <>();
+        listOfAuthorities.add(new Authority(AuthorityName.ROLE_USER));
         user.getAccount().setLastPasswordResetDate(Calendar.getInstance().getTime());
         user.setFolder(new Folder());
         user.getPerson().setFirstName(user.getPerson().getFirstName());
         user.getPerson().setFirstName(firstName);
         user.getPerson().setLastName(lastName);
         user.getAccount().setStatus(AccountStatus.INACTIVE);
+        user.getAccount().setAuthorities(listOfAuthorities);
         user.getAccount().setEmail(user.getAccount().getEmail().toLowerCase());
         user.getAccount().setPassword(passwordEncoder.encode(user.getAccount().getPassword()));
         userService.addUser(user);
