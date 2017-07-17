@@ -2,10 +2,7 @@ package com.softserve.academy.spaced.repetition.security.controller;
 
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import com.softserve.academy.spaced.repetition.domain.*;
-import com.softserve.academy.spaced.repetition.security.GoogleAuthUtil;
-import com.softserve.academy.spaced.repetition.security.JwtAuthenticationRequest;
-import com.softserve.academy.spaced.repetition.security.JwtTokenUtil;
-import com.softserve.academy.spaced.repetition.security.JwtUser;
+import com.softserve.academy.spaced.repetition.security.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
@@ -46,7 +43,7 @@ public class AuthenticationRestController {
     private UserDetailsService userDetailsService;
 
     @RequestMapping(value = "${jwt.route.authentication.path}", method = RequestMethod.POST)
-    public ResponseEntity<String> createAuthenticationToken(@RequestBody JwtAuthenticationRequest authenticationRequest, Device device) throws AuthenticationException {
+    public ResponseEntity<JwtAuthenticationResponse> createAuthenticationToken(@RequestBody JwtAuthenticationRequest authenticationRequest, Device device) throws AuthenticationException {
         final Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(authenticationRequest.getUsername(), authenticationRequest.getPassword())
         );
@@ -56,7 +53,7 @@ public class AuthenticationRestController {
         final String token = jwtTokenUtil.generateToken(userDetails, device);
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add("Set-Cookie", "Authentication="+token);
-        return new ResponseEntity<>(httpHeaders, HttpStatus.OK);
+        return new ResponseEntity<>(new JwtAuthenticationResponse("Ok"), httpHeaders, HttpStatus.OK);
     }
 
     @RequestMapping(value = "${spring.social.google.path}", method = RequestMethod.POST)
@@ -91,3 +88,5 @@ public class AuthenticationRestController {
         }
     }
 }
+
+

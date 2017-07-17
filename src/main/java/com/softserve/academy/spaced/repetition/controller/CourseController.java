@@ -3,6 +3,7 @@ package com.softserve.academy.spaced.repetition.controller;
 import com.softserve.academy.spaced.repetition.DTO.DTOBuilder;
 import com.softserve.academy.spaced.repetition.DTO.impl.CategoryPublicDTO;
 import com.softserve.academy.spaced.repetition.DTO.impl.CoursePublicDTO;
+import com.softserve.academy.spaced.repetition.DTO.impl.CourseTopDTO;
 import com.softserve.academy.spaced.repetition.domain.Category;
 import com.softserve.academy.spaced.repetition.domain.Course;
 import com.softserve.academy.spaced.repetition.service.CourseService;
@@ -32,6 +33,19 @@ public class CourseController {
             List<CoursePublicDTO> courses = DTOBuilder.buildDtoListForCollection(courseList,
                     CoursePublicDTO.class, collectionLink);
 
+            return new ResponseEntity<>(courses, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping("/api/course/top")
+    public ResponseEntity<List<CourseTopDTO>> get4Course() {
+        try {
+            List<Course> courseList = courseService.get4Course();
+            Link collectionLink = linkTo(methodOn(CourseController.class).get4Course()).withSelfRel();
+            List<CourseTopDTO> courses = DTOBuilder.buildDtoListForCollection(courseList,
+                    CourseTopDTO.class, collectionLink);
             return new ResponseEntity<>(courses, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);

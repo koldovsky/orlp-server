@@ -29,6 +29,11 @@ public class CourseService {
         courseRepository.save(course);
     }
 
+    public List<Course> get4Course() {
+        List<Course> courses = courseRepository.findTop4ByOrderById();
+        return courses;
+    }
+
     public void updateCourse(Long course_id, Course course) {
         course.setId(course_id);
         courseRepository.save(course);

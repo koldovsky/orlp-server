@@ -1,5 +1,4 @@
 package com.softserve.academy.spaced.repetition;
-
 import com.softserve.academy.spaced.repetition.domain.*;
 import com.softserve.academy.spaced.repetition.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,19 +21,19 @@ import java.util.stream.Stream;
 @SpringBootApplication
 public class Application {
 
-//    @Autowired
-//    CategoryRepository categoryRepository;
-//    @Autowired
-//    UserRepository userRepository;
-//    @Autowired
-//    DeckRepository deckRepository;
-//    @Autowired
-//    CourseRepository courseRepository;
-//    @Autowired
-//    CardRepository cardRepository;
-//
-//    @Autowired
-//    PasswordEncoder bCryptPasswordEncoder;
+    @Autowired
+    CategoryRepository categoryRepository;
+    @Autowired
+    UserRepository userRepository;
+    @Autowired
+    DeckRepository deckRepository;
+    @Autowired
+    CourseRepository courseRepository;
+    @Autowired
+    CardRepository cardRepository;
+
+    @Autowired
+    PasswordEncoder bCryptPasswordEncoder;
 
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
@@ -121,7 +120,7 @@ public class Application {
 //        decks = deckRepository.findAll();
 //
 //        List<Course> courses = new ArrayList<>();
-//        Resource coursesResource = new ClassPathResource("/Data/deck.txt");
+//        Resource coursesResource = new ClassPathResource("/Data/course.txt");
 //        BufferedReader coursesReader = new BufferedReader(new FileReader(coursesResource.getFile()));
 //        Stream<String> coursesStream = coursesReader.lines();
 //        List<String> coursesList = coursesStream.collect(Collectors.toList());
@@ -134,6 +133,7 @@ public class Application {
 //            Course course = new Course();
 //            course.setName(s[0]);
 //            course.setDescription(s[1]);
+//            course.setImagebase64(s[2]);
 //            course.setCategory(categories.get(i));
 //            course.setDecks(decks.subList(n, m));
 //            courses.add(course);
@@ -144,7 +144,7 @@ public class Application {
 //            m++;
 //
 //        }
-//
+//        courses.get(1).setCategory(categories.get(0)); // Changed Android to Java category
 //        courseRepository.save(courses);
 //    }
 }

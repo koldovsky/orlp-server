@@ -9,4 +9,7 @@ import java.util.List;
 public interface CourseRepository extends JpaRepository<Course, Long> {
 
     List<Course> getAllCoursesByCategoryId(Long id);
+
+    List<Course> findTop4ByOrderById();
+
 }

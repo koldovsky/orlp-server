@@ -6,6 +6,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "account")
@@ -36,7 +37,7 @@ public class Account implements EntityInterface {
     @JoinTable(name = "account_authority", joinColumns = {
             @JoinColumn(name = "account_id")},
             inverseJoinColumns = {@JoinColumn(name = "authority_id")})
-    private List <Authority> authorities;
+    private Set<Authority> authorities;
 
     public Account() {
     }
@@ -50,14 +51,14 @@ public class Account implements EntityInterface {
         this.email = email;
     }
 
-    public Account(String password, String email, Date lastPasswordResetDate, List <Authority> authorities) {
+    public Account(String password, String email, Date lastPasswordResetDate, Set<Authority> authorities) {
         this.password = password;
         this.email = email;
         this.lastPasswordResetDate = lastPasswordResetDate;
         this.authorities = authorities;
     }
 
-    public Account(String password, String email, Date lastPasswordResetDate, List<Authority> authorities, AccountStatus accountStatus) {
+    public Account(String password, String email, Date lastPasswordResetDate, Set<Authority> authorities, AccountStatus accountStatus) {
         this.password = password;
         this.email = email;
         this.lastPasswordResetDate = lastPasswordResetDate;
@@ -89,11 +90,11 @@ public class Account implements EntityInterface {
         this.email = email;
     }
 
-    public List <Authority> getAuthorities() {
+    public Set<Authority> getAuthorities() {
         return authorities;
     }
 
-    public void setAuthorities(List <Authority> authorities) {
+    public void setAuthorities(Set<Authority> authorities) {
         this.authorities = authorities;
     }
 
