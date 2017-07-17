@@ -69,7 +69,7 @@ public class GoogleAuthUtil {
         account.setPassword("-1");
         account.setLastPasswordResetDate(new Date());
         account.setStatus(AccountStatus.ACTIVE);
-        account.setAuthorities(Collections.singletonList(new Authority(AuthorityName.ROLE_USER)));
+        account.setAuthorities(Collections.singleton(new Authority(AuthorityName.ROLE_USER)));
         person.setFirstName((String) payload.get("given_name"));
         person.setLastName((String) payload.get("family_name"));
         user.setAccount(account);

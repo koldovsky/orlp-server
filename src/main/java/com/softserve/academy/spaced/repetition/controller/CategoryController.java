@@ -6,7 +6,6 @@ import java.util.List;
 import com.softserve.academy.spaced.repetition.DTO.DTOBuilder;
 import com.softserve.academy.spaced.repetition.DTO.impl.CategoryLinkDTO;
 import com.softserve.academy.spaced.repetition.DTO.impl.CategoryPublicDTO;
-import com.softserve.academy.spaced.repetition.DTO.impl.CategoryTopDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Link;
 import org.springframework.http.HttpStatus;
@@ -39,12 +38,11 @@ public class CategoryController {
     }
 
     @GetMapping("/api/category/{id}")
-    public ResponseEntity<List<CategoryLinkDTO>> getCategoryById(@PathVariable Long id) {
+    public ResponseEntity<CategoryLinkDTO> getCategoryById(@PathVariable Long id) {
         try {
-            List<Category> category = new ArrayList<>();
-            category.add(categoryService.getCategoryById(id));
+            Category category = categoryService.getCategoryById(id);
             Link selfLink = linkTo(methodOn(CategoryController.class).getAllCategories()).withRel("category");
-            List<CategoryLinkDTO> publicDTO = DTOBuilder.buildDtoListForCollection(category, CategoryLinkDTO.class, selfLink);
+            CategoryLinkDTO publicDTO = DTOBuilder.buildDtoForEntity(category, CategoryLinkDTO.class, selfLink);
             return new ResponseEntity<>(publicDTO, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -52,12 +50,12 @@ public class CategoryController {
     }
 
     @GetMapping("/api/category/top")
-    public ResponseEntity<List<CategoryTopDTO>> get4Categories() {
+    public ResponseEntity<List<CategoryPublicDTO>> get4Categories() {
         try {
             List<Category> categoryList = categoryService.get4Category();
             Link collectionLink = linkTo(methodOn(CategoryController.class).getAllCategories()).withSelfRel();
-            List<CategoryTopDTO> categories = DTOBuilder.buildDtoListForCollection(categoryList,
-                    CategoryTopDTO.class, collectionLink);
+            List<CategoryPublicDTO> categories = DTOBuilder.buildDtoListForCollection(categoryList,
+                    CategoryPublicDTO.class, collectionLink);
             return new ResponseEntity<>(categories, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);

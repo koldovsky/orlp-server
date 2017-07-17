@@ -6,6 +6,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
+import org.springframework.hateoas.config.EnableHypermediaSupport;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.annotation.PostConstruct;
@@ -18,22 +19,23 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+@EnableHypermediaSupport(type = { EnableHypermediaSupport.HypermediaType.HAL })
 @SpringBootApplication
 public class Application {
 
-//    @Autowired
-//    CategoryRepository categoryRepository;
-//    @Autowired
-//    UserRepository userRepository;
-//    @Autowired
-//    DeckRepository deckRepository;
-//    @Autowired
-//    CourseRepository courseRepository;
-//    @Autowired
-//    CardRepository cardRepository;
-//
-//    @Autowired
-//    PasswordEncoder bCryptPasswordEncoder;
+    @Autowired
+    CategoryRepository categoryRepository;
+    @Autowired
+    UserRepository userRepository;
+    @Autowired
+    DeckRepository deckRepository;
+    @Autowired
+    CourseRepository courseRepository;
+    @Autowired
+    CardRepository cardRepository;
+
+    @Autowired
+    PasswordEncoder bCryptPasswordEncoder;
 
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
