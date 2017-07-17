@@ -11,9 +11,7 @@ import org.springframework.mail.MailException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
+import java.util.*;
 
 
 @Service
@@ -63,7 +61,7 @@ public class RegistrationService {
     private void createNewUser(User user) {
         String firstName = wordCapitalization(user.getPerson().getFirstName());
         String lastName = wordCapitalization(user.getPerson().getLastName());
-        List <Authority> listOfAuthorities = new ArrayList <>();
+        Set<Authority> listOfAuthorities = new HashSet <>();
         listOfAuthorities.add(new Authority(AuthorityName.ROLE_USER));
         user.getAccount().setLastPasswordResetDate(Calendar.getInstance().getTime());
         user.setFolder(new Folder());
