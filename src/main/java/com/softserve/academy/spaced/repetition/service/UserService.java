@@ -8,6 +8,7 @@ import com.softserve.academy.spaced.repetition.repository.DeckRepository;
 import com.softserve.academy.spaced.repetition.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -19,19 +20,22 @@ public class UserService {
     @Autowired
     private DeckRepository deckRepository;
 
+    @Transactional
     public void addUser(User user) {
         userRepository.save(user);
     }
 
+    @Transactional
     public User findUserByEmail(String email) {
         return userRepository.findUserByAccount_Email(email);
     }
 
+    @Transactional
     public List<User> getAllUsers() {
         return userRepository.findAll();
     }
 
-
+    @Transactional
     public User toggleUsersStatus(Long id, AccountStatus status) {
 
         User user = userRepository.findOne(id);
@@ -46,11 +50,12 @@ public class UserService {
         return userRepository.findOne(id);
     }
 
-
+    @Transactional
     public User getUserById(Long userId) {
         return userRepository.findOne(userId);
     }
 
+    @Transactional
     public User addExistingDeckToUsersFolder(Long userId, Long deckId) {
 
         User user = userRepository.findOne(userId);
