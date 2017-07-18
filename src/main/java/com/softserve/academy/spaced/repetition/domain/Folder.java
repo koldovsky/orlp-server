@@ -1,11 +1,13 @@
 package com.softserve.academy.spaced.repetition.domain;
 
+import com.softserve.academy.spaced.repetition.DTO.EntityInterface;
+
 import javax.persistence.*;
 import java.util.List;
 
 @Entity
 @Table(name = "Folder")
-public class Folder {
+public class Folder implements EntityInterface {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -15,10 +17,9 @@ public class Folder {
     @OneToMany(fetch = FetchType.LAZY)
     private List<Deck> decks;
 
-    public Folder() {
-    }
+    public Folder() {}
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
