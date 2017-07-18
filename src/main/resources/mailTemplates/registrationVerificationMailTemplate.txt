@@ -5,7 +5,7 @@
     Please follow the link below to activate your account.
 </div>
 <span><a href="${url}/registrationConfirm?token=${token}" rel="link">Confirm email</a></span>
-
+<span><${token}</span>
 
 </body>
 </html>
