@@ -18,6 +18,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
+
 import javax.servlet.http.*;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
@@ -51,16 +52,16 @@ public class AuthenticationRestController {
         // Reload password post-security so we can generate token
         final UserDetails userDetails = userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
         final String token = jwtTokenUtil.generateToken(userDetails, device);
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.add("Set-Cookie", "Authentication="+token);
-        return new ResponseEntity<>(new JwtAuthenticationResponse("Ok"), httpHeaders, HttpStatus.OK);
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Set-Cookie", "Authentication=" + token);
+        return new ResponseEntity<>(new JwtAuthenticationResponse("Ok"), headers, HttpStatus.OK);
     }
 
     @RequestMapping(value = "${spring.social.google.path}", method = RequestMethod.POST)
-    public ResponseEntity<String> createAuthenticationTokenFromSocial(@RequestBody String idToken, Device device) throws GeneralSecurityException, IOException {
+    public ResponseEntity<JwtAuthenticationResponse> createAuthenticationTokenFromSocial(@RequestBody String idToken, Device device) throws GeneralSecurityException, IOException {
         GoogleIdToken googleIdToken = googleAuthUtil.getGoogleIdToken(idToken);
         String email = googleAuthUtil.getEmail(googleIdToken);
-        if(!googleAuthUtil.checkIfExistUser(email)){
+        if (!googleAuthUtil.checkIfExistUser(email)) {
             googleAuthUtil.saveNewGoogleUser(googleIdToken);
         }
         final UsernamePasswordAuthenticationToken authentication =
@@ -68,21 +69,21 @@ public class AuthenticationRestController {
         SecurityContextHolder.getContext().setAuthentication(authentication);
         final UserDetails userDetails = userDetailsService.loadUserByUsername(email);
         final String token = jwtTokenUtil.generateToken(userDetails, device);
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.add("Set-Cookie", "Authentication="+token);
-        return new ResponseEntity<>(httpHeaders, HttpStatus.OK);
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Set-Cookie", "Authentication=" + token);
+        return new ResponseEntity<>(new JwtAuthenticationResponse("Ok"), headers, HttpStatus.OK);
     }
 
     @RequestMapping(value = "${jwt.route.authentication.refresh}", method = RequestMethod.GET)
-    public ResponseEntity<String> refreshAndGetAuthenticationToken(HttpServletRequest request) {
+    public ResponseEntity refreshAndGetAuthenticationToken(HttpServletRequest request) {
         String token = request.getHeader(tokenHeader);
         String username = jwtTokenUtil.getUsernameFromToken(token);
         JwtUser user = (JwtUser) userDetailsService.loadUserByUsername(username);
         if (jwtTokenUtil.canTokenBeRefreshed(token, user.getLastPasswordResetDate())) {
             String refreshedToken = jwtTokenUtil.refreshToken(token);
-            HttpHeaders httpHeaders = new HttpHeaders();
-            httpHeaders.add("Set-Cookie", "Authentication="+refreshedToken);
-            return new ResponseEntity<>(httpHeaders, HttpStatus.OK);
+            HttpHeaders headers = new HttpHeaders();
+            headers.add("Set-Cookie", "Authentication=" + refreshedToken);
+            return new ResponseEntity<>(new JwtAuthenticationResponse("Ok"), headers, HttpStatus.OK);
         } else {
             return ResponseEntity.badRequest().body(null);
         }

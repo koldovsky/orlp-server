@@ -1,16 +1,15 @@
 package com.softserve.academy.spaced.repetition.controller;
 
-import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+@CrossOrigin
 @RestController
 public class TestController {
 
-    @RequestMapping("/test")
-    public String test(){
+    @RequestMapping("/private/test")
+    public String test() {
         return "test";
     }
-
-
 }
