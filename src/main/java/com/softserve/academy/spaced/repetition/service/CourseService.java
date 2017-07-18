@@ -2,7 +2,9 @@ package com.softserve.academy.spaced.repetition.service;
 
 import com.softserve.academy.spaced.repetition.domain.Category;
 import com.softserve.academy.spaced.repetition.domain.Course;
+import com.softserve.academy.spaced.repetition.domain.Deck;
 import com.softserve.academy.spaced.repetition.repository.CourseRepository;
+import com.softserve.academy.spaced.repetition.repository.DeckRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,14 +16,23 @@ public class CourseService {
     @Autowired
     private CourseRepository courseRepository;
 
+    @Autowired
+    private DeckRepository deckRepository;
+
     @Transactional
     public List<Course> getAllCoursesByCategoryId(Long category_id) {
         return courseRepository.getAllCoursesByCategoryId(category_id);
     }
 
     @Transactional
-    public Course getCourse(Long course_id) {
-        return courseRepository.findOne(course_id);
+    public List<Deck> getAllDecksByCourseId(Long category_id, Long course_id){
+        Course course = courseRepository.getCourseByCategoryIdAndId(category_id, course_id);
+        return course.getDecks();
+    }
+
+    @Transactional
+    public Course getCourseById(Long category_id, Long course_id) {
+        return courseRepository.getCourseByCategoryIdAndId(category_id, course_id);
     }
 
     public void addCourse(Course course, Long category_id) {
