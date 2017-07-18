@@ -13,9 +13,7 @@ import javax.annotation.PostConstruct;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -62,7 +60,7 @@ public class Application {
 //        Resource userResource = new ClassPathResource("/Data/Users.txt");
 //        BufferedReader userReader = new BufferedReader(new FileReader(userResource.getFile()));
 //        Stream<String> userStream = userReader.lines();
-//        List<Authority> authorities = new ArrayList<>();
+//        Set<Authority> authorities = new HashSet<>();
 //        authorities.add(new Authority(AuthorityName.ROLE_USER));
 //        AccountStatus status = AccountStatus.ACTIVE;
 //        List<String> userList = userStream.collect(Collectors.toList());
