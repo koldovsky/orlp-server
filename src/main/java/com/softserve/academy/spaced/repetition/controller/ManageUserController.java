@@ -2,6 +2,7 @@ package com.softserve.academy.spaced.repetition.controller;
 
 import com.softserve.academy.spaced.repetition.DTO.impl.UserPublicDTO;
 import com.softserve.academy.spaced.repetition.domain.AccountStatus;
+import com.softserve.academy.spaced.repetition.domain.Deck;
 import com.softserve.academy.spaced.repetition.domain.User;
 import com.softserve.academy.spaced.repetition.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,9 +35,9 @@ public class ManageUserController {
     }
 
     @GetMapping("/api/admin/users/{id}")
-    public ResponseEntity<UserPublicDTO> getUserById(@PathVariable Long userId) {
-        User user = userService.getUserById(userId);
-        Link collectionLink = linkTo(methodOn(ManageUserController.class).getUserById(userId)).withSelfRel();
+    public ResponseEntity<UserPublicDTO> getUserById(@PathVariable Long id) {
+        User user = userService.getUserById(id);
+        Link collectionLink = linkTo(methodOn(ManageUserController.class).getUserById(id)).withSelfRel();
         UserPublicDTO userDTO = DTOBuilder.buildDtoForEntity(user, UserPublicDTO.class, collectionLink);
         return new ResponseEntity<>(userDTO, HttpStatus.OK);
     }
@@ -59,11 +60,17 @@ public class ManageUserController {
         return new ResponseEntity<>(userPublicDTO, HttpStatus.OK);
     }
 
-    @PostMapping("/api/admin/users/{id}/deck/{id}")
-    public ResponseEntity<UserPublicDTO> addExistingDeckToUser(@PathVariable Long userId, @PathVariable Long deckId){
-        User user = userService.getUserById(userId);
-        UserPublicDTO userPublicDTO = null;// we have to change null
-        return new ResponseEntity<UserPublicDTO>(userPublicDTO, HttpStatus.OK);
-    }
+    @PostMapping("/api/admin/users/{userId}/deck/{deckId}")
+    public ResponseEntity<UserPublicDTO> addExistingDeckToUsersFolder(@PathVariable("userId") Long userId, @PathVariable("deckId") Long deckId) {
 
+        User user = userService.addExistingDeckToUsersFolder(userId, deckId);
+
+        if (user != null) {
+            Link collectionLink = linkTo(methodOn(ManageUserController.class).addExistingDeckToUsersFolder(userId, deckId)).withSelfRel();
+            UserPublicDTO userPublicDTO = DTOBuilder.buildDtoForEntity(user, UserPublicDTO.class, collectionLink);
+            return new ResponseEntity<UserPublicDTO>(userPublicDTO, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
 }
