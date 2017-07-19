@@ -1,3 +1,4 @@
+
 spring:
   datasource:
     url: jdbc:mysql://localhost/orlp?useSSL=false
@@ -18,6 +19,7 @@ spring:
     port: 587
     username: sybez.market@gmail.com
     password: z0935152261
+
 jwt:
   header: Authorization
   secret: mySecret
@@ -26,4 +28,5 @@ jwt:
     authentication:
       path: auth
       refresh: refresh
+
 
