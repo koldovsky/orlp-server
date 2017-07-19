@@ -20,7 +20,7 @@ public class DTOBuilder {
         T newInstance = null;
         try {
             newInstance = declaredConstructor.newInstance(entity, selfLink.withSelfRel());
-        } catch (NullPointerException e){
+        } catch (NullPointerException e) {
             e.printStackTrace();
         } catch (InstantiationException e) {
             e.printStackTrace();
