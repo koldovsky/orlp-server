@@ -4,6 +4,7 @@ import com.softserve.academy.spaced.repetition.domain.*;
 import com.softserve.academy.spaced.repetition.exceptions.BlankFieldException;
 import com.softserve.academy.spaced.repetition.exceptions.EmailUniquesException;
 import com.softserve.academy.spaced.repetition.repository.UserRepository;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,14 +28,14 @@ public class RegistrationService {
     MailService mailService;
 
 
-    public ResponseEntity <Person> registerNewUser(User user, String url) {
+    public ResponseEntity <Person> registerNewUser(User user) {
         try {
             blankFieldsValidation(user);
         } catch (BlankFieldException | EmailUniquesException ex) {
             return new ResponseEntity(HttpStatus.BAD_REQUEST);
         }
         try {
-            sendConfirmationEmailMessage(url, user);
+            sendConfirmationEmailMessage(user);
         } catch (MailException ex) {
             return new ResponseEntity(HttpStatus.NOT_FOUND);
         }
@@ -79,8 +80,8 @@ public class RegistrationService {
         return Character.toUpperCase(string.charAt(0)) + string.substring(1).toLowerCase();
     }
 
-    public void sendConfirmationEmailMessage(String url, User user) {
-        mailService.sendMail(user, url);
+    public void sendConfirmationEmailMessage(User user) {
+        mailService.sendMail(user);
     }
 }
 

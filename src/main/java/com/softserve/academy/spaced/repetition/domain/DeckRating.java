@@ -1,14 +1,16 @@
-package com.softserve.academy.spaced.repetition.domain.rating;
+package com.softserve.academy.spaced.repetition.domain;
+
+import com.softserve.academy.spaced.repetition.DTO.EntityInterface;
 
 import javax.persistence.*;
 
 @Entity
 @Table(name = "deck_rating")
-public class DeckRating {
+public class DeckRating implements EntityInterface{
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id")
+    @Column(name = "rating_id")
     private long id;
 
     @Column(name = "user_id", nullable = false)
@@ -23,13 +25,18 @@ public class DeckRating {
     public DeckRating() {
     }
 
+    public DeckRating(Long id) {
+        this.id=id;
+    }
+
     public DeckRating(int userId, int deckId, int rating) {
         this.userId = userId;
         this.deckId = deckId;
         this.rating = rating;
     }
 
-    public long getId() {
+
+    public Long getId() {
         return id;
     }
 

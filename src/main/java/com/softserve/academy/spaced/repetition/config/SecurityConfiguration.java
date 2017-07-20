@@ -1,5 +1,6 @@
 package com.softserve.academy.spaced.repetition.config;
 
+import com.softserve.academy.spaced.repetition.security.CORSFilter;
 import com.softserve.academy.spaced.repetition.security.JwtAuthenticationEntryPoint;
 import com.softserve.academy.spaced.repetition.security.JwtAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,7 +55,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeRequests()
-                .antMatchers(HttpMethod.POST, "/auth/login").permitAll()
                 .antMatchers("/private/**").hasRole("USER")
                 .anyRequest().permitAll();
         http

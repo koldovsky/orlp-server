@@ -12,7 +12,7 @@ public class Category implements EntityInterface {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "category_id")
-    private long id;
+    private Long id;
 
     @Column(name = "name", nullable = false)
     private String name;
@@ -22,9 +22,6 @@ public class Category implements EntityInterface {
 
     @Column(name = "imagebase64", columnDefinition = "LONGTEXT", nullable = false)
     private String imagebase64;
-
-    @Column(name = "rating")
-    private int rating;
 
     @OneToMany(fetch = FetchType.LAZY)
     private List<Course> courses;
@@ -62,7 +59,7 @@ public class Category implements EntityInterface {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -106,11 +103,4 @@ public class Category implements EntityInterface {
         this.imagebase64 = imagebase64;
     }
 
-    public int getRating() {
-        return rating;
-    }
-
-    public void setRating(int rating) {
-        this.rating = rating;
-    }
 }

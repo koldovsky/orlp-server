@@ -1,16 +1,21 @@
 package com.softserve.academy.spaced.repetition.controller;
 
 import com.softserve.academy.spaced.repetition.DTO.DTOBuilder;
-import com.softserve.academy.spaced.repetition.DTO.impl.CategoryPublicDTO;
+import com.softserve.academy.spaced.repetition.DTO.impl.CourseLinkDTO;
 import com.softserve.academy.spaced.repetition.DTO.impl.CoursePublicDTO;
 import com.softserve.academy.spaced.repetition.DTO.impl.CourseTopDTO;
-import com.softserve.academy.spaced.repetition.domain.Category;
+import com.softserve.academy.spaced.repetition.DTO.impl.DeckPublicDTO;
 import com.softserve.academy.spaced.repetition.domain.Course;
+import com.softserve.academy.spaced.repetition.domain.Deck;
+import com.softserve.academy.spaced.repetition.service.AccessToUrlService;
 import com.softserve.academy.spaced.repetition.service.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Link;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -25,58 +30,58 @@ public class CourseController {
     @Autowired
     private CourseService courseService;
 
-    @RequestMapping(value = "/api/category/{category_id}/courses", method = RequestMethod.GET)
+    @Autowired
+    private AccessToUrlService accessToUrlService;
+
+    @GetMapping(value = "/api/category/{category_id}/courses")
     public ResponseEntity<List<CoursePublicDTO>> getAllCoursesByCategoryId(@PathVariable Long category_id) {
-        try {
+        if (accessToUrlService.hasAccessToCourse(category_id)) {
             List<Course> courseList = courseService.getAllCoursesByCategoryId(category_id);
             Link collectionLink = linkTo(methodOn(CourseController.class).getAllCoursesByCategoryId(category_id)).withRel("course");
             List<CoursePublicDTO> courses = DTOBuilder.buildDtoListForCollection(courseList,
                     CoursePublicDTO.class, collectionLink);
-
             return new ResponseEntity<>(courses, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } else {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 
     @GetMapping("/api/course/top")
     public ResponseEntity<List<CourseTopDTO>> get4Course() {
-        try {
-            List<Course> courseList = courseService.get4Course();
-            Link collectionLink = linkTo(methodOn(CourseController.class).get4Course()).withSelfRel();
-            List<CourseTopDTO> courses = DTOBuilder.buildDtoListForCollection(courseList,
-                    CourseTopDTO.class, collectionLink);
-            return new ResponseEntity<>(courses, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        List<Course> courseList = courseService.get4Course();
+        Link collectionLink = linkTo(methodOn(CourseController.class).get4Course()).withSelfRel();
+        List<CourseTopDTO> courses = DTOBuilder.buildDtoListForCollection(courseList,
+                CourseTopDTO.class, collectionLink);
+        return new ResponseEntity<>(courses, HttpStatus.OK);
+    }
+
+
+    @GetMapping(value = "/api/category/{category_id}/courses/{course_id}")
+    public ResponseEntity<CourseLinkDTO> getCourseById(@PathVariable Long category_id, @PathVariable Long course_id) {
+        if (accessToUrlService.hasAccessToCourse(category_id, course_id)) {
+            Course course = courseService.getCourseById(category_id, course_id);
+            Link selfLink = linkTo(methodOn(CourseController.class).getCourseById(category_id, course_id)).withRel("course");
+            CourseLinkDTO linkDTO = DTOBuilder.buildDtoForEntity(course, CourseLinkDTO.class, selfLink);
+            return new ResponseEntity<>(linkDTO, HttpStatus.OK);
+        } else {
+            return new  ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 
-    @RequestMapping(value = "/api/category/{category_id}/courses/{course_id}", method = RequestMethod.GET)
-    public ResponseEntity<CoursePublicDTO> getCourse(@PathVariable Long category_id, @PathVariable Long course_id) {
-        try {
-            Course course = courseService.getCourse(course_id);
-            Link selfLink = linkTo(methodOn(CourseController.class).getCourse(category_id, course_id)).withRel("course");
-            CoursePublicDTO publicDTO = DTOBuilder.buildDtoForEntity(course, CoursePublicDTO.class, selfLink);
-            return new ResponseEntity<>(publicDTO, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-    }
-
-    @RequestMapping(value = "/api/category/{category_id}/courses", method = RequestMethod.POST)
+    @PostMapping(value = "/api/category/{category_id}/courses")
     public ResponseEntity<CoursePublicDTO> addCourse(@RequestBody Course course, @PathVariable Long category_id) {
         courseService.addCourse(course, category_id);
-        Link selfLink = linkTo(methodOn(CourseController.class).getCourse(category_id, course.getId())).withSelfRel();
-        return new ResponseEntity<>(new CoursePublicDTO(course, selfLink), HttpStatus.OK);
+        Link selfLink = linkTo(methodOn(CourseController.class).getCourseById(category_id, course.getId())).withSelfRel();
+        CoursePublicDTO coursePublicDTO = DTOBuilder.buildDtoForEntity(course, CoursePublicDTO.class, selfLink);
+        return new ResponseEntity<>(coursePublicDTO, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/api/user/{user_id}/courses/{course_id}", method = RequestMethod.PUT)
+    @PutMapping(value = "/api/user/{user_id}/courses/{course_id}")
     public void updateCourse(@PathVariable Long course_id, @RequestBody Course course) {
         courseService.updateCourse(course_id, course);
     }
 
-    @RequestMapping(value = "/api/user/{user_id}/courses/{course_id}", method = RequestMethod.DELETE)
+    @DeleteMapping(value = "/api/user/{user_id}/courses/{course_id}")
     public void deleteCourse(@PathVariable Long course_id) {
         courseService.deleteCourse(course_id);
     }

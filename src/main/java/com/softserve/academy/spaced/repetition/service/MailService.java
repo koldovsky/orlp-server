@@ -6,6 +6,7 @@ import freemarker.template.Configuration;
 import freemarker.template.TemplateException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -20,6 +21,9 @@ import java.util.Map;
 
 @Service
 public class MailService {
+    private static final String URL = "http://localhost:3000";
+
+
     @Autowired
     JavaMailSender mailSender;
 
@@ -30,15 +34,15 @@ public class MailService {
     @Qualifier("freemarkerConf")
     Configuration freemarkerConfiguration;
 
-    public void sendMail(User user, String url) throws MailException {
-        MimeMessagePreparator preparator = getMessagePreparator(user, url);
+    public void sendMail(User user) throws MailException {
+        MimeMessagePreparator preparator = getMessagePreparator(user);
         try {
             mailSender.send(preparator);
         } catch (MailException ex) {
         }
     }
 
-    private MimeMessagePreparator getMessagePreparator(User user, String url) {
+    private MimeMessagePreparator getMessagePreparator(User user) {
         MimeMessagePreparator preparator = new MimeMessagePreparator() {
             public void prepare(MimeMessage mimeMessage) throws Exception {
                 MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
@@ -48,7 +52,7 @@ public class MailService {
                 String token = jwtTokenForMail.generateTokenForMail(user);
                 model.put("person", user.getPerson());
                 model.put("token", token);
-                model.put("url", url);
+                model.put("url", URL);
                 String text = getFreeMarkerTemplateContent(model);
                 helper.setText(text, true);
             }

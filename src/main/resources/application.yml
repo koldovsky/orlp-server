@@ -8,22 +8,28 @@ spring:
     show-sql: true
     hibernate:
       ddl-auto: validate
+      naming-strategy: org.hibernate.cfg.ImprovedNamingStrategy
   social:
     google:
       client-id: 109414995516-fftdn22fnpfdh80fgfsvpq1ht97hdkl5.apps.googleusercontent.com
       client-secret: QyK5tYKCYN9KF40Lv--CWfY7
       path: api/auth/google
+    facebook:
+      client-id: 439882899718340
+      client-secret: 94d6144f54723938f384ddb0a09daf81
+      path: api/auth/facebook
   mail:
     host: smtp.gmail.com
     port: 587
     username: sybez.market@gmail.com
     password: z0935152261
+
 jwt:
-  header: Authorization
+  header: Authentication
   secret: mySecret
   expiration: 604800
   route:
     authentication:
-      path: auth
+      path: api/auth
       refresh: refresh
 

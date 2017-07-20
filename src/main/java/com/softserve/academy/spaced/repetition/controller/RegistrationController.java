@@ -9,8 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
-
 @CrossOrigin
 @RestController
 @RequestMapping(value = "/api")
@@ -24,19 +22,25 @@ public class RegistrationController {
     AccountVerificationByEmailService verificationService;
 
     @RequestMapping(value = "/registration", method = RequestMethod.POST)
-    public ResponseEntity <?> addUser(@RequestBody User userFromClient, HttpServletRequest request) {
-        return registrationService.registerNewUser(userFromClient, request.getContextPath());
+    public ResponseEntity <?> addUser(@RequestBody User userFromClient) {
+        return registrationService.registerNewUser(userFromClient);
     }
 
-    @RequestMapping(value = "/registrationConfirm", method = RequestMethod.GET)
+//    @RequestMapping(value = "/registrationConfirm", method = RequestMethod.GET)
+//    public ResponseEntity confirmRegistration
+//            (@RequestParam("token") String token) {
+//        return verificationService.accountVerification(token);
+//    }
+
+    @RequestMapping(value = "/registrationConfirm", method = RequestMethod.POST)
     public ResponseEntity confirmRegistration
-            (@RequestParam("token") String token) {
+            (@RequestBody String token) {
         return verificationService.accountVerification(token);
     }
 
     @RequestMapping(value = "/registration", method = RequestMethod.GET)
     public String test() {
-        registrationService.sendConfirmationEmailMessage("http://localhost:3000", userRepository.findUserByAccount_Email("zadorovskyi@hotmail.com"));
+        registrationService.sendConfirmationEmailMessage(userRepository.findUserByAccount_Email("zadorovskyi@hotmail.com"));
         return "page";
     }
 }

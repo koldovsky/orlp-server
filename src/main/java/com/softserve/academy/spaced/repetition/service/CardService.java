@@ -1,6 +1,7 @@
 package com.softserve.academy.spaced.repetition.service;
 
 import com.softserve.academy.spaced.repetition.domain.Card;
+import com.softserve.academy.spaced.repetition.domain.CardRating;
 import com.softserve.academy.spaced.repetition.domain.Deck;
 import com.softserve.academy.spaced.repetition.repository.CardRepository;
 import com.softserve.academy.spaced.repetition.repository.DeckRepository;
@@ -18,7 +19,7 @@ public class CardService {
     private DeckRepository deckRepository;
 
     @Transactional
-    public Card getCard(Long id) {
+    public Card getCard(Long id){
         return cardRepository.findOne(id);
     }
 
@@ -30,9 +31,11 @@ public class CardService {
 
     @Transactional
     public void updateCard(Long id, Card card) {
-        card.setId(id);
+       card.setId(id);
         cardRepository.save(card);
     }
+
+
 
     @Transactional
     public void deleteCard(Long id) {
