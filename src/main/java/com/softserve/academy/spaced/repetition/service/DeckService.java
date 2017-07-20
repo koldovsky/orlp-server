@@ -28,6 +28,10 @@ public class DeckService {
         return deckRepository.findAll();
     }
 
+    public List<Deck> getAllOrderedDecks() {
+        return deckRepository.findAllByOrderByRatingDesc();
+    }
+
     @Transactional
     public Deck getDeck(Long deck_id) {
         return deckRepository.findOne(deck_id);

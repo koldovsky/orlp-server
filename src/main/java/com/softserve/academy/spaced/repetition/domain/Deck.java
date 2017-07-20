@@ -7,7 +7,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "Deck")
-public class Deck implements EntityInterface {
+public class Deck  implements EntityInterface{
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -25,7 +25,7 @@ public class Deck implements EntityInterface {
     private Category category;
 
     @Column(name = "rating")
-    private int rating;
+    private double rating;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
@@ -85,11 +85,11 @@ public class Deck implements EntityInterface {
         this.cards = cards;
     }
 
-    public int getRating() {
+    public double getRating() {
         return rating;
     }
 
-    public void setRating(int rating) {
+    public void setRating(double rating) {
         this.rating = rating;
     }
 }

@@ -27,7 +27,16 @@ public class DeckController {
     @GetMapping(value = "/api/category/{category_id}/decks")
     public ResponseEntity<List<DeckPublicDTO>> getAllDecksByCategoryId(@PathVariable Long category_id) {
         List<Deck> decksList = deckService.getAllDecks();
-        Link collectionLink = linkTo(methodOn(DeckController.class).getAllDecksByCategoryId(category_id)).withRel("course");
+        Link collectionLink = linkTo(methodOn(DeckController.class).getAllDecksByCategoryId(category_id)).withRel("deck");
+        List<DeckPublicDTO> decks = DTOBuilder.buildDtoListForCollection(decksList,
+                DeckPublicDTO.class, collectionLink);
+        return new ResponseEntity<>(decks, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/api/decks/ordered")
+    public ResponseEntity<List<DeckPublicDTO>> getAllDecksOrderByRating() {
+        List<Deck> decksList = deckService.getAllOrderedDecks();
+        Link collectionLink = linkTo(methodOn(DeckController.class).getAllDecksOrderByRating()).withRel("deck");
         List<DeckPublicDTO> decks = DTOBuilder.buildDtoListForCollection(decksList,
                 DeckPublicDTO.class, collectionLink);
         return new ResponseEntity<>(decks, HttpStatus.OK);

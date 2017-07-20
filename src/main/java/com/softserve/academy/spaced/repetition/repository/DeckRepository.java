@@ -15,4 +15,6 @@ public interface DeckRepository extends JpaRepository <Deck, Long> {
     Deck getDeckByCategoryIdAndId(Long category_id, Long deck_id);
 
     List<Deck> findTop4ByOrderById();
+
+    List<Deck> findAllByOrderByRatingDesc();
 }

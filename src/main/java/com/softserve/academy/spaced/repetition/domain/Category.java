@@ -23,9 +23,6 @@ public class Category implements EntityInterface {
     @Column(name = "imagebase64", columnDefinition = "LONGTEXT", nullable = false)
     private String imagebase64;
 
-    @Column(name = "rating")
-    private int rating;
-
     @OneToMany(fetch = FetchType.LAZY)
     private List<Course> courses;
 
@@ -106,11 +103,4 @@ public class Category implements EntityInterface {
         this.imagebase64 = imagebase64;
     }
 
-    public int getRating() {
-        return rating;
-    }
-
-    public void setRating(int rating) {
-        this.rating = rating;
-    }
 }

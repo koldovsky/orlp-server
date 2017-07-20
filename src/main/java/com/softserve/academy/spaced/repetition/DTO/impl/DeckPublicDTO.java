@@ -17,4 +17,8 @@ public class DeckPublicDTO extends DTO<Deck> {
     public String getDescription() {
         return getEntity().getDescription();
     }
+
+    public double getRating(){
+        return getEntity().getRating();
+    }
 }
