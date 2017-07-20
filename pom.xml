@@ -99,6 +99,12 @@
             <version>2.3.23</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20070829</version>
+        </dependency>
+
     </dependencies>
 
     <properties>

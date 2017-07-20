@@ -23,6 +23,7 @@ import javax.servlet.http.*;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.util.Arrays;
+import java.util.Map;
 
 @RestController
 public class AuthenticationRestController {
@@ -38,6 +39,9 @@ public class AuthenticationRestController {
 
     @Autowired
     private GoogleAuthUtil googleAuthUtil;
+
+    @Autowired
+    FacebookAuthUtil facebookAuthUtil;
 
     @Autowired
     private UserDetailsService userDetailsService;
@@ -71,6 +75,28 @@ public class AuthenticationRestController {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Set-Cookie", tokenHeader + "=" + token + "; Path=/");
         return new ResponseEntity<>(new JwtAuthenticationResponse("Ok"), headers, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "${spring.social.facebook.path}", method = RequestMethod.POST)
+    public ResponseEntity<JwtAuthenticationResponse> createAuthenticationTokenFromFacebook(@RequestBody String token, Device device) throws GeneralSecurityException, IOException {
+
+        String graph = facebookAuthUtil.getFBGraph(token);
+        Map fbProfileData = facebookAuthUtil.getGraphData(graph);
+        String email = (String) fbProfileData.get("email");
+        if (!facebookAuthUtil.checkIfExistUser(email)) {
+            facebookAuthUtil.saveNewFacebookUser(fbProfileData);
+        }
+
+        final UsernamePasswordAuthenticationToken authenticationToken =
+                new UsernamePasswordAuthenticationToken(email, null, Arrays.asList(new SimpleGrantedAuthority(AuthorityName.ROLE_USER.toString())));
+        SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+        final UserDetails userDetails = userDetailsService.loadUserByUsername(email);
+        final String returnedToken = jwtTokenUtil.generateToken(userDetails, device);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Set-Cookie", tokenHeader + "=" + returnedToken + "; Path=/");
+
+        return new ResponseEntity<>(new JwtAuthenticationResponse("OK"), headers, HttpStatus.OK);
     }
 
     @RequestMapping(value = "${jwt.route.authentication.refresh}", method = RequestMethod.GET)
