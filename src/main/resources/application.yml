@@ -1,4 +1,3 @@
-
 spring:
   datasource:
     url: jdbc:mysql://localhost/orlp?useSSL=false
@@ -8,7 +7,8 @@ spring:
   jpa:
     show-sql: true
     hibernate:
-      ddl-auto: create
+      ddl-auto: validate
+      naming-strategy: org.hibernate.cfg.ImprovedNamingStrategy
   social:
     google:
       client-id: 109414995516-fftdn22fnpfdh80fgfsvpq1ht97hdkl5.apps.googleusercontent.com
@@ -32,6 +32,4 @@ jwt:
     authentication:
       path: api/auth
       refresh: refresh
-#server:
-#  port: 8088
 
