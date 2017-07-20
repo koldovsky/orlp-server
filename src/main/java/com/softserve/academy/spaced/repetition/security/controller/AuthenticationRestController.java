@@ -24,7 +24,6 @@ import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.util.Arrays;
 
-@CrossOrigin
 @RestController
 public class AuthenticationRestController {
 
@@ -53,7 +52,7 @@ public class AuthenticationRestController {
         final UserDetails userDetails = userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
         final String token = jwtTokenUtil.generateToken(userDetails, device);
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Set-Cookie", "Authentication=" + token);
+        headers.add("Set-Cookie", tokenHeader + "=" + token + "; Path=/");
         return new ResponseEntity<>(new JwtAuthenticationResponse("Ok"), headers, HttpStatus.OK);
     }
 
@@ -70,7 +69,7 @@ public class AuthenticationRestController {
         final UserDetails userDetails = userDetailsService.loadUserByUsername(email);
         final String token = jwtTokenUtil.generateToken(userDetails, device);
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Set-Cookie", "Authentication=" + token);
+        headers.add("Set-Cookie", tokenHeader + "=" + token + "; Path=/");
         return new ResponseEntity<>(new JwtAuthenticationResponse("Ok"), headers, HttpStatus.OK);
     }
 
@@ -82,7 +81,7 @@ public class AuthenticationRestController {
         if (jwtTokenUtil.canTokenBeRefreshed(token, user.getLastPasswordResetDate())) {
             String refreshedToken = jwtTokenUtil.refreshToken(token);
             HttpHeaders headers = new HttpHeaders();
-            headers.add("Set-Cookie", "Authentication=" + refreshedToken);
+            headers.add("Set-Cookie", tokenHeader + "=" + refreshedToken + "; Path=/");
             return new ResponseEntity<>(new JwtAuthenticationResponse("Ok"), headers, HttpStatus.OK);
         } else {
             return ResponseEntity.badRequest().body(null);

@@ -21,7 +21,7 @@ spring:
     password: z0935152261
 
 jwt:
-  header: Authorization
+  header: Authentication
   secret: mySecret
   expiration: 604800
   route:
