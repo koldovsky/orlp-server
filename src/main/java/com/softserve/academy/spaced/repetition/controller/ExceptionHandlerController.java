@@ -2,6 +2,7 @@ package com.softserve.academy.spaced.repetition.controller;
 
 import com.softserve.academy.spaced.repetition.exceptions.ImageContextDublicationException;
 import com.softserve.academy.spaced.repetition.exceptions.ImageNameDublicationException;
+import com.softserve.academy.spaced.repetition.exceptions.MoreThanOneTimeRateException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -34,5 +35,14 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
     @ResponseStatus(value=HttpStatus.CONFLICT)
     String handleImageContextDublicateException(HttpServletRequest request, Throwable ex) {
         return "File upload error: the file is already in use.";
+    }
+
+
+    //
+    @ExceptionHandler(MoreThanOneTimeRateException.class)
+    @ResponseBody
+    @ResponseStatus(value=HttpStatus.CONFLICT)
+    String handleMoreThanOneTimeRateException(HttpServletRequest request, Throwable ex) {
+        return "Object was rated more than one time.";
     }
 }

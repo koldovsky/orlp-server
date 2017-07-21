@@ -29,7 +29,6 @@ public class ImageController  {
         HttpStatus httpStatus = HttpStatus.CONFLICT;;
         OperationStatus operationStatus = imageService.addImageToDB(file, fileName);
 
-
             switch (operationStatus) {
                 case OK:
                     httpStatus = HttpStatus.OK;
