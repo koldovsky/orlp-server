@@ -38,7 +38,7 @@ public class Application {
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
     }
-
+//
 //    @PostConstruct
 //    public void addTestData() throws IOException {
 //        List<Category> categories = new ArrayList<>();
@@ -97,7 +97,7 @@ public class Application {
 //        int i = 0;
 //        int o = 0;
 //        int n = 0;
-//        int m = 8;
+//        int m = 10;
 //        for (String l : deckList) {
 //            String s[] = l.split("~");
 //            // Insert into Deck table
@@ -112,12 +112,13 @@ public class Application {
 //            } else i = 0;
 //            o++;
 //            n = m;
-//            m += 8;
+//            m += 10;
 //            decks.add(deck);
 //        }
 //
 //        deckRepository.save(decks);
 //        decks = deckRepository.findAll();
+//
 //
 //        List<Course> courses = new ArrayList<>();
 //        Resource coursesResource = new ClassPathResource("/Data/course.txt");
@@ -126,7 +127,7 @@ public class Application {
 //        List<String> coursesList = coursesStream.collect(Collectors.toList());
 //        i = 0;
 //        n = 0;
-//        m = 1;
+//        m = 2;
 //        for (String l : coursesList) {
 //            String s[] = l.split("~");
 //            // Insert into Course table
@@ -141,8 +142,7 @@ public class Application {
 //                i++;
 //            } else i = 0;
 //            n = m;
-//            m++;
-//
+//            m+=2;
 //        }
 //        courses.get(1).setCategory(categories.get(0)); // Changed Android to Java category
 //        courseRepository.save(courses);

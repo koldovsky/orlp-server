@@ -19,6 +19,9 @@ public class Card implements EntityInterface {
     @Column(name = "answer", nullable = false)
     private String answer;
 
+    @Column(name = "rating")
+    private double rating;
+
     public Card() {
     }
 
@@ -55,5 +58,13 @@ public class Card implements EntityInterface {
 
     public void setAnswer(String answer) {
         this.answer = answer;
+    }
+
+    public double getRating() {
+        return rating;
+    }
+
+    public void setRating(double rating) {
+        this.rating = rating;
     }
 }
