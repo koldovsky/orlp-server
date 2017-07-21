@@ -20,10 +20,6 @@ public class CourseService {
     private DeckRepository deckRepository;
 
 
-//    public boolean hasAccessToCourse(Long category_id, Long course_id){
-//        return (courseRepository.getAccessToCourse(category_id, course_id)).size()  > 0;
-//    }
-
     @Transactional
     public List<Course> getAllCoursesByCategoryId(Long category_id) {
         return courseRepository.getAllCoursesByCategoryId(category_id);

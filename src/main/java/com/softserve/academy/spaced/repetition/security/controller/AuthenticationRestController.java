@@ -1,79 +1,72 @@
 package com.softserve.academy.spaced.repetition.security.controller;
 
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
-import com.softserve.academy.spaced.repetition.domain.*;
 import com.softserve.academy.spaced.repetition.security.*;
+import com.softserve.academy.spaced.repetition.security.DTO.JwtAuthenticationRequest;
+import com.softserve.academy.spaced.repetition.security.DTO.JwtAuthenticationResponse;
+import com.softserve.academy.spaced.repetition.security.DTO.ReCaptchaResponseDto;
+import com.softserve.academy.spaced.repetition.security.service.JwtSocialService;
+import com.softserve.academy.spaced.repetition.security.service.ReCaptchaApiService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mobile.device.Device;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.*;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
-import java.util.Arrays;
 import java.util.Map;
 
 @RestController
 public class AuthenticationRestController {
+    private final JwtSocialService jwtSocialService;
+    private final JwtTokenUtil jwtTokenUtil;
+    private final FacebookAuthUtil facebookAuthUtil;
+    private final UserDetailsService userDetailsService;
+    private final ReCaptchaApiService reCaptchaApiService;
+
+    @Autowired
+    public AuthenticationRestController(JwtSocialService jwtSocialService, JwtTokenUtil jwtTokenUtil, FacebookAuthUtil facebookAuthUtil, UserDetailsService userDetailsService, ReCaptchaApiService reCaptchaApiService) {
+        this.jwtSocialService = jwtSocialService;
+        this.jwtTokenUtil = jwtTokenUtil;
+        this.facebookAuthUtil = facebookAuthUtil;
+        this.userDetailsService = userDetailsService;
+        this.reCaptchaApiService = reCaptchaApiService;
+    }
 
     @Value("${jwt.header}")
     private String tokenHeader;
 
-    @Autowired
-    private AuthenticationManager authenticationManager;
-
-    @Autowired
-    private JwtTokenUtil jwtTokenUtil;
-
-    @Autowired
-    private GoogleAuthUtil googleAuthUtil;
-
-    @Autowired
-    FacebookAuthUtil facebookAuthUtil;
-
-    @Autowired
-    private UserDetailsService userDetailsService;
-
     @RequestMapping(value = "${jwt.route.authentication.path}", method = RequestMethod.POST)
     public ResponseEntity<JwtAuthenticationResponse> createAuthenticationToken(@RequestBody JwtAuthenticationRequest authenticationRequest, Device device) throws AuthenticationException {
-        final Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(authenticationRequest.getUsername(), authenticationRequest.getPassword())
-        );
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        // Reload password post-security so we can generate token
-        final UserDetails userDetails = userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
-        final String token = jwtTokenUtil.generateToken(userDetails, device);
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Set-Cookie", tokenHeader + "=" + token + "; Path=/");
+        ReCaptchaResponseDto reCaptchaResponseDto = reCaptchaApiService.verify(authenticationRequest.getCaptcha());
+        if (!reCaptchaResponseDto.isSuccess()) {
+            throw new BadCredentialsException("reCaptcha");
+        }
+        Authentication authentication = jwtSocialService.getAuthenticationToken(authenticationRequest.getUsername(), authenticationRequest.getPassword());
+        jwtSocialService.setAuthentication(authentication);
+        String token = jwtSocialService.generateToken((JwtUser) authentication.getPrincipal(), device);
+        HttpHeaders headers = jwtSocialService.addTokenToHeaderCookie(token);
+        System.out.println("sss");
         return new ResponseEntity<>(new JwtAuthenticationResponse("Ok"), headers, HttpStatus.OK);
     }
 
     @RequestMapping(value = "${spring.social.google.path}", method = RequestMethod.POST)
-    public ResponseEntity<JwtAuthenticationResponse> createAuthenticationTokenFromSocial(@RequestBody String idToken, Device device) throws GeneralSecurityException, IOException {
-        GoogleIdToken googleIdToken = googleAuthUtil.getGoogleIdToken(idToken);
-        String email = googleAuthUtil.getEmail(googleIdToken);
-        if (!googleAuthUtil.checkIfExistUser(email)) {
-            googleAuthUtil.saveNewGoogleUser(googleIdToken);
-        }
-        final UsernamePasswordAuthenticationToken authentication =
-                new UsernamePasswordAuthenticationToken(email, null, Arrays.asList(new SimpleGrantedAuthority(AuthorityName.ROLE_USER.toString())));
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        final UserDetails userDetails = userDetailsService.loadUserByUsername(email);
-        final String token = jwtTokenUtil.generateToken(userDetails, device);
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Set-Cookie", tokenHeader + "=" + token + "; Path=/");
+    public ResponseEntity<JwtAuthenticationResponse> createAuthenticationTokenFromSocial(@RequestBody String idToken, Device device) {
+        GoogleIdToken googleIdToken = jwtSocialService.getGoogleIdToken(idToken);
+        String email = jwtSocialService.getEmail(googleIdToken);
+        jwtSocialService.saveUserIfNotExist(email, googleIdToken);
+        Authentication authentication = jwtSocialService.getAuthenticationTokenWithoutVerify(email);
+        jwtSocialService.setAuthentication(authentication);
+        String token = jwtSocialService.generateToken((JwtUser) authentication.getPrincipal(), device);
+        HttpHeaders headers = jwtSocialService.addTokenToHeaderCookie(token);
         return new ResponseEntity<>(new JwtAuthenticationResponse("Ok"), headers, HttpStatus.OK);
     }
 
@@ -86,16 +79,10 @@ public class AuthenticationRestController {
         if (!facebookAuthUtil.checkIfExistUser(email)) {
             facebookAuthUtil.saveNewFacebookUser(fbProfileData);
         }
-
-        final UsernamePasswordAuthenticationToken authenticationToken =
-                new UsernamePasswordAuthenticationToken(email, null, Arrays.asList(new SimpleGrantedAuthority(AuthorityName.ROLE_USER.toString())));
-        SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-        final UserDetails userDetails = userDetailsService.loadUserByUsername(email);
-        final String returnedToken = jwtTokenUtil.generateToken(userDetails, device);
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Set-Cookie", tokenHeader + "=" + returnedToken + "; Path=/");
-
+        Authentication authentication = jwtSocialService.getAuthenticationTokenWithoutVerify(email);
+        jwtSocialService.setAuthentication(authentication);
+        String returnedToken = jwtSocialService.generateToken((JwtUser) authentication.getPrincipal(), device);
+        HttpHeaders headers = jwtSocialService.addTokenToHeaderCookie(returnedToken);
         return new ResponseEntity<>(new JwtAuthenticationResponse("OK"), headers, HttpStatus.OK);
     }
 
@@ -107,10 +94,10 @@ public class AuthenticationRestController {
         if (jwtTokenUtil.canTokenBeRefreshed(token, user.getLastPasswordResetDate())) {
             String refreshedToken = jwtTokenUtil.refreshToken(token);
             HttpHeaders headers = new HttpHeaders();
-            headers.add("Set-Cookie", tokenHeader + "=" + refreshedToken + "; Path=/");
+            headers.add("Set-Cookie", tokenHeader + "=" + refreshedToken + "; Path=/" + "; Expires=" + jwtTokenUtil.getExpirationDateFromToken(refreshedToken));
             return new ResponseEntity<>(new JwtAuthenticationResponse("Ok"), headers, HttpStatus.OK);
         } else {
-            return ResponseEntity.badRequest().body(null);
+            return ResponseEntity.badRequest().body(new JwtAuthenticationResponse("error"));
         }
     }
 }

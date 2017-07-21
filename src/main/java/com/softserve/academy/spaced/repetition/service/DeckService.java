@@ -8,6 +8,7 @@ import com.softserve.academy.spaced.repetition.repository.CategoryRepository;
 import com.softserve.academy.spaced.repetition.repository.CourseRepository;
 import com.softserve.academy.spaced.repetition.repository.DeckRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,9 +25,16 @@ public class DeckService {
     @Autowired
     private CourseRepository courseRepository;
 
-    public List<Deck> getAllDecks() {
-        return deckRepository.findAll();
+    public List<Deck> getAllDecks(Long course_id) {
+        Course course = courseRepository.findOne(course_id);
+        return course.getDecks();
     }
+
+    public List<Deck> getAllDecksByCategory(Long category_id) {
+        Category category = categoryRepository.findOne(category_id);
+        return category.getDecks();
+    }
+
 
     public List<Deck> getAllOrderedDecks() {
         return deckRepository.findAllByOrderByRatingDesc();
@@ -34,7 +42,7 @@ public class DeckService {
 
     @Transactional
     public Deck getDeck(Long deck_id) {
-        return deckRepository.findOne(deck_id);
+       return deckRepository.findOne(deck_id);
     }
 
     public List<Card> getAllCardsByDeckId(Long deck_id) {
