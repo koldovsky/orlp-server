@@ -1,4 +1,5 @@
 package com.softserve.academy.spaced.repetition;
+
 import com.softserve.academy.spaced.repetition.domain.*;
 import com.softserve.academy.spaced.repetition.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +18,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-@EnableHypermediaSupport(type = { EnableHypermediaSupport.HypermediaType.HAL })
+@EnableHypermediaSupport(type = {EnableHypermediaSupport.HypermediaType.HAL})
 @SpringBootApplication
 public class Application {
 
@@ -142,9 +143,18 @@ public class Application {
 //                i++;
 //            } else i = 0;
 //            n = m;
-//            m+=2;
+//            m += 2;
 //        }
 //        courses.get(1).setCategory(categories.get(0)); // Changed Android to Java category
 //        courseRepository.save(courses);
+//
+//        n = 0;
+//        m = 2;
+//        for (Category category : categories) {
+//            category.setDecks(decks.subList(n, m));
+//            n = m;
+//            m += 2;
+//            categoryRepository.save(category);
+//        }
 //    }
 }

@@ -30,8 +30,9 @@ public class DeckService {
         return course.getDecks();
     }
 
-    public List<Deck> getAllDecks() {
-        return deckRepository.findAll();
+    public List<Deck> getAllDecksByCategory(Long category_id) {
+        Category category = categoryRepository.findOne(category_id);
+        return category.getDecks();
     }
 
 
@@ -41,7 +42,7 @@ public class DeckService {
 
     @Transactional
     public Deck getDeck(Long deck_id) {
-        return deckRepository.findOne(deck_id);
+       return deckRepository.findOne(deck_id);
     }
 
     public List<Card> getAllCardsByDeckId(Long deck_id) {
