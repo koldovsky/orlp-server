@@ -19,14 +19,13 @@ spring:
     port: 587
     username: sybez.market@gmail.com
     password: z0935152261
-
 jwt:
   header: Authorization
   secret: mySecret
   expiration: 604800
   route:
     authentication:
-      path: auth
+      path: api/auth
       refresh: refresh
 
 
