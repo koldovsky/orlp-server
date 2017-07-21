@@ -11,6 +11,7 @@ import sun.misc.BASE64Encoder;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.List;
 
 @Service
 public class ImageService {
@@ -19,10 +20,41 @@ public class ImageService {
     private ImageRepository imageRepository;
 
 
-    public void addImageToDB(MultipartFile file, String fileName) {
-        String base64 = encodeToBase64(file);
-        Image image = new Image(fileName, base64);
-        imageRepository.save(image);
+    public OperationStatus addImageToDB(MultipartFile file, String fileName) {
+
+        OperationStatus operationStatus = null;
+        final long maxFileSize = 1048576L;
+        long fileSize = file.getSize();
+
+        if (fileSize > maxFileSize) {
+            operationStatus = OperationStatus.WRONG_FILE_SIZE;
+        } else {
+            String base64 = encodeToBase64(file);
+            int hash = base64.hashCode();
+
+            List<Integer> existingHashes = imageRepository.getHashList();
+
+            for (Integer existingHash : existingHashes) {
+                if (existingHash == hash) {
+                    return OperationStatus.IMAGE_EXISTS;
+                }
+            }
+
+            List<String> existingNames = imageRepository.getNameList();
+
+            for (String existingName : existingNames){
+                if (existingName.equals(fileName)) {
+                    return OperationStatus.NAME_EXISTS;
+                }
+            }
+
+            Image image = new Image(fileName, base64, hash);
+            imageRepository.save(image);
+            operationStatus = OperationStatus.OK;
+        }
+
+
+        return operationStatus;
     }
 
     private String encodeToBase64(MultipartFile file) {
@@ -39,7 +71,10 @@ public class ImageService {
         encodedFile = Base64.encodeBase64String(bytes);
 
 
-
         return encodedFile;
+    }
+
+    public enum OperationStatus {
+        OK, WRONG_FILE_SIZE, IMAGE_EXISTS, NAME_EXISTS;
     }
 }
