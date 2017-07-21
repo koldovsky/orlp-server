@@ -1,5 +1,6 @@
 package com.softserve.academy.spaced.repetition.controller;
 
+import com.softserve.academy.spaced.repetition.security.JwtUser;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,21 +15,22 @@ public class TestController {
 
     @RequestMapping("/private/test")
     public String test() {
+    //    JwtUser user =
         return "test";
     }
 
-    @RequestMapping(value = "/hello", method = RequestMethod.POST)
-    public ResponseEntity test2(){
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Set-Cookie", "test=test");
-        return new ResponseEntity(headers, HttpStatus.OK);
-    }
-
-    @RequestMapping(value = "/hello2", method = RequestMethod.GET)
-    public ResponseEntity test3(){
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Set-Cookie", "test2=qddd");
-        headers.add("test", "test2");
-        return new ResponseEntity(headers, HttpStatus.OK);
-    }
+//    @RequestMapping(value = "/hello", method = RequestMethod.POST)
+//    public ResponseEntity test2(){
+//        HttpHeaders headers = new HttpHeaders();
+//        headers.add("Set-Cookie", "test=test");
+//        return new ResponseEntity(headers, HttpStatus.OK);
+//    }
+//
+//    @RequestMapping(value = "/hello2", method = RequestMethod.GET)
+//    public ResponseEntity test3(){
+//        HttpHeaders headers = new HttpHeaders();
+//        headers.add("Set-Cookie", "test2=qddd");
+//        headers.add("test", "test2");
+//        return new ResponseEntity(headers, HttpStatus.OK);
+//    }
 }

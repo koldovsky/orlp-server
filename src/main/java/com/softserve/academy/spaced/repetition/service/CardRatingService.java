@@ -1,5 +1,6 @@
 package com.softserve.academy.spaced.repetition.service;
 
+import ch.qos.logback.core.net.SyslogOutputStream;
 import com.softserve.academy.spaced.repetition.domain.Card;
 import com.softserve.academy.spaced.repetition.domain.CardRating;
 import com.softserve.academy.spaced.repetition.domain.Deck;
@@ -30,22 +31,29 @@ public class CardRatingService {
         JwtUser user = (JwtUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String username = user.getUsername();
 
-        cardRating.setAccountEmail(username);
-        Card card = cardRepository.findOne(cardId);
-        Deck deck = deckRepository.findOne(deckId);
-        cardRating.setCardId(cardId);
-        cardRating.setDeckId(deckId);
-        cardRatingRepository.save(cardRating);
+        System.out.println("username " + username);
+        CardRating cardRatingByAccountEmail = cardRatingRepository.findAllByAccountEmail(username);
 
-        double cardAvarageRating = countCardAvarageRating(cardId);
-        double deckAvarageRating = countDeckAvarageRating(deckId);
-        card.setRating(cardAvarageRating);
-        deck.setRating(deckAvarageRating);
-        cardRepository.save(card);
+        if (cardRatingByAccountEmail == null) {
+
+            Card card = cardRepository.findOne(cardId);
+            Deck deck = deckRepository.findOne(deckId);
+            cardRating.setAccountEmail(username);
+            cardRating.setCardId(cardId);
+            cardRating.setDeckId(deckId);
+            cardRatingRepository.save(cardRating);
+
+            double cardAvarageRating = countCardAvarageRating(cardId);
+            double deckAvarageRating = countDeckAvarageRating(deckId);
+            card.setRating(cardAvarageRating);
+            deck.setRating(deckAvarageRating);
+            cardRepository.save(card);
+
+        }
 
     }
 
-    public double countCardAvarageRating( Long cardId) {
+    public double countCardAvarageRating(Long cardId) {
         double totalRating = 0;
         List<CardRating> cardRatings = cardRatingRepository.findAllByCardId(cardId);
         for (CardRating cRating : cardRatings) {
@@ -57,7 +65,7 @@ public class CardRatingService {
 
     public double countDeckAvarageRating(Long deckId) {
         double totalRating = 0;
-        List<CardRating> deckRatings = cardRatingRepository.findAllByDeckId(deckId) ;
+        List<CardRating> deckRatings = cardRatingRepository.findAllByDeckId(deckId);
         for (CardRating dRating : deckRatings) {
             totalRating += dRating.getRating();
         }
