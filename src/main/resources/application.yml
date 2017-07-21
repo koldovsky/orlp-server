@@ -8,7 +8,7 @@ spring:
   jpa:
     show-sql: true
     hibernate:
-      ddl-auto: validate
+      ddl-auto: create
       naming-strategy: org.hibernate.cfg.ImprovedNamingStrategy
   social:
     google:
@@ -24,6 +24,8 @@ spring:
     port: 587
     username: sybez.market@gmail.com
     password: z0935152261
+  origin:
+    url: http://localhost:3000
 
 jwt:
   header: Authentication
