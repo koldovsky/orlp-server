@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import sun.misc.BASE64Encoder;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -42,7 +43,7 @@ public class ImageService {
 
             List<String> existingNames = imageRepository.getNameList();
 
-            for (String existingName : existingNames){
+            for (String existingName : existingNames) {
                 if (existingName.equals(fileName)) {
                     return OperationStatus.NAME_EXISTS;
                 }
@@ -59,7 +60,6 @@ public class ImageService {
 
     private String encodeToBase64(MultipartFile file) {
         String encodedFile = null;
-        System.out.println(file.getSize());
 
         byte[] bytes = new byte[(int) file.getSize()];
         try {
@@ -72,6 +72,25 @@ public class ImageService {
 
 
         return encodedFile;
+    }
+
+    private MultipartFile decodeFromBase64(String encodedFile) {
+        MultipartFile decodedFile = null;
+
+        byte[] bytes = Base64.decodeBase64(encodedFile);
+
+
+        return decodedFile;
+    }
+
+    public List<MultipartFile> getAllImages() {
+
+        List<Image> imagesList = imageRepository.findAll();
+
+        List<MultipartFile> filesList = null;
+
+
+        return filesList;
     }
 
     public enum OperationStatus {

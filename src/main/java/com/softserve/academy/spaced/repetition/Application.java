@@ -150,5 +150,14 @@ public class Application {
 //        }
 //        courses.get(1).setCategory(categories.get(0)); // Changed Android to Java category
 //        courseRepository.save(courses);
+//
+//        n = 0;
+//        m = 2;
+//        for (Category category : categories) {
+//            category.setDecks(decks.subList(n, m));
+//            n = m;
+//            m += 2;
+//            categoryRepository.save(category);
+//        }
 //    }
 }
