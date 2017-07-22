@@ -27,17 +27,18 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 @RestController
 @CrossOrigin
 public class CourseController {
+
     @Autowired
     private CourseService courseService;
 
     @GetMapping(value = "/api/category/{category_id}/courses")
-    @PreAuthorize(value = "@accessToUrlService.hasAccessToCourse(#category_id)")
+    @PreAuthorize(value = "@accessToUrlService.hasAccessToCategory(#category_id)")
     public ResponseEntity<List<CoursePublicDTO>> getAllCoursesByCategoryId(@PathVariable Long category_id) {
-            List<Course> courseList = courseService.getAllCoursesByCategoryId(category_id);
-            Link collectionLink = linkTo(methodOn(CourseController.class).getAllCoursesByCategoryId(category_id)).withRel("course");
-            List<CoursePublicDTO> courses = DTOBuilder.buildDtoListForCollection(courseList,
-                    CoursePublicDTO.class, collectionLink);
-            return new ResponseEntity<>(courses, HttpStatus.OK);
+        List<Course> courseList = courseService.getAllCoursesByCategoryId(category_id);
+        Link collectionLink = linkTo(methodOn(CourseController.class).getAllCoursesByCategoryId(category_id)).withSelfRel();
+        List<CoursePublicDTO> courses = DTOBuilder.buildDtoListForCollection(courseList,
+                CoursePublicDTO.class, collectionLink);
+        return new ResponseEntity<>(courses, HttpStatus.OK);
     }
 
     @GetMapping("/api/course/top")
@@ -53,10 +54,10 @@ public class CourseController {
     @GetMapping(value = "/api/category/{category_id}/courses/{course_id}")
     @PreAuthorize(value = "@accessToUrlService.hasAccessToCourse(#category_id, #course_id)")
     public ResponseEntity<CourseLinkDTO> getCourseById(@PathVariable Long category_id, @PathVariable Long course_id) {
-            Course course = courseService.getCourseById(category_id, course_id);
-            Link selfLink = linkTo(methodOn(CourseController.class).getCourseById(category_id, course_id)).withRel("course");
-            CourseLinkDTO linkDTO = DTOBuilder.buildDtoForEntity(course, CourseLinkDTO.class, selfLink);
-            return new ResponseEntity<>(linkDTO, HttpStatus.OK);
+        Course course = courseService.getCourseById(category_id, course_id);
+        Link selfLink = linkTo(methodOn(CourseController.class).getCourseById(category_id, course_id)).withSelfRel();
+        CourseLinkDTO linkDTO = DTOBuilder.buildDtoForEntity(course, CourseLinkDTO.class, selfLink);
+        return new ResponseEntity<>(linkDTO, HttpStatus.OK);
     }
 
     @PostMapping(value = "/api/category/{category_id}/courses")

@@ -1,6 +1,7 @@
 package com.softserve.academy.spaced.repetition.service;
 
 import com.softserve.academy.spaced.repetition.repository.CardRepository;
+import com.softserve.academy.spaced.repetition.repository.CategoryRepository;
 import com.softserve.academy.spaced.repetition.repository.CourseRepository;
 import com.softserve.academy.spaced.repetition.repository.DeckRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,9 @@ import org.springframework.stereotype.Service;
 public class AccessToUrlService {
 
     @Autowired
+    private CategoryRepository categoryRepository;
+
+    @Autowired
     private CourseRepository courseRepository;
 
     @Autowired
@@ -20,6 +24,10 @@ public class AccessToUrlService {
 
     @Autowired
     private CardRepository cardRepository;
+
+    public boolean hasAccessToCategory(Long category_id){
+        return categoryRepository.hasAccessToCategory(category_id).size() > 0;
+    }
 
     public boolean hasAccessToCourse(Long category_id, Long course_id) {
         return courseRepository.getAccessToCourse(category_id, course_id).size() > 0;
