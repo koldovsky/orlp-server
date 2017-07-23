@@ -34,4 +34,9 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
     ResponseEntity<MessageDTO> handleMoreThanOneTimeRateException() {
         return new ResponseEntity<>(new MessageDTO("Object was rated more than one time."), HttpStatus.CONFLICT);
     }
+
+    @ExceptionHandler(NullPointerException.class)
+    ResponseEntity<MessageDTO> handleIllegalValueOfRequestParameterException(){
+        return new ResponseEntity<>(new MessageDTO("The value of request parameter is not valid!"), HttpStatus.CONFLICT);
+    }
 }
