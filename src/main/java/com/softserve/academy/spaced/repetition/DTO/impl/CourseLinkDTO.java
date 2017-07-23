@@ -8,7 +8,7 @@ import org.springframework.hateoas.Link;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
-public class CourseLinkDTO extends DTO<Course>{
+public class CourseLinkDTO extends DTO<Course> {
 
     public CourseLinkDTO(Course course, Link link) {
         super(course, link);
@@ -21,5 +21,9 @@ public class CourseLinkDTO extends DTO<Course>{
 
     public String getDescription() {
         return getEntity().getDescription();
+    }
+
+    public String getImagebase64() {
+        return getEntity().getImagebase64();
     }
 }

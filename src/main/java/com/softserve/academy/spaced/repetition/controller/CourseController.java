@@ -33,11 +33,10 @@ public class CourseController {
 
     @GetMapping(value = "/api/category/{category_id}/courses")
     @PreAuthorize(value = "@accessToUrlService.hasAccessToCategory(#category_id)")
-    public ResponseEntity<List<CoursePublicDTO>> getAllCoursesByCategoryId(@PathVariable Long category_id) {
+    public ResponseEntity<List<CourseLinkDTO>> getAllCoursesByCategoryId(@PathVariable Long category_id) {
         List<Course> courseList = courseService.getAllCoursesByCategoryId(category_id);
         Link collectionLink = linkTo(methodOn(CourseController.class).getAllCoursesByCategoryId(category_id)).withSelfRel();
-        List<CoursePublicDTO> courses = DTOBuilder.buildDtoListForCollection(courseList,
-                CoursePublicDTO.class, collectionLink);
+        List<CourseLinkDTO> courses = DTOBuilder.buildDtoListForCollection(courseList, CourseLinkDTO.class, collectionLink);
         return new ResponseEntity<>(courses, HttpStatus.OK);
     }
 
