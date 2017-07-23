@@ -46,15 +46,16 @@ public class AuthenticationRestController {
 
     @RequestMapping(value = "${jwt.route.authentication.path}", method = RequestMethod.POST)
     public ResponseEntity<JwtAuthenticationResponse> createAuthenticationToken(@RequestBody JwtAuthenticationRequest authenticationRequest, Device device) throws AuthenticationException {
+        /*
+        Don't remove this!
         ReCaptchaResponseDto reCaptchaResponseDto = reCaptchaApiService.verify(authenticationRequest.getCaptcha());
         if (!reCaptchaResponseDto.isSuccess()) {
             throw new BadCredentialsException("reCaptcha");
-        }
+        }*/
         Authentication authentication = jwtSocialService.getAuthenticationToken(authenticationRequest.getUsername(), authenticationRequest.getPassword());
         jwtSocialService.setAuthentication(authentication);
         String token = jwtSocialService.generateToken((JwtUser) authentication.getPrincipal(), device);
         HttpHeaders headers = jwtSocialService.addTokenToHeaderCookie(token);
-        System.out.println("sss");
         return new ResponseEntity<>(new JwtAuthenticationResponse("Ok"), headers, HttpStatus.OK);
     }
 
