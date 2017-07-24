@@ -3,6 +3,7 @@ package com.softserve.academy.spaced.repetition.config;
 import com.softserve.academy.spaced.repetition.security.JwtAuthenticationEntryPoint;
 import com.softserve.academy.spaced.repetition.security.JwtAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.web.DefaultErrorAttributes;
 import org.springframework.boot.autoconfigure.web.ErrorAttributes;
 import org.springframework.context.annotation.Bean;
@@ -19,6 +20,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.context.request.RequestAttributes;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import java.util.Map;
 
@@ -27,17 +31,23 @@ import java.util.Map;
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
-    @Autowired
-    private JwtAuthenticationEntryPoint unauthorizedHandler;
+    private final JwtAuthenticationEntryPoint unauthorizedHandler;
+    private final UserDetailsService userDetailsService;
 
     @Autowired
-    private UserDetailsService userDetailsService;
+    public SecurityConfiguration(JwtAuthenticationEntryPoint unauthorizedHandler, UserDetailsService userDetailsService) {
+        this.unauthorizedHandler = unauthorizedHandler;
+        this.userDetailsService = userDetailsService;
+    }
 
     @Autowired
     public void configureAuthentication(AuthenticationManagerBuilder builder) throws Exception {
         builder.userDetailsService(this.userDetailsService)
                 .passwordEncoder(passwordEncoder());
     }
+
+    @Value("${spring.origin.url}")
+    private String url;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -63,6 +73,19 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
         http
                 .headers().cacheControl();
+    }
+
+    @Bean
+    public WebMvcConfigurer CORSConfig() {
+        return new WebMvcConfigurerAdapter() {
+            @Override
+            public void addCorsMappings(CorsRegistry registry) {
+                registry.addMapping("/**")
+                        .allowedOrigins(url)
+                        .allowCredentials(true)
+                        .allowedHeaders("Content-Type", "Access-Control-Allow-Headers", "Authorization", "X-Requested-With");
+            }
+        };
     }
 
     @Bean
