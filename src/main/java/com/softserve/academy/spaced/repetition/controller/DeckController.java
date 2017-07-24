@@ -28,12 +28,12 @@ public class DeckController {
     private DeckService deckService;
 
     @GetMapping(value = "/api/category/{category_id}/decks")
-    @PreAuthorize(value = "@accessToUrlService.hasAccessToCategory(#category_id)")
-    public ResponseEntity<List<DeckPublicDTO>> getAllDecksByCategoryId(@PathVariable Long category_id) {
+    @PreAuthorize(value = "@accessToUrlService.hasAccessToDeck(#category_id)")
+    public ResponseEntity<List<DeckLinkByCategoryDTO>> getAllDecksByCategoryId(@PathVariable Long category_id) {
             List<Deck> decksList = deckService.getAllDecksByCategory(category_id);
             Link collectionLink = linkTo(methodOn(DeckController.class).getAllDecksByCategoryId(category_id)).withRel("deck");
-            List<DeckPublicDTO> decks = DTOBuilder.buildDtoListForCollection(decksList,
-                    DeckPublicDTO.class, collectionLink);
+            List<DeckLinkByCategoryDTO> decks = DTOBuilder.buildDtoListForCollection(decksList,
+                    DeckLinkByCategoryDTO.class, collectionLink);
             return new ResponseEntity<>(decks, HttpStatus.OK);
     }
 

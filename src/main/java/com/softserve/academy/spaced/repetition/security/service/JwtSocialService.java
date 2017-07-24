@@ -55,7 +55,7 @@ public class JwtSocialService {
         return authentication;
     }
 
-    public String generateToken(JwtUser user, Device device){
+    public String generateToken(UserDetails user, Device device){
         return jwtTokenUtil.generateToken(user, device);
     }
 

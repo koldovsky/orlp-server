@@ -16,6 +16,7 @@ import org.springframework.mobile.device.Device;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
 
@@ -66,7 +67,8 @@ public class AuthenticationRestController {
         jwtSocialService.saveUserIfNotExist(email, googleIdToken);
         Authentication authentication = jwtSocialService.getAuthenticationTokenWithoutVerify(email);
         jwtSocialService.setAuthentication(authentication);
-        String token = jwtSocialService.generateToken((JwtUser) authentication.getPrincipal(), device);
+        UserDetails userDetails = userDetailsService.loadUserByUsername(email);
+        String token = jwtSocialService.generateToken(userDetails, device);
         HttpHeaders headers = jwtSocialService.addTokenToHeaderCookie(token);
         return new ResponseEntity<>(new JwtAuthenticationResponse("Ok"), headers, HttpStatus.OK);
     }
@@ -82,7 +84,8 @@ public class AuthenticationRestController {
         }
         Authentication authentication = jwtSocialService.getAuthenticationTokenWithoutVerify(email);
         jwtSocialService.setAuthentication(authentication);
-        String returnedToken = jwtSocialService.generateToken((JwtUser) authentication.getPrincipal(), device);
+        UserDetails userDetails = userDetailsService.loadUserByUsername(email);
+        String returnedToken = jwtSocialService.generateToken(userDetails, device);
         HttpHeaders headers = jwtSocialService.addTokenToHeaderCookie(returnedToken);
         return new ResponseEntity<>(new JwtAuthenticationResponse("OK"), headers, HttpStatus.OK);
     }

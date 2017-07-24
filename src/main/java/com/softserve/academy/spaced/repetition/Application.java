@@ -22,19 +22,22 @@ import java.util.stream.Stream;
 @SpringBootApplication
 public class Application {
 
-//    @Autowired
-//    CategoryRepository categoryRepository;
-//    @Autowired
-//    UserRepository userRepository;
-//    @Autowired
-//    DeckRepository deckRepository;
-//    @Autowired
-//    CourseRepository courseRepository;
-//    @Autowired
-//    CardRepository cardRepository;
+//    private final CategoryRepository categoryRepository;
+//    private final UserRepository userRepository;
+//    private final DeckRepository deckRepository;
+//    private final CourseRepository courseRepository;
+//    private final CardRepository cardRepository;
+//    private final PasswordEncoder bCryptPasswordEncoder;
 //
 //    @Autowired
-//    PasswordEncoder bCryptPasswordEncoder;
+//    public Application(CategoryRepository categoryRepository, UserRepository userRepository, DeckRepository deckRepository, CourseRepository courseRepository, CardRepository cardRepository, PasswordEncoder bCryptPasswordEncoder) {
+//        this.categoryRepository = categoryRepository;
+//        this.userRepository = userRepository;
+//        this.deckRepository = deckRepository;
+//        this.courseRepository = courseRepository;
+//        this.cardRepository = cardRepository;
+//        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+//    }
 
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);

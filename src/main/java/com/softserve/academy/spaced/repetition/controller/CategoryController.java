@@ -29,7 +29,7 @@ public class CategoryController {
     public ResponseEntity<List<CategoryPublicDTO>> getAllCategories() {
             List<Category> categoryList = categoryService.getAllCategory();
             Link collectionLink = linkTo(methodOn(CategoryController.class).getAllCategories()).withRel("category");
-            List<CategoryPublicDTO> categories = DTOBuilder.buildDtoListForCollection(categoryList,
+                List<CategoryPublicDTO> categories = DTOBuilder.buildDtoListForCollection(categoryList,
                     CategoryPublicDTO.class, collectionLink);
             return new ResponseEntity<>(categories, HttpStatus.OK);
     }
