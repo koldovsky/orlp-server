@@ -25,4 +25,3 @@ public class DeckLinkByCategoryDTO extends DTO<Deck> {
         return getEntity().getDescription();
     }
 }
-
