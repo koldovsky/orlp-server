@@ -1,10 +1,6 @@
-package com.softserve.academy.spaced.repetition.security;
+package com.softserve.academy.spaced.repetition.security.DTO;
 
-import java.io.Serializable;
-
-public class JwtAuthenticationResponse implements Serializable {
-    private static final long serialVersionUID = -8245375448965154842L;
-
+public class JwtAuthenticationResponse {
     private String status;
 
     public JwtAuthenticationResponse(String status) {

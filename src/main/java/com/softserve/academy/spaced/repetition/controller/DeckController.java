@@ -23,23 +23,18 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 @RestController
 @CrossOrigin
 public class DeckController {
+
     @Autowired
     private DeckService deckService;
 
-    @Autowired
-    private AccessToUrlService accessToUrlService;
-
     @GetMapping(value = "/api/category/{category_id}/decks")
-    public ResponseEntity<List<DeckPublicDTO>> getAllDecksByCategoryId(@PathVariable Long category_id) {
-        if(accessToUrlService.hasAccessToDeck(category_id)) {
-            List<Deck> decksList = deckService.getAllDecks();
+    @PreAuthorize(value = "@accessToUrlService.hasAccessToDeck(#category_id)")
+    public ResponseEntity<List<DeckLinkByCategoryDTO>> getAllDecksByCategoryId(@PathVariable Long category_id) {
+            List<Deck> decksList = deckService.getAllDecksByCategory(category_id);
             Link collectionLink = linkTo(methodOn(DeckController.class).getAllDecksByCategoryId(category_id)).withRel("deck");
-            List<DeckPublicDTO> decks = DTOBuilder.buildDtoListForCollection(decksList,
-                    DeckPublicDTO.class, collectionLink);
+            List<DeckLinkByCategoryDTO> decks = DTOBuilder.buildDtoListForCollection(decksList,
+                    DeckLinkByCategoryDTO.class, collectionLink);
             return new ResponseEntity<>(decks, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
     }
 
     @GetMapping(value = "/api/decks/ordered")
@@ -52,56 +47,49 @@ public class DeckController {
     }
 
     @GetMapping(value = "/api/category/{category_id}/courses/{course_id}/decks")
+    @PreAuthorize(value = "@accessToUrlService.hasAccessToCourse(#category_id, #course_id)")
     public ResponseEntity<List<DeckPublicDTO>> getAllDecksByCourseId(@PathVariable Long category_id, @PathVariable Long course_id) {
-       if(accessToUrlService.hasAccessToCourse(category_id, course_id)) {
-           List<Deck> decksList = deckService.getAllDecks();
-           Link collectionLink = linkTo(methodOn(DeckController.class).getAllDecksByCourseId(category_id, course_id)).withRel("course");
-           List<DeckPublicDTO> decks = DTOBuilder.buildDtoListForCollection(decksList, DeckPublicDTO.class, collectionLink);
-           return new ResponseEntity<>(decks, HttpStatus.OK);
-       } else {
-           return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-       }
+            List<Deck> decksList = deckService.getAllDecks(course_id);
+            Link collectionLink = linkTo(methodOn(DeckController.class).getAllDecksByCourseId(category_id, course_id)).withRel("course");
+            List<DeckPublicDTO> decks = DTOBuilder.buildDtoListForCollection(decksList, DeckPublicDTO.class, collectionLink);
+            return new ResponseEntity<>(decks, HttpStatus.OK);
     }
 
     @GetMapping(value = "/api/category/{category_id}/decks/{deck_id}")
+    @PreAuthorize(value = "@accessToUrlService.hasAccessToDeckFromCategory(#category_id, #deck_id)")
     public ResponseEntity<DeckLinkByCategoryDTO> getDeckByCategoryId(@PathVariable Long category_id, @PathVariable Long deck_id) {
-        if (accessToUrlService.hasAccessToDeckFromCategory(category_id, deck_id)) {
             Deck deck = deckService.getDeck(deck_id);
             Link selfLink = linkTo(methodOn(DeckController.class).getDeckByCategoryId(category_id, deck_id)).withSelfRel();
             DeckLinkByCategoryDTO linkDTO = DTOBuilder.buildDtoForEntity(deck, DeckLinkByCategoryDTO.class, selfLink);
             return new ResponseEntity<>(linkDTO, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
     }
 
     @GetMapping(value = "/api/category/{category_id}/courses/{course_id}/decks/{deck_id}")
+    @PreAuthorize(value = "@accessToUrlService.hasAccessToDeck(#category_id, #course_id, #deck_id)")
     public ResponseEntity<DeckLinkByCourseDTO> getDeckByCourseId(@PathVariable Long category_id, @PathVariable Long course_id,
                                                                  @PathVariable Long deck_id) {
-        if (accessToUrlService.hasAccessToDeck(category_id, course_id, deck_id)) {
             Deck deck = deckService.getDeck(deck_id);
             Link selfLink = linkTo(methodOn(DeckController.class).getDeckByCourseId(category_id, course_id, deck_id)).withSelfRel();
             DeckLinkByCourseDTO linkDTO = DTOBuilder.buildDtoForEntity(deck, DeckLinkByCourseDTO.class, selfLink);
             return new ResponseEntity<>(linkDTO, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
     }
 
     @GetMapping(value = "/api/category/{category_id}/decks/{deck_id}/cards")
+    @PreAuthorize(value = "@accessToUrlService.hasAccessToDeckFromCategory(#category_id, #deck_id)")
     public ResponseEntity<List<CardPublicDTO>> getCardsByCategoryAndDeck(@PathVariable Long category_id, @PathVariable Long deck_id) {
-        List<Card> cards = deckService.getAllCardsByDeckId(deck_id);
-        Link collectionLink = linkTo(methodOn(DeckController.class).getCardsByCategoryAndDeck(category_id, deck_id)).withSelfRel();
-        List<CardPublicDTO> cardsPublic = DTOBuilder.buildDtoListForCollection(cards, CardPublicDTO.class, collectionLink);
-        return new ResponseEntity<>(cardsPublic, HttpStatus.OK);
+            List<Card> cards = deckService.getAllCardsByDeckId(deck_id);
+            Link collectionLink = linkTo(methodOn(DeckController.class).getCardsByCategoryAndDeck(category_id, deck_id)).withSelfRel();
+            List<CardPublicDTO> cardsPublic = DTOBuilder.buildDtoListForCollection(cards, CardPublicDTO.class, collectionLink);
+            return new ResponseEntity<>(cardsPublic, HttpStatus.OK);
     }
 
     @GetMapping(value = "/api/category/{category_id}/courses/{course_id}/decks/{deck_id}/cards")
+    @PreAuthorize(value = "@accessToUrlService.hasAccessToDeck(#category_id, #course_id, #deck_id)")
     public ResponseEntity<List<CardPublicDTO>> getCardsByCourseAndDeck(@PathVariable Long category_id, @PathVariable Long course_id, @PathVariable Long deck_id) {
-        List<Card> cards = deckService.getAllCardsByDeckId(deck_id);
-        Link collectionLink = linkTo(methodOn(DeckController.class).getCardsByCourseAndDeck(category_id, course_id, deck_id)).withSelfRel();
-        List<CardPublicDTO> cardsPublic = DTOBuilder.buildDtoListForCollection(cards, CardPublicDTO.class, collectionLink);
-        return new ResponseEntity<>(cardsPublic, HttpStatus.OK);
+            List<Card> cards = deckService.getAllCardsByDeckId(deck_id);
+            Link collectionLink = linkTo(methodOn(DeckController.class).getCardsByCourseAndDeck(category_id, course_id, deck_id)).withSelfRel();
+            List<CardPublicDTO> cardsPublic = DTOBuilder.buildDtoListForCollection(cards, CardPublicDTO.class, collectionLink);
+            return new ResponseEntity<>(cardsPublic, HttpStatus.OK);
     }
 
     @PostMapping(value = "/api/category/{category_id}/decks")
@@ -109,14 +97,15 @@ public class DeckController {
         deckService.addDeckToCategory(deck, category_id);
         Link selfLink = linkTo(methodOn(DeckController.class).getDeckByCategoryId(category_id, deck.getId())).withSelfRel();
         DeckPublicDTO deckPublicDTO = DTOBuilder.buildDtoForEntity(deck, DeckPublicDTO.class, selfLink);
-        return new ResponseEntity<>(deckPublicDTO, HttpStatus.OK);
+        return new ResponseEntity<>(deckPublicDTO, HttpStatus.CREATED);
     }
 
     @PostMapping(value = "/api/category/{category_id}/courses/{course_id}/decks")
     public ResponseEntity<DeckPublicDTO> addDeckToCourse(@RequestBody Deck deck, @PathVariable Long category_id, @PathVariable Long course_id) {
         deckService.addDeckToCourse(deck, category_id, course_id);
         Link selfLink = linkTo(methodOn(DeckController.class).getDeckByCourseId(category_id, course_id, deck.getId())).withSelfRel();
-        return new ResponseEntity<>(new DeckPublicDTO(deck, selfLink), HttpStatus.OK);
+        DeckPublicDTO deckPublicDTO = DTOBuilder.buildDtoForEntity(deck, DeckPublicDTO.class, selfLink);
+        return new ResponseEntity<>(deckPublicDTO, HttpStatus.CREATED);
     }
 
     @PutMapping(value = "/api/user/{user_id}/decks/{deck_id}")

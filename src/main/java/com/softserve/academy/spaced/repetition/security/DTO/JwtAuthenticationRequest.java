@@ -1,12 +1,10 @@
-package com.softserve.academy.spaced.repetition.security;
+package com.softserve.academy.spaced.repetition.security.DTO;
 
-import java.io.Serializable;
-
-public class JwtAuthenticationRequest implements Serializable{
-    private static final long serialVersionUID = -8445943548965154773L;
+public class JwtAuthenticationRequest{
 
     private String username;
     private String password;
+    private String captcha;
 
     public JwtAuthenticationRequest() {
     }
@@ -25,5 +23,13 @@ public class JwtAuthenticationRequest implements Serializable{
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getCaptcha() {
+        return captcha;
+    }
+
+    public void setCaptcha(String captcha) {
+        this.captcha = captcha;
     }
 }

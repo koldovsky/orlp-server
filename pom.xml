@@ -110,7 +110,6 @@
             <artifactId>json</artifactId>
             <version>20070829</version>
         </dependency>
-
     </dependencies>
 
     <properties>

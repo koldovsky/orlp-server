@@ -1,4 +1,5 @@
 package com.softserve.academy.spaced.repetition;
+
 import com.softserve.academy.spaced.repetition.domain.*;
 import com.softserve.academy.spaced.repetition.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,28 +18,31 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-@EnableHypermediaSupport(type = { EnableHypermediaSupport.HypermediaType.HAL })
+@EnableHypermediaSupport(type = {EnableHypermediaSupport.HypermediaType.HAL})
 @SpringBootApplication
 public class Application {
 
-//    @Autowired
-//    CategoryRepository categoryRepository;
-//    @Autowired
-//    UserRepository userRepository;
-//    @Autowired
-//    DeckRepository deckRepository;
-//    @Autowired
-//    CourseRepository courseRepository;
-//    @Autowired
-//    CardRepository cardRepository;
+//    private final CategoryRepository categoryRepository;
+//    private final UserRepository userRepository;
+//    private final DeckRepository deckRepository;
+//    private final CourseRepository courseRepository;
+//    private final CardRepository cardRepository;
+//    private final PasswordEncoder bCryptPasswordEncoder;
 //
 //    @Autowired
-//    PasswordEncoder bCryptPasswordEncoder;
+//    public Application(CategoryRepository categoryRepository, UserRepository userRepository, DeckRepository deckRepository, CourseRepository courseRepository, CardRepository cardRepository, PasswordEncoder bCryptPasswordEncoder) {
+//        this.categoryRepository = categoryRepository;
+//        this.userRepository = userRepository;
+//        this.deckRepository = deckRepository;
+//        this.courseRepository = courseRepository;
+//        this.cardRepository = cardRepository;
+//        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+//    }
 
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
     }
-//
+
 //    @PostConstruct
 //    public void addTestData() throws IOException {
 //        List<Category> categories = new ArrayList<>();
@@ -142,9 +146,23 @@ public class Application {
 //                i++;
 //            } else i = 0;
 //            n = m;
-//            m+=2;
+//            m += 2;
 //        }
 //        courses.get(1).setCategory(categories.get(0)); // Changed Android to Java category
 //        courseRepository.save(courses);
+//
+//        int a = 0;
+//        int b = 1;
+//        n = 0;
+//        m = 2;
+//        for (Category category : categories) {
+//            category.setDecks(decks.subList(n, m));
+//            category.setCourses(courses.subList(a , b));
+//            n = m;
+//            a = b;
+//            m += 2;
+//            b++;
+//            categoryRepository.save(category);
+//        }
 //    }
 }
