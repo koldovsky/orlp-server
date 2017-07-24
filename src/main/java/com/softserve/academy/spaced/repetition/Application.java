@@ -151,12 +151,17 @@ public class Application {
 //        courses.get(1).setCategory(categories.get(0)); // Changed Android to Java category
 //        courseRepository.save(courses);
 //
+//        int a = 0;
+//        int b = 1;
 //        n = 0;
 //        m = 2;
 //        for (Category category : categories) {
 //            category.setDecks(decks.subList(n, m));
+//            category.setCourses(courses.subList(a , b));
 //            n = m;
+//            a = b;
 //            m += 2;
+//            b++;
 //            categoryRepository.save(category);
 //        }
 //    }
