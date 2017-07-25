@@ -61,7 +61,7 @@ public class JwtSocialService {
 
     public HttpHeaders addTokenToHeaderCookie(String token) {
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Set-Cookie", tokenHeader + "=" + token + "; Path=/" + "; Expires=" + jwtTokenUtil.getExpirationDateFromToken(token));
+        headers.add("Set-Cookie", tokenHeader + "=" + token + "; Path=/" + "; Expires=" + jwtTokenUtil.getExpirationDateFromToken(token) + "; HttpOnly;");
         return headers;
     }
 
