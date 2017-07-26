@@ -22,6 +22,9 @@ public class Card implements EntityInterface {
     @Column(name = "rating")
     private double rating;
 
+    @Column(name="numb_of_users_ratings")
+    private long numbOfUsersRatings;
+
     public Card() {
     }
 
@@ -62,6 +65,14 @@ public class Card implements EntityInterface {
 
     public double getRating() {
         return rating;
+    }
+
+    public long getNumbOfUsersRatings() {
+        return numbOfUsersRatings;
+    }
+
+    public void setNumbOfUsersRatings(long numbOfUsersRatings) {
+        this.numbOfUsersRatings = numbOfUsersRatings;
     }
 
     public void setRating(double rating) {

@@ -92,6 +92,7 @@ public class DeckController {
     }
 
     @PostMapping(value = "/api/category/{category_id}/decks")
+    @PreAuthorize(value = "@accessToUrlService.hasAccessToDeck(#category_id)")
     public ResponseEntity<DeckPublicDTO> addDeckToCategory(@RequestBody Deck deck, @PathVariable Long category_id) {
         deckService.addDeckToCategory(deck, category_id);
         Link selfLink = linkTo(methodOn(DeckController.class).getDeckByCategoryId(category_id, deck.getId())).withSelfRel();
@@ -100,6 +101,7 @@ public class DeckController {
     }
 
     @PostMapping(value = "/api/category/{category_id}/courses/{course_id}/decks")
+    @PreAuthorize(value = "@accessToUrlService.hasAccessToCourse(#category_id, #course_id)")
     public ResponseEntity<DeckPublicDTO> addDeckToCourse(@RequestBody Deck deck, @PathVariable Long category_id, @PathVariable Long course_id) {
         deckService.addDeckToCourse(deck, category_id, course_id);
         Link selfLink = linkTo(methodOn(DeckController.class).getDeckByCourseId(category_id, course_id, deck.getId())).withSelfRel();

@@ -7,7 +7,7 @@ spring:
   jpa:
     show-sql: true
     hibernate:
-      ddl-auto: validate
+      ddl-auto: create
       naming-strategy: org.hibernate.cfg.ImprovedNamingStrategy
   social:
     google:
@@ -39,3 +39,5 @@ app:
   reCaptcha:
     secretKey: 6LeS2ykUAAAAAPUUYX5h93VVp0cBhHB6c0PfMkRB
     url: https://www.google.com/recaptcha/api/siteverify
+#server:
+#  port: 8088

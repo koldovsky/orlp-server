@@ -24,7 +24,10 @@ public class Course implements EntityInterface {
     private String imagebase64;
 
     @Column(name = "rating")
-    private int rating;
+    private double rating;
+
+    @Column(name="numb_of_users_ratings")
+    private long numbOfUsersRatings;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
@@ -85,11 +88,19 @@ public class Course implements EntityInterface {
         this.imagebase64 = imagebase64;
     }
 
-    public int getRating() {
+    public double getRating() {
         return rating;
     }
 
-    public void setRating(int rating) {
+    public void setRating(double rating) {
         this.rating = rating;
+    }
+
+    public long getNumbOfUsersRatings() {
+        return numbOfUsersRatings;
+    }
+
+    public void setNumbOfUsersRatings(long numbOfUsersRatings) {
+        this.numbOfUsersRatings = numbOfUsersRatings;
     }
 }
