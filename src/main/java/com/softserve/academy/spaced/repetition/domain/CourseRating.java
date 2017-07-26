@@ -5,8 +5,8 @@ import com.softserve.academy.spaced.repetition.DTO.EntityInterface;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "card_rating")
-public class CardRating implements EntityInterface {
+@Table(name = "course_rating")
+public class CourseRating implements EntityInterface{
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -16,24 +16,19 @@ public class CardRating implements EntityInterface {
     @Column(name = "account_email",nullable = false)
     private String accountEmail;
 
-    @Column(name = "deck_id", nullable = false)
-    private long deckId;
-
-    @Column(name = "card_id", nullable = false)
-    private long cardId;
+    @Column(name = "course_id", nullable = false)
+    private long courseId;
 
     @Column(name = "rating", nullable = false)
     private int rating;
 
-    public CardRating() {
+    public CourseRating(){
 
     }
 
-    public CardRating(Long id){
-        this.id = id;
-    }
-
-    public CardRating(int rating) {
+    public CourseRating(String accountEmail, long courseId, int rating) {
+        this.accountEmail = accountEmail;
+        this.courseId = courseId;
         this.rating = rating;
     }
 
@@ -53,20 +48,12 @@ public class CardRating implements EntityInterface {
         this.accountEmail = accountEmail;
     }
 
-    public long getDeckId() {
-        return deckId;
+    public long getCourseId() {
+        return courseId;
     }
 
-    public void setDeckId(long deckId) {
-        this.deckId = deckId;
-    }
-
-    public long getCardId() {
-        return cardId;
-    }
-
-    public void setCardId(long cardId) {
-        this.cardId = cardId;
+    public void setCourseId(long courseId) {
+        this.courseId = courseId;
     }
 
     public int getRating() {
