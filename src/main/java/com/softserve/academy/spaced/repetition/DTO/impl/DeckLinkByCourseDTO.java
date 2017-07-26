@@ -8,7 +8,7 @@ import org.springframework.hateoas.Link;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
-public class DeckLinkByCourseDTO extends DTO<Deck>{
+public class DeckLinkByCourseDTO extends DTO<Deck> {
     public DeckLinkByCourseDTO(Deck deck, Link link) {
         super(deck, link);
         Link linkCards = linkTo(methodOn(DeckController.class).getCardsByCourseAndDeck((long) -1, (long) -1, getEntity().getId())).withRel("cards");

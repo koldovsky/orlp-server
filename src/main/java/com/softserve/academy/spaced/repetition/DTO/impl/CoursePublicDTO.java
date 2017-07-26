@@ -18,7 +18,7 @@ public class CoursePublicDTO extends DTO<Course> {
         return getEntity().getDescription();
     }
 
-    public String getImagebase64(){
-        return  getEntity().getImagebase64();
+    public String getImagebase64() {
+        return getEntity().getImagebase64();
     }
 }
