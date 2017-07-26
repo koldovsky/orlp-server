@@ -3,7 +3,6 @@ package com.softserve.academy.spaced.repetition.service;
 import com.softserve.academy.spaced.repetition.domain.Course;
 import com.softserve.academy.spaced.repetition.domain.CourseRating;
 import com.softserve.academy.spaced.repetition.exceptions.MoreThanOneTimeRateException;
-import com.softserve.academy.spaced.repetition.exceptions.UserIsNotAuthorizedException;
 import com.softserve.academy.spaced.repetition.repository.CourseRatingRepository;
 import com.softserve.academy.spaced.repetition.repository.CourseRepository;
 import com.softserve.academy.spaced.repetition.security.JwtUser;
