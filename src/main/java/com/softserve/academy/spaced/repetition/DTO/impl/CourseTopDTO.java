@@ -18,7 +18,7 @@ public class CourseTopDTO extends DTO<Course> {
         return getEntity().getName();
     }
 
-    public String getImagebase64(){
-        return  getEntity().getImagebase64();
+    public String getImagebase64() {
+        return getEntity().getImagebase64();
     }
 }

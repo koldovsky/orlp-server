@@ -4,18 +4,13 @@ import com.softserve.academy.spaced.repetition.DTO.DTOBuilder;
 import com.softserve.academy.spaced.repetition.DTO.impl.CourseLinkDTO;
 import com.softserve.academy.spaced.repetition.DTO.impl.CoursePublicDTO;
 import com.softserve.academy.spaced.repetition.DTO.impl.CourseTopDTO;
-import com.softserve.academy.spaced.repetition.DTO.impl.DeckPublicDTO;
 import com.softserve.academy.spaced.repetition.domain.Course;
-import com.softserve.academy.spaced.repetition.domain.Deck;
-import com.softserve.academy.spaced.repetition.service.AccessToUrlService;
 import com.softserve.academy.spaced.repetition.service.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Link;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -25,7 +20,6 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
 @RestController
-@CrossOrigin
 public class CourseController {
 
     @Autowired
@@ -37,6 +31,17 @@ public class CourseController {
         List<Course> courseList = courseService.getAllCoursesByCategoryId(category_id);
         Link collectionLink = linkTo(methodOn(CourseController.class).getAllCoursesByCategoryId(category_id)).withSelfRel();
         List<CourseLinkDTO> courses = DTOBuilder.buildDtoListForCollection(courseList, CourseLinkDTO.class, collectionLink);
+        return new ResponseEntity<>(courses, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/api/courses")
+    public ResponseEntity<List<CourseLinkDTO>> getAllCourses() {
+        List<Course> courseList = courseService.getAllCourses();
+        List<CourseLinkDTO> courses = new ArrayList<>();
+        for (Course course : courseList) {
+            Link selfLink = linkTo(methodOn(CourseController.class).getAllCoursesByCategoryId(course.getCategory().getId())).withSelfRel();
+            courses.add(DTOBuilder.buildDtoForEntity(course, CourseLinkDTO.class, selfLink));
+        }
         return new ResponseEntity<>(courses, HttpStatus.OK);
     }
 
@@ -65,6 +70,7 @@ public class CourseController {
     }
 
     @PostMapping(value = "/api/category/{category_id}/courses")
+    @PreAuthorize(value = "@accessToUrlService.hasAccessToCategory(#category_id)")
     public ResponseEntity<CoursePublicDTO> addCourse(@RequestBody Course course, @PathVariable Long category_id) {
         courseService.addCourse(course, category_id);
         Link selfLink = linkTo(methodOn(CourseController.class).getCourseById(category_id, course.getId())).withSelfRel();

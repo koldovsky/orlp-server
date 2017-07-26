@@ -21,12 +21,17 @@ public class CourseService {
 
 
     @Transactional
+    public List<Course> getAllCourses() {
+        return courseRepository.findAll();
+    }
+
+    @Transactional
     public List<Course> getAllCoursesByCategoryId(Long category_id) {
         return courseRepository.getAllCoursesByCategoryId(category_id);
     }
 
     @Transactional
-    public List<Deck> getAllDecksByCourseId(Long category_id, Long course_id){
+    public List<Deck> getAllDecksByCourseId(Long category_id, Long course_id) {
         Course course = courseRepository.getCourseByCategoryIdAndId(category_id, course_id);
         return course.getDecks();
     }

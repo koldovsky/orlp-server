@@ -39,7 +39,7 @@ public class RegistrationController {
 
     @RequestMapping(value = "/registration", method = RequestMethod.GET)
     public String test() {
-        registrationService.sendConfirmationEmailMessage(userRepository.findUserByAccount_Email("dsaw@sda"));
+        registrationService.sendConfirmationEmailMessage(userRepository.findUserByAccountEmail("dsaw@sda"));
         return "page";
     }
 }

@@ -4,7 +4,6 @@ import com.softserve.academy.spaced.repetition.domain.*;
 import com.softserve.academy.spaced.repetition.exceptions.BlankFieldException;
 import com.softserve.academy.spaced.repetition.exceptions.EmailUniquesException;
 import com.softserve.academy.spaced.repetition.repository.UserRepository;
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -52,7 +51,7 @@ public class RegistrationService {
     }
 
     private void emailUniquesValidation(User user) throws EmailUniquesException {
-        if (userRepository.findUserByAccount_Email(user.getAccount().getEmail().toLowerCase()) == null) {
+        if (userRepository.findUserByAccountEmail(user.getAccount().getEmail().toLowerCase()) == null) {
             createNewUser(user);
         } else {
             throw new EmailUniquesException();

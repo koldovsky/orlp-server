@@ -66,7 +66,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeRequests()
-                .antMatchers("/private/**").hasRole("USER")
+                .antMatchers("api/private/**").hasRole("USER")
                 .antMatchers("/**").permitAll()
                 .anyRequest().permitAll();
         http
@@ -83,7 +83,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 registry.addMapping("/**")
                         .allowedOrigins(url)
                         .allowCredentials(true)
-                        .allowedHeaders("Content-Type", "Access-Control-Allow-Headers", "Authorization", "X-Requested-With");
+                        .allowedHeaders("Set-Cookie", "*", "Content-Type", "Access-Control-Allow-Headers", "Authorization", "X-Requested-With", "Origin", "Accept")
+                        .allowedMethods("PUT", "DELETE", "GET", "POST")
+                        .maxAge(3600);
             }
         };
     }

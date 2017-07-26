@@ -4,6 +4,8 @@ import com.softserve.academy.spaced.repetition.DTO.DTO;
 import com.softserve.academy.spaced.repetition.DTO.DTOBuilder;
 import com.softserve.academy.spaced.repetition.DTO.impl.CardRatingPublicDTO;
 import com.softserve.academy.spaced.repetition.domain.CardRating;
+import com.softserve.academy.spaced.repetition.exceptions.MoreThanOneTimeRateException;
+import com.softserve.academy.spaced.repetition.exceptions.RatingsBadValueException;
 import com.softserve.academy.spaced.repetition.service.CardRatingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Link;
@@ -48,15 +50,15 @@ public class CardRatingController {
     }
 
     @PostMapping("/api/category/{categoryId}/decks/{deckId}/cards/{cardId}/rate")
-    public ResponseEntity<DTO<CardRating>> addCardRating(@RequestBody CardRating cardRating, @PathVariable Long deckId, @PathVariable Long cardId) {
-        try {
+    public ResponseEntity<DTO<CardRating>> addCardRating(@RequestBody CardRating cardRating, @PathVariable Long deckId, @PathVariable Long cardId) throws MoreThanOneTimeRateException,RatingsBadValueException {
+
+        if (cardRating.getRating() <= 5 && cardRating.getRating() >= 0) {
             cardRatingService.addCardRating(cardRating, deckId, cardId);
             Link selfLink = linkTo(methodOn(CardRatingController.class).getCardRatingById(cardRating.getId())).withSelfRel();
             CardRatingPublicDTO cardRatingPublicDTO = DTOBuilder.buildDtoForEntity(cardRating, CardRatingPublicDTO.class, selfLink);
             return new ResponseEntity<>(cardRatingPublicDTO, HttpStatus.CREATED);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
+        } else
+            throw new RatingsBadValueException();
     }
 
 }

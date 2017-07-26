@@ -9,7 +9,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 
-@Service
 @Component("accessToUrlService")
 public class AccessToUrlService {
 
@@ -25,7 +24,7 @@ public class AccessToUrlService {
     @Autowired
     private CardRepository cardRepository;
 
-    public boolean hasAccessToCategory(Long category_id){
+    public boolean hasAccessToCategory(Long category_id) {
         return categoryRepository.hasAccessToCategory(category_id).size() > 0;
     }
 
