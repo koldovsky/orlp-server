@@ -4,6 +4,7 @@ import com.softserve.academy.spaced.repetition.security.JwtUser;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -15,10 +16,11 @@ public class TestController {
 
     @RequestMapping("/private/test")
     public String test() {
-    //    JwtUser user =
-        return "test";
+        JwtUser user = (JwtUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String username = user.getUsername();
+        return username;
     }
-
+//
 //    @RequestMapping(value = "/hello", method = RequestMethod.POST)
 //    public ResponseEntity test2(){
 //        HttpHeaders headers = new HttpHeaders();

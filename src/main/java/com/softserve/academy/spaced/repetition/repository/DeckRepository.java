@@ -14,6 +14,8 @@ public interface DeckRepository extends JpaRepository<Deck, Long> {
 
     List<Deck> getAllDecksByCategoryId(Long id);
 
+    Deck getDeckById(Long id);
+
     Deck getDeckByCategoryIdAndId(Long category_id, Long deck_id);
 
     List<Deck> findTop4ByOrderById();
@@ -24,7 +26,7 @@ public interface DeckRepository extends JpaRepository<Deck, Long> {
             + "c.id = :course_id and d.id = :deck_id")
     List<Deck> hasAccessToDeck(@Param("course_id") Long course_id, @Param("deck_id") Long deck_id);
 
-    @Query(value = "SELECT d FROM Deck d, Category c WHERE c.id = :category_id AND d.id = :deck_id")
+    @Query(value = "SELECT d FROM Category c INNER JOIN c.decks AS d WHERE c.id = :category_id AND d.id = :deck_id")
     List<Deck> hasAccessToDeckFromCategory(@Param("category_id") Long category_id, @Param("deck_id") Long deck_id);
 
     @Query(value = "SELECT d FROM Deck d WHERE d.category.id = :category_id")
