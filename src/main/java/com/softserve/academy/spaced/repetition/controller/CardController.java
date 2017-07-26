@@ -24,10 +24,10 @@ public class CardController {
     @GetMapping(value = "/api/category/{category_id}/courses/{course_id}/decks/{deck_id}/cards/{card_id}")
     @PreAuthorize(value = "@accessToUrlService.hasAccessToCard(#category_id, #course_id, #deck_id, #card_id)")
     public ResponseEntity<CardPublicDTO> getCardByCourseAndDeck(@PathVariable Long category_id, @PathVariable Long course_id, @PathVariable Long deck_id, @PathVariable Long card_id) {
-           Card card = cardService.getCard(card_id);
-           Link selfLink = linkTo(methodOn(CardController.class).getCardByCourseAndDeck(category_id, course_id, deck_id, card_id)).withSelfRel();
-           CardPublicDTO cardPublicDTO = DTOBuilder.buildDtoForEntity(card, CardPublicDTO.class, selfLink);
-           return new ResponseEntity<>(cardPublicDTO, HttpStatus.OK);
+        Card card = cardService.getCard(card_id);
+        Link selfLink = linkTo(methodOn(CardController.class).getCardByCourseAndDeck(category_id, course_id, deck_id, card_id)).withSelfRel();
+        CardPublicDTO cardPublicDTO = DTOBuilder.buildDtoForEntity(card, CardPublicDTO.class, selfLink);
+        return new ResponseEntity<>(cardPublicDTO, HttpStatus.OK);
     }
 
     @GetMapping(value = "/api/category/{category_id}/decks/{deck_id}/cards/{card_id}")
