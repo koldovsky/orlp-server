@@ -40,6 +40,14 @@ public class CourseController {
         return new ResponseEntity<>(courses, HttpStatus.OK);
     }
 
+    @GetMapping(value = "/api/courses")
+    public ResponseEntity<List<CourseLinkDTO>> getAllCourses() {
+        List<Course> courseList = courseService.getAllCourses();
+        Link collectionLink = linkTo(methodOn(CourseController.class).getAllCourses()).withSelfRel();
+        List<CourseLinkDTO> courses = DTOBuilder.buildDtoListForCollection(courseList, CourseLinkDTO.class, collectionLink);
+        return new ResponseEntity<>(courses, HttpStatus.OK);
+    }
+
     @GetMapping("/api/course/top")
     public ResponseEntity<List<CourseTopDTO>> get4Course() {
         List<Course> courseList = courseService.get4Course();
