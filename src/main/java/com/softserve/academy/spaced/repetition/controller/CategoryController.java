@@ -60,6 +60,7 @@ public class CategoryController {
     }
 
     @PutMapping("/api/admin/add/category/{id}")
+    @PreAuthorize(value = "@accessToUrlService.hasAccessToCategory(#id)")
     public ResponseEntity<CategoryPublicDTO> updateCategory(@RequestBody Category category, @PathVariable Long id) {
             category = categoryService.updateCategory(category, id);
             Link selfLink = linkTo(methodOn(CategoryController.class).getCategoryById(category.getId())).withSelfRel();
