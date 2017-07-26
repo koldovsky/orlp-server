@@ -13,9 +13,6 @@ public class Image implements EntityInterface {
     @Column(name = "image_id")
     private long id;
 
-    @Column(name = "name", nullable = false)
-    private String name;
-
     @Column(name = "imagebase64", columnDefinition = "LONGTEXT")
     private String imagebase64;
 
@@ -28,19 +25,20 @@ public class Image implements EntityInterface {
     public Image() {
     }
 
-    public Image(String name, String imagebase64) {
-        this.name = name;
+    public Image(Long id) {
+        this.id = id;
+    }
+
+    public Image(String imagebase64) {
         this.imagebase64 = imagebase64;
     }
 
-    public Image(String name, String imagebase64, int hash) {
-        this.name = name;
+    public Image(String imagebase64, int hash) {
         this.imagebase64 = imagebase64;
         this.hash = hash;
     }
 
-    public Image(String name, String imagebase64, int hash, String type) {
-        this.name = name;
+    public Image(String imagebase64, int hash, String type) {
         this.imagebase64 = imagebase64;
         this.hash = hash;
         this.type = type;
@@ -53,14 +51,6 @@ public class Image implements EntityInterface {
 
     public void setId(long id) {
         this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public String getImagebase64() {
