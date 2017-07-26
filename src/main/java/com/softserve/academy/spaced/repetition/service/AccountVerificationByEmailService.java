@@ -28,10 +28,10 @@ public class AccountVerificationByEmailService {
         } catch (ExpiredTokenForVerificationException e) {
             return new ResponseEntity(HttpStatus.NOT_FOUND);
         }
-        if (userRepository.findUserByAccount_Email(email) == null) {
+        if (userRepository.findUserByAccountEmail(email) == null) {
             return new ResponseEntity(HttpStatus.NOT_FOUND);
         }
-        Account editedAcc = userRepository.findUserByAccount_Email(email).getAccount();
+        Account editedAcc = userRepository.findUserByAccountEmail(email).getAccount();
         if (editedAcc.getStatus().equals(AccountStatus.INACTIVE)) {
             editedAcc.setStatus(AccountStatus.ACTIVE);
         }

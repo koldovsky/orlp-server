@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@CrossOrigin
 @RestController
 @RequestMapping(value = "/api")
 public class RegistrationController {
@@ -40,7 +39,7 @@ public class RegistrationController {
 
     @RequestMapping(value = "/registration", method = RequestMethod.GET)
     public String test() {
-        registrationService.sendConfirmationEmailMessage(userRepository.findUserByAccount_Email("zadorovskyi@hotmail.com"));
+        registrationService.sendConfirmationEmailMessage(userRepository.findUserByAccountEmail("zadorovskyi@hotmail.com"));
         return "page";
     }
 }

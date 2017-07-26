@@ -12,7 +12,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.jws.soap.SOAPBinding;
 import java.util.List;
 
 @Service
@@ -30,7 +29,7 @@ public class UserService {
 
     @Transactional
     public User findUserByEmail(String email) {
-        return userRepository.findUserByAccount_Email(email);
+        return userRepository.findUserByAccountEmail(email);
     }
 
     @Transactional
@@ -80,7 +79,6 @@ public class UserService {
 
     public User getAuthorizedUser() {
         JwtUser jwtUser = (JwtUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-        return userRepository.findUserByAccount_Email(jwtUser.getUsername());
+        return userRepository.findUserByAccountEmail(jwtUser.getUsername());
     }
 }

@@ -55,7 +55,8 @@ public class AuthenticationRestController {
         }*/
         Authentication authentication = jwtSocialService.getAuthenticationToken(authenticationRequest.getUsername(), authenticationRequest.getPassword());
         jwtSocialService.setAuthentication(authentication);
-        String token = jwtSocialService.generateToken((JwtUser) authentication.getPrincipal(), device);
+        UserDetails userDetails = userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
+        String token = jwtSocialService.generateToken(userDetails, device);
         HttpHeaders headers = jwtSocialService.addTokenToHeaderCookie(token);
         return new ResponseEntity<>(new JwtAuthenticationResponse("Ok"), headers, HttpStatus.OK);
     }
