@@ -43,9 +43,14 @@ public class CourseController {
     @GetMapping("/api/course/top")
     public ResponseEntity<List<CourseTopDTO>> get4Course() {
         List<Course> courseList = courseService.get4Course();
-        Link collectionLink = linkTo(methodOn(CourseController.class).get4Course()).withSelfRel();
-        List<CourseTopDTO> courses = DTOBuilder.buildDtoListForCollection(courseList,
-                CourseTopDTO.class, collectionLink);
+        List<CourseTopDTO> courses = new ArrayList <>();
+        for (Course course : courseList) {
+            Link selfLink = linkTo(methodOn(CourseController.class).getCourseById(course.getCategory().getId(), course.getId())).withSelfRel();
+            courses.add(DTOBuilder.buildDtoForEntity(course, CourseTopDTO.class, selfLink));
+        }
+//        Link collectionLink = linkTo(methodOn(CourseController.class).getAllCoursesByCategoryId(courseList.get(0).getCategory().getId()).).withSelfRel();
+//        List<CourseTopDTO> courses = DTOBuilder.buildDtoListForCollection(courseList,
+//                CourseTopDTO.class, collectionLink);
         return new ResponseEntity<>(courses, HttpStatus.OK);
     }
 
