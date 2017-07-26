@@ -6,6 +6,7 @@ import com.softserve.academy.spaced.repetition.DTO.impl.CardRatingPublicDTO;
 import com.softserve.academy.spaced.repetition.DTO.impl.CourseRatingPublicDTO;
 import com.softserve.academy.spaced.repetition.domain.CourseRating;
 import com.softserve.academy.spaced.repetition.exceptions.MoreThanOneTimeRateException;
+import com.softserve.academy.spaced.repetition.exceptions.RatingsBadValueException;
 import com.softserve.academy.spaced.repetition.service.CourseRatingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Link;
@@ -26,7 +27,7 @@ public class CourseRatingController {
     private CourseRatingService courseRatingService;
 
     @PostMapping("/api/category/course/{courseId}")
-    public ResponseEntity<DTO<CourseRating>> addCourseRating(@RequestBody CourseRating courseRating, @PathVariable Long courseId) throws MoreThanOneTimeRateException {
+    public ResponseEntity<DTO<CourseRating>> addCourseRating(@RequestBody CourseRating courseRating, @PathVariable Long courseId) throws MoreThanOneTimeRateException,RatingsBadValueException {
 
         if (courseRating.getRating() <= 5 && courseRating.getRating() >= 0) {
             courseRatingService.addCourseRating(courseRating,courseId);
@@ -34,7 +35,7 @@ public class CourseRatingController {
             CourseRatingPublicDTO courseRatingPublicDTO = DTOBuilder.buildDtoForEntity(courseRating, CourseRatingPublicDTO.class, selfLink);
             return new ResponseEntity<>(courseRatingPublicDTO, HttpStatus.CREATED);
         } else
-            throw new MoreThanOneTimeRateException();
+            throw new RatingsBadValueException();
     }
 
 }

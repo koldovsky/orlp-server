@@ -26,7 +26,7 @@ public class Course implements EntityInterface {
     @Column(name = "rating")
     private double rating;
 
-    @Column(name="name_of_users_ratings")
+    @Column(name="numb_of_users_ratings")
     private long numbOfUsersRatings;
 
     @ManyToOne(fetch = FetchType.LAZY)

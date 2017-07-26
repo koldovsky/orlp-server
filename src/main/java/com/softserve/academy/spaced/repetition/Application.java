@@ -21,25 +21,27 @@ import java.util.stream.Stream;
 @SpringBootApplication
 public class Application {
 
-//    @Autowired
-//    CategoryRepository categoryRepository;
-//    @Autowired
-//    UserRepository userRepository;
-//    @Autowired
-//    DeckRepository deckRepository;
-//    @Autowired
-//    CourseRepository courseRepository;
-//    @Autowired
-//    CardRepository cardRepository;
-//
-//    @Autowired
-//    PasswordEncoder bCryptPasswordEncoder;
+        private final CategoryRepository categoryRepository;
+    private final UserRepository userRepository;
+    private final DeckRepository deckRepository;
+    private final CourseRepository courseRepository;
+    private final CardRepository cardRepository;
+    private final PasswordEncoder bCryptPasswordEncoder;
+
+    @Autowired
+    public Application(CategoryRepository categoryRepository, UserRepository userRepository, DeckRepository deckRepository, CourseRepository courseRepository, CardRepository cardRepository, PasswordEncoder bCryptPasswordEncoder) {
+        this.categoryRepository = categoryRepository;
+        this.userRepository = userRepository;
+        this.deckRepository = deckRepository;
+        this.courseRepository = courseRepository;
+        this.cardRepository = cardRepository;
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+    }
 
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
     }
-//
-//    @PostConstruct
+//        @PostConstruct
 //    public void addTestData() throws IOException {
 //        List<Category> categories = new ArrayList<>();
 //        Resource categoryResource = new ClassPathResource("/Data/Category.txt");
@@ -137,14 +139,26 @@ public class Application {
 //            course.setImagebase64(s[2]);
 //            course.setCategory(categories.get(i));
 //            course.setDecks(decks.subList(n, m));
+//            categories.get(i).setDecks(course.getDecks());
 //            courses.add(course);
 //            if (i < 9) {
 //                i++;
 //            } else i = 0;
 //            n = m;
-//            m+=2;
+//            m += 2;
 //        }
-//        courses.get(1).setCategory(categories.get(0)); // Changed Android to Java category
 //        courseRepository.save(courses);
+//
+//        int a = 0;
+//        int b = 1;
+//        for (Category category : categories) {
+//            List<Deck> decks1 = new ArrayList<>();
+//            decks1.addAll(courses.get(a).getDecks());
+//            category.setDecks(decks1);
+//            category.setCourses(courses.subList(a, b));
+//            a = b;
+//            b++;
+//            categoryRepository.save(category);
+//        }
 //    }
 }

@@ -37,7 +37,7 @@ public class CardRatingService {
 
         CardRating cardRatingByAccountEmail = cardRatingRepository.findAllByAccountEmailAndCardId(username, cardId);
 
-     //   if (cardRatingByAccountEmail == null) {
+       if (cardRatingByAccountEmail == null) {
 
             Card card = cardRepository.findOne(cardId);
             Deck deck = deckRepository.findOne(deckId);
@@ -56,9 +56,9 @@ public class CardRatingService {
             deck.setRating(deckAvarageRating);
             cardRepository.save(card);
 
-//        } else {
-//            throw new MoreThanOneTimeRateException();
-//        }
+        } else {
+            throw new MoreThanOneTimeRateException();
+        }
     }
 
     public double countAvarageRating(List<Integer> ratings) {

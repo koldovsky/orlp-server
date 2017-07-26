@@ -7,7 +7,7 @@ spring:
   jpa:
     show-sql: true
     hibernate:
-      ddl-auto: validate
+      ddl-auto: create
       naming-strategy: org.hibernate.cfg.ImprovedNamingStrategy
   social:
     google:
@@ -23,6 +23,8 @@ spring:
     port: 587
     username: sybez.market@gmail.com
     password: z0935152261
+  origin:
+    url: http://localhost:3000
 
 jwt:
   header: Authentication
@@ -33,3 +35,9 @@ jwt:
       path: api/auth
       refresh: refresh
 
+app:
+  reCaptcha:
+    secretKey: 6LeS2ykUAAAAAPUUYX5h93VVp0cBhHB6c0PfMkRB
+    url: https://www.google.com/recaptcha/api/siteverify
+#server:
+#  port: 8088
