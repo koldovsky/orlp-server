@@ -42,7 +42,7 @@ public class DeckService {
 
     @Transactional
     public Deck getDeck(Long deck_id) {
-       return deckRepository.findOne(deck_id);
+        return deckRepository.findOne(deck_id);
     }
 
     public List<Card> getAllCardsByDeckId(Long deck_id) {
