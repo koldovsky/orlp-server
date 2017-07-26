@@ -24,33 +24,26 @@ public class CardRatingController {
     @Autowired
     private CardRatingService cardRatingService;
 
-
     @GetMapping("api/rate/card")
     public ResponseEntity<List<CardRatingPublicDTO>> getCardRating() {
-        try {
-            List<CardRating> cardRatingsList = cardRatingService.getAllCardRating();
-            Link collectionLink = linkTo(methodOn(CardRatingController.class).getCardRating()).withRel("card");
-            List<CardRatingPublicDTO> cardRatings = DTOBuilder.buildDtoListForCollection(cardRatingsList, CardRatingPublicDTO.class, collectionLink);
-            return new ResponseEntity<>(cardRatings, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+
+        List<CardRating> cardRatingsList = cardRatingService.getAllCardRating();
+        Link collectionLink = linkTo(methodOn(CardRatingController.class).getCardRating()).withRel("card");
+        List<CardRatingPublicDTO> cardRatings = DTOBuilder.buildDtoListForCollection(cardRatingsList, CardRatingPublicDTO.class, collectionLink);
+        return new ResponseEntity<>(cardRatings, HttpStatus.OK);
     }
 
     @GetMapping("api/rate/card/{id}")
     public ResponseEntity<CardRatingPublicDTO> getCardRatingById(@PathVariable Long id) {
-        try {
-            CardRating cardRating = cardRatingService.getCardRatingById(id);
-            Link selfLink = linkTo(methodOn(CardRatingController.class).getCardRatingById(cardRating.getId())).withRel("cardRating");
-            CardRatingPublicDTO cardRatingDTO = DTOBuilder.buildDtoForEntity(cardRating, CardRatingPublicDTO.class, selfLink);
-            return new ResponseEntity<>(cardRatingDTO, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+
+        CardRating cardRating = cardRatingService.getCardRatingById(id);
+        Link selfLink = linkTo(methodOn(CardRatingController.class).getCardRatingById(cardRating.getId())).withRel("cardRating");
+        CardRatingPublicDTO cardRatingDTO = DTOBuilder.buildDtoForEntity(cardRating, CardRatingPublicDTO.class, selfLink);
+        return new ResponseEntity<>(cardRatingDTO, HttpStatus.OK);
     }
 
-    @PostMapping("/api/category/{categoryId}/decks/{deckId}/cards/{cardId}/rate")
-    public ResponseEntity<DTO<CardRating>> addCardRating(@RequestBody CardRating cardRating, @PathVariable Long deckId, @PathVariable Long cardId) throws MoreThanOneTimeRateException,RatingsBadValueException {
+    @PostMapping("/api/private/decks/{deckId}/cards/{cardId}/rate")
+    public ResponseEntity<DTO<CardRating>> addCardRating(@RequestBody CardRating cardRating, @PathVariable Long deckId, @PathVariable Long cardId) throws MoreThanOneTimeRateException, RatingsBadValueException {
 
         if (cardRating.getRating() <= 5 && cardRating.getRating() >= 0) {
             cardRatingService.addCardRating(cardRating, deckId, cardId);
