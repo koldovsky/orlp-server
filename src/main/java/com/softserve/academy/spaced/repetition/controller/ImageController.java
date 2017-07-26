@@ -15,7 +15,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 
 @RestController
-@CrossOrigin
 public class ImageController {
 
 
