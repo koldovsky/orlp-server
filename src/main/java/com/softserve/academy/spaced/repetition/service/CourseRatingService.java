@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class CourseRatingService {
 
@@ -20,34 +22,43 @@ public class CourseRatingService {
     private CourseRepository courseRepository;
 
     @Autowired
-    private CardRatingService cardRatingService;
+    private RatingCountService ratingCountService;
 
     public void addCourseRating(CourseRating courseRating, Long courseId) throws MoreThanOneTimeRateException {
 
         JwtUser user = (JwtUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if(user==null)
-            System.out.println();
 
-        String username = user.getUsername();
+            String username = user.getUsername();
 
-        CourseRating CourseRatingByAccountEmail = courseRatingRepository.findAllByAccountEmailAndCourseId(username, courseId);
+            CourseRating CourseRatingByAccountEmail = courseRatingRepository.findAllByAccountEmailAndCourseId(username, courseId);
 
-           if (CourseRatingByAccountEmail == null) {
+            if (CourseRatingByAccountEmail == null) {
 
-        Course course = courseRepository.findOne(courseId);
-        courseRating.setAccountEmail(username);
-        courseRating.setCourseId(courseId);
-        courseRatingRepository.save(courseRating);
+                Course course = courseRepository.findOne(courseId);
+                courseRating.setAccountEmail(username);
+                courseRating.setCourseId(courseId);
+                courseRatingRepository.save(courseRating);
 
-        double courseAvarageRating = cardRatingService.countAvarageRating(courseRatingRepository.findRatingByCourseId(courseId));
-        System.out.println("courseAvgRate="+courseAvarageRating);
-        long numbOfUsersRatings = courseRatingRepository.countAllByCourseId(courseId);
-        course.setRating(courseAvarageRating);
-        course.setNumbOfUsersRatings(numbOfUsersRatings);
-        courseRepository.save(course);
+                double courseAvarageRating = ratingCountService.countAvarageRating(courseRatingRepository.findRatingByCourseId(courseId));
+                long numbOfUsersRatings = courseRatingRepository.countAllByCourseId(courseId);
+                course.setRating(courseAvarageRating);
+                course.setNumbOfUsersRatings(numbOfUsersRatings);
+                courseRepository.save(course);
 
-        } else {
-            throw new MoreThanOneTimeRateException();
-        }
+            } else {
+                throw new MoreThanOneTimeRateException();
+            }
+
     }
+
+    public List<CourseRating> getAllCardRating() {
+        List<CourseRating> courseRatings = courseRatingRepository.findAll();
+        return courseRatings;
+    }
+
+    public CourseRating getCourseRatingById(Long courseId){
+        CourseRating courseRating = courseRatingRepository.findOne(courseId);
+        return courseRating;
+    }
+
 }

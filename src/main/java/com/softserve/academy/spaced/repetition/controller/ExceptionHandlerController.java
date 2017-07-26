@@ -1,10 +1,7 @@
 package com.softserve.academy.spaced.repetition.controller;
 
 import com.softserve.academy.spaced.repetition.DTO.impl.MessageDTO;
-import com.softserve.academy.spaced.repetition.exceptions.ImageContextDublicationException;
-import com.softserve.academy.spaced.repetition.exceptions.ImageNameDublicationException;
-import com.softserve.academy.spaced.repetition.exceptions.MoreThanOneTimeRateException;
-import com.softserve.academy.spaced.repetition.exceptions.RatingsBadValueException;
+import com.softserve.academy.spaced.repetition.exceptions.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -41,14 +38,15 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(NullPointerException.class)
-    ResponseEntity<MessageDTO> handleIllegalValueOfRequestParameterException(){
+    ResponseEntity<MessageDTO> handleIllegalValueOfRequestParameterException() {
         return new ResponseEntity<>(new MessageDTO("The value of request parameter is not valid!"), HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler(RatingsBadValueException.class)
     @ResponseBody
-    @ResponseStatus(value=HttpStatus.CONFLICT)
+    @ResponseStatus(value = HttpStatus.CONFLICT)
     String handleRatingsBadValueException(HttpServletRequest request, Throwable ex) {
         return "Rating can't be less than 0 and more than 5";
     }
+
 }
