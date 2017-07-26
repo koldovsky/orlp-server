@@ -2,7 +2,7 @@ package com.softserve.academy.spaced.repetition.controller.authorization;
 
 import com.softserve.academy.spaced.repetition.DTO.DTOBuilder;
 import com.softserve.academy.spaced.repetition.DTO.impl.UserLinksDTO;
-import com.softserve.academy.spaced.repetition.DTO.impl.UserPublicDTO;
+import com.softserve.academy.spaced.repetition.DTO.impl.UserDTO;
 import com.softserve.academy.spaced.repetition.domain.User;
 import com.softserve.academy.spaced.repetition.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,10 +22,10 @@ public class UserController {
     UserService userService;
 
     @GetMapping("api/private/user/details")
-    public ResponseEntity<UserPublicDTO> getAuthorizedUserPublicInfo() {
+    public ResponseEntity<UserDTO> getAuthorizedUserPublicInfo() {
         User user = userService.getAuthorizedUser();
         Link link = linkTo(methodOn(UserController.class).getAuthorizedUserWithLinks()).withSelfRel();
-        UserPublicDTO userDTO = DTOBuilder.buildDtoForEntity(user, UserPublicDTO.class, link);
+        UserDTO userDTO = DTOBuilder.buildDtoForEntity(user, UserDTO.class, link);
         return new ResponseEntity<>(userDTO, HttpStatus.OK);
     }
 
