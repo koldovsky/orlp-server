@@ -1,6 +1,5 @@
 package com.softserve.academy.spaced.repetition.config;
 
-
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -11,7 +10,6 @@ import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.ui.freemarker.FreeMarkerConfigurationFactoryBean;
 
 import java.util.Properties;
-
 
 @Configuration
 @ComponentScan(basePackages = "com.softserve.academy.spaced.repetition.config")
@@ -28,26 +26,20 @@ public class MailConfiguration {
     @Bean
     public JavaMailSender getMailSender() {
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
-
         mailSender.setHost(host);
         mailSender.setPort(port);
         mailSender.setUsername(username);
         mailSender.setPassword(password);
-
         Properties javaMailProperties = new Properties();
         javaMailProperties.put("mail.smtp.starttls.enable", "true");
         javaMailProperties.put("mail.smtp.auth", "true");
         javaMailProperties.put("mail.transport.protocol", "smtp");
         javaMailProperties.put("mail.debug", "true");
         javaMailProperties.put("mail.default-encoding", "utf-8");
-
         mailSender.setJavaMailProperties(javaMailProperties);
         return mailSender;
     }
 
-    /*
-     * FreeMarker configuration.
-     */
     @Bean
     @Qualifier("freemarkerConf")
     public FreeMarkerConfigurationFactoryBean getFreeMarkerConfiguration() {
@@ -55,6 +47,4 @@ public class MailConfiguration {
         bean.setTemplateLoaderPath("classpath:/mailTemplates/");
         return bean;
     }
-
 }
-

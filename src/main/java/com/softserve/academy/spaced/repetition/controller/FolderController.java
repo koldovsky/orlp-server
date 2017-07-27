@@ -43,7 +43,7 @@ public class FolderController {
         return new ResponseEntity<DeckPublicDTO>(deckPublicDTO, HttpStatus.OK);
     }
 
-    @GetMapping("/api/user/folder/{folder_id}/decks")
+    @GetMapping("/api/private/user/folder/{folder_id}/decks")
     @PreAuthorize(value = "@accessToUrlService.hasAccessToFolder(#folder_id)")
     public ResponseEntity<List<DeckLinkByFolderDTO>> getAllDecksWithFolder(@PathVariable Long folder_id) {
         List<Deck> deckList = folderService.getAllDecksByFolderId(folder_id);
@@ -54,14 +54,14 @@ public class FolderController {
         return new ResponseEntity<List<DeckLinkByFolderDTO>>(decks, HttpStatus.OK);
     }
 
-    @GetMapping("/api/user/folder/decks/id")
+    @GetMapping("/api/private/user/folder/decks/id")
     public ResponseEntity<List<Long>> getIdAllDecksInFolder() {
         List<Long> id = folderService.getAllDecksIdWithFolder();
 
         return new ResponseEntity<List<Long>>(id, HttpStatus.OK);
     }
 
-    @GetMapping("/api/user/folder/{folder_id}/decks/{deck_id}")
+    @GetMapping("/api/private/user/folder/{folder_id}/decks/{deck_id}")
     @PreAuthorize(value = "@accessToUrlService.hasAccessToDeckFromFolder(#folder_id, #deck_id)")
     public ResponseEntity<DeckLinkByFolderDTO> getDeckByFolderId(@PathVariable Long folder_id, @PathVariable Long deck_id) {
         Deck deck = deckService.getDeck(deck_id);
@@ -71,7 +71,7 @@ public class FolderController {
         return new ResponseEntity<DeckLinkByFolderDTO>(linkDTO, HttpStatus.OK);
     }
 
-    @GetMapping("/api/user/folder/{folder_id}/decks/{deck_id}/cards")
+    @GetMapping("/api/private/user/folder/{folder_id}/decks/{deck_id}/cards")
     @PreAuthorize(value = "@accessToUrlService.hasAccessToDeckFromFolder(#folder_id, #deck_id)")
     public ResponseEntity<List<CardPublicDTO>> getCardsByFolderAndDeck(@PathVariable Long folder_id, @PathVariable Long deck_id) {
         List<Card> cards = deckService.getAllCardsByDeckId(deck_id);

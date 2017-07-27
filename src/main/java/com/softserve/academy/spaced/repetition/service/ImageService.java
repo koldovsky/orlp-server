@@ -5,6 +5,7 @@ import com.softserve.academy.spaced.repetition.domain.Image;
 import com.softserve.academy.spaced.repetition.repository.ImageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartException;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -19,62 +20,67 @@ public class ImageService {
     @Autowired
     private ImageRepository imageRepository;
 
+
     /**
      * Add image to the database
      *
-     * @param file     - MultiPartFile
-     * @param fileName - the name of the file that was uplouded by user
+     * @param file - MultiPartFile
      * @return
      */
-    public OperationStatus addImageToDB(MultipartFile file, String fileName) {
+    public Long addImageToDB(MultipartFile file){
 
-        OperationStatus operationStatus = null;
         final long maxFileSize = 1048576L;
         long fileSize = file.getSize();
+        Image image = null;
+        Long imageId = 0L;
 
         if (fileSize > maxFileSize) {
-            operationStatus = OperationStatus.WRONG_FILE_SIZE;
+
+            throw new MultipartException("File upload error: file is too large.");
+
         } else {
+
             String base64 = encodeToBase64(file);
             int hash = base64.hashCode();
 
-            List<Integer> existingHashes = imageRepository.getHashList();
+            List<Integer> existingHashsList = imageRepository.getHashsList();
 
-            for (Integer existingHash : existingHashes) {
-                if (existingHash == hash) {
-                    return OperationStatus.IMAGE_EXISTS;
+           for(Integer existingHash : existingHashsList){
+                if ( existingHash.equals(hash)){
+                    imageId = imageRepository.getIdByHash(hash);
+                    return imageId;
                 }
-            }
 
-            List<String> existingNames = imageRepository.getNameList();
-
-            for (String existingName : existingNames) {
-                if (existingName.equals(fileName)) {
-                    return OperationStatus.NAME_EXISTS;
-                }
-            }
+           }
             String imageType = file.getContentType();
 
-            Image image = new Image(fileName, base64, hash, imageType);
+            image = new Image(base64, hash, imageType);
             imageRepository.save(image);
-            operationStatus = OperationStatus.OK;
+            imageId = image.getId();
         }
-
-
-        return operationStatus;
+        return imageId;
     }
 
     /**
      * Get decoded from Base64 image content by Image Id
+     *
      * @param id id of the image in the database
      * @return String, which contains decoded image content
      */
     public byte[] getDecodedImageContentByImageId(Long id) {
 
-        Image image = imageRepository.findImageById(id);
-        String encodedFileContent = image.getImagebase64();
-        return decodeFromBase64(encodedFileContent);
+        byte[] imageContentet = null;
+        List<Long> idList = imageRepository.getIdList();
 
+        for (Long existingId : idList){
+            if (id.equals(existingId)) {
+                Image image = imageRepository.findImageById(id);
+                String encodedFileContent = image.getImagebase64();
+                imageContentet = decodeFromBase64(encodedFileContent);
+                break;
+            }
+        }
+        return imageContentet;
     }
 
 
@@ -107,13 +113,5 @@ public class ImageService {
     private byte[] decodeFromBase64(String encodedFileContent) {
 
         return Base64.decodeBase64(encodedFileContent);
-    }
-
-
-    /**
-     * Operation status of adding image to the database
-     */
-    public enum OperationStatus {
-        OK, WRONG_FILE_SIZE, IMAGE_EXISTS, NAME_EXISTS;
     }
 }

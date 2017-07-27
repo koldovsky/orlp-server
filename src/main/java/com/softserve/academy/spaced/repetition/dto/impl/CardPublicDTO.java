@@ -17,4 +17,13 @@ public class CardPublicDTO extends DTO<Card> {
     public String getQuestion() {
         return getEntity().getQuestion();
     }
+
+    public double getRating(){
+        return getEntity().getRating();
+    }
+
+    public long getNumbOfUsersRatings(){
+        return  getEntity().getNumbOfUsersRatings();
+    }
+
 }

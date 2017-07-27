@@ -4,9 +4,10 @@ import com.softserve.academy.spaced.repetition.domain.User;
 import com.softserve.academy.spaced.repetition.security.JwtTokenForMail;
 import freemarker.template.Configuration;
 import freemarker.template.TemplateException;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.annotation.PropertySource;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -21,15 +22,14 @@ import java.util.Map;
 
 @Service
 public class MailService {
-    private static final String URL = "http://localhost:3000";
-
+    Logger logger = Logger.getLogger(this.getClass());
+    @Value("${spring.origin.url}")
+    private String URL;
 
     @Autowired
     JavaMailSender mailSender;
-
     @Autowired
     JwtTokenForMail jwtTokenForMail;
-
     @Autowired
     @Qualifier("freemarkerConf")
     Configuration freemarkerConfiguration;
@@ -52,6 +52,7 @@ public class MailService {
                 String token = jwtTokenForMail.generateTokenForMail(user);
                 model.put("person", user.getPerson());
                 model.put("token", token);
+                logger.warn("http://localhost:3000/registrationConfirm?token=" + token);
                 model.put("url", URL);
                 String text = getFreeMarkerTemplateContent(model);
                 helper.setText(text, true);

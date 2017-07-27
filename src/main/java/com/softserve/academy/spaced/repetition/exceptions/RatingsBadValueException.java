@@ -1,4 +1,4 @@
 package com.softserve.academy.spaced.repetition.exceptions;
 
-public class ImageNameDublicationException extends Exception {
+public class RatingsBadValueException extends Exception {
 }

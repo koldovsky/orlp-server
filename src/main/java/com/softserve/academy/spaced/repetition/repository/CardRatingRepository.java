@@ -1,32 +1,26 @@
 package com.softserve.academy.spaced.repetition.repository;
 
-import com.mysql.jdbc.jmx.LoadBalanceConnectionGroupManager;
-import com.softserve.academy.spaced.repetition.domain.Card;
+
 import com.softserve.academy.spaced.repetition.domain.CardRating;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
 public interface CardRatingRepository extends JpaRepository<CardRating, Long> {
 
-    final static String updateCardRating =
-            "UPDATE  card c" +
-                    "        CROSS JOIN" +
-                    "        (" +
-                    "            SELECT  AVG(rating) c_r " +
-                    "            FROM    card_rating " +
-                    "            WHERE   deck_id = ?1 " +
-                    "            AND card_id=?2 " +
-                    "        ) b " +
-                    "SET     c.rating = b.c_r " +
-                    "WHERE   c.card_id = ?3 ";
-    @Modifying()
-    @Query(value = updateCardRating,nativeQuery = true)
-    public void updateCardRating(int deck_id,int card_id,long card_idd);
+    @Query("select c.rating from CardRating c where c.cardId=:cardId")
+    public List<Integer> findRatingByCardId(@Param("cardId") long cardId);
 
-    public List<CardRating> findAllByCardId(long cardId);
+    @Query("select c.rating from CardRating c where c.deckId=:deckId")
+    public List<Integer> findRatingByDeckId(@Param("deckId") long deckId);
+
+    public Long countAllByRating(int rating);
 
     public List<CardRating> findAllByDeckId(long deckId);
+
+    public CardRating findAllByAccountEmailAndCardId(String accountEmail,long cardId);
+
+    public Long countAllByCardId(Long id);
 }

@@ -4,6 +4,7 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import com.softserve.academy.spaced.repetition.security.*;
 import com.softserve.academy.spaced.repetition.security.DTO.JwtAuthenticationRequest;
 import com.softserve.academy.spaced.repetition.security.DTO.JwtAuthenticationResponse;
+import com.softserve.academy.spaced.repetition.security.DTO.ReCaptchaResponseDto;
 import com.softserve.academy.spaced.repetition.security.service.AuthenticationRestService;
 import com.softserve.academy.spaced.repetition.security.service.JwtSocialService;
 import com.softserve.academy.spaced.repetition.security.service.ReCaptchaApiService;
@@ -13,6 +14,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mobile.device.Device;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -48,12 +50,10 @@ public class AuthenticationRestController {
 
     @RequestMapping(value = "${jwt.route.authentication.path}", method = RequestMethod.POST)
     public ResponseEntity<JwtAuthenticationResponse> createAuthenticationToken(@RequestBody JwtAuthenticationRequest authenticationRequest, Device device) throws AuthenticationException {
-        /*
-        Don't remove this!
         ReCaptchaResponseDto reCaptchaResponseDto = reCaptchaApiService.verify(authenticationRequest.getCaptcha());
         if (!reCaptchaResponseDto.isSuccess()) {
             throw new BadCredentialsException("reCaptcha");
-        }*/
+        }
         Authentication authentication = jwtSocialService.getAuthenticationToken(authenticationRequest.getUsername(), authenticationRequest.getPassword());
         jwtSocialService.setAuthentication(authentication);
         UserDetails userDetails = userDetailsService.loadUserByUsername(authenticationRequest.getUsername());

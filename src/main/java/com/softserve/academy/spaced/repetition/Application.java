@@ -1,23 +1,11 @@
 package com.softserve.academy.spaced.repetition;
 
-import com.softserve.academy.spaced.repetition.domain.*;
 import com.softserve.academy.spaced.repetition.repository.*;
-import com.softserve.academy.spaced.repetition.service.TestServiceToAddCards;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
 import org.springframework.hateoas.config.EnableHypermediaSupport;
 import org.springframework.security.crypto.password.PasswordEncoder;
-
-import javax.annotation.PostConstruct;
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @EnableHypermediaSupport(type = {EnableHypermediaSupport.HypermediaType.HAL})
 @SpringBootApplication
@@ -29,17 +17,15 @@ public class Application {
 //    private final CourseRepository courseRepository;
 //    private final CardRepository cardRepository;
 //    private final PasswordEncoder bCryptPasswordEncoder;
-//    private final TestServiceToAddCards testServiceToAddCards;
 //
 //    @Autowired
-//    public Application(CategoryRepository categoryRepository, UserRepository userRepository, DeckRepository deckRepository, CourseRepository courseRepository, CardRepository cardRepository, PasswordEncoder bCryptPasswordEncoder, TestServiceToAddCards testServiceToAddCards) {
+//    public Application(CategoryRepository categoryRepository, UserRepository userRepository, DeckRepository deckRepository, CourseRepository courseRepository, CardRepository cardRepository, PasswordEncoder bCryptPasswordEncoder) {
 //        this.categoryRepository = categoryRepository;
 //        this.userRepository = userRepository;
 //        this.deckRepository = deckRepository;
 //        this.courseRepository = courseRepository;
 //        this.cardRepository = cardRepository;
 //        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
-//        this.testServiceToAddCards = testServiceToAddCards;
 //    }
 
     public static void main(String[] args) {
@@ -132,7 +118,7 @@ public class Application {
 //            deck.setDescription(s[1]);
 //            deck.setCategory(categories.get(i));
 //            deck.setDeckOwner(users.get(o));
-//            deck.setCards(cards.subList(n, m));
+////            deck.setCards(cards.subList(n, m));
 //            if (i < 9) {
 //                i++;
 //            } else i = 0;

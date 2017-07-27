@@ -42,17 +42,22 @@ public class CourseController {
     @GetMapping(value = "/api/courses")
     public ResponseEntity<List<CourseLinkDTO>> getAllCourses() {
         List<Course> courseList = courseService.getAllCourses();
-        Link collectionLink = linkTo(methodOn(CourseController.class).getAllCourses()).withSelfRel();
-        List<CourseLinkDTO> courses = DTOBuilder.buildDtoListForCollection(courseList, CourseLinkDTO.class, collectionLink);
+        List<CourseLinkDTO> courses = new ArrayList<>();
+        for (Course course : courseList) {
+            Link selfLink = linkTo(methodOn(CourseController.class).getAllCoursesByCategoryId(course.getCategory().getId())).withSelfRel();
+            courses.add(DTOBuilder.buildDtoForEntity(course, CourseLinkDTO.class, selfLink));
+        }
         return new ResponseEntity<>(courses, HttpStatus.OK);
     }
 
     @GetMapping("/api/course/top")
     public ResponseEntity<List<CourseTopDTO>> get4Course() {
         List<Course> courseList = courseService.get4Course();
-        Link collectionLink = linkTo(methodOn(CourseController.class).get4Course()).withSelfRel();
-        List<CourseTopDTO> courses = DTOBuilder.buildDtoListForCollection(courseList,
-                CourseTopDTO.class, collectionLink);
+        List<CourseTopDTO> courses = new ArrayList <>();
+        for (Course course : courseList) {
+            Link selfLink = linkTo(methodOn(CourseController.class).getCourseById(course.getCategory().getId(), course.getId())).withSelfRel();
+            courses.add(DTOBuilder.buildDtoForEntity(course, CourseTopDTO.class, selfLink));
+        }
         return new ResponseEntity<>(courses, HttpStatus.OK);
     }
 
@@ -67,6 +72,7 @@ public class CourseController {
     }
 
     @PostMapping(value = "/api/category/{category_id}/courses")
+    @PreAuthorize(value = "@accessToUrlService.hasAccessToCategory(#category_id)")
     public ResponseEntity<CoursePublicDTO> addCourse(@RequestBody Course course, @PathVariable Long category_id) {
         courseService.addCourse(course, category_id);
         Link selfLink = linkTo(methodOn(CourseController.class).getCourseById(category_id, course.getId())).withSelfRel();
