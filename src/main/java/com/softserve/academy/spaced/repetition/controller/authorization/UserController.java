@@ -29,7 +29,7 @@ public class UserController {
         return new ResponseEntity<>(userDTO, HttpStatus.OK);
     }
 
-    @GetMapping("api/private/user")
+    @GetMapping("api/user")
     public ResponseEntity<UserLinksDTO> getAuthorizedUserWithLinks() {
         User user = userService.getAuthorizedUser();
         Link link = linkTo(methodOn(UserController.class).getAuthorizedUserWithLinks()).withSelfRel();

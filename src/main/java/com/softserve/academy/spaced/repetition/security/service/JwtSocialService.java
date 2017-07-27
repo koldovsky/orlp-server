@@ -2,6 +2,7 @@ package com.softserve.academy.spaced.repetition.security.service;
 
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import com.softserve.academy.spaced.repetition.domain.AuthorityName;
+import com.softserve.academy.spaced.repetition.security.FacebookAuthUtil;
 import com.softserve.academy.spaced.repetition.security.GoogleAuthUtil;
 import com.softserve.academy.spaced.repetition.security.JwtTokenUtil;
 import com.softserve.academy.spaced.repetition.security.JwtUser;
@@ -26,16 +27,17 @@ public class JwtSocialService {
     private final JwtTokenUtil jwtTokenUtil;
     private final GoogleAuthUtil googleAuthUtil;
     private final AuthenticationManager authenticationManager;
+    private final FacebookAuthUtil facebookAuthUtil;
 
     @Value("${jwt.header}")
     private String tokenHeader;
 
-    @Autowired
-    public JwtSocialService(UserDetailsService userDetailsService, JwtTokenUtil jwtTokenUtil, GoogleAuthUtil googleAuthUtil, AuthenticationManager authenticationManager) {
+    public JwtSocialService(UserDetailsService userDetailsService, JwtTokenUtil jwtTokenUtil, GoogleAuthUtil googleAuthUtil, AuthenticationManager authenticationManager, FacebookAuthUtil facebookAuthUtil) {
         this.userDetailsService = userDetailsService;
         this.jwtTokenUtil = jwtTokenUtil;
         this.googleAuthUtil = googleAuthUtil;
         this.authenticationManager = authenticationManager;
+        this.facebookAuthUtil = facebookAuthUtil;
     }
 
     public Authentication getAuthenticationTokenWithoutVerify(String email) {

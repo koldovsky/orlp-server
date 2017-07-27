@@ -2,6 +2,7 @@ package com.softserve.academy.spaced.repetition;
 
 import com.softserve.academy.spaced.repetition.domain.*;
 import com.softserve.academy.spaced.repetition.repository.*;
+import com.softserve.academy.spaced.repetition.service.TestServiceToAddCards;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -28,20 +29,41 @@ public class Application {
 //    private final CourseRepository courseRepository;
 //    private final CardRepository cardRepository;
 //    private final PasswordEncoder bCryptPasswordEncoder;
+//    private final TestServiceToAddCards testServiceToAddCards;
 //
 //    @Autowired
-//    public Application(CategoryRepository categoryRepository, UserRepository userRepository, DeckRepository deckRepository, CourseRepository courseRepository, CardRepository cardRepository, PasswordEncoder bCryptPasswordEncoder) {
+//    public Application(CategoryRepository categoryRepository, UserRepository userRepository, DeckRepository deckRepository, CourseRepository courseRepository, CardRepository cardRepository, PasswordEncoder bCryptPasswordEncoder, TestServiceToAddCards testServiceToAddCards) {
 //        this.categoryRepository = categoryRepository;
 //        this.userRepository = userRepository;
 //        this.deckRepository = deckRepository;
 //        this.courseRepository = courseRepository;
 //        this.cardRepository = cardRepository;
 //        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+//        this.testServiceToAddCards = testServiceToAddCards;
 //    }
 
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
     }
+
+//    @PostConstruct
+//    public void addTestData() throws IOException {
+//        List<Card> cards = new LinkedList<>();
+//
+//        Card card1 = new Card("What are the classes implementing List and Set interface ?", "Class implementing List interface :  ArrayList , Vector , LinkedList ,\n" +
+//                "\n" +
+//                "Class implementing Set interface :  HashSet , TreeSet");
+//        Card card2 = new Card("How to create ArrayList in Java?", "List<String> list = new ArrayList<>()");
+//        Card card3 = new Card("You have hash set students. How to add some data to it.", "students.add(\"Student1\");");
+//        Card card4 = new Card("How to delete item from LinkedList?", "list.remove(item);");
+//
+//        cards.add(card1);
+//        cards.add(card2);
+//        cards.add(card3);
+//        cards.add(card4);
+//
+//        testServiceToAddCards.addDeck(cards);
+//    }
 
 //    @PostConstruct
 //    public void addTestData() throws IOException {

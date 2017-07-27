@@ -31,7 +31,7 @@ public class Deck  implements EntityInterface{
     @JoinColumn(name = "user_id")
     private User deckOwner;
 
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Card> cards;
 
     public Deck() {

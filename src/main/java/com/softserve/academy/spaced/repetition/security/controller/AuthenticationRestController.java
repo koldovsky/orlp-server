@@ -4,7 +4,7 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import com.softserve.academy.spaced.repetition.security.*;
 import com.softserve.academy.spaced.repetition.security.DTO.JwtAuthenticationRequest;
 import com.softserve.academy.spaced.repetition.security.DTO.JwtAuthenticationResponse;
-import com.softserve.academy.spaced.repetition.security.DTO.ReCaptchaResponseDto;
+import com.softserve.academy.spaced.repetition.security.service.AuthenticationRestService;
 import com.softserve.academy.spaced.repetition.security.service.JwtSocialService;
 import com.softserve.academy.spaced.repetition.security.service.ReCaptchaApiService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +13,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mobile.device.Device;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -32,14 +31,16 @@ public class AuthenticationRestController {
     private final FacebookAuthUtil facebookAuthUtil;
     private final UserDetailsService userDetailsService;
     private final ReCaptchaApiService reCaptchaApiService;
+    private final AuthenticationRestService authenticationRestService;
 
     @Autowired
-    public AuthenticationRestController(JwtSocialService jwtSocialService, JwtTokenUtil jwtTokenUtil, FacebookAuthUtil facebookAuthUtil, UserDetailsService userDetailsService, ReCaptchaApiService reCaptchaApiService) {
+    public AuthenticationRestController(JwtSocialService jwtSocialService, JwtTokenUtil jwtTokenUtil, FacebookAuthUtil facebookAuthUtil, UserDetailsService userDetailsService, ReCaptchaApiService reCaptchaApiService, AuthenticationRestService authenticationRestService) {
         this.jwtSocialService = jwtSocialService;
         this.jwtTokenUtil = jwtTokenUtil;
         this.facebookAuthUtil = facebookAuthUtil;
         this.userDetailsService = userDetailsService;
         this.reCaptchaApiService = reCaptchaApiService;
+        this.authenticationRestService = authenticationRestService;
     }
 
     @Value("${jwt.header}")
@@ -76,18 +77,7 @@ public class AuthenticationRestController {
 
     @RequestMapping(value = "${spring.social.facebook.path}", method = RequestMethod.POST)
     public ResponseEntity<JwtAuthenticationResponse> createAuthenticationTokenFromFacebook(@RequestBody String token, Device device) throws GeneralSecurityException, IOException {
-
-        String graph = facebookAuthUtil.getFBGraph(token);
-        Map fbProfileData = facebookAuthUtil.getGraphData(graph);
-        String email = (String) fbProfileData.get("email");
-        if (!facebookAuthUtil.checkIfExistUser(email)) {
-            facebookAuthUtil.saveNewFacebookUser(fbProfileData);
-        }
-        Authentication authentication = jwtSocialService.getAuthenticationTokenWithoutVerify(email);
-        jwtSocialService.setAuthentication(authentication);
-        UserDetails userDetails = userDetailsService.loadUserByUsername(email);
-        String returnedToken = jwtSocialService.generateToken(userDetails, device);
-        HttpHeaders headers = jwtSocialService.addTokenToHeaderCookie(returnedToken);
+        HttpHeaders headers = authenticationRestService.getFacebookHeaders(token, device);
         return new ResponseEntity<>(new JwtAuthenticationResponse("OK"), headers, HttpStatus.OK);
     }
 
