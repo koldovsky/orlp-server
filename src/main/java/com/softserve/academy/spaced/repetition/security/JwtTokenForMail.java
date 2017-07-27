@@ -39,7 +39,7 @@ public class JwtTokenForMail extends JwtTokenUtil {
     }
 
     private Date generateExpirationDate() {
-        return new Date(System.currentTimeMillis() + expiration * 1*60);
+        return new Date(System.currentTimeMillis() + expiration);
     }
 
     public String decryptToken(String token) throws ExpiredTokenForVerificationException {
