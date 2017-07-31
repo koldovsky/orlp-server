@@ -15,13 +15,13 @@ import java.util.Map;
 @Service
 public class AuthenticationRestService {
 
-    private final JwtSocialService jwtSocialService;
+    private final JwtService jwtService;
     private final FacebookAuthUtil facebookAuthUtil;
     private final UserDetailsService userDetailsService;
 
     @Autowired
-    public AuthenticationRestService(JwtSocialService jwtSocialService, FacebookAuthUtil facebookAuthUtil, UserDetailsService userDetailsService) {
-        this.jwtSocialService = jwtSocialService;
+    public AuthenticationRestService(JwtService jwtService, FacebookAuthUtil facebookAuthUtil, UserDetailsService userDetailsService) {
+        this.jwtService = jwtService;
         this.facebookAuthUtil = facebookAuthUtil;
         this.userDetailsService = userDetailsService;
     }
@@ -33,11 +33,11 @@ public class AuthenticationRestService {
         if (!facebookAuthUtil.checkIfExistUser(email)) {
             facebookAuthUtil.saveNewFacebookUser(fbProfileData);
         }
-        Authentication authentication = jwtSocialService.getAuthenticationTokenWithoutVerify(email);
-        jwtSocialService.setAuthentication(authentication);
+        Authentication authentication = jwtService.getAuthenticationTokenWithoutVerify(email);
+        jwtService.setAuthentication(authentication);
         UserDetails userDetails = userDetailsService.loadUserByUsername(email);
-        String returnedToken = jwtSocialService.generateToken(userDetails, device);
+        String returnedToken = jwtService.generateToken(userDetails, device);
 
-        return jwtSocialService.addTokenToHeaderCookie(returnedToken);
+        return jwtService.addTokenToHeaderCookie(returnedToken);
     }
 }

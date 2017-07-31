@@ -6,7 +6,8 @@ import com.softserve.academy.spaced.repetition.security.DTO.JwtAuthenticationReq
 import com.softserve.academy.spaced.repetition.security.DTO.JwtAuthenticationResponse;
 import com.softserve.academy.spaced.repetition.security.DTO.ReCaptchaResponseDto;
 import com.softserve.academy.spaced.repetition.security.service.AuthenticationRestService;
-import com.softserve.academy.spaced.repetition.security.service.JwtSocialService;
+import com.softserve.academy.spaced.repetition.security.service.JwtService;
+import com.softserve.academy.spaced.repetition.security.service.JwtUserDetailsService;
 import com.softserve.academy.spaced.repetition.security.service.ReCaptchaApiService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,32 +19,25 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.*;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
-import java.util.Map;
 
 @RestController
 public class AuthenticationRestController {
-    private final JwtSocialService jwtSocialService;
-    private final JwtTokenUtil jwtTokenUtil;
-    private final FacebookAuthUtil facebookAuthUtil;
-    private final UserDetailsService userDetailsService;
-    private final ReCaptchaApiService reCaptchaApiService;
-    private final AuthenticationRestService authenticationRestService;
 
     @Autowired
-    public AuthenticationRestController(JwtSocialService jwtSocialService, JwtTokenUtil jwtTokenUtil, FacebookAuthUtil facebookAuthUtil, UserDetailsService userDetailsService, ReCaptchaApiService reCaptchaApiService, AuthenticationRestService authenticationRestService) {
-        this.jwtSocialService = jwtSocialService;
-        this.jwtTokenUtil = jwtTokenUtil;
-        this.facebookAuthUtil = facebookAuthUtil;
-        this.userDetailsService = userDetailsService;
-        this.reCaptchaApiService = reCaptchaApiService;
-        this.authenticationRestService = authenticationRestService;
-    }
+    private ReCaptchaApiService reCaptchaApiService;
+    @Autowired
+    private JwtService jwtService;
+    @Autowired
+    private JwtUserDetailsService userDetailsService;
+    @Autowired
+    private AuthenticationRestService authenticationRestService;
+    @Autowired
+    private JwtTokenUtil jwtTokenUtil;
 
     @Value("${jwt.header}")
     private String tokenHeader;
@@ -54,24 +48,24 @@ public class AuthenticationRestController {
         if (!reCaptchaResponseDto.isSuccess()) {
             throw new BadCredentialsException("reCaptcha");
         }
-        Authentication authentication = jwtSocialService.getAuthenticationToken(authenticationRequest.getUsername(), authenticationRequest.getPassword());
-        jwtSocialService.setAuthentication(authentication);
+        Authentication authentication = jwtService.getAuthenticationToken(authenticationRequest.getUsername(), authenticationRequest.getPassword());
+        jwtService.setAuthentication(authentication);
         UserDetails userDetails = userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
-        String token = jwtSocialService.generateToken(userDetails, device);
-        HttpHeaders headers = jwtSocialService.addTokenToHeaderCookie(token);
+        String token = jwtService.generateToken(userDetails, device);
+        HttpHeaders headers = jwtService.addTokenToHeaderCookie(token);
         return new ResponseEntity<>(new JwtAuthenticationResponse("Ok"), headers, HttpStatus.OK);
     }
 
     @RequestMapping(value = "${spring.social.google.path}", method = RequestMethod.POST)
     public ResponseEntity<JwtAuthenticationResponse> createAuthenticationTokenFromSocial(@RequestBody String idToken, Device device) {
-        GoogleIdToken googleIdToken = jwtSocialService.getGoogleIdToken(idToken);
-        String email = jwtSocialService.getEmail(googleIdToken);
-        jwtSocialService.saveUserIfNotExist(email, googleIdToken);
-        Authentication authentication = jwtSocialService.getAuthenticationTokenWithoutVerify(email);
-        jwtSocialService.setAuthentication(authentication);
+        GoogleIdToken googleIdToken = jwtService.getGoogleIdToken(idToken);
+        String email = jwtService.getEmail(googleIdToken);
+        jwtService.saveUserIfNotExist(email, googleIdToken);
+        Authentication authentication = jwtService.getAuthenticationTokenWithoutVerify(email);
+        jwtService.setAuthentication(authentication);
         UserDetails userDetails = userDetailsService.loadUserByUsername(email);
-        String token = jwtSocialService.generateToken(userDetails, device);
-        HttpHeaders headers = jwtSocialService.addTokenToHeaderCookie(token);
+        String token = jwtService.generateToken(userDetails, device);
+        HttpHeaders headers = jwtService.addTokenToHeaderCookie(token);
         return new ResponseEntity<>(new JwtAuthenticationResponse("Ok"), headers, HttpStatus.OK);
     }
 

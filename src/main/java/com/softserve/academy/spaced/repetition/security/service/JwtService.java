@@ -22,23 +22,17 @@ import org.springframework.stereotype.Service;
 import java.util.Collections;
 
 @Service
-public class JwtSocialService {
-    private final UserDetailsService userDetailsService;
-    private final JwtTokenUtil jwtTokenUtil;
-    private final GoogleAuthUtil googleAuthUtil;
-    private final AuthenticationManager authenticationManager;
-    private final FacebookAuthUtil facebookAuthUtil;
+public class JwtService {
+
+    @Autowired
+    private AuthenticationManager authenticationManager;
+    @Autowired
+    private JwtTokenUtil jwtTokenUtil;
+    @Autowired
+    private GoogleAuthUtil googleAuthUtil;
 
     @Value("${jwt.header}")
     private String tokenHeader;
-
-    public JwtSocialService(UserDetailsService userDetailsService, JwtTokenUtil jwtTokenUtil, GoogleAuthUtil googleAuthUtil, AuthenticationManager authenticationManager, FacebookAuthUtil facebookAuthUtil) {
-        this.userDetailsService = userDetailsService;
-        this.jwtTokenUtil = jwtTokenUtil;
-        this.googleAuthUtil = googleAuthUtil;
-        this.authenticationManager = authenticationManager;
-        this.facebookAuthUtil = facebookAuthUtil;
-    }
 
     public Authentication getAuthenticationTokenWithoutVerify(String email) {
         final UsernamePasswordAuthenticationToken authentication =

@@ -27,7 +27,7 @@ public class CourseRatingController {
     @PostMapping("/api/private/course/{courseId}")
     public ResponseEntity<DTO<CourseRating>> addCourseRating(@RequestBody CourseRating courseRating, @PathVariable Long courseId) throws MoreThanOneTimeRateException, RatingsBadValueException{
 
-        if (courseRating.getRating() <= 5 && courseRating.getRating() >= 0) {
+        if (courseRating.getRating() <= 5 && courseRating.getRating() > 0) {
             courseRatingService.addCourseRating(courseRating,courseId);
             Link selfLink = linkTo(methodOn(CourseRatingController.class).getCourseRatingById(courseRating.getId())).withSelfRel();
             CourseRatingPublicDTO courseRatingPublicDTO = DTOBuilder.buildDtoForEntity(courseRating, CourseRatingPublicDTO.class, selfLink);

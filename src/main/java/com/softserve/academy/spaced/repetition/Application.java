@@ -1,11 +1,18 @@
 package com.softserve.academy.spaced.repetition;
 
+import com.softserve.academy.spaced.repetition.domain.Card;
 import com.softserve.academy.spaced.repetition.repository.*;
+import com.softserve.academy.spaced.repetition.service.TestServiceToAddCards;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.hateoas.config.EnableHypermediaSupport;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
+import javax.annotation.PostConstruct;
+import java.io.IOException;
+import java.util.LinkedList;
+import java.util.List;
 
 @EnableHypermediaSupport(type = {EnableHypermediaSupport.HypermediaType.HAL})
 @SpringBootApplication
@@ -17,6 +24,8 @@ public class Application {
 //    private final CourseRepository courseRepository;
 //    private final CardRepository cardRepository;
 //    private final PasswordEncoder bCryptPasswordEncoder;
+//    @Autowired
+//    private TestServiceToAddCards testServiceToAddCards;
 //
 //    @Autowired
 //    public Application(CategoryRepository categoryRepository, UserRepository userRepository, DeckRepository deckRepository, CourseRepository courseRepository, CardRepository cardRepository, PasswordEncoder bCryptPasswordEncoder) {
