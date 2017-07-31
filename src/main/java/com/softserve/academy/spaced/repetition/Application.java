@@ -1,18 +1,22 @@
 package com.softserve.academy.spaced.repetition;
 
-import com.softserve.academy.spaced.repetition.domain.Card;
+import com.softserve.academy.spaced.repetition.domain.*;
 import com.softserve.academy.spaced.repetition.repository.*;
-import com.softserve.academy.spaced.repetition.service.TestServiceToAddCards;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.hateoas.config.EnableHypermediaSupport;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.annotation.PostConstruct;
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @EnableHypermediaSupport(type = {EnableHypermediaSupport.HypermediaType.HAL})
 @SpringBootApplication
@@ -24,8 +28,6 @@ public class Application {
 //    private final CourseRepository courseRepository;
 //    private final CardRepository cardRepository;
 //    private final PasswordEncoder bCryptPasswordEncoder;
-//    @Autowired
-//    private TestServiceToAddCards testServiceToAddCards;
 //
 //    @Autowired
 //    public Application(CategoryRepository categoryRepository, UserRepository userRepository, DeckRepository deckRepository, CourseRepository courseRepository, CardRepository cardRepository, PasswordEncoder bCryptPasswordEncoder) {
@@ -115,27 +117,27 @@ public class Application {
 //        Stream<String> deckStream = deckReader.lines();
 //        List<String> deckList = deckStream.collect(Collectors.toList());
 //
-//        int i = 0;
-//        int o = 0;
-//        int n = 0;
-//        int m = 10;
-//        for (String l : deckList) {
-//            String s[] = l.split("~");
-//            // Insert into Deck table
-//            Deck deck = new Deck();
-//            deck.setName(s[0]);
-//            deck.setDescription(s[1]);
-//            deck.setCategory(categories.get(i));
-//            deck.setDeckOwner(users.get(o));
-////            deck.setCards(cards.subList(n, m));
-//            if (i < 9) {
-//                i++;
-//            } else i = 0;
-//            o++;
-//            n = m;
-//            m += 10;
-//            decks.add(deck);
-//        }
+//            int i = 0;
+//            int o = 0;
+//            int n = 0;
+//            int m = 10;
+//            for (String l : deckList) {
+//                String s[] = l.split("~");
+//                // Insert into Deck table
+//                Deck deck = new Deck();
+//                deck.setName(s[0]);
+//                deck.setDescription(s[1]);
+//                deck.setCategory(categories.get(i));
+//                deck.setDeckOwner(users.get(o));
+//                deck.setCards(cards.subList(n, m));
+//                if (i < 9) {
+//                    i++;
+//                } else i = 0;
+//                o++;
+//                n = m;
+//                m += 10;
+//                decks.add(deck);
+//            }
 //
 //        deckRepository.save(decks);
 //        decks = deckRepository.findAll();
