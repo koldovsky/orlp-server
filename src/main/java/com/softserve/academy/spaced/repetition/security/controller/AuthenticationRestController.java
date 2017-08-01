@@ -1,12 +1,10 @@
 package com.softserve.academy.spaced.repetition.security.controller;
 
-import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
-import com.softserve.academy.spaced.repetition.security.*;
-import com.softserve.academy.spaced.repetition.security.DTO.JwtAuthenticationRequest;
-import com.softserve.academy.spaced.repetition.security.DTO.JwtAuthenticationResponse;
-import com.softserve.academy.spaced.repetition.security.DTO.ReCaptchaResponseDto;
-import com.softserve.academy.spaced.repetition.security.service.JwtSocialService;
-import com.softserve.academy.spaced.repetition.security.service.ReCaptchaApiService;
+import java.io.IOException;
+import java.security.GeneralSecurityException;
+
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
@@ -17,13 +15,21 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.*;
-import java.io.IOException;
-import java.security.GeneralSecurityException;
-import java.util.Map;
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
+import com.softserve.academy.spaced.repetition.security.JwtTokenUtil;
+import com.softserve.academy.spaced.repetition.security.JwtUser;
+import com.softserve.academy.spaced.repetition.security.DTO.JwtAuthenticationRequest;
+import com.softserve.academy.spaced.repetition.security.DTO.JwtAuthenticationResponse;
+import com.softserve.academy.spaced.repetition.security.DTO.ReCaptchaResponseDto;
+import com.softserve.academy.spaced.repetition.security.service.AuthenticationRestService;
+import com.softserve.academy.spaced.repetition.security.service.JwtService;
+import com.softserve.academy.spaced.repetition.security.service.JwtUserDetailsService;
+import com.softserve.academy.spaced.repetition.security.service.ReCaptchaApiService;
 
 @RestController
 public class AuthenticationRestController {
