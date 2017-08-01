@@ -49,5 +49,11 @@ public class FolderService {
 
         return folder.getDecks();
     }
-}
 
+    public List<Long> getAllDecksIdWithFolder() {
+        User authorizedUser = userService.getAuthorizedUser();
+        Long folderId = authorizedUser.getFolder().getId();
+
+        return folderRepository.selectAllDeckIdWithFolder(folderId);
+    }
+}

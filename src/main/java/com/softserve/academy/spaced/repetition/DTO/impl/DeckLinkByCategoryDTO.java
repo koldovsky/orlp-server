@@ -17,6 +17,8 @@ public class DeckLinkByCategoryDTO extends DTO<Deck> {
         add(getLinkWithReplacedParentPart(linkCards).withRel("cards"));
     }
 
+    public Long getDeckId() { return getEntity().getId(); }
+
     public String getName() {
         return getEntity().getName();
     }

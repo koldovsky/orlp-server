@@ -17,6 +17,8 @@ public class RatingCountService {
                 numbOfNotZeroRatings++;
             }
         }
+        if(numbOfNotZeroRatings==0)
+            numbOfNotZeroRatings=1;
         totalRating = totalRating / numbOfNotZeroRatings;
         return totalRating;
     }
