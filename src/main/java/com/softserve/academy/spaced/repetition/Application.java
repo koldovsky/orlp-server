@@ -129,7 +129,7 @@ public class Application {
 //                deck.setDescription(s[1]);
 //                deck.setCategory(categories.get(i));
 //                deck.setDeckOwner(users.get(o));
-//                deck.setCards(cards.subList(n, m));
+////                deck.setCards(cards.subList(n, m));
 //                if (i < 9) {
 //                    i++;
 //                } else i = 0;

@@ -14,7 +14,7 @@ public class Folder implements EntityInterface {
     @Column(name = "folder_id")
     private long id;
 
-    @OneToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Deck> decks;
 
     public Folder() {}
