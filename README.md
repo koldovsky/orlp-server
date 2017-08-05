@@ -40,7 +40,7 @@ QUICK START
 -  change the parameter `jpa\hibernate\`**`ddl-auto`** in the `src\main\resources\`**`application.yml`** to **`create`**
 -  uncomment all commented rows in the `src\main\java\`**`Application.java`**
 -  **Run** the Application
-6. After getting the information in the IDE's console of the successfull strat of the project - you should revert changes that you made in **`Application.java`** and **`application.yml`**.
+6. After getting the information from the IDE's console about the successfull start of the project - you should revert changes that you have done in **`Application.java`** and **`application.yml`**.
 
 Now you can work with the API.
 
