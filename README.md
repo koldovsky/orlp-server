@@ -15,7 +15,7 @@ Please download & unpack zip-file under a Web-accessible directory. You shall se
 | src/ |source-code|
 |.gitignore|file with list of ignored files for uploading to the git|
 |pom.xml|Maven's project object model file|
-|README|this file|
+|README.md|this file|
 
 
 REQUIREMENTS
