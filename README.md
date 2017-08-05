@@ -36,14 +36,19 @@ QUICK START
 ```sql
     CREATE DATABASE orlp;
 ```
+5. Create tables in the database and fill them with data - in the IDE:
+-  change the parameter `jpa\hibernate\`**`ddl-auto`** in the `src\main\resources\`**`application.yml`** to **`create`**
+-  uncomment all commented rows in the `src\main\java\`**`Application.java`**
+-  **Run** the Application
+6. After getting the information in the IDE's console of the successfull strat of the project - you should revert changes that you made in **`Application.java`** and **`application.yml`**.
 
-Now you can start the server in your IDE.
+Now you can work with the API.
 
 
 WHAT'S NEXT
 -----------
 
-You can check all API-opportunities in the Swagger, that is included to the project, by using next URL:
+You can check all opportunities of the API in the Swagger (it was included to the project) by using next URL:
 [http://127.0.0.1:8080/swagger-ui.html](http://127.0.0.1:8080/swagger-ui.html)
 
 -----------
