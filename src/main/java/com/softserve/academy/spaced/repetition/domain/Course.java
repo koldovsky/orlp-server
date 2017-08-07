@@ -33,8 +33,7 @@ public class Course implements EntityInterface {
     @JoinColumn(name = "category_id")
     private Category category;
 
-    @OneToMany(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "deck_id")
+    @ManyToMany(fetch = FetchType.LAZY)
     private List<Deck> decks;
 
     public Course() {
