@@ -4,7 +4,6 @@ import com.softserve.academy.spaced.repetition.domain.User;
 import com.softserve.academy.spaced.repetition.security.JwtTokenForMail;
 import freemarker.template.Configuration;
 import freemarker.template.TemplateException;
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -22,7 +21,6 @@ import java.util.Map;
 
 @Service
 public class MailService {
-    Logger logger = Logger.getLogger(this.getClass());
     @Value("${spring.origin.url}")
     private String URL;
 
@@ -35,30 +33,19 @@ public class MailService {
     Configuration freemarkerConfiguration;
 
     public void sendMail(User user) throws MailException {
-        MimeMessagePreparator preparator = getMessagePreparator(user);
-        try {
-            mailSender.send(preparator);
-        } catch (MailException ex) {
-        }
-    }
-
-    private MimeMessagePreparator getMessagePreparator(User user) {
-        MimeMessagePreparator preparator = new MimeMessagePreparator() {
-            public void prepare(MimeMessage mimeMessage) throws Exception {
-                MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
-                helper.setSubject("Successful registration");
-                helper.setTo(user.getAccount().getEmail());
-                Map <String, Object> model = new HashMap <String, Object>();
-                String token = jwtTokenForMail.generateTokenForMail(user);
-                model.put("person", user.getPerson());
-                model.put("token", token);
-                logger.warn("http://localhost:3000/registrationConfirm?token=" + token);
-                model.put("url", URL);
-                String text = getFreeMarkerTemplateContent(model);
-                helper.setText(text, true);
-            }
+        MimeMessagePreparator preparator = mimeMessage -> {
+            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
+            helper.setSubject("Successful registration");
+            helper.setTo(user.getAccount().getEmail());
+            Map <String, Object> model = new HashMap <String, Object>();
+            String token = jwtTokenForMail.generateTokenForMail(user);
+            model.put("person", user.getPerson());
+            model.put("token", token);
+            model.put("url", URL);
+            String text = getFreeMarkerTemplateContent(model);
+            helper.setText(text, true);
         };
-        return preparator;
+        mailSender.send(preparator);
     }
 
     private String getFreeMarkerTemplateContent(Map <String, Object> model) {

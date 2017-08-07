@@ -33,7 +33,7 @@ public class UserService {
     }
 
     @Transactional
-    public List<User> getAllUsers() {
+    public List <User> getAllUsers() {
         return userRepository.findAll();
     }
 

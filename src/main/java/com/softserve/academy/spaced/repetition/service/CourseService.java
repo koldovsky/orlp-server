@@ -3,8 +3,10 @@ package com.softserve.academy.spaced.repetition.service;
 import com.softserve.academy.spaced.repetition.domain.Category;
 import com.softserve.academy.spaced.repetition.domain.Course;
 import com.softserve.academy.spaced.repetition.domain.Deck;
+import com.softserve.academy.spaced.repetition.domain.User;
 import com.softserve.academy.spaced.repetition.repository.CourseRepository;
 import com.softserve.academy.spaced.repetition.repository.DeckRepository;
+import com.softserve.academy.spaced.repetition.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,20 +20,24 @@ public class CourseService {
 
     @Autowired
     private DeckRepository deckRepository;
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private UserRepository userRepository;
 
 
     @Transactional
-    public List<Course> getAllCourses() {
+    public List <Course> getAllCourses() {
         return courseRepository.findAll();
     }
 
     @Transactional
-    public List<Course> getAllCoursesByCategoryId(Long category_id) {
+    public List <Course> getAllCoursesByCategoryId(Long category_id) {
         return courseRepository.getAllCoursesByCategoryId(category_id);
     }
 
     @Transactional
-    public List<Deck> getAllDecksByCourseId(Long category_id, Long course_id) {
+    public List <Deck> getAllDecksByCourseId(Long category_id, Long course_id) {
         Course course = courseRepository.getCourseByCategoryIdAndId(category_id, course_id);
         return course.getDecks();
     }
@@ -46,8 +52,8 @@ public class CourseService {
         courseRepository.save(course);
     }
 
-    public List<Course> get4Course() {
-        List<Course> courses = courseRepository.findTop4ByOrderById();
+    public List <Course> get4Course() {
+        List <Course> courses = courseRepository.findTop4ByOrderById();
         return courses;
     }
 
@@ -58,5 +64,13 @@ public class CourseService {
 
     public void deleteCourse(Long course_id) {
         courseRepository.delete(course_id);
+    }
+
+    public Course addCourseToUser(Long courseId) {
+        Course course = courseRepository.findOne(courseId);
+        User user = userService.getAuthorizedUser();
+        user.getCourses().add(course);
+        userRepository.save(user);
+        return course;
     }
 }

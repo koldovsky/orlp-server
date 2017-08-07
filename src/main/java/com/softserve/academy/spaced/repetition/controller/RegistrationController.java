@@ -25,12 +25,6 @@ public class RegistrationController {
         return registrationService.registerNewUser(userFromClient);
     }
 
-//    @RequestMapping(value = "/registrationConfirm", method = RequestMethod.GET)
-//    public ResponseEntity confirmRegistration
-//            (@RequestParam("token") String token) {
-//        return verificationService.accountVerification(token);
-//    }
-
     @RequestMapping(value = "/registrationConfirm", method = RequestMethod.POST)
     public ResponseEntity confirmRegistration
             (@RequestBody String token) {

@@ -15,9 +15,10 @@ public class Folder implements EntityInterface {
     private long id;
 
     @OneToMany(fetch = FetchType.LAZY)
-    private List<Deck> decks;
+    private List <Deck> decks;
 
-    public Folder() {}
+    public Folder() {
+    }
 
     public Long getId() {
         return id;
@@ -27,11 +28,11 @@ public class Folder implements EntityInterface {
         this.id = id;
     }
 
-    public List<Deck> getDecks() {
+    public List <Deck> getDecks() {
         return decks;
     }
 
-    public void setDecks(List<Deck> decks) {
+    public void setDecks(List <Deck> decks) {
         this.decks = decks;
     }
 }
