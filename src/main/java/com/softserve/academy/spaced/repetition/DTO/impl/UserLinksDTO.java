@@ -1,7 +1,9 @@
 package com.softserve.academy.spaced.repetition.DTO.impl;
 
 import com.softserve.academy.spaced.repetition.DTO.DTO;
+import com.softserve.academy.spaced.repetition.controller.CourseController;
 import com.softserve.academy.spaced.repetition.controller.FolderController;
+import com.softserve.academy.spaced.repetition.controller.authorization.UserController;
 import com.softserve.academy.spaced.repetition.domain.User;
 import org.springframework.hateoas.Link;
 
@@ -15,6 +17,8 @@ public class UserLinksDTO extends DTO<User> {
 
         Link linkFolder = linkTo(methodOn(FolderController.class).getAllDecksWithFolder(getEntity().getFolder().getId())).withRel("folder");
         add(getLinkWithReplacedParentPart(linkFolder).withRel("folder"));
+        add(linkTo(methodOn(UserController.class).getAllCoursesByUserId(getEntity().getId())).withRel("courses"));
+
     }
 
     public String getFirstName() { return getEntity().getPerson().getFirstName(); }
