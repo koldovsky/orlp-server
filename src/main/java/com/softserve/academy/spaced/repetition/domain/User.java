@@ -26,7 +26,10 @@ public class User implements EntityInterface {
     @JoinColumn(name = "folder_id")
     private Folder folder;
 
-    @OneToMany(fetch = FetchType.EAGER)
+    @ManyToMany
+    @JoinTable(name = "user_courses", joinColumns = {
+            @JoinColumn(name = "user_id")},
+            inverseJoinColumns = {@JoinColumn(name = "course_id")})
     private List<Course> courses;
 
     public User() {
