@@ -1,8 +1,11 @@
 package com.softserve.academy.spaced.repetition.controller.authorization;
 
 import com.softserve.academy.spaced.repetition.DTO.DTOBuilder;
+import com.softserve.academy.spaced.repetition.DTO.impl.CourseLinkDTO;
 import com.softserve.academy.spaced.repetition.DTO.impl.UserLinksDTO;
 import com.softserve.academy.spaced.repetition.DTO.impl.UserDTO;
+import com.softserve.academy.spaced.repetition.controller.CourseController;
+import com.softserve.academy.spaced.repetition.domain.Course;
 import com.softserve.academy.spaced.repetition.domain.User;
 import com.softserve.academy.spaced.repetition.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +13,10 @@ import org.springframework.hateoas.Link;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
@@ -37,4 +43,11 @@ public class UserController {
         return new ResponseEntity<>(userDTO, HttpStatus.OK);
     }
 
+    @GetMapping(value = "/api/private/user/{user_id}/courses")
+    public ResponseEntity<List<CourseLinkDTO>> getAllCoursesByUserId(@PathVariable Long user_id) {
+        List<Course> courseList = userService.getAllCoursesByUserId(user_id);
+        Link collectionLink = linkTo(methodOn(UserController.class).getAllCoursesByUserId(user_id)).withSelfRel();
+        List<CourseLinkDTO> courses = DTOBuilder.buildDtoListForCollection(courseList, CourseLinkDTO.class, collectionLink);
+        return new ResponseEntity<>(courses, HttpStatus.OK);
+    }
 }

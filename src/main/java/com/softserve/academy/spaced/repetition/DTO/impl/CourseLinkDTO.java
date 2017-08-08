@@ -30,4 +30,8 @@ public class CourseLinkDTO extends DTO <Course> {
     public String getImagebase64() {
         return getEntity().getImagebase64();
     }
+
+    public Double getRating() {
+        return getEntity().getRating();
+    }
 }
