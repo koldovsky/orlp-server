@@ -26,7 +26,7 @@ public class User implements EntityInterface {
     @JoinColumn(name = "folder_id")
     private Folder folder;
 
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.EAGER)
     private List<Course> courses;
 
     public User() {
