@@ -91,4 +91,10 @@ public class CourseController {
         Course course = courseService.addCourseToUser(course_id);
         return new ResponseEntity(course, HttpStatus.CREATED);
     }
+    @GetMapping("/api/private/user/courses/id")
+    public ResponseEntity<List<Long>> getIdAllCoursesOfTheCurrentUser() {
+       // List<Long> id = courseService.getAllCoursesOfTheCurrentUser();
+
+        return new ResponseEntity<List<Long>>( HttpStatus.OK);
+    }
 }

@@ -20,7 +20,7 @@ public interface CardRatingRepository extends JpaRepository<CardRating, Long> {
 
     public List<CardRating> findAllByDeckId(long deckId);
 
-    public CardRating findAllByAccountEmailAndCardId(String accountEmail,long cardId);
+    public CardRating findCardRatingByAccountEmailAndCardIdAndDeckId(String accountEmail,long cardId,long deckId);
 
     public Long countAllByCardId(Long id);
 }

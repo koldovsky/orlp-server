@@ -31,5 +31,4 @@ public interface DeckRepository extends JpaRepository<Deck, Long> {
 
     @Query(value = "SELECT d FROM Deck d WHERE d.category.id = :category_id")
     List<Deck> hasAccessToDeckFromCategory(@Param("category_id") Long category_id);
-
 }

@@ -1,15 +1,18 @@
 package com.softserve.academy.spaced.repetition.service;
 
+import com.softserve.academy.spaced.repetition.DTO.impl.DeckPublicDTO;
 import com.softserve.academy.spaced.repetition.domain.Deck;
 import com.softserve.academy.spaced.repetition.domain.Folder;
 import com.softserve.academy.spaced.repetition.domain.User;
-import com.softserve.academy.spaced.repetition.repository.CourseRepository;
 import com.softserve.academy.spaced.repetition.repository.DeckRepository;
 import com.softserve.academy.spaced.repetition.repository.FolderRepository;
 import com.softserve.academy.spaced.repetition.repository.UserRepository;
+import com.softserve.academy.spaced.repetition.security.JwtUser;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -22,8 +25,10 @@ public class FolderService {
     private UserService userService;
 
     @Autowired
-    private DeckRepository deckRepository;
+    private UserRepository userRepository;
 
+    @Autowired
+    private DeckRepository deckRepository;
 
     public Deck addDeck(Long deckId) {
 
@@ -32,18 +37,24 @@ public class FolderService {
         User user = userService.getAuthorizedUser();
 
         Folder folder = user.getFolder();
-        List <Deck> decks = folder.getDecks();
+        List<Deck> decks = folder.getDecks();
         decks.add(deck);
         folderRepository.save(folder);
 
         return deck;
     }
 
-    public List <Deck> getAllDecksByFolderId(Long folder_id) {
+    public List<Deck> getAllDecksByFolderId(Long folder_id) {
         Folder folder = folderRepository.findOne(folder_id);
 
         return folder.getDecks();
     }
 
-}
 
+    public List<Long> getAllDecksIdWithFolder() {
+        User authorizedUser = userService.getAuthorizedUser();
+        Long folderId = authorizedUser.getFolder().getId();
+
+        return folderRepository.selectAllDeckIdWithFolder(folderId);
+    }
+}

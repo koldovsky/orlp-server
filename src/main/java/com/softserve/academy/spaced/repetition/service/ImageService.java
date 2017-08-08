@@ -27,7 +27,7 @@ public class ImageService {
      * @param file - MultiPartFile
      * @return
      */
-    public Long addImageToDB(MultipartFile file){
+    public Long addImageToDB(MultipartFile file) {
 
         final long maxFileSize = 1048576L;
         long fileSize = file.getSize();
@@ -35,9 +35,7 @@ public class ImageService {
         Long imageId = 0L;
 
         if (fileSize > maxFileSize) {
-
             throw new MultipartException("File upload error: file is too large.");
-
         } else {
 
             String base64 = encodeToBase64(file);
@@ -45,13 +43,12 @@ public class ImageService {
 
             List<Integer> existingHashsList = imageRepository.getHashsList();
 
-           for(Integer existingHash : existingHashsList){
-                if ( existingHash.equals(hash)){
+            for (Integer existingHash : existingHashsList) {
+                if (existingHash.equals(hash)) {
                     imageId = imageRepository.getIdByHash(hash);
                     return imageId;
                 }
-
-           }
+            }
             String imageType = file.getContentType();
 
             image = new Image(base64, hash, imageType);
@@ -72,7 +69,7 @@ public class ImageService {
         byte[] imageContentet = null;
         List<Long> idList = imageRepository.getIdList();
 
-        for (Long existingId : idList){
+        for (Long existingId : idList) {
             if (id.equals(existingId)) {
                 Image image = imageRepository.findImageById(id);
                 String encodedFileContent = image.getImagebase64();
