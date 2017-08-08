@@ -14,7 +14,10 @@ public class Folder implements EntityInterface {
     @Column(name = "folder_id")
     private long id;
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "folder_decks", joinColumns = {
+            @JoinColumn(name = "folder_id")},
+            inverseJoinColumns = {@JoinColumn(name = "deck_id")})
     private List<Deck> decks;
 
     public Folder() {}

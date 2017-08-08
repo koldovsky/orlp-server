@@ -33,9 +33,10 @@ public class Course implements EntityInterface {
     @JoinColumn(name = "category_id")
     private Category category;
 
-    @OneToMany(fetch = FetchType.LAZY) //This is not correct!!!
-    //    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)   This is correct!!!!!
-//    @JoinColumn(name = "deck_id")
+    @ManyToMany
+    @JoinTable(name = "course_decks", joinColumns = {
+            @JoinColumn(name = "course_id")},
+            inverseJoinColumns = {@JoinColumn(name = "deck_id")})
     private List<Deck> decks;
 
     public Course() {

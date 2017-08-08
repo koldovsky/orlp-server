@@ -23,10 +23,10 @@ public class Category implements EntityInterface {
     @Column(name = "imagebase64", columnDefinition = "LONGTEXT", nullable = false)
     private String imagebase64;
 
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "category")
     private List<Course> courses;
 
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "category")
     private List<Deck> decks;
 
     public Category() {

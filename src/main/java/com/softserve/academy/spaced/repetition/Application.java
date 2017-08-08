@@ -1,5 +1,4 @@
 package com.softserve.academy.spaced.repetition;
-
 import com.softserve.academy.spaced.repetition.domain.*;
 import com.softserve.academy.spaced.repetition.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -183,4 +182,3 @@ public class Application {
 //        }
 //    }
 }
-
