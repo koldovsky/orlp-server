@@ -29,35 +29,35 @@ public class CardRatingService {
     @Autowired
     RatingCountService ratingCountService;
 
-    public void addCardRating(CardRating cardRating, Long deckId, Long cardId) throws MoreThanOneTimeRateException {
+    public void addCardRating(CardRating cardRating, Long deckId, Long cardId) {
 
         JwtUser user = (JwtUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-            String username = user.getUsername();
+        String username = user.getUsername();
 
-            CardRating cardRatingByAccountEmail = cardRatingRepository.findAllByAccountEmailAndCardId(username, cardId);
+        CardRating cardRatingByAccountEmail = cardRatingRepository.findCardRatingByAccountEmailAndCardIdAndDeckId(username, cardId,deckId);
 
-            if (cardRatingByAccountEmail == null) {
+        if (cardRatingByAccountEmail != null) {
 
-                Card card = cardRepository.findOne(cardId);
-                Deck deck = deckRepository.findOne(deckId);
-                cardRating.setAccountEmail(username);
-                cardRating.setCardId(cardId);
-                cardRating.setDeckId(deckId);
-                cardRatingRepository.save(cardRating);
-
-                double cardAvarageRating = ratingCountService.countAvarageRating(cardRatingRepository.findRatingByCardId(cardId));
-                double deckAvarageRating = ratingCountService.countAvarageRating(cardRatingRepository.findRatingByDeckId(deckId));
-                long numbOfUsersRatings = cardRatingRepository.countAllByCardId(cardId);
-                card.setRating(cardAvarageRating);
-                card.setNumbOfUsersRatings(numbOfUsersRatings);
-                deck.setRating(deckAvarageRating);
-                cardRepository.save(card);
-
-            } else {
-                throw new MoreThanOneTimeRateException();
-            }
+            cardRating.setId(cardRatingByAccountEmail.getId());
         }
+        cardRating.setAccountEmail(username);
+        cardRating.setCardId(cardId);
+        cardRating.setDeckId(deckId);
+            cardRatingRepository.save(cardRating);
+
+        Card card = cardRepository.findOne(cardId);
+        Deck deck = deckRepository.findOne(deckId);
+
+        double cardAvarageRating = ratingCountService.countAvarageRating(cardRatingRepository.findRatingByCardId(cardId));
+        double deckAvarageRating = ratingCountService.countAvarageRating(cardRatingRepository.findRatingByDeckId(deckId));
+        long numbOfUsersRatings = cardRatingRepository.countAllByCardId(cardId);
+        card.setRating(cardAvarageRating);
+        card.setNumbOfUsersRatings(numbOfUsersRatings);
+        deck.setRating(deckAvarageRating);
+        cardRepository.save(card);
+
+    }
 
     public List<CardRating> getAllCardRating() {
         List<CardRating> cardRatings = cardRatingRepository.findAll();

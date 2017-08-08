@@ -21,6 +21,9 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 @RestController
 public class CardRatingController {
 
+    public static final int MAX_RTING_VALUE = 5;
+    public static final int MIN_RTING_VALUE = 0;
+
     @Autowired
     private CardRatingService cardRatingService;
 
@@ -45,7 +48,7 @@ public class CardRatingController {
     @PostMapping("/api/private/decks/{deckId}/cards/{cardId}/rate")
     public ResponseEntity<DTO<CardRating>> addCardRating(@RequestBody CardRating cardRating, @PathVariable Long deckId, @PathVariable Long cardId) throws MoreThanOneTimeRateException, RatingsBadValueException {
 
-        if (cardRating.getRating() <= 5 && cardRating.getRating() >= 0) {
+        if (cardRating.getRating() <= MAX_RTING_VALUE && cardRating.getRating() >= MIN_RTING_VALUE) {
             cardRatingService.addCardRating(cardRating, deckId, cardId);
             Link selfLink = linkTo(methodOn(CardRatingController.class).getCardRatingById(cardRating.getId())).withSelfRel();
             CardRatingPublicDTO cardRatingPublicDTO = DTOBuilder.buildDtoForEntity(cardRating, CardRatingPublicDTO.class, selfLink);
