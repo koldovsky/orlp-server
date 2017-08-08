@@ -86,11 +86,9 @@ public class CourseController {
     }
 
 
-    @PostMapping("/api/user/courses/{course_id}")
-    public ResponseEntity addCourse(@RequestBody Long course_id) {
+    @PutMapping("/api/user/courses/{course_id}")
+    public ResponseEntity addCourse(@PathVariable Long course_id) {
         Course course = courseService.addCourseToUser(course_id);
-        return new ResponseEntity(HttpStatus.CREATED);
+        return new ResponseEntity(course, HttpStatus.CREATED);
     }
-
-
 }

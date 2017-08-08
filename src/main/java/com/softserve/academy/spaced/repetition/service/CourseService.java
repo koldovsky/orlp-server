@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Iterator;
 import java.util.List;
 
 @Service
@@ -68,7 +69,9 @@ public class CourseService {
 
     public Course addCourseToUser(Long courseId) {
         Course course = courseRepository.findOne(courseId);
+        System.out.println("----------------------------------"+course);
         User user = userService.getAuthorizedUser();
+        System.out.println("----------------------------------"+user);
         user.getCourses().add(course);
         userRepository.save(user);
         return course;
