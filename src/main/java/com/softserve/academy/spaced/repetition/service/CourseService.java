@@ -11,7 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class CourseService {
@@ -66,17 +68,25 @@ public class CourseService {
         courseRepository.delete(course_id);
     }
 
-    public Course addCourseToUser(Long courseId) {
+    public Course updatingListOfUserCourses(Long courseId) {
         Course course = courseRepository.findOne(courseId);
         User user = userService.getAuthorizedUser();
-        user.getCourses().add(course);
+        if (user.getCourses().contains(course)) {
+            user.getCourses().remove(course);
+        } else {
+            user.getCourses().add(course);
+        }
         userRepository.save(user);
         return course;
     }
 
-    public List <Course> getAllCoursesOfTheCurrentUser() {
+    public List <Long> getAllCoursesIdOfTheCurrentUser() {
         User user = userService.getAuthorizedUser();
-        List <Course> courses = courseRepository.findAll();
-        return courses;
+        Set <Course> listOfCourses = userService.getAllCoursesByUserId(user.getId());
+        List <Long> listOfId = new ArrayList <>();
+        for (Course course : listOfCourses) {
+            listOfId.add(course.getId());
+        }
+        return listOfId;
     }
 }
