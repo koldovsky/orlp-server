@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class UserService {
@@ -79,7 +80,7 @@ public class UserService {
         return userRepository.findUserByAccountEmail(jwtUser.getUsername());
     }
 
-    public List<Course> getAllCoursesByUserId(Long user_id) {
+    public Set<Course> getAllCoursesByUserId(Long user_id) {
         User user = userRepository.findOne(user_id);
         return user.getCourses();
     }

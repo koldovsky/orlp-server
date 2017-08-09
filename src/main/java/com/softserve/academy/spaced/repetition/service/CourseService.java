@@ -68,7 +68,7 @@ public class CourseService {
         courseRepository.delete(course_id);
     }
 
-    public Course updatingListOfUserCourses(Long courseId) {
+    public Course updateListOfCoursesOfTheAuthorizedUser(Long courseId) {
         Course course = courseRepository.findOne(courseId);
         User user = userService.getAuthorizedUser();
         if (user.getCourses().contains(course)) {
