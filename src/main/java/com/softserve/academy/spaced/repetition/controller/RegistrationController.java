@@ -30,10 +30,4 @@ public class RegistrationController {
             (@RequestBody String token) {
         return verificationService.accountVerification(token);
     }
-
-    @RequestMapping(value = "/registration", method = RequestMethod.GET)
-    public String test() {
-        registrationService.sendConfirmationEmailMessage(userRepository.findUserByAccountEmail("dsaw@sda"));
-        return "page";
-    }
 }

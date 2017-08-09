@@ -88,13 +88,13 @@ public class CourseController {
 
     @PutMapping("/api/user/courses/{course_id}")
     public ResponseEntity addCourse(@PathVariable Long course_id) {
-        Course course = courseService.addCourseToUser(course_id);
-        return new ResponseEntity(course, HttpStatus.CREATED);
+        Course course = courseService.updateListOfCoursesOfTheAuthorizedUser(course_id);
+        return new ResponseEntity(HttpStatus.OK);
     }
-    @GetMapping("/api/private/user/courses/id")
+    @GetMapping("/api/private/user/courses")
     public ResponseEntity<List<Long>> getIdAllCoursesOfTheCurrentUser() {
-       // List<Long> id = courseService.getAllCoursesOfTheCurrentUser();
+        List<Long> id = courseService.getAllCoursesIdOfTheCurrentUser();
 
-        return new ResponseEntity<List<Long>>( HttpStatus.OK);
+        return new ResponseEntity<List<Long>>(id, HttpStatus.OK);
     }
 }
