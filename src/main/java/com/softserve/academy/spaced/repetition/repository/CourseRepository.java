@@ -23,4 +23,6 @@ public interface CourseRepository extends JpaRepository<Course, Long> {
 
     @Query(value = "SELECT c FROM Course c where c.category.id = :category_id")
     List<Course> getAccessToCourse(@Param("category_id") Long category_id);
+
+    List<Course> findAllByOrderByRatingDesc();
 }

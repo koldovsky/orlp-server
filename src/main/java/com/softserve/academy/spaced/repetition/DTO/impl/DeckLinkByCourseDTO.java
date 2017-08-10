@@ -22,4 +22,8 @@ public class DeckLinkByCourseDTO extends DTO<Deck> {
     public String getDescription() {
         return getEntity().getDescription();
     }
+
+    public Double getRating() {
+        return getEntity().getRating();
+    }
 }

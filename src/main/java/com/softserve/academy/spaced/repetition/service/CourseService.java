@@ -51,6 +51,10 @@ public class CourseService {
         return courses;
     }
 
+    public List<Course> getAllOrderedCourses() {
+        return courseRepository.findAllByOrderByRatingDesc();
+    }
+
     public void updateCourse(Long course_id, Course course) {
         course.setId(course_id);
         courseRepository.save(course);
