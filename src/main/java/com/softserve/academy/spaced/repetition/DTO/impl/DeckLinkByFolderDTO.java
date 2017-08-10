@@ -17,7 +17,15 @@ public class DeckLinkByFolderDTO extends DTO<Deck> {
         add(getLinkWithReplacedParentPart(linkCards).withRel("cards"));
     }
 
-    public String getName() { return getEntity().getName(); }
+    public String getName() {
+        return getEntity().getName();
+    }
 
-    public String getDescription() { return getEntity().getDescription(); }
+    public String getDescription() {
+        return getEntity().getDescription();
+    }
+
+    public Double getRating() {
+        return getEntity().getRating();
+    }
 }
