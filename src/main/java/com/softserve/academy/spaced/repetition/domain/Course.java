@@ -26,7 +26,7 @@ public class Course implements EntityInterface {
     @Column(name = "rating")
     private double rating;
 
-    @Column(name="numb_of_users_ratings")
+    @Column(name = "numb_of_users_ratings")
     private long numbOfUsersRatings;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -37,7 +37,7 @@ public class Course implements EntityInterface {
     @JoinTable(name = "course_decks", joinColumns = {
             @JoinColumn(name = "course_id")},
             inverseJoinColumns = {@JoinColumn(name = "deck_id")})
-    private List<Deck> decks;
+    private List <Deck> decks;
 
     public Course() {
     }
@@ -74,11 +74,11 @@ public class Course implements EntityInterface {
         this.category = category;
     }
 
-    public List<Deck> getDecks() {
+    public List <Deck> getDecks() {
         return decks;
     }
 
-    public void setDecks(List<Deck> decks) {
+    public void setDecks(List <Deck> decks) {
         this.decks = decks;
     }
 
@@ -104,5 +104,34 @@ public class Course implements EntityInterface {
 
     public void setNumbOfUsersRatings(long numbOfUsersRatings) {
         this.numbOfUsersRatings = numbOfUsersRatings;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Course)) return false;
+
+        Course course = (Course) o;
+
+        if (Double.compare(course.rating, rating) != 0) return false;
+        if (id != null ? !id.equals(course.id) : course.id != null) return false;
+        if (name != null ? !name.equals(course.name) : course.name != null) return false;
+        if (description != null ? !description.equals(course.description) : course.description != null) return false;
+        if (imagebase64 != null ? !imagebase64.equals(course.imagebase64) : course.imagebase64 != null) return false;
+        return category != null ? category.equals(course.category) : course.category == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result;
+        long temp;
+        result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (name != null ? name.hashCode() : 0);
+        result = 31 * result + (description != null ? description.hashCode() : 0);
+        result = 31 * result + (imagebase64 != null ? imagebase64.hashCode() : 0);
+        temp = Double.doubleToLongBits(rating);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        result = 31 * result + (category != null ? category.hashCode() : 0);
+        return result;
     }
 }
