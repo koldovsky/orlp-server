@@ -38,8 +38,9 @@ QUICK START
 ```
 5. Create tables in the database and fill them with data - in the IDE:
 -  change the parameter `jpa\hibernate\`**`ddl-auto`** in the `src\main\resources\`**`application.yml`** to **`create`**
--  uncomment all commented rows in the `src\main\java\`**`Application.java`**
 -  **Run** the Application
+-  **Run** sql script `src\main\resources\data\TestData.sql`
+-  change the parameter `jpa\hibernate\`**`ddl-auto`** in the `src\main\resources\`**`application.yml`** to **`validate`**
 6. After getting the information from the IDE's console about the successfull start of the project - you should revert changes that you have done in **`Application.java`** and **`application.yml`**.
 
 Now you can work with the API.
