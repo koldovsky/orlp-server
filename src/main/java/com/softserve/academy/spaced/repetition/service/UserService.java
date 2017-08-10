@@ -1,9 +1,6 @@
 package com.softserve.academy.spaced.repetition.service;
 
-import com.softserve.academy.spaced.repetition.domain.AccountStatus;
-import com.softserve.academy.spaced.repetition.domain.Deck;
-import com.softserve.academy.spaced.repetition.domain.Folder;
-import com.softserve.academy.spaced.repetition.domain.User;
+import com.softserve.academy.spaced.repetition.domain.*;
 import com.softserve.academy.spaced.repetition.repository.DeckRepository;
 import com.softserve.academy.spaced.repetition.repository.UserRepository;
 import com.softserve.academy.spaced.repetition.security.JwtUser;
@@ -13,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class UserService {
@@ -33,7 +31,7 @@ public class UserService {
     }
 
     @Transactional
-    public List<User> getAllUsers() {
+    public List <User> getAllUsers() {
         return userRepository.findAll();
     }
 
@@ -80,5 +78,10 @@ public class UserService {
     public User getAuthorizedUser() {
         JwtUser jwtUser = (JwtUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return userRepository.findUserByAccountEmail(jwtUser.getUsername());
+    }
+
+    public Set<Course> getAllCoursesByUserId(Long user_id) {
+        User user = userRepository.findOne(user_id);
+        return user.getCourses();
     }
 }

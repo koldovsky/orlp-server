@@ -1,8 +1,10 @@
 package com.softserve.academy.spaced.repetition.controller.authorization;
 
 import com.softserve.academy.spaced.repetition.DTO.DTOBuilder;
-import com.softserve.academy.spaced.repetition.DTO.impl.UserLinksDTO;
+import com.softserve.academy.spaced.repetition.DTO.impl.CourseLinkDTO;
 import com.softserve.academy.spaced.repetition.DTO.impl.UserDTO;
+import com.softserve.academy.spaced.repetition.DTO.impl.UserLinksDTO;
+import com.softserve.academy.spaced.repetition.domain.Course;
 import com.softserve.academy.spaced.repetition.domain.User;
 import com.softserve.academy.spaced.repetition.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +12,12 @@ import org.springframework.hateoas.Link;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
@@ -22,19 +29,27 @@ public class UserController {
     UserService userService;
 
     @GetMapping("api/private/user/details")
-    public ResponseEntity<UserDTO> getAuthorizedUserPublicInfo() {
+    public ResponseEntity <UserDTO> getAuthorizedUserPublicInfo() {
         User user = userService.getAuthorizedUser();
         Link link = linkTo(methodOn(UserController.class).getAuthorizedUserWithLinks()).withSelfRel();
         UserDTO userDTO = DTOBuilder.buildDtoForEntity(user, UserDTO.class, link);
-        return new ResponseEntity<>(userDTO, HttpStatus.OK);
+        return new ResponseEntity <>(userDTO, HttpStatus.OK);
     }
 
     @GetMapping("api/private/user")
-    public ResponseEntity<UserLinksDTO> getAuthorizedUserWithLinks() {
+    public ResponseEntity <UserLinksDTO> getAuthorizedUserWithLinks() {
         User user = userService.getAuthorizedUser();
         Link link = linkTo(methodOn(UserController.class).getAuthorizedUserWithLinks()).withSelfRel();
         UserLinksDTO userDTO = DTOBuilder.buildDtoForEntity(user, UserLinksDTO.class, link);
-        return new ResponseEntity<>(userDTO, HttpStatus.OK);
+        return new ResponseEntity <>(userDTO, HttpStatus.OK);
     }
 
+    @GetMapping(value = "/api/private/user/{user_id}/courses")
+    public ResponseEntity <List <CourseLinkDTO>> getAllCoursesByUserId(@PathVariable Long user_id) {
+        Set <Course> set = userService.getAllCoursesByUserId(user_id);
+        List <Course> courseList = new ArrayList <>(set);
+        Link collectionLink = linkTo(methodOn(UserController.class).getAllCoursesByUserId(user_id)).withSelfRel();
+        List <CourseLinkDTO> courses = DTOBuilder.buildDtoListForCollection(courseList, CourseLinkDTO.class, collectionLink);
+        return new ResponseEntity <>(courses, HttpStatus.OK);
+    }
 }

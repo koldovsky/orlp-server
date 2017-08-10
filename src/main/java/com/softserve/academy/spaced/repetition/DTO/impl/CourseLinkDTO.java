@@ -8,11 +8,15 @@ import org.springframework.hateoas.Link;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
-public class CourseLinkDTO extends DTO<Course> {
+public class CourseLinkDTO extends DTO <Course> {
 
     public CourseLinkDTO(Course course, Link link) {
         super(course, link);
         add(linkTo(methodOn(DeckController.class).getAllDecksByCourseId(getEntity().getCategory().getId(), getEntity().getId())).withRel("decks"));
+    }
+
+    public Long getCourseId() {
+        return getEntity().getId();
     }
 
     public String getName() {
@@ -25,5 +29,9 @@ public class CourseLinkDTO extends DTO<Course> {
 
     public String getImagebase64() {
         return getEntity().getImagebase64();
+    }
+
+    public Double getRating() {
+        return getEntity().getRating();
     }
 }
