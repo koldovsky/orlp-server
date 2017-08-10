@@ -1,8 +1,7 @@
 package com.softserve.academy.spaced.repetition.controller;
 
 import com.softserve.academy.spaced.repetition.DTO.impl.MessageDTO;
-import com.softserve.academy.spaced.repetition.exceptions.MoreThanOneTimeRateException;
-import com.softserve.academy.spaced.repetition.exceptions.RatingsBadValueException;
+import com.softserve.academy.spaced.repetition.exceptions.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -37,6 +36,21 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
     @ResponseStatus(value = HttpStatus.CONFLICT)
     String handleRatingsBadValueException(HttpServletRequest request, Throwable ex) {
         return "Rating can't be less than 0 and more than 5";
+    }
+
+    @ExceptionHandler(ImageRepositorySizeQuotaExceededException.class)
+    ResponseEntity<MessageDTO> handleImageRepositorySizeQuotaExceededException() {
+        return new ResponseEntity<>(new MessageDTO("You have exceeded your quota for uploading images. You should delete some images before new upload."), HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(CanNotBeDeletedException.class)
+    ResponseEntity<MessageDTO> handleCanNotBeDeletedException(){
+        return new ResponseEntity<MessageDTO>(new MessageDTO("Current image is already in use!"), HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(NotOwnerOperationException.class)
+    ResponseEntity<MessageDTO> handleNotOwnerOperationException(){
+        return new ResponseEntity<MessageDTO>(new MessageDTO("Operation is not allowed for current user!"), HttpStatus.CONFLICT);
     }
 
 }
