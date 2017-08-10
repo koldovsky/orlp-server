@@ -61,15 +61,10 @@ public class RegistrationService {
     }
 
     private void createNewUser(User user) {
-        String firstName = wordCapitalization(user.getPerson().getFirstName());
-        String lastName = wordCapitalization(user.getPerson().getLastName());
         Set <Authority> listOfAuthorities = new HashSet <>();
         listOfAuthorities.add(new Authority(AuthorityName.ROLE_USER));
         user.getAccount().setLastPasswordResetDate(Calendar.getInstance().getTime());
         user.setFolder(new Folder());
-        user.getPerson().setFirstName(user.getPerson().getFirstName());
-        user.getPerson().setFirstName(firstName);
-        user.getPerson().setLastName(lastName);
         user.getAccount().setStatus(AccountStatus.INACTIVE);
         user.getAccount().setAuthorities(listOfAuthorities);
         user.getAccount().setEmail(user.getAccount().getEmail().toLowerCase());
@@ -77,11 +72,7 @@ public class RegistrationService {
         userService.addUser(user);
     }
 
-    private String wordCapitalization(String string) {
-        return Character.toUpperCase(string.charAt(0)) + string.substring(1).toLowerCase();
-    }
-
-    public void sendConfirmationEmailMessage(User user) {
+    public void sendConfirmationEmailMessage(User user) throws MailException {
         mailService.sendMail(user);
     }
 }

@@ -26,10 +26,10 @@ public class AccountVerificationByEmailService {
         try {
             email = jwtTokenForMail.decryptToken(token);
         } catch (ExpiredTokenForVerificationException e) {
-            return new ResponseEntity(HttpStatus.NOT_FOUND);
+            return new ResponseEntity("no token found", HttpStatus.NOT_FOUND);
         }
         if (userRepository.findUserByAccountEmail(email) == null) {
-            return new ResponseEntity(HttpStatus.NOT_FOUND);
+            return new ResponseEntity("email not exists", HttpStatus.NOT_FOUND);
         }
         Account editedAcc = userRepository.findUserByAccountEmail(email).getAccount();
         if (editedAcc.getStatus().equals(AccountStatus.INACTIVE)) {
