@@ -5,14 +5,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mobile.device.Device;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
-import java.io.Serializable;
+
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 @Component
-public class JwtTokenUtil implements Serializable {
-    private static final long serialVersionUID = -3301605591108950415L;
+public class JwtTokenUtil {
 
     private static final String CLAIM_KEY_USERNAME = "sub";
     private static final String CLAIM_KEY_AUDIENCE = "audience";
@@ -22,6 +21,9 @@ public class JwtTokenUtil implements Serializable {
     private static final String AUDIENCE_WEB = "web";
     private static final String AUDIENCE_MOBILE = "mobile";
     private static final String AUDIENCE_TABLET = "tablet";
+
+    private static final int MILLISECONDS_TO_SECONDS = 1000;
+    private final int FIVE_SECONDS = 5000;
 
     @Value("${jwt.secret}")
     private String secret;
@@ -87,7 +89,7 @@ public class JwtTokenUtil implements Serializable {
     }
 
     private Date generateExpirationDate() {
-        return new Date(System.currentTimeMillis() + expiration * 1000);
+        return new Date(System.currentTimeMillis() + expiration * MILLISECONDS_TO_SECONDS);
     }
 
     private Boolean isTokenExpired(String token) {
@@ -120,7 +122,7 @@ public class JwtTokenUtil implements Serializable {
         Map<String, Object> claims = new HashMap<>();
         claims.put(CLAIM_KEY_USERNAME, userDetails.getUsername());
         claims.put(CLAIM_KEY_AUDIENCE, generateAudience(device));
-        claims.put(CLAIM_KEY_CREATED, new Date());
+        claims.put(CLAIM_KEY_CREATED, new Date(System.currentTimeMillis() + FIVE_SECONDS));
         return generateToken(claims);
     }
 
