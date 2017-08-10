@@ -5,6 +5,7 @@ import com.softserve.academy.spaced.repetition.domain.Deck;
 import com.softserve.academy.spaced.repetition.domain.Folder;
 import org.springframework.hateoas.Link;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class FolderPublicDTO extends DTO<Folder> {
@@ -14,7 +15,9 @@ public class FolderPublicDTO extends DTO<Folder> {
     }
 
     public List<Deck> getDecks(){
-        return getEntity().getDecks();
+        List<Deck> decks = new ArrayList<>(getEntity().getDecks());
+
+        return decks;
     }
 
 }
