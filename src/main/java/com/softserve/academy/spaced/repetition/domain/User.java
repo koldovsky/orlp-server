@@ -4,6 +4,7 @@ import com.softserve.academy.spaced.repetition.DTO.EntityInterface;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "User")
@@ -30,7 +31,7 @@ public class User implements EntityInterface {
     @JoinTable(name = "user_courses", joinColumns = {
             @JoinColumn(name = "user_id")},
             inverseJoinColumns = {@JoinColumn(name = "course_id")})
-    private List<Course> courses;
+    private Set<Course> courses;
 
     public User() {
     }
@@ -73,11 +74,11 @@ public class User implements EntityInterface {
         this.folder = folder;
     }
 
-    public List<Course> getCourses() {
+    public Set<Course> getCourses() {
         return courses;
     }
 
-    public void setCourses(List<Course> courses) {
+    public void setCourses(Set<Course> courses) {
         this.courses = courses;
     }
 }
