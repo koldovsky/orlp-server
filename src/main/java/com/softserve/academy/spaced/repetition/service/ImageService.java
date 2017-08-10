@@ -2,8 +2,14 @@ package com.softserve.academy.spaced.repetition.service;
 
 import com.google.api.client.util.Base64;
 import com.softserve.academy.spaced.repetition.domain.Image;
+import com.softserve.academy.spaced.repetition.domain.User;
+import com.softserve.academy.spaced.repetition.exceptions.CanNotBeDeletedException;
+import com.softserve.academy.spaced.repetition.exceptions.ImageRepositorySizeQuotaExceededException;
+import com.softserve.academy.spaced.repetition.exceptions.NotOwnerOperationException;
 import com.softserve.academy.spaced.repetition.repository.ImageRepository;
+import com.softserve.academy.spaced.repetition.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartException;
 import org.springframework.web.multipart.MultipartFile;
@@ -19,39 +25,40 @@ public class ImageService {
 
     @Autowired
     private ImageRepository imageRepository;
+    @Autowired
+    private UserRepository userRepository;
 
+    @Value("${app.images.maxSize}")
+    private Long maxFileSize;
+
+    @Value("${app.images.userQuote}")
+    private Long userQuote;
 
     /**
      * Add image to the database
      *
-     * @param file - MultiPartFile
+     * @param file   - image uploaded by User
+     * @param userId - id of User which have uploaded this image
      * @return
      */
-    public Long addImageToDB(MultipartFile file) {
+    public Long addImageToDB(MultipartFile file, Long userId) throws ImageRepositorySizeQuotaExceededException {
 
-        final long maxFileSize = 1048576L;
         long fileSize = file.getSize();
         Image image = null;
         Long imageId = 0L;
+
+        if (fileSize > getUsersLimitInBytesForImagesLeft(userId)) {
+            throw new ImageRepositorySizeQuotaExceededException();
+        }
 
         if (fileSize > maxFileSize) {
             throw new MultipartException("File upload error: file is too large.");
         } else {
 
             String base64 = encodeToBase64(file);
-            int hash = base64.hashCode();
-
-            List<Integer> existingHashsList = imageRepository.getHashsList();
-
-            for (Integer existingHash : existingHashsList) {
-                if (existingHash.equals(hash)) {
-                    imageId = imageRepository.getIdByHash(hash);
-                    return imageId;
-                }
-            }
             String imageType = file.getContentType();
-
-            image = new Image(base64, hash, imageType);
+            User user = userRepository.findUserById(userId);
+            image = new Image(base64, imageType, user, fileSize);
             imageRepository.save(image);
             imageId = image.getId();
         }
@@ -110,5 +117,37 @@ public class ImageService {
     private byte[] decodeFromBase64(String encodedFileContent) {
 
         return Base64.decodeBase64(encodedFileContent);
+    }
+
+    /**
+     * Getting value (in bytes) of personal user's limit for uploading files to the DB.
+     *
+     * @param userId - user's id
+     * @return number of bytes that left to upload
+     */
+    public Long getUsersLimitInBytesForImagesLeft(Long userId) {
+
+        Long bytesUsed = imageRepository.getSumOfImagesSizesOfUserById(userId);
+        if (bytesUsed == null) {
+            bytesUsed = 0L;
+        }
+        Long bytesLeft = userQuote - bytesUsed;
+
+        return bytesLeft;
+    }
+
+    public void deleteImage(Long id, Long userId) throws CanNotBeDeletedException, NotOwnerOperationException {
+        Image image = imageRepository.findImageById(id);
+        Long imageOwnerId = image.getCreatedBy().getId();
+
+        if (imageOwnerId != userId) throw new NotOwnerOperationException();
+
+        boolean isUsed = image.isUsed();
+
+        if (isUsed) {
+            throw new CanNotBeDeletedException();
+        } else {
+            imageRepository.delete(image);
+        }
     }
 }

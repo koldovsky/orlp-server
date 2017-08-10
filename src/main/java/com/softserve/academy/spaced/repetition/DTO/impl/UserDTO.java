@@ -20,6 +20,10 @@ public class UserDTO extends DTO<User> {
 
     public String getEmail() { return getEntity().getAccount().getEmail(); }
 
+    public String getImage() {
+        return getEntity().getPerson().getImage();
+    }
+
     public Set<String> getAuthorities() {
         Set<Authority> authorities = getEntity().getAccount().getAuthorities();
         Set<String> names = new HashSet<>();

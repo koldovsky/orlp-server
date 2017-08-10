@@ -17,6 +17,8 @@ public class Person {
     @Column(name = "last_name")
     private String lastName;
 
+    private String image;
+
     public Person() {
     }
 
@@ -47,5 +49,13 @@ public class Person {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 }
