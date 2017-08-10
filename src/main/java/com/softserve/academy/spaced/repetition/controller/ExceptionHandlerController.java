@@ -44,13 +44,12 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(CanNotBeDeletedException.class)
-    ResponseEntity<MessageDTO> handleCanNotBeDeletedException(){
+    ResponseEntity<MessageDTO> handleCanNotBeDeletedException() {
         return new ResponseEntity<MessageDTO>(new MessageDTO("Current image is already in use!"), HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler(NotOwnerOperationException.class)
-    ResponseEntity<MessageDTO> handleNotOwnerOperationException(){
+    ResponseEntity<MessageDTO> handleNotOwnerOperationException() {
         return new ResponseEntity<MessageDTO>(new MessageDTO("Operation is not allowed for current user!"), HttpStatus.CONFLICT);
     }
-
 }
