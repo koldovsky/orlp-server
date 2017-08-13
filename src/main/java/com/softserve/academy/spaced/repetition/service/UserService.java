@@ -31,21 +31,30 @@ public class UserService {
     }
 
     @Transactional
-    public List <User> getAllUsers() {
+    public List<User> getAllUsers() {
         return userRepository.findAll();
     }
 
     @Transactional
-    public User toggleUsersStatus(Long id, AccountStatus status) {
-
+    public User setUsersStatusActive(Long id) {
         User user = userRepository.findOne(id);
+        user.getAccount().setStatus(AccountStatus.ACTIVE);
+        userRepository.save(user);
+        return userRepository.findOne(id);
+    }
 
-        if (user.getAccount().getStatus() == status) {
-            user.getAccount().setStatus(AccountStatus.ACTIVE);
-        } else if (user.getAccount().getStatus() == AccountStatus.ACTIVE) {
-            user.getAccount().setStatus(status);
-        }
+    @Transactional
+    public User setUsersStatusDeleted(Long id) {
+        User user = userRepository.findOne(id);
+        user.getAccount().setStatus(AccountStatus.DELETED);
+        userRepository.save(user);
+        return userRepository.findOne(id);
+    }
 
+    @Transactional
+    public User setUsersStatusBlocked(Long id) {
+        User user = userRepository.findOne(id);
+        user.getAccount().setStatus(AccountStatus.BLOCKED);
         userRepository.save(user);
         return userRepository.findOne(id);
     }
@@ -63,7 +72,7 @@ public class UserService {
 
 
         for (Deck deck : usersFolder.getDecks()) {
-            if (deck.getId() == deckId) {
+            if (deck.getId().equals(deckId)) {
                 return null;
             }
         }
@@ -83,5 +92,26 @@ public class UserService {
     public Set<Course> getAllCoursesByUserId(Long user_id) {
         User user = userRepository.findOne(user_id);
         return user.getCourses();
+    }
+
+    public User removeDeckFromUsersFolder(Long userId, Long deckId) {
+        Deck deck = deckRepository.getDeckByItsIdAndOwnerOfDeck(deckId, userId);
+        User user = userRepository.findOne(userId);
+        Folder usersFolder = user.getFolder();
+
+        boolean hasFolderDeck = false;
+        for (Deck deckFromUsersFolder : usersFolder.getDecks()) {
+            if (deckFromUsersFolder.getId().equals(deckId)) {
+                hasFolderDeck = true;
+            }
+        }
+        if (deck == null && hasFolderDeck == true) {
+            deck = deckRepository.findOne(deckId);
+            usersFolder.getDecks().remove(deck);
+            userRepository.save(user);
+        } else {
+            return null;
+        }
+        return user;
     }
 }
