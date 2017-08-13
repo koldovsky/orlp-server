@@ -9,6 +9,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -70,30 +71,27 @@ public class UserService {
         User user = userRepository.findOne(userId);
         Folder usersFolder = user.getFolder();
 
-
         for (Deck deck : usersFolder.getDecks()) {
             if (deck.getId().equals(deckId)) {
                 return null;
             }
         }
-
         Deck deckForAdding = deckRepository.findOne(deckId);
         usersFolder.getDecks().add(deckForAdding);
         userRepository.save(user);
-
         return user;
     }
-
+    @Transactional
     public User getAuthorizedUser() {
         JwtUser jwtUser = (JwtUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return userRepository.findUserByAccountEmail(jwtUser.getUsername());
     }
-
+    @Transactional
     public Set<Course> getAllCoursesByUserId(Long user_id) {
         User user = userRepository.findOne(user_id);
         return user.getCourses();
     }
-
+    @Transactional
     public User removeDeckFromUsersFolder(Long userId, Long deckId) {
         Deck deck = deckRepository.getDeckByItsIdAndOwnerOfDeck(deckId, userId);
         User user = userRepository.findOne(userId);
@@ -113,5 +111,13 @@ public class UserService {
             return null;
         }
         return user;
+    }
+    @Transactional
+    public List<Deck> getAllDecksFromUsersFolder(Long userId) {
+        User user = userRepository.findOne(userId);
+        Folder usersFolder = user.getFolder();
+        List<Deck> decks = new ArrayList<>();
+        decks.addAll(usersFolder.getDecks());
+        return decks;
     }
 }
