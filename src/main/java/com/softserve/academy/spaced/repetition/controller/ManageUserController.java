@@ -79,4 +79,18 @@ public class ManageUserController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
+
+    @DeleteMapping("/api/admin/users/{userId}/deck/{deckId}")
+    public ResponseEntity<UserAdminDTO> removeDeckFromUsersFolder(@PathVariable("userId") Long userId, @PathVariable("deckId") Long deckId) {
+
+        User user = userService.removeDeckFromUsersFolder(userId, deckId);
+
+        if (user != null) {
+            Link link = linkTo(methodOn(ManageUserController.class).getUserById(userId)).withSelfRel();
+            UserAdminDTO userAdminDTO = DTOBuilder.buildDtoForEntity(user, UserAdminDTO.class, link);
+            return new ResponseEntity<UserAdminDTO>(userAdminDTO, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
 }
