@@ -6,9 +6,9 @@ import com.softserve.academy.spaced.repetition.domain.Folder;
 import com.softserve.academy.spaced.repetition.domain.User;
 import org.springframework.hateoas.Link;
 
-public class UserAdminDTO extends DTO<User> {
+public class UserManagedByAdminDTO extends DTO<User> {
 
-    public UserAdminDTO(User user, Link link) {
+    public UserManagedByAdminDTO(User user, Link link) {
         super(user, link);
     }
 
