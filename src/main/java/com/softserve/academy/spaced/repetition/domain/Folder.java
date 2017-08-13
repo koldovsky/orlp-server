@@ -4,6 +4,7 @@ import com.softserve.academy.spaced.repetition.DTO.EntityInterface;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "Folder")
@@ -18,7 +19,7 @@ public class Folder implements EntityInterface {
     @JoinTable(name = "folder_decks", joinColumns = {
             @JoinColumn(name = "folder_id")},
             inverseJoinColumns = {@JoinColumn(name = "deck_id")})
-    private List<Deck> decks;
+    private Set<Deck> decks;
 
     public Folder() {}
 
@@ -30,11 +31,11 @@ public class Folder implements EntityInterface {
         this.id = id;
     }
 
-    public List<Deck> getDecks() {
+    public Set<Deck> getDecks() {
         return decks;
     }
 
-    public void setDecks(List<Deck> decks) {
+    public void setDecks(Set<Deck> decks) {
         this.decks = decks;
     }
 }

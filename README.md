@@ -54,3 +54,13 @@ You can check all opportunities of the API in the Swagger (it was included to th
 -----------
 
 ***The ORLP Developer Team***
+- [**Petro Zadorovskyi**](https://github.com/zadorovskyi)
+- [**Yevhen Palamarchuk**](https://github.com/YevhenPalamarchuk/)
+- [**Sasha Verenka**](https://github.com/OleksandrVerenka)
+- [**Yaroslav Varshavskyj**](https://github.com/jarkinV)
+- [**Orest Potsiluiko**](https://github.com/OrestPotsiluiko)
+- [**Vlad Kuhivchak**](https://github.com/Vkiro)
+- [**Askold Baran**](https://github.com/askoldbaran)
+- [**Taras Predzymyrskyi**](https://github.com/tararas124)
+
+
