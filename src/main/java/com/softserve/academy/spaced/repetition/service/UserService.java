@@ -31,21 +31,30 @@ public class UserService {
     }
 
     @Transactional
-    public List <User> getAllUsers() {
+    public List<User> getAllUsers() {
         return userRepository.findAll();
     }
 
     @Transactional
-    public User toggleUsersStatus(Long id, AccountStatus status) {
-
+    public User setUsersStatusActive(Long id) {
         User user = userRepository.findOne(id);
+        user.getAccount().setStatus(AccountStatus.ACTIVE);
+        userRepository.save(user);
+        return userRepository.findOne(id);
+    }
 
-        if (user.getAccount().getStatus() == status) {
-            user.getAccount().setStatus(AccountStatus.ACTIVE);
-        } else if (user.getAccount().getStatus() == AccountStatus.ACTIVE) {
-            user.getAccount().setStatus(status);
-        }
+    @Transactional
+    public User setUsersStatusDeleted(Long id) {
+        User user = userRepository.findOne(id);
+        user.getAccount().setStatus(AccountStatus.DELETED);
+        userRepository.save(user);
+        return userRepository.findOne(id);
+    }
 
+    @Transactional
+    public User setUsersStatusBlocked(Long id) {
+        User user = userRepository.findOne(id);
+        user.getAccount().setStatus(AccountStatus.BLOCKED);
         userRepository.save(user);
         return userRepository.findOne(id);
     }
