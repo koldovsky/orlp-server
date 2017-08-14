@@ -52,4 +52,9 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
     ResponseEntity<MessageDTO> handleNotOwnerOperationException() {
         return new ResponseEntity<MessageDTO>(new MessageDTO("Operation is not allowed for current user!"), HttpStatus.CONFLICT);
     }
+
+    @ExceptionHandler(NotAuthorisedUserException.class)
+    ResponseEntity<MessageDTO> NotAuthorisedUserException() {
+        return new ResponseEntity<MessageDTO>(new MessageDTO("Operation is unavailable for unauthorized users!"), HttpStatus.CONFLICT);
+    }
 }

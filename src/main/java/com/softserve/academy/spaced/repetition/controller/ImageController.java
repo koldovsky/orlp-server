@@ -6,9 +6,11 @@ import com.softserve.academy.spaced.repetition.DTO.impl.UploadingImageDTO;
 import com.softserve.academy.spaced.repetition.domain.Image;
 import com.softserve.academy.spaced.repetition.exceptions.CanNotBeDeletedException;
 import com.softserve.academy.spaced.repetition.exceptions.ImageRepositorySizeQuotaExceededException;
+import com.softserve.academy.spaced.repetition.exceptions.NotAuthorisedUserException;
 import com.softserve.academy.spaced.repetition.exceptions.NotOwnerOperationException;
 import com.softserve.academy.spaced.repetition.repository.ImageRepository;
 import com.softserve.academy.spaced.repetition.service.ImageService;
+import com.softserve.academy.spaced.repetition.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Link;
 import org.springframework.http.HttpStatus;
@@ -28,33 +30,30 @@ public class ImageController {
     @Autowired
     private ImageService imageService;
     @Autowired
+    private UserService userService;
+    @Autowired
     private ImageRepository imageRepository;
-
 
     /**
      * Upload and add the image to the database
      *
      * @param file   - image-file
-     * @param userId - id of the user that is adding this image to DB
      * @return - upploaded image DTO, HttpStatus
      * @throws ImageRepositorySizeQuotaExceededException - is dropping when user have exceeded the quote of disk-space for his own images
      */
     @PostMapping("/api/service/image")
-    public ResponseEntity<UploadingImageDTO> addImageToDB(@RequestParam("file") MultipartFile file, @RequestParam("userId") Long userId) throws ImageRepositorySizeQuotaExceededException {
-
-        Long imageId = imageService.addImageToDB(file, userId);
+    public ResponseEntity<UploadingImageDTO> addImageToDB(@RequestParam("file") MultipartFile file) throws ImageRepositorySizeQuotaExceededException, NotAuthorisedUserException {
+        Long imageId = imageService.addImageToDB(file);
         Image image = imageRepository.getImageWithoutBase64(imageId);
         Link link = linkTo(methodOn(ImageController.class).getImageById(imageId)).withSelfRel();
         UploadingImageDTO uploadingimageDTO = DTOBuilder.buildDtoForEntity(image, UploadingImageDTO.class, link);
-        Long bytesLeft = imageService.getUsersLimitInBytesForImagesLeft(userId);
+        Long bytesLeft = imageService.getUsersLimitInBytesForImagesLeft(userService.getAuthorizedUser().getId());
         uploadingimageDTO.setBytesLeft(bytesLeft);
-
         return new ResponseEntity<>(uploadingimageDTO, HttpStatus.OK);
     }
 
     @GetMapping("/api/service/images/user/{userId}")
     public ResponseEntity<List<ImageDTO>> getAllImagesByUserId(@RequestParam("userId") Long userId) {
-
         List<Image> listId = imageRepository.getImagesWithoutBase64byId(userId);
         Link link = linkTo(methodOn(ImageController.class).getImageList()).withSelfRel();
         List<ImageDTO> imageDTOList = DTOBuilder.buildDtoListForCollection(listId, ImageDTO.class, link);
@@ -70,14 +69,12 @@ public class ImageController {
      */
     @GetMapping(value = "/api/service/image/{id}", produces = {MediaType.IMAGE_JPEG_VALUE})
     public ResponseEntity<byte[]> getImageById(@PathVariable("id") Long id) {
-
         byte[] imageContentBytes = imageService.getDecodedImageContentByImageId(id);
         if (imageContentBytes == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(imageContentBytes);
     }
-
 
     /**
      * Allows Admin to download all images from ImageRepository as list of DTO with links on on it
@@ -86,11 +83,9 @@ public class ImageController {
      */
     @GetMapping(value = "/api/admin/service/image")
     public ResponseEntity<List<ImageDTO>> getImageList() {
-
         List<Image> listId = imageRepository.getImagesWithoutBase64();
         Link link = linkTo(methodOn(ImageController.class).getImageList()).withSelfRel();
         List<ImageDTO> imageDTOList = DTOBuilder.buildDtoListForCollection(listId, ImageDTO.class, link);
-
         return new ResponseEntity<>(imageDTOList, HttpStatus.OK);
     }
 
@@ -98,14 +93,13 @@ public class ImageController {
      * Delete the selected image
      *
      * @param id     - Image id, which we want to delete
-     * @param userId - id of the owner of image
      * @return - Httpstatus.OK if the operation of deleting was made successfull
      * @throws CanNotBeDeletedException   - is dropping when the image which we want to delete is already in use
      * @throws NotOwnerOperationException - is dropping when the the image which we want to delete not belongs to us as to owner
      */
     @DeleteMapping(value = "/api/service/image/{id}")
-    public ResponseEntity<?> deleteImage(@PathVariable("id") Long id, @RequestParam("userId") Long userId) throws CanNotBeDeletedException, NotOwnerOperationException {
-        imageService.deleteImage(id, userId);
+    public ResponseEntity<?> deleteImage(@PathVariable("id") Long id) throws CanNotBeDeletedException, NotOwnerOperationException, NotAuthorisedUserException {
+        imageService.deleteImage(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }
