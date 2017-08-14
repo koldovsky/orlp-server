@@ -4,6 +4,8 @@ import com.softserve.academy.spaced.repetition.DTO.DTOBuilder;
 import com.softserve.academy.spaced.repetition.DTO.impl.CourseLinkDTO;
 import com.softserve.academy.spaced.repetition.DTO.impl.CoursePublicDTO;
 import com.softserve.academy.spaced.repetition.DTO.impl.CourseTopDTO;
+import com.softserve.academy.spaced.repetition.audit.Auditable;
+import com.softserve.academy.spaced.repetition.audit.AuditingActionType;
 import com.softserve.academy.spaced.repetition.domain.Course;
 import com.softserve.academy.spaced.repetition.service.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +27,7 @@ public class CourseController {
     @Autowired
     private CourseService courseService;
 
+    @Auditable(actionType = AuditingActionType.VIEW_COURSES_BY_CATEGORY)
     @GetMapping(value = "/api/category/{category_id}/courses")
     @PreAuthorize(value = "@accessToUrlService.hasAccessToCategory(#category_id)")
     public ResponseEntity <List <CourseLinkDTO>> getAllCoursesByCategoryId(@PathVariable Long category_id) {
@@ -34,6 +37,7 @@ public class CourseController {
         return new ResponseEntity <>(courses, HttpStatus.OK);
     }
 
+    @Auditable(actionType = AuditingActionType.VIEW_COURSES)
     @GetMapping(value = "/api/courses")
     public ResponseEntity <List <CourseLinkDTO>> getAllCourses() {
         List <Course> courseList = courseService.getAllCourses();
@@ -54,6 +58,7 @@ public class CourseController {
         return new ResponseEntity<>(decks, HttpStatus.OK);
     }
 
+    @Auditable(actionType = AuditingActionType.VIEW_TOP_COURSES)
     @GetMapping("/api/course/top")
     public ResponseEntity <List <CourseTopDTO>> get4Course() {
         List <Course> courseList = courseService.get4Course();

@@ -12,8 +12,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class FolderService {
@@ -37,7 +39,7 @@ public class FolderService {
         User user = userService.getAuthorizedUser();
 
         Folder folder = user.getFolder();
-        List<Deck> decks = folder.getDecks();
+        Set<Deck> decks = folder.getDecks();
         decks.add(deck);
         folderRepository.save(folder);
 
@@ -46,8 +48,9 @@ public class FolderService {
 
     public List<Deck> getAllDecksByFolderId(Long folder_id) {
         Folder folder = folderRepository.findOne(folder_id);
+        List<Deck> decks = new ArrayList<>(folder.getDecks());
 
-        return folder.getDecks();
+        return decks;
     }
 
     public List<Long> getAllDecksIdWithFolder() {
