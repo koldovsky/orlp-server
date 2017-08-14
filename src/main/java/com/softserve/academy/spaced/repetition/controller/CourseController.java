@@ -4,6 +4,8 @@ import com.softserve.academy.spaced.repetition.DTO.DTOBuilder;
 import com.softserve.academy.spaced.repetition.DTO.impl.CourseLinkDTO;
 import com.softserve.academy.spaced.repetition.DTO.impl.CoursePublicDTO;
 import com.softserve.academy.spaced.repetition.DTO.impl.CourseTopDTO;
+import com.softserve.academy.spaced.repetition.audit.Auditable;
+import com.softserve.academy.spaced.repetition.audit.AuditingActionType;
 import com.softserve.academy.spaced.repetition.domain.Course;
 import com.softserve.academy.spaced.repetition.service.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +27,7 @@ public class CourseController {
     @Autowired
     private CourseService courseService;
 
+    @Auditable(actionType = AuditingActionType.VIEW_COURSES_BY_CATEGORY)
     @GetMapping(value = "/api/category/{category_id}/courses")
     @PreAuthorize(value = "@accessToUrlService.hasAccessToCategory(#category_id)")
     public ResponseEntity <List <CourseLinkDTO>> getAllCoursesByCategoryId(@PathVariable Long category_id) {
@@ -35,16 +38,26 @@ public class CourseController {
     }
 
     @GetMapping(value = "/api/courses")
-    public ResponseEntity <List <CourseLinkDTO>> getAllCourses() {
-        List <Course> courseList = courseService.getAllCourses();
-        List <CourseLinkDTO> courses = new ArrayList <>();
+    public ResponseEntity<List<CourseLinkDTO>> getAllCourses() {
+        List<Course> courseList = courseService.getAllCourses();
+        List<CourseLinkDTO> courses = new ArrayList<>();
         for (Course course : courseList) {
             Link selfLink = linkTo(methodOn(CourseController.class).getAllCoursesByCategoryId(course.getCategory().getId())).withSelfRel();
             courses.add(DTOBuilder.buildDtoForEntity(course, CourseLinkDTO.class, selfLink));
         }
-        return new ResponseEntity <>(courses, HttpStatus.OK);
+        return new ResponseEntity<>(courses, HttpStatus.OK);
     }
 
+    @GetMapping(value = "/api/courses/ordered")
+    public ResponseEntity<List<CourseLinkDTO>> getAllCoursesOrderByRating() {
+        List<Course> courseList = courseService.getAllOrderedCourses();
+        Link collectionLink = linkTo(methodOn(CourseController.class).getAllCoursesOrderByRating()).withRel("course");
+        List<CourseLinkDTO> decks = DTOBuilder.buildDtoListForCollection(courseList,
+                CourseLinkDTO.class, collectionLink);
+        return new ResponseEntity<>(decks, HttpStatus.OK);
+    }
+
+    @Auditable(actionType = AuditingActionType.VIEW_TOP_COURSES)
     @GetMapping("/api/course/top")
     public ResponseEntity <List <CourseTopDTO>> get4Course() {
         List <Course> courseList = courseService.get4Course();
@@ -85,15 +98,15 @@ public class CourseController {
         courseService.deleteCourse(course_id);
     }
 
-
-    @PostMapping("/api/user/courses/{course_id}")
-    public ResponseEntity addCourse(@RequestBody Long course_id) {
+    @PutMapping("/api/user/courses/{course_id}")
+    public ResponseEntity addCourse(@PathVariable Long course_id) {
         Course course = courseService.updateListOfCoursesOfTheAuthorizedUser(course_id);
-        return new ResponseEntity(HttpStatus.CREATED);
+        return new ResponseEntity(HttpStatus.OK);
     }
     @GetMapping("/api/private/user/courses")
     public ResponseEntity<List<Long>> getIdAllCoursesOfTheCurrentUser() {
         List<Long> id = courseService.getAllCoursesIdOfTheCurrentUser();
+
         return new ResponseEntity<List<Long>>(id, HttpStatus.OK);
     }
 }

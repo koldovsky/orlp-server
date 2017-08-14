@@ -3,6 +3,8 @@ package com.softserve.academy.spaced.repetition.controller;
 import com.softserve.academy.spaced.repetition.DTO.DTO;
 import com.softserve.academy.spaced.repetition.DTO.DTOBuilder;
 import com.softserve.academy.spaced.repetition.DTO.impl.CardRatingPublicDTO;
+import com.softserve.academy.spaced.repetition.audit.Auditable;
+import com.softserve.academy.spaced.repetition.audit.AuditingActionType;
 import com.softserve.academy.spaced.repetition.domain.CardRating;
 import com.softserve.academy.spaced.repetition.exceptions.MoreThanOneTimeRateException;
 import com.softserve.academy.spaced.repetition.exceptions.RatingsBadValueException;
@@ -45,6 +47,7 @@ public class CardRatingController {
         return new ResponseEntity<>(cardRatingDTO, HttpStatus.OK);
     }
 
+    @Auditable(actionType = AuditingActionType.RATE_CARD)
     @PostMapping("/api/private/decks/{deckId}/cards/{cardId}/rate")
     public ResponseEntity<DTO<CardRating>> addCardRating(@RequestBody CardRating cardRating, @PathVariable Long deckId, @PathVariable Long cardId) throws MoreThanOneTimeRateException, RatingsBadValueException {
 

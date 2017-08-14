@@ -20,6 +20,10 @@ import java.util.Date;
 @Component
 public class GoogleAuthUtil {
 
+    private final String FIRST_NAME = "given_name";
+    private final String LAST_NAME = "family_name";
+    private final String IMAGE = "picture";
+
     @Value("${spring.social.google.client-id}")
     private String clientId;
 
@@ -55,12 +59,12 @@ public class GoogleAuthUtil {
 
     public String getFirstName(GoogleIdToken googleIdToken) {
         GoogleIdToken.Payload payload = googleIdToken.getPayload();
-        return (String) payload.get("given_name");
+        return (String) payload.get(FIRST_NAME);
     }
 
     public String getLastName(GoogleIdToken googleIdToken) {
         GoogleIdToken.Payload payload = googleIdToken.getPayload();
-        return (String) payload.get("family_name");
+        return (String) payload.get(LAST_NAME);
     }
 
     public void saveNewGoogleUser(GoogleIdToken googleIdToken) {
@@ -75,8 +79,9 @@ public class GoogleAuthUtil {
         account.setStatus(AccountStatus.ACTIVE);
         Authority authority = authorityRepository.findAuthorityByName(AuthorityName.ROLE_USER);
         account.setAuthorities(Collections.singleton(authority));
-        person.setFirstName((String) payload.get("given_name"));
-        person.setLastName((String) payload.get("family_name"));
+        person.setFirstName((String) payload.get(FIRST_NAME));
+        person.setLastName((String) payload.get(LAST_NAME));
+        person.setImage((String) payload.get(IMAGE));
         user.setAccount(account);
         user.setFolder(folder);
         user.setPerson(person);

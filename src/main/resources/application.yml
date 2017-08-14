@@ -39,5 +39,8 @@ app:
   reCaptcha:
     secretKey: 6LeS2ykUAAAAAPUUYX5h93VVp0cBhHB6c0PfMkRB
     url: https://www.google.com/recaptcha/api/siteverify
+  images:
+    maxSize: 1048576
+    userQuote: 10485760
 #server:
 #  port: 8088

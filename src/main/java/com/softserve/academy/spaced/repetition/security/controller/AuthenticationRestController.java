@@ -1,6 +1,8 @@
 package com.softserve.academy.spaced.repetition.security.controller;
 
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
+import com.softserve.academy.spaced.repetition.audit.Auditable;
+import com.softserve.academy.spaced.repetition.audit.AuditingActionType;
 import com.softserve.academy.spaced.repetition.security.*;
 import com.softserve.academy.spaced.repetition.security.DTO.JwtAuthenticationRequest;
 import com.softserve.academy.spaced.repetition.security.DTO.JwtAuthenticationResponse;
@@ -42,6 +44,7 @@ public class AuthenticationRestController {
     @Value("${jwt.header}")
     private String tokenHeader;
 
+    @Auditable(actionType = AuditingActionType.SIGN_IN)
     @RequestMapping(value = "${jwt.route.authentication.path}", method = RequestMethod.POST)
     public ResponseEntity<JwtAuthenticationResponse> createAuthenticationToken(@RequestBody JwtAuthenticationRequest authenticationRequest, Device device) throws AuthenticationException {
         ReCaptchaResponseDto reCaptchaResponseDto = reCaptchaApiService.verify(authenticationRequest.getCaptcha());
@@ -56,6 +59,7 @@ public class AuthenticationRestController {
         return new ResponseEntity<>(new JwtAuthenticationResponse("Ok"), headers, HttpStatus.OK);
     }
 
+    @Auditable(actionType = AuditingActionType.SIGN_IN_VIA_GOOGLE)
     @RequestMapping(value = "${spring.social.google.path}", method = RequestMethod.POST)
     public ResponseEntity<JwtAuthenticationResponse> createAuthenticationTokenFromSocial(@RequestBody String idToken, Device device) {
         GoogleIdToken googleIdToken = jwtService.getGoogleIdToken(idToken);
@@ -69,6 +73,7 @@ public class AuthenticationRestController {
         return new ResponseEntity<>(new JwtAuthenticationResponse("Ok"), headers, HttpStatus.OK);
     }
 
+    @Auditable(actionType = AuditingActionType.SIGN_IN_VIA_FACEBOOK)
     @RequestMapping(value = "${spring.social.facebook.path}", method = RequestMethod.POST)
     public ResponseEntity<JwtAuthenticationResponse> createAuthenticationTokenFromFacebook(@RequestBody String token, Device device) throws GeneralSecurityException, IOException {
         HttpHeaders headers = authenticationRestService.getFacebookHeaders(token, device);
@@ -90,5 +95,3 @@ public class AuthenticationRestController {
         }
     }
 }
-
-

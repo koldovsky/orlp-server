@@ -2,6 +2,8 @@ package com.softserve.academy.spaced.repetition.controller;
 
 import com.softserve.academy.spaced.repetition.DTO.DTOBuilder;
 import com.softserve.academy.spaced.repetition.DTO.impl.*;
+import com.softserve.academy.spaced.repetition.audit.Auditable;
+import com.softserve.academy.spaced.repetition.audit.AuditingActionType;
 import com.softserve.academy.spaced.repetition.domain.Card;
 import com.softserve.academy.spaced.repetition.domain.Category;
 import com.softserve.academy.spaced.repetition.domain.Deck;
@@ -26,6 +28,7 @@ public class DeckController {
     @Autowired
     private DeckService deckService;
 
+    @Auditable(actionType = AuditingActionType.VIEW_DECKS_BY_CATEGORY)
     @GetMapping(value = "/api/category/{category_id}/decks")
     @PreAuthorize(value = "@accessToUrlService.hasAccessToDeck(#category_id)")
     public ResponseEntity<List<DeckLinkByCategoryDTO>> getAllDecksByCategoryId(@PathVariable Long category_id) {
@@ -45,12 +48,13 @@ public class DeckController {
         return new ResponseEntity<>(decks, HttpStatus.OK);
     }
 
+    @Auditable(actionType = AuditingActionType.VIEW_DECKS_BY_COURSE)
     @GetMapping(value = "/api/category/{category_id}/courses/{course_id}/decks")
     @PreAuthorize(value = "@accessToUrlService.hasAccessToCourse(#category_id, #course_id)")
-    public ResponseEntity<List<DeckPublicDTO>> getAllDecksByCourseId(@PathVariable Long category_id, @PathVariable Long course_id) {
+    public ResponseEntity<List<DeckLinkByCourseDTO>> getAllDecksByCourseId(@PathVariable Long category_id, @PathVariable Long course_id) {
         List<Deck> decksList = deckService.getAllDecks(course_id);
         Link collectionLink = linkTo(methodOn(DeckController.class).getAllDecksByCourseId(category_id, course_id)).withRel("course");
-        List<DeckPublicDTO> decks = DTOBuilder.buildDtoListForCollection(decksList, DeckPublicDTO.class, collectionLink);
+        List<DeckLinkByCourseDTO> decks = DTOBuilder.buildDtoListForCollection(decksList, DeckLinkByCourseDTO.class, collectionLink);
         return new ResponseEntity<>(decks, HttpStatus.OK);
     }
 
@@ -73,6 +77,7 @@ public class DeckController {
         return new ResponseEntity<>(linkDTO, HttpStatus.OK);
     }
 
+    @Auditable(actionType = AuditingActionType.VIEW_CARD_BY_CATEGORY_AND_DECK)
     @GetMapping(value = "/api/category/{category_id}/decks/{deck_id}/cards")
     @PreAuthorize(value = "@accessToUrlService.hasAccessToDeckFromCategory(#category_id, #deck_id)")
     public ResponseEntity<List<CardPublicDTO>> getCardsByCategoryAndDeck(@PathVariable Long category_id, @PathVariable Long deck_id) {
@@ -82,6 +87,7 @@ public class DeckController {
         return new ResponseEntity<>(cardsPublic, HttpStatus.OK);
     }
 
+    @Auditable(actionType = AuditingActionType.VIEW_CARD_BY_COURSE_AND_DECK)
     @GetMapping(value = "/api/category/{category_id}/courses/{course_id}/decks/{deck_id}/cards")
     @PreAuthorize(value = "@accessToUrlService.hasAccessToDeck(#category_id, #course_id, #deck_id)")
     public ResponseEntity<List<CardPublicDTO>> getCardsByCourseAndDeck(@PathVariable Long category_id, @PathVariable Long course_id, @PathVariable Long deck_id) {

@@ -1,6 +1,8 @@
 package com.softserve.academy.spaced.repetition.controller;
 
 
+import com.softserve.academy.spaced.repetition.audit.Auditable;
+import com.softserve.academy.spaced.repetition.audit.AuditingActionType;
 import com.softserve.academy.spaced.repetition.domain.User;
 import com.softserve.academy.spaced.repetition.repository.UserRepository;
 import com.softserve.academy.spaced.repetition.service.AccountVerificationByEmailService;
@@ -20,6 +22,7 @@ public class RegistrationController {
     @Autowired
     AccountVerificationByEmailService verificationService;
 
+    @Auditable(actionType = AuditingActionType.SIGN_UP)
     @RequestMapping(value = "/registration", method = RequestMethod.POST)
     public ResponseEntity <?> addUser(@RequestBody User userFromClient) {
         return registrationService.registerNewUser(userFromClient);

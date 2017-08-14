@@ -9,6 +9,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -36,16 +37,25 @@ public class UserService {
     }
 
     @Transactional
-    public User toggleUsersStatus(Long id, AccountStatus status) {
-
+    public User setUsersStatusActive(Long id) {
         User user = userRepository.findOne(id);
+        user.getAccount().setStatus(AccountStatus.ACTIVE);
+        userRepository.save(user);
+        return userRepository.findOne(id);
+    }
 
-        if (user.getAccount().getStatus() == status) {
-            user.getAccount().setStatus(AccountStatus.ACTIVE);
-        } else if (user.getAccount().getStatus() == AccountStatus.ACTIVE) {
-            user.getAccount().setStatus(status);
-        }
+    @Transactional
+    public User setUsersStatusDeleted(Long id) {
+        User user = userRepository.findOne(id);
+        user.getAccount().setStatus(AccountStatus.DELETED);
+        userRepository.save(user);
+        return userRepository.findOne(id);
+    }
 
+    @Transactional
+    public User setUsersStatusBlocked(Long id) {
+        User user = userRepository.findOne(id);
+        user.getAccount().setStatus(AccountStatus.BLOCKED);
         userRepository.save(user);
         return userRepository.findOne(id);
     }
@@ -63,25 +73,52 @@ public class UserService {
 
 
         for (Deck deck : usersFolder.getDecks()) {
-            if (deck.getId() == deckId) {
+            if (deck.getId().equals(deckId)) {
                 return null;
             }
         }
-
         Deck deckForAdding = deckRepository.findOne(deckId);
         usersFolder.getDecks().add(deckForAdding);
         userRepository.save(user);
-
         return user;
     }
-
+    @Transactional
     public User getAuthorizedUser() {
         JwtUser jwtUser = (JwtUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return userRepository.findUserByAccountEmail(jwtUser.getUsername());
     }
-
+    @Transactional
     public Set<Course> getAllCoursesByUserId(Long user_id) {
         User user = userRepository.findOne(user_id);
         return user.getCourses();
+    }
+    @Transactional
+    public User removeDeckFromUsersFolder(Long userId, Long deckId) {
+        Deck deck = deckRepository.getDeckByItsIdAndOwnerOfDeck(deckId, userId);
+        User user = userRepository.findOne(userId);
+        Folder usersFolder = user.getFolder();
+
+        boolean hasFolderDeck = false;
+        for (Deck deckFromUsersFolder : usersFolder.getDecks()) {
+            if (deckFromUsersFolder.getId().equals(deckId)) {
+                hasFolderDeck = true;
+            }
+        }
+        if (deck == null && hasFolderDeck == true) {
+            deck = deckRepository.findOne(deckId);
+            usersFolder.getDecks().remove(deck);
+            userRepository.save(user);
+        } else {
+            return null;
+        }
+        return user;
+    }
+    @Transactional
+    public List<Deck> getAllDecksFromUsersFolder(Long userId) {
+        User user = userRepository.findOne(userId);
+        Folder usersFolder = user.getFolder();
+        List<Deck> decks = new ArrayList<>();
+        decks.addAll(usersFolder.getDecks());
+        return decks;
     }
 }
