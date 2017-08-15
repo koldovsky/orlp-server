@@ -54,6 +54,10 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
         return new ResponseEntity<MessageDTO>(new MessageDTO("Operation is not allowed for current user!"), HttpStatus.CONFLICT);
     }
 
+    @ExceptionHandler(NotAuthorisedUserException.class)
+    ResponseEntity<MessageDTO> NotAuthorisedUserException() {
+        return new ResponseEntity<MessageDTO>(new MessageDTO("Operation is unavailable for unauthorized users!"), HttpStatus.CONFLICT);
+
     @ExceptionHandler(UnknownHostException.class)
     ResponseEntity<MessageDTO> handleUnknownHostException() {
         return new ResponseEntity<MessageDTO>(new MessageDTO("The IP address of a host could not be determined"), HttpStatus.CONFLICT);

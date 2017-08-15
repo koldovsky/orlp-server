@@ -22,7 +22,8 @@ import java.util.List;
  */
 @Service
 public class ImageService {
-
+    @Autowired
+    private UserService userService;
     @Autowired
     private ImageRepository imageRepository;
     @Autowired
@@ -38,7 +39,6 @@ public class ImageService {
      * Add image to the database
      *
      * @param file   - image uploaded by User
-     * @param userId - id of User which have uploaded this image
      * @return
      */
     public Long addImageToDB(MultipartFile file, Long userId) throws ImageRepositorySizeQuotaExceededException {
@@ -46,8 +46,9 @@ public class ImageService {
         long fileSize = file.getSize();
         Image image = null;
         Long imageId = 0L;
+        User user = userService.getUserById(userId);
 
-        if (fileSize > getUsersLimitInBytesForImagesLeft(userId)) {
+        if (fileSize > getUsersLimitInBytesForImagesLeft(user.getId())) {
             throw new ImageRepositorySizeQuotaExceededException();
         }
 
@@ -57,7 +58,6 @@ public class ImageService {
 
             String base64 = encodeToBase64(file);
             String imageType = file.getContentType();
-            User user = userRepository.findUserById(userId);
             image = new Image(base64, imageType, user, fileSize);
             imageRepository.save(image);
             imageId = image.getId();
@@ -149,5 +149,16 @@ public class ImageService {
         } else {
             imageRepository.delete(image);
         }
+    }
+
+    public void setImageStatusInUse(Long imageId){
+        Image image = imageRepository.findOne(imageId);
+        image.setUsed(true);
+        imageRepository.save(image);
+    }
+    public void setImageStatusNotInUse(Long imageId){
+        Image image = imageRepository.findOne(imageId);
+        image.setUsed(false);
+        imageRepository.save(image);
     }
 }
