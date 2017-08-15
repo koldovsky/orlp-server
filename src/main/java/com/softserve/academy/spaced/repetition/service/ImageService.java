@@ -5,7 +5,6 @@ import com.softserve.academy.spaced.repetition.domain.Image;
 import com.softserve.academy.spaced.repetition.domain.User;
 import com.softserve.academy.spaced.repetition.exceptions.CanNotBeDeletedException;
 import com.softserve.academy.spaced.repetition.exceptions.ImageRepositorySizeQuotaExceededException;
-import com.softserve.academy.spaced.repetition.exceptions.NotAuthorisedUserException;
 import com.softserve.academy.spaced.repetition.exceptions.NotOwnerOperationException;
 import com.softserve.academy.spaced.repetition.repository.ImageRepository;
 import com.softserve.academy.spaced.repetition.repository.UserRepository;
@@ -29,33 +28,34 @@ public class ImageService {
     private ImageRepository imageRepository;
     @Autowired
     private UserRepository userRepository;
+
     @Value("${app.images.maxSize}")
     private Long maxFileSize;
+
     @Value("${app.images.userQuote}")
     private Long userQuote;
 
     /**
      * Add image to the database
      *
-     * @param file - image uploaded by User
+     * @param file   - image uploaded by User
      * @return
      */
-    public Long addImageToDB(MultipartFile file) throws ImageRepositorySizeQuotaExceededException, NotAuthorisedUserException {
+    public Long addImageToDB(MultipartFile file, Long userId) throws ImageRepositorySizeQuotaExceededException {
+
         long fileSize = file.getSize();
         Image image = null;
         Long imageId = 0L;
-        User user = null;
-        try {
-            user = userService.getAuthorizedUser();
-        } catch (ClassCastException e) {
-            throw new NotAuthorisedUserException();
-        }
+        User user = userService.getUserById(userId);
+
         if (fileSize > getUsersLimitInBytesForImagesLeft(user.getId())) {
             throw new ImageRepositorySizeQuotaExceededException();
         }
+
         if (fileSize > maxFileSize) {
             throw new MultipartException("File upload error: file is too large.");
         } else {
+
             String base64 = encodeToBase64(file);
             String imageType = file.getContentType();
             image = new Image(base64, imageType, user, fileSize);
@@ -72,8 +72,10 @@ public class ImageService {
      * @return String, which contains decoded image content
      */
     public byte[] getDecodedImageContentByImageId(Long id) {
+
         byte[] imageContentet = null;
         List<Long> idList = imageRepository.getIdList();
+
         for (Long existingId : idList) {
             if (id.equals(existingId)) {
                 Image image = imageRepository.findImageById(id);
@@ -85,6 +87,7 @@ public class ImageService {
         return imageContentet;
     }
 
+
     /**
      * Encoding file-content to Base64 format
      *
@@ -93,6 +96,7 @@ public class ImageService {
      */
     private String encodeToBase64(MultipartFile file) {
         String encodedFile = null;
+
         byte[] bytes = new byte[(int) file.getSize()];
         try {
             bytes = file.getBytes();
@@ -111,6 +115,7 @@ public class ImageService {
      * @return decoded file-content
      */
     private byte[] decodeFromBase64(String encodedFileContent) {
+
         return Base64.decodeBase64(encodedFileContent);
     }
 
@@ -121,29 +126,39 @@ public class ImageService {
      * @return number of bytes that left to upload
      */
     public Long getUsersLimitInBytesForImagesLeft(Long userId) {
+
         Long bytesUsed = imageRepository.getSumOfImagesSizesOfUserById(userId);
         if (bytesUsed == null) {
             bytesUsed = 0L;
         }
         Long bytesLeft = userQuote - bytesUsed;
+
         return bytesLeft;
     }
 
-    public void deleteImage(Long id) throws CanNotBeDeletedException, NotOwnerOperationException, NotAuthorisedUserException {
+    public void deleteImage(Long id, Long userId) throws CanNotBeDeletedException, NotOwnerOperationException {
         Image image = imageRepository.findImageById(id);
-        Long userId = 0L;
-        try {
-            userId = userService.getAuthorizedUser().getId();
-        } catch (ClassCastException e) {
-            throw new NotAuthorisedUserException();
-        }
         Long imageOwnerId = image.getCreatedBy().getId();
+
         if (imageOwnerId != userId) throw new NotOwnerOperationException();
+
         boolean isUsed = image.isUsed();
+
         if (isUsed) {
             throw new CanNotBeDeletedException();
         } else {
             imageRepository.delete(image);
         }
+    }
+
+    public void setImageStatusInUse(Long imageId){
+        Image image = imageRepository.findOne(imageId);
+        image.setUsed(true);
+        imageRepository.save(image);
+    }
+    public void setImageStatusNotInUse(Long imageId){
+        Image image = imageRepository.findOne(imageId);
+        image.setUsed(false);
+        imageRepository.save(image);
     }
 }

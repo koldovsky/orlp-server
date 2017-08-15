@@ -42,12 +42,12 @@ public class ImageController {
      * @throws ImageRepositorySizeQuotaExceededException - is dropping when user have exceeded the quote of disk-space for his own images
      */
     @PostMapping("/api/service/image")
-    public ResponseEntity<UploadingImageDTO> addImageToDB(@RequestParam("file") MultipartFile file) throws ImageRepositorySizeQuotaExceededException, NotAuthorisedUserException {
-        Long imageId = imageService.addImageToDB(file);
+    public ResponseEntity<UploadingImageDTO> addImageToDB(@RequestParam("file") MultipartFile file, @RequestParam("userId") Long userId) throws ImageRepositorySizeQuotaExceededException, NotAuthorisedUserException {
+        Long imageId = imageService.addImageToDB(file, userId);
         Image image = imageRepository.getImageWithoutBase64(imageId);
         Link link = linkTo(methodOn(ImageController.class).getImageById(imageId)).withSelfRel();
         UploadingImageDTO uploadingimageDTO = DTOBuilder.buildDtoForEntity(image, UploadingImageDTO.class, link);
-        Long bytesLeft = imageService.getUsersLimitInBytesForImagesLeft(userService.getAuthorizedUser().getId());
+        Long bytesLeft = imageService.getUsersLimitInBytesForImagesLeft(userId);
         uploadingimageDTO.setBytesLeft(bytesLeft);
         return new ResponseEntity<>(uploadingimageDTO, HttpStatus.OK);
     }
@@ -81,7 +81,7 @@ public class ImageController {
      *
      * @return list of ImageDTO
      */
-    @GetMapping(value = "/api/admin/service/image")
+    @GetMapping(value = "/api/service/image")
     public ResponseEntity<List<ImageDTO>> getImageList() {
         List<Image> listId = imageRepository.getImagesWithoutBase64();
         Link link = linkTo(methodOn(ImageController.class).getImageList()).withSelfRel();
@@ -93,13 +93,13 @@ public class ImageController {
      * Delete the selected image
      *
      * @param id     - Image id, which we want to delete
-     * @return - Httpstatus.OK if the operation of deleting was made successfull
+     * @return - HttpStatus.OK if the operation of deleting was made successfull
      * @throws CanNotBeDeletedException   - is dropping when the image which we want to delete is already in use
      * @throws NotOwnerOperationException - is dropping when the the image which we want to delete not belongs to us as to owner
      */
     @DeleteMapping(value = "/api/service/image/{id}")
-    public ResponseEntity<?> deleteImage(@PathVariable("id") Long id) throws CanNotBeDeletedException, NotOwnerOperationException, NotAuthorisedUserException {
-        imageService.deleteImage(id);
+    public ResponseEntity<?> deleteImage(@PathVariable("id") Long id,  @RequestParam("userId") Long userId) throws CanNotBeDeletedException, NotOwnerOperationException, NotAuthorisedUserException {
+        imageService.deleteImage(id, userId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

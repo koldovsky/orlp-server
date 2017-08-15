@@ -17,9 +17,10 @@ public class CategoryService {
 
     @Autowired
     private CategoryRepository categoryRepository;
-
     @Autowired
     private CourseRepository courseRepository;
+    @Autowired
+    private ImageService imageService;
 
     @Transactional
     public List<Category> getAllCategory() {
@@ -42,6 +43,8 @@ public class CategoryService {
     }
 
     public Category addCategory(Category category) {
+        Long imageId = category.getImage().getId();
+        imageService.setImageStatusInUse(imageId);
         return categoryRepository.save(category);
     }
 

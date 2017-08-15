@@ -20,8 +20,9 @@ public class Course implements EntityInterface {
     @Column(name = "description", nullable = false)
     private String description;
 
-    @Column(name = "imagebase64", columnDefinition = "LONGTEXT")
-    private String imagebase64;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "image")
+    private Image image;
 
     @Column(name = "rating")
     private double rating;
@@ -82,12 +83,12 @@ public class Course implements EntityInterface {
         this.decks = decks;
     }
 
-    public String getImagebase64() {
-        return imagebase64;
+    public Image getImage() {
+        return image;
     }
 
-    public void setImagebase64(String imagebase64) {
-        this.imagebase64 = imagebase64;
+    public void setImage(Image image) {
+        this.image = image;
     }
 
     public double getRating() {
@@ -117,7 +118,7 @@ public class Course implements EntityInterface {
         if (id != null ? !id.equals(course.id) : course.id != null) return false;
         if (name != null ? !name.equals(course.name) : course.name != null) return false;
         if (description != null ? !description.equals(course.description) : course.description != null) return false;
-        if (imagebase64 != null ? !imagebase64.equals(course.imagebase64) : course.imagebase64 != null) return false;
+        if (image != null ? !image.equals(course.image) : course.image != null) return false;
         return category != null ? category.equals(course.category) : course.category == null;
     }
 
@@ -128,7 +129,7 @@ public class Course implements EntityInterface {
         result = id != null ? id.hashCode() : 0;
         result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + (description != null ? description.hashCode() : 0);
-        result = 31 * result + (imagebase64 != null ? imagebase64.hashCode() : 0);
+        result = 31 * result + (image != null ? image.hashCode() : 0);
         temp = Double.doubleToLongBits(rating);
         result = 31 * result + (int) (temp ^ (temp >>> 32));
         result = 31 * result + (category != null ? category.hashCode() : 0);
