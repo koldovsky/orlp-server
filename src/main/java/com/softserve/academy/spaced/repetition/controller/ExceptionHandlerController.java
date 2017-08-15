@@ -14,6 +14,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 import javax.servlet.http.HttpServletRequest;
 import java.net.UnknownHostException;
 
+
 @ControllerAdvice
 public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
 
@@ -57,6 +58,7 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
     @ExceptionHandler(NotAuthorisedUserException.class)
     ResponseEntity<MessageDTO> NotAuthorisedUserException() {
         return new ResponseEntity<MessageDTO>(new MessageDTO("Operation is unavailable for unauthorized users!"), HttpStatus.CONFLICT);
+    }
 
     @ExceptionHandler(UnknownHostException.class)
     ResponseEntity<MessageDTO> handleUnknownHostException() {
