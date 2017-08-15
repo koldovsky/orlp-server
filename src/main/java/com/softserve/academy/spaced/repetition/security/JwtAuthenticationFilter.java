@@ -23,7 +23,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Autowired
     JwtTokenUtil jwtTokenUtil;
 
-
+    @Value("${jwt.header}")
+    private String tokenHeader;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws ServletException, IOException {
@@ -31,7 +32,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         Cookie[] cookies = request.getCookies();
         if(cookies != null){
             for (Cookie cookie: cookies) {
-                if (cookie.getName().equals("Authentication")){
+                if (cookie.getName().equals(tokenHeader)){
                     authToken = cookie.getValue();
                 }
             }

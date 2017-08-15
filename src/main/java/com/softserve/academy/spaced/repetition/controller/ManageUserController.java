@@ -3,6 +3,8 @@ package com.softserve.academy.spaced.repetition.controller;
 import com.softserve.academy.spaced.repetition.DTO.DTOBuilder;
 import com.softserve.academy.spaced.repetition.DTO.impl.DeckOfUserManagedByAdminDTO;
 import com.softserve.academy.spaced.repetition.DTO.impl.UserManagedByAdminDTO;
+import com.softserve.academy.spaced.repetition.audit.Auditable;
+import com.softserve.academy.spaced.repetition.audit.AuditingActionType;
 import com.softserve.academy.spaced.repetition.domain.Deck;
 import com.softserve.academy.spaced.repetition.domain.User;
 import com.softserve.academy.spaced.repetition.service.UserService;
@@ -23,6 +25,7 @@ public class ManageUserController {
     @Autowired
     private UserService userService;
 
+    @Auditable(actionType = AuditingActionType.VIEW_ALL_USERS)
     @GetMapping("/api/admin/users")
     public ResponseEntity<List<UserManagedByAdminDTO>> getAllUsers() {
         List<User> userList = userService.getAllUsers();
@@ -32,6 +35,7 @@ public class ManageUserController {
         return new ResponseEntity<>(usersDTOList, HttpStatus.OK);
     }
 
+    @Auditable(actionType = AuditingActionType.VIEW_ONE_USER)
     @GetMapping("/api/admin/users/{id}")
     public ResponseEntity<UserManagedByAdminDTO> getUserById(@PathVariable Long id) {
         User user = userService.getUserById(id);
@@ -40,6 +44,7 @@ public class ManageUserController {
         return new ResponseEntity<>(userDTO, HttpStatus.OK);
     }
 
+    @Auditable(actionType = AuditingActionType.SET_ACCOUNT_BLOCKED)
     @PutMapping("/api/admin/users/{id}")
     public ResponseEntity<UserManagedByAdminDTO> setUsersStatusBlocked(@PathVariable Long id) {
         User userWithChangedStatus = userService.setUsersStatusBlocked(id);
@@ -48,6 +53,7 @@ public class ManageUserController {
         return new ResponseEntity<>(userManagedByAdminDTO, HttpStatus.OK);
     }
 
+    @Auditable(actionType = AuditingActionType.SET_ACCOUNT_DELETED)
     @DeleteMapping("/api/admin/users/{id}")
     public ResponseEntity<UserManagedByAdminDTO> setUsersStatusDeleted(@PathVariable Long id) {
         User userWithChangedStatus = userService.setUsersStatusDeleted(id);
@@ -56,6 +62,7 @@ public class ManageUserController {
         return new ResponseEntity<>(userManagedByAdminDTO, HttpStatus.OK);
     }
 
+    @Auditable(actionType = AuditingActionType.SET_ACCOUNT_ACTIVE)
     @PostMapping("/api/admin/users/{id}")
     public ResponseEntity<UserManagedByAdminDTO> setUsersStatusActive(@PathVariable Long id) {
         User userWithChangedStatus = userService.setUsersStatusActive(id);
@@ -64,6 +71,7 @@ public class ManageUserController {
         return new ResponseEntity<>(userManagedByAdminDTO, HttpStatus.OK);
     }
 
+    @Auditable(actionType = AuditingActionType.ADD_DECK_TO_USER_FOLDER)
     @PostMapping("/api/admin/users/{userId}/deck/{deckId}")
     public ResponseEntity<UserManagedByAdminDTO> addExistingDeckToUsersFolder(@PathVariable("userId") Long userId, @PathVariable("deckId") Long deckId) {
         User user = userService.addExistingDeckToUsersFolder(userId, deckId);
@@ -76,6 +84,7 @@ public class ManageUserController {
         }
     }
 
+    @Auditable(actionType = AuditingActionType.REMOVE_DECK_FROM_USER_FOLDER)
     @DeleteMapping("/api/admin/users/{userId}/deck/{deckId}")
     public ResponseEntity<UserManagedByAdminDTO> removeDeckFromUsersFolder(@PathVariable("userId") Long userId, @PathVariable("deckId") Long deckId) {
         User user = userService.removeDeckFromUsersFolder(userId, deckId);
@@ -88,6 +97,7 @@ public class ManageUserController {
         }
     }
 
+    @Auditable(actionType = AuditingActionType.VIEW_DECKS_FROM_USER_FOLDER)
     @GetMapping("/api/admin/users/{userId}/decks")
     public ResponseEntity<List<DeckOfUserManagedByAdminDTO>> getAllDecksFromUsersFolder(@PathVariable("userId") Long userId) {
         List<Deck> decksFromUsersFolder = userService.getAllDecksFromUsersFolder(userId);
