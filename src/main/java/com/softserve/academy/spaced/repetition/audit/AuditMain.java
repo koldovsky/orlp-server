@@ -10,6 +10,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import javax.transaction.Transactional;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.Date;
 
 @Aspect
@@ -21,18 +23,24 @@ public class AuditMain {
 
     @After("@annotation(auditable)")
     @Transactional
-    public void logAuditActivity(Auditable auditable) {
-
+    public void logAuditActivity(Auditable auditable) throws UnknownHostException {
         String accountEmail;
         String actionType = auditable.actionType().getActionDescription();
-
-        try {
-            JwtUser jwtUser = (JwtUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (principal instanceof String) {
+            if (principal.equals("anonymousUser")) {
+                accountEmail = "GUEST";
+            } else {
+                accountEmail = String.valueOf(principal);
+            }
+        } else {
+            JwtUser jwtUser = (JwtUser) principal;
             accountEmail = jwtUser.getUsername();
-        }catch (ClassCastException ex){
-            accountEmail = "GUEST";
         }
+        auditRepository.save(new Audit(accountEmail, actionType, new Date(), getIpAddress()));
+    }
 
-        auditRepository.save(new Audit(accountEmail, actionType, new Date()));
+    public String getIpAddress() throws UnknownHostException {
+        return InetAddress.getLocalHost().getHostAddress().toString();
     }
 }
