@@ -40,7 +40,7 @@ public class CardController {
         return new ResponseEntity<>(cardPublicDTO, HttpStatus.OK);
     }
 
-    @Auditable(actionType = AuditingActionType.CREATE_CARD_BY_COURSE_AND_DECK)
+    @Auditable(actionType = AuditingActionType.CREATE_CARD_VIA_COURSE_AND_DECK)
     @PostMapping(value = "/api/category/{category_id}/courses/{course_id}/decks/{deck_id}/cards")
     @PreAuthorize(value = "@accessToUrlService.hasAccessToDeck(#category_id, #course_id, #deck_id)")
     public ResponseEntity<CardPublicDTO> addCardByCourseAndDeck(@RequestBody Card card, @PathVariable Long category_id, @PathVariable Long course_id, @PathVariable Long deck_id) {
@@ -50,7 +50,7 @@ public class CardController {
         return new ResponseEntity<>(cardPublicDTO, HttpStatus.CREATED);
     }
 
-    @Auditable(actionType = AuditingActionType.CREATE_CARD_BY_CATEGORY_AND_DECK)
+    @Auditable(actionType = AuditingActionType.CREATE_CARD_VIA_CATEGORY_AND_DECK)
     @PostMapping(value = "/api/category/{category_id}/decks/{deck_id}/cards")
     @PreAuthorize(value = "@accessToUrlService.hasAccessToDeckFromCategory(#category_id, #deck_id)")
     public ResponseEntity<CardPublicDTO> addCardByCategoryAndDeck(@RequestBody Card card, @PathVariable Long category_id, @PathVariable Long deck_id) {
@@ -60,7 +60,7 @@ public class CardController {
         return new ResponseEntity<>(cardPublicDTO, HttpStatus.CREATED);
     }
 
-    @Auditable(actionType = AuditingActionType.EDIT_CARD_BY_COURSE_AND_DECK)
+    @Auditable(actionType = AuditingActionType.EDIT_CARD_VIA_COURSE_AND_DECK)
     @PutMapping(value = "/api/category/{category_id}/courses/{course_id}/decks/{deck_id}/cards/{card_id}")
     @PreAuthorize(value = "@accessToUrlService.hasAccessToCard(#category_id, #course_id, #deck_id, #card_id)")
     public ResponseEntity<CardPublicDTO> updateCardByCourseAndDeck(@PathVariable Long category_id, @PathVariable Long course_id,
@@ -71,7 +71,7 @@ public class CardController {
         return new ResponseEntity<>(cardPublicDTO, HttpStatus.OK);
     }
 
-    @Auditable(actionType = AuditingActionType.EDIT_CARD_BY_CATEGORY_AND_DECK)
+    @Auditable(actionType = AuditingActionType.EDIT_CARD_VIA_CATEGORY_AND_DECK)
     @PutMapping(value = "/api/category/{category_id}/decks/{deck_id}/cards/{card_id}")
     @PreAuthorize(value = "@accessToUrlService.hasAccessToCard(#category_id, #deck_id, #card_id)")
     public ResponseEntity<CardPublicDTO> updateCardByCategoryAndDeck(@PathVariable Long category_id, @PathVariable Long deck_id, @PathVariable Long card_id, @RequestBody Card card) {
