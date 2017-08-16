@@ -25,6 +25,10 @@ public class ManageUserController {
     @Autowired
     private UserService userService;
 
+    /**
+     * Gets the list of all users
+     * @return list of managed by admin usersDTO
+     */
     @Auditable(actionType = AuditingActionType.VIEW_ALL_USERS)
     @GetMapping("/api/admin/users")
     public ResponseEntity<List<UserManagedByAdminDTO>> getAllUsers() {
@@ -35,6 +39,12 @@ public class ManageUserController {
         return new ResponseEntity<>(usersDTOList, HttpStatus.OK);
     }
 
+    /**
+     * Gets user by his/her id
+     *
+     * @param id - users id
+     * @return managed by admin usersDTO
+     */
     @Auditable(actionType = AuditingActionType.VIEW_ONE_USER)
     @GetMapping("/api/admin/users/{id}")
     public ResponseEntity<UserManagedByAdminDTO> getUserById(@PathVariable Long id) {
@@ -44,6 +54,12 @@ public class ManageUserController {
         return new ResponseEntity<>(userDTO, HttpStatus.OK);
     }
 
+    /**
+     * Sets users status "Blocked"
+     *
+     * @param id - users id
+     * @return managed by admin usersDTO
+     */
     @Auditable(actionType = AuditingActionType.SET_ACCOUNT_BLOCKED)
     @PutMapping("/api/admin/users/{id}")
     public ResponseEntity<UserManagedByAdminDTO> setUsersStatusBlocked(@PathVariable Long id) {
@@ -53,6 +69,12 @@ public class ManageUserController {
         return new ResponseEntity<>(userManagedByAdminDTO, HttpStatus.OK);
     }
 
+    /**
+     * Sets users status "Deleted"
+     *
+     * @param id - users id
+     * @return managed by admin usersDTO
+     */
     @Auditable(actionType = AuditingActionType.SET_ACCOUNT_DELETED)
     @DeleteMapping("/api/admin/users/{id}")
     public ResponseEntity<UserManagedByAdminDTO> setUsersStatusDeleted(@PathVariable Long id) {
@@ -62,6 +84,12 @@ public class ManageUserController {
         return new ResponseEntity<>(userManagedByAdminDTO, HttpStatus.OK);
     }
 
+    /**
+     * Sets users status "Active"
+     *
+     * @param id - users id
+     * @return managed by admin usersDTO
+     */
     @Auditable(actionType = AuditingActionType.SET_ACCOUNT_ACTIVE)
     @PostMapping("/api/admin/users/{id}")
     public ResponseEntity<UserManagedByAdminDTO> setUsersStatusActive(@PathVariable Long id) {
@@ -71,6 +99,12 @@ public class ManageUserController {
         return new ResponseEntity<>(userManagedByAdminDTO, HttpStatus.OK);
     }
 
+    /**
+     * Ads deck to users folder
+     * @param userId - users id
+     * @param deckId - decks id
+     * @return managed by admin usersDTO
+     */
     @Auditable(actionType = AuditingActionType.ADD_DECK_TO_USER_FOLDER)
     @PostMapping("/api/admin/users/{userId}/deck/{deckId}")
     public ResponseEntity<UserManagedByAdminDTO> addExistingDeckToUsersFolder(@PathVariable("userId") Long userId, @PathVariable("deckId") Long deckId) {
@@ -78,12 +112,18 @@ public class ManageUserController {
         if (user != null) {
             Link link = linkTo(methodOn(ManageUserController.class).addExistingDeckToUsersFolder(userId, deckId)).withSelfRel();
             UserManagedByAdminDTO userManagedByAdminDTO = DTOBuilder.buildDtoForEntity(user, UserManagedByAdminDTO.class, link);
-            return new ResponseEntity<UserManagedByAdminDTO>(userManagedByAdminDTO, HttpStatus.OK);
+            return new ResponseEntity<>(userManagedByAdminDTO, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 
+    /**
+     * Deletes deck from users folder
+     * @param userId - users id
+     * @param deckId - decks id
+     * @return managed by admin usersDTO
+     */
     @Auditable(actionType = AuditingActionType.REMOVE_DECK_FROM_USER_FOLDER)
     @DeleteMapping("/api/admin/users/{userId}/deck/{deckId}")
     public ResponseEntity<UserManagedByAdminDTO> removeDeckFromUsersFolder(@PathVariable("userId") Long userId, @PathVariable("deckId") Long deckId) {
@@ -97,13 +137,19 @@ public class ManageUserController {
         }
     }
 
+    /**
+     * Gets list of decks from the folder of the defined user
+     *
+     * @param userId - users id
+     * @return managed by admin usersDTO
+     */
     @Auditable(actionType = AuditingActionType.VIEW_DECKS_FROM_USER_FOLDER)
     @GetMapping("/api/admin/users/{userId}/decks")
     public ResponseEntity<List<DeckOfUserManagedByAdminDTO>> getAllDecksFromUsersFolder(@PathVariable("userId") Long userId) {
         List<Deck> decksFromUsersFolder = userService.getAllDecksFromUsersFolder(userId);
         Link link = linkTo(methodOn(ManageUserController.class).getAllDecksFromUsersFolder(userId)).withSelfRel();
         List<DeckOfUserManagedByAdminDTO> decksFromUsersFolderDTO = DTOBuilder.buildDtoListForCollection(decksFromUsersFolder, DeckOfUserManagedByAdminDTO.class, link);
-        return new ResponseEntity<List<DeckOfUserManagedByAdminDTO>>(decksFromUsersFolderDTO, HttpStatus.OK);
+        return new ResponseEntity<>(decksFromUsersFolderDTO, HttpStatus.OK);
     }
 
 
