@@ -8,6 +8,7 @@ import org.springframework.boot.autoconfigure.web.DefaultErrorAttributes;
 import org.springframework.boot.autoconfigure.web.ErrorAttributes;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -33,6 +34,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     private final JwtAuthenticationEntryPoint unauthorizedHandler;
     private final UserDetailsService userDetailsService;
+    private final int MAX_AGE = 3600;
 
     @Autowired
     public SecurityConfiguration(JwtAuthenticationEntryPoint unauthorizedHandler, UserDetailsService userDetailsService) {
@@ -83,9 +85,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 registry.addMapping("/**")
                         .allowedOrigins(url)
                         .allowCredentials(true)
-                        .allowedHeaders("Set-Cookie", "*", "Content-Type", "Access-Control-Allow-Headers", "Authorization", "X-Requested-With", "Origin", "Accept")
+                        .allowedHeaders("Access-Control-Allow-Credentials", "Content-Type", "Access-Control-Allow-Headers", "X-Requested-With", "Origin", "Accept")
                         .allowedMethods("PUT", "DELETE", "GET", "POST")
-                        .maxAge(3600);
+                        .maxAge(MAX_AGE);
             }
         };
     }
