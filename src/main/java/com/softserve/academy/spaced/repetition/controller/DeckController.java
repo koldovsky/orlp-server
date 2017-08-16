@@ -77,7 +77,7 @@ public class DeckController {
         return new ResponseEntity<>(linkDTO, HttpStatus.OK);
     }
 
-    @Auditable(actionType = AuditingActionType.START_LEARNING_VIA_CATEGORY)
+    @Auditable(actionType = AuditingActionType.START_LEARNING_DECK_VIA_CATEGORY)
     @GetMapping(value = "/api/category/{category_id}/decks/{deck_id}/cards")
     @PreAuthorize(value = "@accessToUrlService.hasAccessToDeckFromCategory(#category_id, #deck_id)")
     public ResponseEntity<List<CardPublicDTO>> getCardsByCategoryAndDeck(@PathVariable Long category_id, @PathVariable Long deck_id) {
@@ -95,7 +95,7 @@ public class DeckController {
         return new ResponseEntity<>(cardsPublic, HttpStatus.OK);
     }
 
-    @Auditable(actionType = AuditingActionType.START_LEARNING_VIA_COURSE)
+    @Auditable(actionType = AuditingActionType.START_LEARNING_DECK_VIA_COURSE)
     @GetMapping(value = "/api/category/{category_id}/courses/{course_id}/decks/{deck_id}/cards")
     @PreAuthorize(value = "@accessToUrlService.hasAccessToDeck(#category_id, #course_id, #deck_id)")
     public ResponseEntity<List<CardPublicDTO>> getCardsByCourseAndDeck(@PathVariable Long category_id, @PathVariable Long course_id, @PathVariable Long deck_id) {
