@@ -1,6 +1,7 @@
 package com.softserve.academy.spaced.repetition.audit;
 
 import com.softserve.academy.spaced.repetition.domain.Audit;
+import com.softserve.academy.spaced.repetition.domain.AuthorityName;
 import com.softserve.academy.spaced.repetition.repository.AuditRepository;
 import com.softserve.academy.spaced.repetition.security.JwtUser;
 import org.aspectj.lang.annotation.After;
@@ -18,6 +19,10 @@ import java.util.Date;
 @Component
 public class AuditMain {
 
+    private final String PRINCIPAL = "anonymousUser";
+    private final String EMAIL_FOR_UNAUTHORIZED_USER = "GUEST";
+    private final String ROLE_FOR_GUEST = "[ROLE_ANONYMOUS]";
+
     @Autowired
     AuditRepository auditRepository;
 
@@ -25,19 +30,22 @@ public class AuditMain {
     @Transactional
     public void logAuditActivity(Auditable auditable) throws UnknownHostException {
         String accountEmail;
-        String actionType = auditable.actionType().getActionDescription();
+        String role = "";
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (principal instanceof String) {
-            if (principal.equals("anonymousUser")) {
-                accountEmail = "GUEST";
+            if (principal.equals(PRINCIPAL)) {
+                accountEmail = EMAIL_FOR_UNAUTHORIZED_USER;
+                role = ROLE_FOR_GUEST;
             } else {
                 accountEmail = String.valueOf(principal);
+                role = ROLE_FOR_GUEST;
             }
         } else {
             JwtUser jwtUser = (JwtUser) principal;
             accountEmail = jwtUser.getUsername();
+            role = jwtUser.getAuthorities().toString();
         }
-        auditRepository.save(new Audit(accountEmail, actionType, new Date(), getIpAddress()));
+        auditRepository.save(new Audit(accountEmail, auditable.actionType(), new Date(), getIpAddress(), role));
     }
 
     public String getIpAddress() throws UnknownHostException {
