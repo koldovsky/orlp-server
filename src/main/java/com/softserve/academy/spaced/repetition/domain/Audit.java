@@ -24,15 +24,20 @@ public class Audit implements EntityInterface {
     @Temporal(TemporalType.TIMESTAMP)
     private Date time;
 
+    @Column(name = "ip_address", nullable = false)
+    private String ipAddress;
+
     public Audit() {
     }
 
-    public Audit(String accountEmail, String action, Date time) {
+    public Audit(String accountEmail, String action, Date time, String ipAddress) {
         this.accountEmail = accountEmail;
         this.action = action;
         this.time = time;
+        this.ipAddress = ipAddress;
     }
 
+    @Override
     public Long getId() {
         return id;
     }
@@ -65,13 +70,11 @@ public class Audit implements EntityInterface {
         this.time = time;
     }
 
-    @Override
-    public String toString() {
-        return "Audit{" +
-                "id=" + id +
-                ", accountEmail='" + accountEmail + '\'' +
-                ", action='" + action + '\'' +
-                ", time=" + time +
-                '}';
+    public String getIpAddress() {
+        return ipAddress;
+    }
+
+    public void setIpAddress(String ipAddress) {
+        this.ipAddress = ipAddress;
     }
 }

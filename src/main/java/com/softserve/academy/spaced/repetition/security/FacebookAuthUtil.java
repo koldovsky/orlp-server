@@ -2,6 +2,8 @@ package com.softserve.academy.spaced.repetition.security;
 
 import com.google.api.client.util.Value;
 
+import com.softserve.academy.spaced.repetition.audit.Auditable;
+import com.softserve.academy.spaced.repetition.audit.AuditingActionType;
 import com.softserve.academy.spaced.repetition.domain.*;
 import com.softserve.academy.spaced.repetition.repository.AccountRepository;
 import com.softserve.academy.spaced.repetition.repository.UserRepository;
@@ -79,6 +81,7 @@ public class FacebookAuthUtil {
         return account != null;
     }
 
+    @Auditable(actionType = AuditingActionType.SIGN_UP_FACEBOOK)
     public void saveNewFacebookUser(Map fbProfileData) {
         User user = new User();
         Account account = new Account();
