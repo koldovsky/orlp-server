@@ -1,11 +1,9 @@
 package com.softserve.academy.spaced.repetition.logger;
 
-import com.softserve.academy.spaced.repetition.logger.Logger;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterThrowing;
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 @Aspect
@@ -15,9 +13,15 @@ public class LogException {
     Logger logger;
 
     @AfterThrowing(value = "execution(* com.softserve.academy.spaced.repetition.controller.*.*(..))", throwing = "ex")
-    public void handlingController(JoinPoint joinPoint, Exception ex) {
+    public void loggingExceptionsFromControllers(JoinPoint joinPoint, Exception ex) {
         System.out.println(logger);
-        logger.log("Exception in class = " + joinPoint.getThis() + ", method = " + joinPoint.getSignature());
+        logger.log("Exception in controller = " + joinPoint.getThis() + ", method = " + joinPoint.getSignature());
+    }
+
+    @AfterThrowing(value = "execution(* com.softserve.academy.spaced.repetition.service.*.*(..))", throwing = "ex")
+    public void loggingExceptionsFromServices(JoinPoint joinPoint, Exception ex) {
+        System.out.println(logger);
+        logger.log("Exception in service = " + joinPoint.getThis() + ", method = " + joinPoint.getSignature());
     }
 
 }

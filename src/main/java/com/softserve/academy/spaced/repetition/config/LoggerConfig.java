@@ -3,8 +3,6 @@ package com.softserve.academy.spaced.repetition.config;
 import com.softserve.academy.spaced.repetition.logger.Log4jImpl;
 import com.softserve.academy.spaced.repetition.logger.Logger;
 import com.softserve.academy.spaced.repetition.logger.LoggerFactory;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
