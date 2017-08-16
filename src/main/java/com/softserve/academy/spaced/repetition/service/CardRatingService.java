@@ -30,25 +30,19 @@ public class CardRatingService {
     RatingCountService ratingCountService;
 
     public void addCardRating(CardRating cardRating, Long deckId, Long cardId) {
-
         JwtUser user = (JwtUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
         String username = user.getUsername();
-
-        CardRating cardRatingByAccountEmail = cardRatingRepository.findCardRatingByAccountEmailAndCardIdAndDeckId(username, cardId,deckId);
+        CardRating cardRatingByAccountEmail = cardRatingRepository.findCardRatingByAccountEmailAndCardIdAndDeckId(username, cardId, deckId);
 
         if (cardRatingByAccountEmail != null) {
-
             cardRating.setId(cardRatingByAccountEmail.getId());
         }
         cardRating.setAccountEmail(username);
         cardRating.setCardId(cardId);
         cardRating.setDeckId(deckId);
-            cardRatingRepository.save(cardRating);
-
+        cardRatingRepository.save(cardRating);
         Card card = cardRepository.findOne(cardId);
         Deck deck = deckRepository.findOne(deckId);
-
         double cardAvarageRating = ratingCountService.countAvarageRating(cardRatingRepository.findRatingByCardId(cardId));
         double deckAvarageRating = ratingCountService.countAvarageRating(cardRatingRepository.findRatingByDeckId(deckId));
         long numbOfUsersRatings = cardRatingRepository.countAllByCardId(cardId);
@@ -56,7 +50,6 @@ public class CardRatingService {
         card.setNumbOfUsersRatings(numbOfUsersRatings);
         deck.setRating(deckAvarageRating);
         cardRepository.save(card);
-
     }
 
     public List<CardRating> getAllCardRating() {
@@ -68,5 +61,7 @@ public class CardRatingService {
         CardRating cardRating = cardRatingRepository.findOne(cardId);
         return cardRating;
     }
+
+
 
 }
