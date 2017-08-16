@@ -1,3 +1,0 @@
-2017-08-15 00:15:50,323 [INFO ][-nio-8080-exec-1][academy.spaced.repetition.controller.TestController] - sout*------------------->
-2017-08-15 00:22:10,553 [INFO ][-nio-8080-exec-1][academy.spaced.repetition.controller.TestController] - sout*------------------->
-2017-08-15 00:23:18,709 [INFO ][-nio-8080-exec-1][academy.spaced.repetition.controller.TestController] - sout*------------------->
