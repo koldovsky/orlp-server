@@ -5,5 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface UserCardQueueRepository extends JpaRepository<UserCardQueue,Long> {
 
-
+    public UserCardQueue findUserCardQueueByAccountEmailAndCardId(String accountEmail,long cardId);
 }

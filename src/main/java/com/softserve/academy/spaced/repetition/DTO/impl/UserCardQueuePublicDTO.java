@@ -21,6 +21,8 @@ public class UserCardQueuePublicDTO extends DTO<UserCardQueue> {
         return getEntity().getCardId();
     }
 
+    public long getDeckId(){return  getEntity().getDeckId();}
+
     public UserCardQueueStatus getStatus() {
         return getEntity().getStatus();
     }

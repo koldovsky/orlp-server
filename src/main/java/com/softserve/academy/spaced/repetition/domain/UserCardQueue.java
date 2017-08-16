@@ -21,6 +21,9 @@ public class UserCardQueue implements EntityInterface{
     @Column(name = "card_id", nullable = false)
     private long cardId;
 
+    @Column(name = "deck_id", nullable = false)
+    private long deckId;
+
     @Column(name = "status")
     @NotNull
     @Enumerated(EnumType.STRING)
@@ -41,6 +44,14 @@ public class UserCardQueue implements EntityInterface{
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public long getDeckId() {
+        return deckId;
+    }
+
+    public void setDeckId(long deckId) {
+        this.deckId = deckId;
     }
 
     public String getAccountEmail() {
