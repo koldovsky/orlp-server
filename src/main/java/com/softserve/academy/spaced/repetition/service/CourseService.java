@@ -19,14 +19,14 @@ import java.util.Set;
 public class CourseService {
     @Autowired
     private CourseRepository courseRepository;
-
     @Autowired
     private DeckRepository deckRepository;
     @Autowired
     private UserService userService;
     @Autowired
     private UserRepository userRepository;
-
+    @Autowired
+    private ImageService imageService;
 
     @Transactional
     public List <Course> getAllCourses() {
@@ -50,6 +50,8 @@ public class CourseService {
     }
 
     public void addCourse(Course course, Long category_id) {
+        Long imageId = course.getImage().getId();
+        imageService.setImageStatusInUse(imageId);
         course.setCategory(new Category(category_id));
         courseRepository.save(course);
     }

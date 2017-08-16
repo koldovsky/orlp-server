@@ -20,8 +20,9 @@ public class Category implements EntityInterface {
     @Column(name = "description", nullable = false)
     private String description;
 
-    @Column(name = "imagebase64", columnDefinition = "LONGTEXT", nullable = false)
-    private String imagebase64;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "image")
+    private Image image;
 
     @OneToMany(mappedBy = "category")
     private List<Course> courses;
@@ -36,23 +37,23 @@ public class Category implements EntityInterface {
         this.id = id;
     }
 
-    public Category(String name, String description, String imagebase64) {
+    public Category(String name, String description, Image image) {
         this.name = name;
         this.description = description;
-        this.imagebase64 = imagebase64;
+        this.image = image;
     }
 
-    public Category(Long id, String name, String imagebase64) {
+    public Category(Long id, String name, Image image) {
         this.id = id;
         this.name = name;
-        this.imagebase64 = imagebase64;
+        this.image = image;
     }
 
-    public Category(Long id, String name, String description, String imagebase64) {
+    public Category(Long id, String name, String description, Image image) {
         this.id = id;
         this.name = name;
         this.description = description;
-        this.imagebase64 = imagebase64;
+        this.image = image;
     }
 
     public Long getId() {
@@ -95,12 +96,12 @@ public class Category implements EntityInterface {
         this.decks = decks;
     }
 
-    public String getImagebase64() {
-        return imagebase64;
+    public Image getImage() {
+        return image;
     }
 
-    public void setImagebase64(String imagebase64) {
-        this.imagebase64 = imagebase64;
+    public void setImage(Image image) {
+        this.image = image;
     }
 
 }

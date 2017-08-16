@@ -1,8 +1,12 @@
 package com.softserve.academy.spaced.repetition.DTO.impl;
 
 import com.softserve.academy.spaced.repetition.DTO.DTO;
+import com.softserve.academy.spaced.repetition.controller.ImageController;
 import com.softserve.academy.spaced.repetition.domain.Course;
 import org.springframework.hateoas.Link;
+
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
 public class CoursePublicDTO extends DTO<Course> {
 
@@ -18,7 +22,7 @@ public class CoursePublicDTO extends DTO<Course> {
         return getEntity().getDescription();
     }
 
-    public String getImagebase64() {
-        return getEntity().getImagebase64();
+    public String getImage() {
+        return linkTo(methodOn(ImageController.class).getImageById(getEntity().getImage().getId())).withSelfRel().getHref();
     }
 }

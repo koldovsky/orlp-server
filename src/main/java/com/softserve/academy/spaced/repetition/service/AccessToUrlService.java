@@ -59,6 +59,9 @@ public class AccessToUrlService {
     public boolean hasAccessToDeck(Long category_id) {
         return deckRepository.hasAccessToDeckFromCategory(category_id).size() > 0;
     }
+    public boolean hasAccessToCard(Long deck_id,Long card_id){
+        return (cardRepository.hasAccessToCard(deck_id,card_id).size()>0);
+    }
 
     public boolean hasAccessToCard(Long category_id, Long deck_id, Long card_id) {
         return hasAccessToDeckFromCategory(category_id, deck_id) & (cardRepository.hasAccessToCard(deck_id, card_id).size() > 0);

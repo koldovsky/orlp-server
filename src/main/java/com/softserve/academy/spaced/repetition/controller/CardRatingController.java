@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Link;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -49,6 +50,7 @@ public class CardRatingController {
 
     @Auditable(actionType = AuditingActionType.RATE_CARD)
     @PostMapping("/api/private/decks/{deckId}/cards/{cardId}/rate")
+    @PreAuthorize(value = "@accessToUrlService.hasAccessToCard(#deckId,#cardId)")
     public ResponseEntity<DTO<CardRating>> addCardRating(@RequestBody CardRating cardRating, @PathVariable Long deckId, @PathVariable Long cardId) throws MoreThanOneTimeRateException, RatingsBadValueException {
 
         if (cardRating.getRating() <= MAX_RTING_VALUE && cardRating.getRating() >= MIN_RTING_VALUE) {
