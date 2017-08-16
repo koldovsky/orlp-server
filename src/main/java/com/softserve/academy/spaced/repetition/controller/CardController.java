@@ -13,6 +13,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
@@ -85,5 +87,13 @@ public class CardController {
     @DeleteMapping(value = {"/api/category/{categoryId}/decks/{deckId}/cards/{id}", "/api/courses/{courseId}/decks/{deckId}/cards/{id}"})
     public void deleteCard(@PathVariable Long id) {
         cardService.deleteCard(id);
+    }
+
+    @GetMapping("api/private/category/{categoryId}/decks{deckId}")
+    public ResponseEntity<List<CardPublicDTO>> getLearningCards(@PathVariable long categoryId,@PathVariable long deckId) {
+        List<Card> learningCards = cardService.getCardsQueue(deckId);
+        Link collectionLink = linkTo(methodOn(DeckController.class).getCardsByCategoryAndDeck(categoryId,deckId)).withSelfRel();
+        List<CardPublicDTO> cards = DTOBuilder.buildDtoListForCollection(learningCards, CardPublicDTO.class, collectionLink);
+        return new ResponseEntity<>(cards, HttpStatus.OK);
     }
 }

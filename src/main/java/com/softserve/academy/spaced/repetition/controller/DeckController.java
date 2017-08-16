@@ -1,13 +1,14 @@
 package com.softserve.academy.spaced.repetition.controller;
 
 import com.softserve.academy.spaced.repetition.DTO.DTOBuilder;
-import com.softserve.academy.spaced.repetition.DTO.impl.*;
+import com.softserve.academy.spaced.repetition.DTO.impl.CardPublicDTO;
+import com.softserve.academy.spaced.repetition.DTO.impl.DeckLinkByCategoryDTO;
+import com.softserve.academy.spaced.repetition.DTO.impl.DeckLinkByCourseDTO;
+import com.softserve.academy.spaced.repetition.DTO.impl.DeckPublicDTO;
 import com.softserve.academy.spaced.repetition.audit.Auditable;
 import com.softserve.academy.spaced.repetition.audit.AuditingActionType;
 import com.softserve.academy.spaced.repetition.domain.Card;
-import com.softserve.academy.spaced.repetition.domain.Category;
 import com.softserve.academy.spaced.repetition.domain.Deck;
-import com.softserve.academy.spaced.repetition.service.AccessToUrlService;
 import com.softserve.academy.spaced.repetition.service.DeckService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Link;
@@ -16,7 +17,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
@@ -83,6 +83,14 @@ public class DeckController {
     public ResponseEntity<List<CardPublicDTO>> getCardsByCategoryAndDeck(@PathVariable Long category_id, @PathVariable Long deck_id) {
         List<Card> cards = deckService.getAllCardsByDeckId(deck_id);
         Link collectionLink = linkTo(methodOn(DeckController.class).getCardsByCategoryAndDeck(category_id, deck_id)).withSelfRel();
+        List<CardPublicDTO> cardsPublic = DTOBuilder.buildDtoListForCollection(cards, CardPublicDTO.class, collectionLink);
+        return new ResponseEntity<>(cardsPublic, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/api/decks/{deck_id}/cards")
+    public ResponseEntity<List<CardPublicDTO>> getCardsByDeck(@PathVariable Long deck_id) {
+        List<Card> cards = deckService.getAllCardsByDeckId(deck_id);
+        Link collectionLink = linkTo(methodOn(DeckController.class).getCardsByDeck(deck_id)).withSelfRel();
         List<CardPublicDTO> cardsPublic = DTOBuilder.buildDtoListForCollection(cards, CardPublicDTO.class, collectionLink);
         return new ResponseEntity<>(cardsPublic, HttpStatus.OK);
     }
