@@ -17,18 +17,18 @@ import javax.servlet.http.HttpServletRequest;
 public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(MultipartException.class)
-    ResponseEntity<MessageDTO> handleLargeFileException() {
-        return new ResponseEntity<>(new MessageDTO("File upload error: file is too large."), HttpStatus.CONFLICT);
+    ResponseEntity <MessageDTO> handleLargeFileException() {
+        return new ResponseEntity <>(new MessageDTO("File upload error: file is too large."), HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler(MoreThanOneTimeRateException.class)
-    ResponseEntity<MessageDTO> handleMoreThanOneTimeRateException() {
-        return new ResponseEntity<>(new MessageDTO("Object was rated more than one time."), HttpStatus.CONFLICT);
+    ResponseEntity <MessageDTO> handleMoreThanOneTimeRateException() {
+        return new ResponseEntity <>(new MessageDTO("Object was rated more than one time."), HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler(NullPointerException.class)
-    ResponseEntity<MessageDTO> handleIllegalValueOfRequestParameterException() {
-        return new ResponseEntity<>(new MessageDTO("The value of request parameter is not valid!"), HttpStatus.CONFLICT);
+    ResponseEntity <MessageDTO> handleIllegalValueOfRequestParameterException() {
+        return new ResponseEntity <>(new MessageDTO("The value of request parameter is not valid!"), HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler(RatingsBadValueException.class)
@@ -39,17 +39,17 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(ImageRepositorySizeQuotaExceededException.class)
-    ResponseEntity<MessageDTO> handleImageRepositorySizeQuotaExceededException() {
-        return new ResponseEntity<>(new MessageDTO("You have exceeded your quota for uploading images. You should delete some images before new upload."), HttpStatus.CONFLICT);
+    ResponseEntity <MessageDTO> handleImageRepositorySizeQuotaExceededException() {
+        return new ResponseEntity <>(new MessageDTO("You have exceeded your quota for uploading images. You should delete some images before new upload."), HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler(CanNotBeDeletedException.class)
-    ResponseEntity<MessageDTO> handleCanNotBeDeletedException() {
-        return new ResponseEntity<MessageDTO>(new MessageDTO("Current image is already in use!"), HttpStatus.CONFLICT);
+    ResponseEntity <MessageDTO> handleCanNotBeDeletedException() {
+        return new ResponseEntity <MessageDTO>(new MessageDTO("Current image is already in use!"), HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler(NotOwnerOperationException.class)
-    ResponseEntity<MessageDTO> handleNotOwnerOperationException() {
-        return new ResponseEntity<MessageDTO>(new MessageDTO("Operation is not allowed for current user!"), HttpStatus.CONFLICT);
+    ResponseEntity <MessageDTO> handleNotOwnerOperationException() {
+        return new ResponseEntity <MessageDTO>(new MessageDTO("Operation is not allowed for current user!"), HttpStatus.CONFLICT);
     }
 }

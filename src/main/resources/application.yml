@@ -7,7 +7,7 @@ spring:
   jpa:
     show-sql: true
     hibernate:
-      ddl-auto: create
+      ddl-auto: validate
       naming-strategy: org.hibernate.cfg.ImprovedNamingStrategy
   social:
     google:
@@ -25,7 +25,6 @@ spring:
     password: z0935152261
   origin:
     url: http://localhost:3000
-
 jwt:
   header: Authentication
   secret: mySecret
