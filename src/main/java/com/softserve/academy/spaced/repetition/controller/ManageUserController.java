@@ -29,7 +29,7 @@ public class ManageUserController {
      * Gets the list of all users
      * @return list of managed by admin usersDTO
      */
-    @Auditable(actionType = AuditingActionType.VIEW_ALL_USERS)
+    @Auditable(actionType = AuditingActionType.VIEW_ALL_USERS_ADMIN)
     @GetMapping("/api/admin/users")
     public ResponseEntity<List<UserManagedByAdminDTO>> getAllUsers() {
         List<User> userList = userService.getAllUsers();
@@ -45,7 +45,7 @@ public class ManageUserController {
      * @param id - users id
      * @return managed by admin usersDTO
      */
-    @Auditable(actionType = AuditingActionType.VIEW_ONE_USER)
+    @Auditable(actionType = AuditingActionType.VIEW_ONE_USER_ADMIN)
     @GetMapping("/api/admin/users/{id}")
     public ResponseEntity<UserManagedByAdminDTO> getUserById(@PathVariable Long id) {
         User user = userService.getUserById(id);
@@ -105,7 +105,7 @@ public class ManageUserController {
      * @param deckId - decks id
      * @return managed by admin usersDTO
      */
-    @Auditable(actionType = AuditingActionType.ADD_DECK_TO_USER_FOLDER)
+    @Auditable(actionType = AuditingActionType.ADD_DECK_TO_USER_FOLDER_ADMIN)
     @PostMapping("/api/admin/users/{userId}/deck/{deckId}")
     public ResponseEntity<UserManagedByAdminDTO> addExistingDeckToUsersFolder(@PathVariable("userId") Long userId, @PathVariable("deckId") Long deckId) {
         User user = userService.addExistingDeckToUsersFolder(userId, deckId);
@@ -124,7 +124,7 @@ public class ManageUserController {
      * @param deckId - decks id
      * @return managed by admin usersDTO
      */
-    @Auditable(actionType = AuditingActionType.REMOVE_DECK_FROM_USER_FOLDER)
+    @Auditable(actionType = AuditingActionType.REMOVE_DECK_FROM_USER_FOLDER_ADMIN)
     @DeleteMapping("/api/admin/users/{userId}/deck/{deckId}")
     public ResponseEntity<UserManagedByAdminDTO> removeDeckFromUsersFolder(@PathVariable("userId") Long userId, @PathVariable("deckId") Long deckId) {
         User user = userService.removeDeckFromUsersFolder(userId, deckId);
@@ -143,7 +143,7 @@ public class ManageUserController {
      * @param userId - users id
      * @return managed by admin usersDTO
      */
-    @Auditable(actionType = AuditingActionType.VIEW_DECKS_FROM_USER_FOLDER)
+    @Auditable(actionType = AuditingActionType.VIEW_FOLDER_DECKS_ADMIN)
     @GetMapping("/api/admin/users/{userId}/decks")
     public ResponseEntity<List<DeckOfUserManagedByAdminDTO>> getAllDecksFromUsersFolder(@PathVariable("userId") Long userId) {
         List<Deck> decksFromUsersFolder = userService.getAllDecksFromUsersFolder(userId);

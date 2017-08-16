@@ -1,6 +1,7 @@
 package com.softserve.academy.spaced.repetition.domain;
 
 import com.softserve.academy.spaced.repetition.DTO.EntityInterface;
+import com.softserve.academy.spaced.repetition.audit.AuditingActionType;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -18,7 +19,8 @@ public class Audit implements EntityInterface {
     private String accountEmail;
 
     @Column(name = "action", nullable = false)
-    private String action;
+    @Enumerated(EnumType.STRING)
+    private AuditingActionType action;
 
     @Column(name = "time", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
@@ -27,14 +29,18 @@ public class Audit implements EntityInterface {
     @Column(name = "ip_address", nullable = false)
     private String ipAddress;
 
+    @Column(name = "role", nullable = false)
+    private String role;
+
     public Audit() {
     }
 
-    public Audit(String accountEmail, String action, Date time, String ipAddress) {
+    public Audit(String accountEmail, AuditingActionType action, Date time, String ipAddress, String role) {
         this.accountEmail = accountEmail;
         this.action = action;
         this.time = time;
         this.ipAddress = ipAddress;
+        this.role = role;
     }
 
     @Override
@@ -54,11 +60,11 @@ public class Audit implements EntityInterface {
         this.accountEmail = accountEmail;
     }
 
-    public String getAction() {
+    public AuditingActionType getAction() {
         return action;
     }
 
-    public void setAction(String action) {
+    public void setAction(AuditingActionType action) {
         this.action = action;
     }
 
@@ -77,4 +83,13 @@ public class Audit implements EntityInterface {
     public void setIpAddress(String ipAddress) {
         this.ipAddress = ipAddress;
     }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
 }

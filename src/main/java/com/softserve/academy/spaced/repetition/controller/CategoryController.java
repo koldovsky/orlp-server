@@ -26,7 +26,7 @@ public class CategoryController {
     @Autowired
     private CategoryService categoryService;
 
-    @Auditable(actionType = AuditingActionType.VIEW_ALL_CATEGORY)
+    @Auditable(actionType = AuditingActionType.VIEW_ALL_CATEGORIES)
     @GetMapping("/api/category")
     public ResponseEntity <List <CategoryPublicDTO>> getAllCategories() {
         List <Category> categoryList = categoryService.getAllCategory();
@@ -46,7 +46,7 @@ public class CategoryController {
         return new ResponseEntity <>(publicDTO, HttpStatus.OK);
     }
 
-    @Auditable(actionType = AuditingActionType.VIEW_TOP_CATEGORY)
+    @Auditable(actionType = AuditingActionType.VIEW_TOP_CATEGORIES)
     @GetMapping("/api/category/top")
     public ResponseEntity <List <CategoryTopDTO>> getTopCategories() {
         List <Category> categoryList = categoryService.getTopCategory();
