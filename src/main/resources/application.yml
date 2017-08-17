@@ -25,7 +25,6 @@ spring:
     password: z0935152261
   origin:
     url: http://localhost:3000
-
 jwt:
   header: Authentication
   secret: mySecret
