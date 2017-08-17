@@ -3,7 +3,6 @@ package com.softserve.academy.spaced.repetition.service;
 import com.softserve.academy.spaced.repetition.domain.*;
 import com.softserve.academy.spaced.repetition.exceptions.BlankFieldException;
 import com.softserve.academy.spaced.repetition.exceptions.EmailUniquesException;
-import com.softserve.academy.spaced.repetition.logger.Logger;
 import com.softserve.academy.spaced.repetition.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -32,13 +31,15 @@ public class RegistrationService {
     public ResponseEntity <Person> registerNewUser(User user) {
         try {
             blankFieldsValidation(user);
-        } catch (BlankFieldException | EmailUniquesException ex) {
-            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        } catch (EmailUniquesException ex) {
+            return new ResponseEntity("Email exists", HttpStatus.BAD_REQUEST);
+        } catch (BlankFieldException ex) {
+            return new ResponseEntity("Blank fields", HttpStatus.BAD_REQUEST);
         }
         try {
             sendConfirmationEmailMessage(user);
         } catch (MailException ex) {
-            return new ResponseEntity(HttpStatus.NOT_FOUND);
+            return new ResponseEntity("Mail not sent", HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity(user.getPerson(), HttpStatus.CREATED);
     }
