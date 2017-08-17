@@ -87,7 +87,7 @@ public class ImageController {
      *
      * @return list of ImageDTO
      */
-    @GetMapping(value = "/api/service/image")
+    @GetMapping(value = "/api/admin/service/image")
     public ResponseEntity<List<ImageDTO>> getImageList() {
         List<Image> listId = imageRepository.getImagesWithoutBase64();
         Link link = linkTo(methodOn(ImageController.class).getImageList()).withSelfRel();

@@ -25,4 +25,5 @@ public interface CourseRepository extends JpaRepository<Course, Long> {
     List<Course> getAccessToCourse(@Param("category_id") Long category_id);
 
     List<Course> findAllByOrderByRatingDesc();
+
 }

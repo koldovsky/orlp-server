@@ -32,7 +32,7 @@ public class UserService {
     }
 
     @Transactional
-    public List<User> getAllUsers() {
+    public List <User> getAllUsers() {
         return userRepository.findAll();
     }
 
@@ -70,6 +70,7 @@ public class UserService {
 
         User user = userRepository.findOne(userId);
         Folder usersFolder = user.getFolder();
+
 
         for (Deck deck : usersFolder.getDecks()) {
             if (deck.getId().equals(deckId)) {

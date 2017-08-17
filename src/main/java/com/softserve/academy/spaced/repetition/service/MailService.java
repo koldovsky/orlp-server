@@ -1,6 +1,7 @@
 package com.softserve.academy.spaced.repetition.service;
 
 import com.softserve.academy.spaced.repetition.domain.User;
+import com.softserve.academy.spaced.repetition.logger.Logger;
 import com.softserve.academy.spaced.repetition.security.JwtTokenForMail;
 import freemarker.template.Configuration;
 import freemarker.template.TemplateException;
@@ -55,9 +56,7 @@ public class MailService {
                     freemarkerConfiguration.getTemplate("registrationVerificationMailTemplate.txt"), model));
             return content.toString();
         } catch (IOException e) {
-            System.out.println(e.getMessage());
         } catch (TemplateException e) {
-            System.out.println(e.getMessage());
         }
         return "";
     }
