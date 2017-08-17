@@ -35,7 +35,7 @@ public interface CardRepository extends JpaRepository<Card, Long> {
             "             when 'BAD' then 1 " +
             "             when 'NORMAL' then 2 " +
             "             when 'GOOD' then 3 " +
-            "             end limit :limitNumber",
+            "             end,u.card_data limit :limitNumber",
             nativeQuery = true)
     List<Card> CardsQueueForLearningWithStatus(@Param("accountEmail") String accountEmail, @Param("deckId") long deckId,
                                                @Param("limitNumber") long limitNumber);

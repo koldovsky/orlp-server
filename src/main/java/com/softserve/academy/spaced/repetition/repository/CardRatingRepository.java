@@ -10,10 +10,10 @@ import java.util.List;
 
 public interface CardRatingRepository extends JpaRepository<CardRating, Long> {
 
-    @Query("select c.rating from CardRating c where c.cardId=:cardId")
+    @Query("select c.rating from CardRating c where c.cardId=:cardId and c.rating>0")
     public List<Integer> findRatingByCardId(@Param("cardId") long cardId);
 
-    @Query("select c.rating from CardRating c where c.deckId=:deckId")
+    @Query("select c.rating from CardRating c where c.deckId=:deckId and c.rating>0")
     public List<Integer> findRatingByDeckId(@Param("deckId") long deckId);
 
     public Long countAllByRating(int rating);

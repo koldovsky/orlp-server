@@ -53,7 +53,7 @@ public class CardRatingController {
     @PreAuthorize(value = "@accessToUrlService.hasAccessToCard(#deckId,#cardId)")
     public ResponseEntity<DTO<CardRating>> addCardRating(@RequestBody CardRating cardRating, @PathVariable Long deckId, @PathVariable Long cardId) throws MoreThanOneTimeRateException, RatingsBadValueException {
 
-        if (cardRating.getRating() <= MAX_RTING_VALUE && cardRating.getRating() >= MIN_RTING_VALUE) {
+        if (cardRating.getRating() <= MAX_RTING_VALUE && cardRating.getRating() > MIN_RTING_VALUE) {
             cardRatingService.addCardRating(cardRating, deckId, cardId);
             Link selfLink = linkTo(methodOn(CardRatingController.class).getCardRatingById(cardRating.getId())).withSelfRel();
             CardRatingPublicDTO cardRatingPublicDTO = DTOBuilder.buildDtoForEntity(cardRating, CardRatingPublicDTO.class, selfLink);

@@ -24,7 +24,7 @@ public class UserCardQueueController {
     @Autowired
     UserCardQueueService userCardQueueService;
 
-    @PostMapping("api/user/deck{deck_id}/card/{card_id}/queue")
+    @PostMapping("/api/user/deck/{deck_id}/card/{card_id}/queue")
     @PreAuthorize(value = "@accessToUrlService.hasAccessToCard(#deck_id,#card_id)")
     public ResponseEntity<UserCardQueuePublicDTO> addUserCardQueue(@RequestBody UserCardQueue userCardQueue, @PathVariable long card_id, @PathVariable long deck_id) {
         userCardQueueService.addUserCardQueue(userCardQueue, card_id, deck_id);
