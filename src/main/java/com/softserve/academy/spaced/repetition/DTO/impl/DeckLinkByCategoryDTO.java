@@ -1,6 +1,7 @@
 package com.softserve.academy.spaced.repetition.DTO.impl;
 
 import com.softserve.academy.spaced.repetition.DTO.DTO;
+import com.softserve.academy.spaced.repetition.controller.CardController;
 import com.softserve.academy.spaced.repetition.controller.DeckController;
 import com.softserve.academy.spaced.repetition.domain.Deck;
 import org.springframework.hateoas.Link;
@@ -13,7 +14,7 @@ public class DeckLinkByCategoryDTO extends DTO<Deck> {
 
     public DeckLinkByCategoryDTO(Deck deck, Link link) {
         super(deck, link);
-        Link linkCards = linkTo(methodOn(DeckController.class).getCardsByCategoryAndDeck((long) -1, getEntity().getId())).withRel("cards");
+        Link linkCards = linkTo(methodOn(CardController.class).getLearningCards((long) -1, getEntity().getId())).withRel("cards");
         add(getLinkWithReplacedParentPart(linkCards).withRel("cards"));
     }
 

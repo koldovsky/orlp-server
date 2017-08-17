@@ -37,7 +37,7 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
     @ResponseBody
     @ResponseStatus(value = HttpStatus.CONFLICT)
     String handleRatingsBadValueException(HttpServletRequest request, Throwable ex) {
-        return "Rating can't be less than 0 and more than 5";
+        return "Rating can't be less than 1 and more than 5";
     }
 
     @ExceptionHandler(ImageRepositorySizeQuotaExceededException.class)
