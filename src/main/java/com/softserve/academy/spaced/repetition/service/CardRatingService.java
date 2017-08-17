@@ -3,7 +3,6 @@ package com.softserve.academy.spaced.repetition.service;
 import com.softserve.academy.spaced.repetition.domain.Card;
 import com.softserve.academy.spaced.repetition.domain.CardRating;
 import com.softserve.academy.spaced.repetition.domain.Deck;
-import com.softserve.academy.spaced.repetition.exceptions.MoreThanOneTimeRateException;
 import com.softserve.academy.spaced.repetition.repository.CardRatingRepository;
 import com.softserve.academy.spaced.repetition.repository.CardRepository;
 import com.softserve.academy.spaced.repetition.repository.DeckRepository;
@@ -41,15 +40,18 @@ public class CardRatingService {
         cardRating.setCardId(cardId);
         cardRating.setDeckId(deckId);
         cardRatingRepository.save(cardRating);
-        Card card = cardRepository.findOne(cardId);
-        Deck deck = deckRepository.findOne(deckId);
-        double cardAvarageRating = ratingCountService.countAvarageRating(cardRatingRepository.findRatingByCardId(cardId));
-        double deckAvarageRating = ratingCountService.countAvarageRating(cardRatingRepository.findRatingByDeckId(deckId));
-        long numbOfUsersRatings = cardRatingRepository.countAllByCardId(cardId);
-        card.setRating(cardAvarageRating);
-        card.setNumbOfUsersRatings(numbOfUsersRatings);
-        deck.setRating(deckAvarageRating);
-        cardRepository.save(card);
+
+        if(cardRatingRepository.findRatingByCardId(cardId).size()>0) {
+            Card card = cardRepository.findOne(cardId);
+            Deck deck = deckRepository.findOne(deckId);
+            double cardAvarageRating = ratingCountService.countAvarageRating(cardRatingRepository.findRatingByCardId(cardId));
+            double deckAvarageRating = ratingCountService.countAvarageRating(cardRatingRepository.findRatingByDeckId(deckId));
+            long numbOfUsersRatings = cardRatingRepository.countAllByCardId(cardId);
+            card.setRating(cardAvarageRating);
+            card.setNumbOfUsersRatings(numbOfUsersRatings);
+            deck.setRating(deckAvarageRating);
+            cardRepository.save(card);
+        }
     }
 
     public List<CardRating> getAllCardRating() {

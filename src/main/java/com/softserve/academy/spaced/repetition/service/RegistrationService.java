@@ -3,6 +3,7 @@ package com.softserve.academy.spaced.repetition.service;
 import com.softserve.academy.spaced.repetition.domain.*;
 import com.softserve.academy.spaced.repetition.exceptions.BlankFieldException;
 import com.softserve.academy.spaced.repetition.exceptions.EmailUniquesException;
+import com.softserve.academy.spaced.repetition.logger.Logger;
 import com.softserve.academy.spaced.repetition.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

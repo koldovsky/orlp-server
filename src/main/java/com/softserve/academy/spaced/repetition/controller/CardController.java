@@ -89,10 +89,10 @@ public class CardController {
         cardService.deleteCard(id);
     }
 
-    @GetMapping("api/private/category/{categoryId}/decks{deckId}")
-    public ResponseEntity<List<CardPublicDTO>> getLearningCards(@PathVariable long categoryId,@PathVariable long deckId) {
-        List<Card> learningCards = cardService.getCardsQueue(deckId);
-        Link collectionLink = linkTo(methodOn(DeckController.class).getCardsByCategoryAndDeck(categoryId,deckId)).withSelfRel();
+    @GetMapping("/api/category/{category_id}/decks/{deck_id}/learn/cards")
+    public ResponseEntity<List<CardPublicDTO>> getLearningCards(@PathVariable long category_id,@PathVariable long deck_id) {
+        List<Card> learningCards = cardService.getCardsQueue(deck_id);
+        Link collectionLink = linkTo(methodOn(DeckController.class).getCardsByCategoryAndDeck(category_id,deck_id)).withSelfRel();
         List<CardPublicDTO> cards = DTOBuilder.buildDtoListForCollection(learningCards, CardPublicDTO.class, collectionLink);
         return new ResponseEntity<>(cards, HttpStatus.OK);
     }

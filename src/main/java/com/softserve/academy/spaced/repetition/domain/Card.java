@@ -13,10 +13,10 @@ public class Card implements EntityInterface {
     @Column(name = "card_id")
     private Long id;
 
-    @Column(name = "question", nullable = false)
+    @Column(name = "question", nullable = false, columnDefinition = "LONGTEXT")
     private String question;
 
-    @Column(name = "answer", nullable = false)
+    @Column(name = "answer", nullable = false, columnDefinition = "LONGTEXT")
     private String answer;
 
     @Column(name = "rating")
