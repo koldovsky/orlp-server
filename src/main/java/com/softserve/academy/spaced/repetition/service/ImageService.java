@@ -183,4 +183,14 @@ public class ImageService {
         image.setUsed(false);
         imageRepository.save(image);
     }
+
+    /**
+     * Gets images for authorized user
+     *
+     * @return List of images
+     */
+    public List<Image> getImagesForCurrentUser() {
+        Long userId = userService.getAuthorizedUser().getId();
+        return imageRepository.getImagesWithoutContentbyId(userId);
+    }
 }
