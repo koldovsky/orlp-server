@@ -41,5 +41,7 @@ app:
   images:
     maxSize: 1048576
     userQuote: 10485760
+#logging:
+#  path: /com/softserve/academy/spaced/repetition/logger/logs
 #server:
 #  port: 8088
