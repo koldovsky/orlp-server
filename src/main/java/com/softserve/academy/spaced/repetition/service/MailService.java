@@ -15,7 +15,6 @@ import org.springframework.mail.javamail.MimeMessagePreparator;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 
-import javax.mail.internet.MimeMessage;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -26,14 +25,16 @@ public class MailService {
     private String URL;
 
     @Autowired
-    JavaMailSender mailSender;
+    private JavaMailSender mailSender;
     @Autowired
-    JwtTokenForMail jwtTokenForMail;
+    private JwtTokenForMail jwtTokenForMail;
     @Autowired
     @Qualifier("freemarkerConf")
-    Configuration freemarkerConfiguration;
+    private Configuration freemarkerConfiguration;
+    @Autowired
+    private Logger logger;
 
-    public void sendMail(User user) throws MailException {
+    public void sendConfirmationMail(User user) throws MailException {
         MimeMessagePreparator preparator = mimeMessage -> {
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
             helper.setSubject("Successful registration");
@@ -56,7 +57,9 @@ public class MailService {
                     freemarkerConfiguration.getTemplate("registrationVerificationMailTemplate.txt"), model));
             return content.toString();
         } catch (IOException e) {
+            logger.log(e.getClass().getName());
         } catch (TemplateException e) {
+            logger.log(e.getClass().getName());
         }
         return "";
     }

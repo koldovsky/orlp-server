@@ -4,6 +4,7 @@ import com.softserve.academy.spaced.repetition.DTO.impl.MessageDTO;
 import com.softserve.academy.spaced.repetition.exceptions.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.MailException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -63,5 +64,25 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
     @ExceptionHandler(UnknownHostException.class)
     ResponseEntity<MessageDTO> handleUnknownHostException() {
         return new ResponseEntity<MessageDTO>(new MessageDTO("The IP address of a host could not be determined"), HttpStatus.CONFLICT);
+    }
+    @ExceptionHandler(BlankFieldException.class)
+    ResponseEntity<MessageDTO> handleBlanckFieldException() {
+        return new ResponseEntity<MessageDTO>(new MessageDTO("Blank fields is not required"), HttpStatus.BAD_REQUEST);
+    }
+    @ExceptionHandler(EmailUniquesException.class)
+    ResponseEntity<MessageDTO> handleEmailUniquesException() {
+        return new ResponseEntity<MessageDTO>(new MessageDTO("Email exists"), HttpStatus.NOT_FOUND);
+    }
+    @ExceptionHandler(MailException.class)
+    ResponseEntity<MessageDTO> handleMailException() {
+        return new ResponseEntity<MessageDTO>(new MessageDTO("Mail not sent"), HttpStatus.SERVICE_UNAVAILABLE);
+    }
+    @ExceptionHandler(ExpiredTokenForVerificationException.class)
+    ResponseEntity<MessageDTO> handlExpiredTokenForVerificationException() {
+        return new ResponseEntity<MessageDTO>(new MessageDTO("No token found"), HttpStatus.NOT_FOUND);
+    }
+    @ExceptionHandler(EmailDoesntExistException.class)
+    ResponseEntity<MessageDTO> handleEmailDoesntExistException() {
+        return new ResponseEntity<MessageDTO>(new MessageDTO("Email not exists"), HttpStatus.NOT_FOUND);
     }
 }
