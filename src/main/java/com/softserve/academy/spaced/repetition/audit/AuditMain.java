@@ -1,7 +1,6 @@
 package com.softserve.academy.spaced.repetition.audit;
 
 import com.softserve.academy.spaced.repetition.domain.Audit;
-import com.softserve.academy.spaced.repetition.domain.AuthorityName;
 import com.softserve.academy.spaced.repetition.repository.AuditRepository;
 import com.softserve.academy.spaced.repetition.security.JwtUser;
 import org.aspectj.lang.annotation.After;
@@ -20,8 +19,8 @@ import java.util.Date;
 public class AuditMain {
 
     private final String PRINCIPAL = "anonymousUser";
-    private final String EMAIL_FOR_UNAUTHORIZED_USER = "GUEST";
-    private final String ROLE_FOR_GUEST = "[ROLE_ANONYMOUS]";
+    private final String EMAIL_FOR_UNAUTHORIZED_USER = "ANONYMOUS";
+    private final String ROLE_FOR_GUEST = "[ROLE_GUEST]";
 
     @Autowired
     AuditRepository auditRepository;
@@ -35,11 +34,10 @@ public class AuditMain {
         if (principal instanceof String) {
             if (principal.equals(PRINCIPAL)) {
                 accountEmail = EMAIL_FOR_UNAUTHORIZED_USER;
-                role = ROLE_FOR_GUEST;
             } else {
                 accountEmail = String.valueOf(principal);
-                role = ROLE_FOR_GUEST;
             }
+            role = ROLE_FOR_GUEST;
         } else {
             JwtUser jwtUser = (JwtUser) principal;
             accountEmail = jwtUser.getUsername();
