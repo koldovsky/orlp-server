@@ -27,7 +27,7 @@ spring:
     url: http://localhost:3000
 jwt:
   header: Authentication
-  secret: mySecret
+  secret: K&Mcq(\*cy(<9bUa)|E'(@]G$ao~'Vm1h@upwRWECrLvw~>M1J{26}g6ZAr;2}i
   expiration: 604800
   route:
     authentication:
