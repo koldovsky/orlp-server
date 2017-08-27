@@ -9,38 +9,38 @@ spring:
     hibernate:
       ddl-auto: validate
       naming-strategy: org.hibernate.cfg.ImprovedNamingStrategy
-  social:
-    google:
-      client-id: 109414995516-fftdn22fnpfdh80fgfsvpq1ht97hdkl5.apps.googleusercontent.com
-      client-secret: QyK5tYKCYN9KF40Lv--CWfY7
-      path: api/auth/google
-    facebook:
-      client-id: 439882899718340
-      client-secret: 94d6144f54723938f384ddb0a09daf81
-      path: api/auth/facebook
   mail:
     host: smtp.gmail.com
     port: 587
     username: sybez.market@gmail.com
     password: z0935152261
-  origin:
-    url: http://localhost:3000
-jwt:
-  header: Authentication
-  secret: mySecret
-  expiration: 604800
-  route:
-    authentication:
-      path: api/auth
-      refresh: refresh
-
 app:
+  jwt:
+    header: Authentication
+    secret: mySecret
+    expiration: 604800
+    route:
+      authentication:
+        path: api/auth
+        refresh: refresh
   reCaptcha:
     secretKey: 6LeS2ykUAAAAAPUUYX5h93VVp0cBhHB6c0PfMkRB
     url: https://www.google.com/recaptcha/api/siteverify
+  social:
+      google:
+        client-id: 109414995516-fftdn22fnpfdh80fgfsvpq1ht97hdkl5.apps.googleusercontent.com
+        client-secret: QyK5tYKCYN9KF40Lv--CWfY7
+        path: api/auth/google
+      facebook:
+        client-id: 439882899718340
+        client-secret: 94d6144f54723938f384ddb0a09daf81
+        path: api/auth/facebook
   images:
     maxSize: 1048576
     userQuote: 10485760
+  origin:
+      url: http://localhost:3000
+
 #logging:
 #  path: /com/softserve/academy/spaced/repetition/logger/logs
 #server:

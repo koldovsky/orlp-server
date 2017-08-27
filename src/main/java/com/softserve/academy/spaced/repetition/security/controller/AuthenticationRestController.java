@@ -27,27 +27,27 @@ public class AuthenticationRestController {
     private AuthenticationRestService authenticationRestService;
 
     @Auditable(actionType = AuditingActionType.SIGN_IN)
-    @RequestMapping(value = "${jwt.route.authentication.path}", method = RequestMethod.POST)
+    @RequestMapping(value = "${app.jwt.route.authentication.path}", method = RequestMethod.POST)
     public ResponseEntity<JwtAuthenticationResponse> createAuthenticationToken(@RequestBody JwtAuthenticationRequest authenticationRequest, Device device) throws AuthenticationException {
         HttpHeaders headers = authenticationRestService.getAuthHeaders(authenticationRequest.getUsername(), authenticationRequest.getPassword(), authenticationRequest.getCaptcha(), device);
         return new ResponseEntity<>(new JwtAuthenticationResponse("Ok"), headers, HttpStatus.OK);
     }
 
     @Auditable(actionType = AuditingActionType.SIGN_IN_VIA_GOOGLE)
-    @RequestMapping(value = "${spring.social.google.path}", method = RequestMethod.POST)
+    @RequestMapping(value = "${app.social.google.path}", method = RequestMethod.POST)
     public ResponseEntity<JwtAuthenticationResponse> createAuthenticationTokenFromSocial(@RequestBody String idToken, Device device) {
         HttpHeaders headers = authenticationRestService.getGoogleHeaders(idToken, device);
         return new ResponseEntity<>(new JwtAuthenticationResponse("Ok"), headers, HttpStatus.OK);
     }
 
     @Auditable(actionType = AuditingActionType.SIGN_IN_VIA_FACEBOOK)
-    @RequestMapping(value = "${spring.social.facebook.path}", method = RequestMethod.POST)
+    @RequestMapping(value = "${app.social.facebook.path}", method = RequestMethod.POST)
     public ResponseEntity<JwtAuthenticationResponse> createAuthenticationTokenFromFacebook(@RequestBody String token, Device device) throws GeneralSecurityException, IOException {
         HttpHeaders headers = authenticationRestService.getFacebookHeaders(token, device);
         return new ResponseEntity<>(new JwtAuthenticationResponse("OK"), headers, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "${jwt.route.authentication.refresh}", method = RequestMethod.GET)
+    @RequestMapping(value = "${app.jwt.route.authentication.refresh}", method = RequestMethod.GET)
     public ResponseEntity refreshAndGetAuthenticationToken(HttpServletRequest request) {
         HttpHeaders headers = authenticationRestService.getHeadersForRefreshToken(request);
         return new ResponseEntity<>(new JwtAuthenticationResponse("OK"), headers, HttpStatus.OK);
