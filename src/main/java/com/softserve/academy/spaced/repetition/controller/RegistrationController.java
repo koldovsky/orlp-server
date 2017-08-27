@@ -5,10 +5,7 @@ import com.softserve.academy.spaced.repetition.audit.Auditable;
 import com.softserve.academy.spaced.repetition.audit.AuditingActionType;
 import com.softserve.academy.spaced.repetition.domain.Person;
 import com.softserve.academy.spaced.repetition.domain.User;
-import com.softserve.academy.spaced.repetition.exceptions.BlankFieldException;
-import com.softserve.academy.spaced.repetition.exceptions.EmailDoesntExistException;
-import com.softserve.academy.spaced.repetition.exceptions.EmailUniquesException;
-import com.softserve.academy.spaced.repetition.exceptions.ExpiredTokenForVerificationException;
+import com.softserve.academy.spaced.repetition.exceptions.*;
 import com.softserve.academy.spaced.repetition.repository.UserRepository;
 import com.softserve.academy.spaced.repetition.service.AccountVerificationByEmailService;
 import com.softserve.academy.spaced.repetition.service.RegistrationService;
@@ -33,7 +30,7 @@ public class RegistrationController {
 
     @Auditable(actionType = AuditingActionType.SIGN_UP)
     @RequestMapping(value = "/registration", method = RequestMethod.POST)
-    public ResponseEntity <Person> addUser(@RequestBody User userFromClient) throws BlankFieldException, MailException, EmailUniquesException {
+    public ResponseEntity <Person> addUser(@RequestBody User userFromClient) throws BlankFieldException, MailException, EmailUniquesException, ObjectHasNullFieldsException {
         User user = registrationService.registerNewUser(userFromClient);
         registrationService.sendConfirmationEmailMessage(user);
         return new ResponseEntity <Person>(user.getPerson(), HttpStatus.CREATED);

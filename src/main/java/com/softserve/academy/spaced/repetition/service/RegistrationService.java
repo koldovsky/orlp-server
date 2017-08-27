@@ -3,6 +3,7 @@ package com.softserve.academy.spaced.repetition.service;
 import com.softserve.academy.spaced.repetition.domain.*;
 import com.softserve.academy.spaced.repetition.exceptions.BlankFieldException;
 import com.softserve.academy.spaced.repetition.exceptions.EmailUniquesException;
+import com.softserve.academy.spaced.repetition.exceptions.ObjectHasNullFieldsException;
 import com.softserve.academy.spaced.repetition.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailException;
@@ -26,20 +27,36 @@ public class RegistrationService {
     private MailService mailService;
 
 
-    public User registerNewUser(User user) throws BlankFieldException, EmailUniquesException {
-        return blankFieldsValidation(user);
+    public User registerNewUser(User user) throws BlankFieldException, EmailUniquesException, ObjectHasNullFieldsException {
+        return nullFieldsValidation(user);
     }
 
-    private User blankFieldsValidation(User user) throws BlankFieldException, EmailUniquesException {
-        if (user.getAccount().getPassword() != null && user.getAccount().getEmail() != null && user.getPerson().getFirstName()
-                != null && user.getPerson().getLastName() != null) {
+    public User nullFieldsValidation(User user) throws BlankFieldException, EmailUniquesException, ObjectHasNullFieldsException {
+        if (user.getPerson() != null && user.getAccount() != null) {
+            return blankFieldsValidation(user);
+        } else {
+            throw new ObjectHasNullFieldsException();
+        }
+    }
+
+    public User blankFieldsValidation(User user) throws BlankFieldException, EmailUniquesException {
+        if (ifUserContainsBlankFields(user)) {
             return emailUniquesValidation(user);
         } else {
             throw new BlankFieldException();
         }
     }
 
-    private User emailUniquesValidation(User user) throws EmailUniquesException {
+    public boolean ifUserContainsBlankFields(User user) {
+        if (!user.getAccount().getPassword().isEmpty() && !user.getAccount().getEmail().isEmpty()
+                && !user.getPerson().getFirstName().isEmpty()
+                && !user.getPerson().getLastName().isEmpty()) {
+            return true;
+        }
+        return false;
+    }
+
+    public User emailUniquesValidation(User user) throws EmailUniquesException {
         if (userRepository.findUserByAccountEmail(user.getAccount().getEmail().toLowerCase()) == null) {
             return createNewUser(user);
         } else {
@@ -47,7 +64,7 @@ public class RegistrationService {
         }
     }
 
-    private User createNewUser(User user) {
+    public User createNewUser(User user) {
         Set <Authority> listOfAuthorities = new HashSet <>();
         listOfAuthorities.add(new Authority(AuthorityName.ROLE_USER));
         user.getAccount().setLastPasswordResetDate(Calendar.getInstance().getTime());
