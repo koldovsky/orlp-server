@@ -25,10 +25,10 @@ public class JwtTokenUtil {
     private static final int MILLISECONDS_TO_SECONDS = 1000;
     private final int FIVE_SECONDS = 5000;
 
-    @Value("${jwt.secret}")
+    @Value("${app.jwt.secret}")
     private String secret;
 
-    @Value("${jwt.expiration}")
+    @Value("${app.jwt.expiration}")
     private Long expiration;
 
     public String getUsernameFromToken(String token) {
