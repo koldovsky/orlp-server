@@ -21,7 +21,7 @@ import java.util.Map;
 
 @Service
 public class MailService {
-    @Value("${spring.origin.url}")
+    @Value("${app.origin.url}")
     private String URL;
 
     @Autowired

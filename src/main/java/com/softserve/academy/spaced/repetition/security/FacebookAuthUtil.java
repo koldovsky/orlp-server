@@ -1,7 +1,5 @@
 package com.softserve.academy.spaced.repetition.security;
 
-import com.google.api.client.util.Value;
-
 import com.softserve.academy.spaced.repetition.audit.Auditable;
 import com.softserve.academy.spaced.repetition.audit.AuditingActionType;
 import com.softserve.academy.spaced.repetition.domain.*;

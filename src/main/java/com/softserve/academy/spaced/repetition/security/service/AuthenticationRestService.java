@@ -1,6 +1,5 @@
 package com.softserve.academy.spaced.repetition.security.service;
 
-
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import com.softserve.academy.spaced.repetition.domain.AuthorityName;
 import com.softserve.academy.spaced.repetition.security.DTO.ReCaptchaResponseDto;
@@ -43,7 +42,7 @@ public class AuthenticationRestService {
     @Autowired
     private AuthenticationManager authenticationManager;
 
-    @Value("${jwt.header}")
+    @Value("${app.jwt.header}")
     private String tokenHeader;
 
     public HttpHeaders getAuthHeaders(String email, String password, String captcha, Device device) {
