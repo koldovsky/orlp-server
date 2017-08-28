@@ -4,6 +4,7 @@ import com.softserve.academy.spaced.repetition.DTO.impl.DeckPublicDTO;
 import com.softserve.academy.spaced.repetition.domain.Deck;
 import com.softserve.academy.spaced.repetition.domain.Folder;
 import com.softserve.academy.spaced.repetition.domain.User;
+import com.softserve.academy.spaced.repetition.exceptions.NotAuthorisedUserException;
 import com.softserve.academy.spaced.repetition.repository.DeckRepository;
 import com.softserve.academy.spaced.repetition.repository.FolderRepository;
 import com.softserve.academy.spaced.repetition.repository.UserRepository;
@@ -32,7 +33,7 @@ public class FolderService {
     @Autowired
     private DeckRepository deckRepository;
 
-    public Deck addDeck(Long deckId) {
+    public Deck addDeck(Long deckId) throws NotAuthorisedUserException {
 
         Deck deck = deckRepository.getDeckById(deckId);
 
@@ -53,7 +54,7 @@ public class FolderService {
         return decks;
     }
 
-    public List<Long> getAllDecksIdWithFolder() {
+    public List<Long> getAllDecksIdWithFolder() throws NotAuthorisedUserException {
         User authorizedUser = userService.getAuthorizedUser();
         Long folderId = authorizedUser.getFolder().getId();
 

@@ -21,7 +21,7 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(MultipartException.class)
     ResponseEntity <MessageDTO> handleLargeFileException() {
-        return new ResponseEntity <>(new MessageDTO("File upload error: file is too large."), HttpStatus.CONFLICT);
+        return new ResponseEntity <>(new MessageDTO("File upload error: file is too large."), HttpStatus.FORBIDDEN);
     }
 
     @ExceptionHandler(MoreThanOneTimeRateException.class)
@@ -43,22 +43,22 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(ImageRepositorySizeQuotaExceededException.class)
     ResponseEntity <MessageDTO> handleImageRepositorySizeQuotaExceededException() {
-        return new ResponseEntity <>(new MessageDTO("You have exceeded your quota for uploading images. You should delete some images before new upload."), HttpStatus.CONFLICT);
+        return new ResponseEntity <>(new MessageDTO("You have exceeded your quota for uploading images. You should delete some images before new upload."), HttpStatus.FORBIDDEN);
     }
 
     @ExceptionHandler(CanNotBeDeletedException.class)
     ResponseEntity <MessageDTO> handleCanNotBeDeletedException() {
-        return new ResponseEntity <MessageDTO>(new MessageDTO("Current image is already in use!"), HttpStatus.CONFLICT);
+        return new ResponseEntity <MessageDTO>(new MessageDTO("Current image is already in use!"), HttpStatus.FORBIDDEN);
     }
 
     @ExceptionHandler(NotOwnerOperationException.class)
     ResponseEntity <MessageDTO> handleNotOwnerOperationException() {
-        return new ResponseEntity <MessageDTO>(new MessageDTO("Operation is not allowed for current user!"), HttpStatus.CONFLICT);
+        return new ResponseEntity <MessageDTO>(new MessageDTO("Operation is not allowed for current user!"), HttpStatus.FORBIDDEN);
     }
 
     @ExceptionHandler(NotAuthorisedUserException.class)
-    ResponseEntity <MessageDTO> handleNotAuthorisedUserException() {
-        return new ResponseEntity <MessageDTO>(new MessageDTO("Operation is unavailable for unauthorized users!"), HttpStatus.CONFLICT);
+    ResponseEntity<MessageDTO> handleNotAuthorisedUserException() {
+        return new ResponseEntity<MessageDTO>(new MessageDTO("Operation is unavailable for unauthorized users!"), HttpStatus.FORBIDDEN);
     }
 
     @ExceptionHandler(UnknownHostException.class)
