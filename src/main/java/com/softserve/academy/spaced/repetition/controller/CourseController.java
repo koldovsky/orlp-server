@@ -99,12 +99,12 @@ public class CourseController {
 
     @Auditable(actionType = AuditingActionType.DELETE_COURSE)
     @DeleteMapping(value = "/api/user/global/courses/{course_id}")
-    public void deleteGlobalCourse(@PathVariable Long course_id) {
+    public void deleteGlobalCourse(@PathVariable Long course_id) throws NotAuthorisedUserException {
         courseService.deleteGlobalCourse(course_id);
     }
 
     @DeleteMapping(value = "/api/user/local/courses/{course_id}")
-    public void deleteLocalCourse(@PathVariable Long course_id) {
+    public void deleteLocalCourse(@PathVariable Long course_id) throws NotAuthorisedUserException {
         courseService.deleteLocalCourse(course_id);
     }
 
@@ -136,7 +136,7 @@ public class CourseController {
     }
 
     @PostMapping("/api/category/{category_id}/private/user/create/course")
-    public ResponseEntity<Course> createPrivateCourse(@RequestBody Course privateCourse, @PathVariable Long category_id) {
+    public ResponseEntity<Course> createPrivateCourse(@RequestBody Course privateCourse, @PathVariable Long category_id) throws NotAuthorisedUserException {
         courseService.createPrivateCourse(privateCourse, category_id);
         return new ResponseEntity<>(privateCourse, HttpStatus.OK);
     }
