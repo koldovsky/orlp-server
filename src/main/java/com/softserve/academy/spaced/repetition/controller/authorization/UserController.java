@@ -36,6 +36,14 @@ public class UserController {
         return new ResponseEntity <>(userDTO, HttpStatus.OK);
     }
 
+    @GetMapping("api/private/user/{user_id}")
+    public ResponseEntity <UserDTO> getUserById(@PathVariable Long user_id) {
+        User user = userService.getUserById(user_id);
+        Link link = linkTo(methodOn(UserController.class).getUserById(user_id)).withSelfRel();
+        UserDTO userDTO = DTOBuilder.buildDtoForEntity(user, UserDTO.class, link);
+        return new ResponseEntity <>(userDTO, HttpStatus.OK);
+    }
+
     @GetMapping("api/private/user")
     public ResponseEntity <UserLinksDTO> getAuthorizedUserWithLinks() {
         User user = userService.getAuthorizedUser();
