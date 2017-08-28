@@ -59,7 +59,7 @@ public class ImageController {
      * @return list of imageDTOs
      */
     @GetMapping("/api/service/images/user")
-    public ResponseEntity<List<ImageDTO>> getAllImagesByUserId() {
+    public ResponseEntity<List<ImageDTO>> getAllImagesByUserId() throws NotAuthorisedUserException {
         List<Image> listId = imageService.getImagesForCurrentUser();
         Link link = linkTo(methodOn(ImageController.class).getImageList()).withSelfRel();
         List<ImageDTO> imageDTOList = DTOBuilder.buildDtoListForCollection(listId, ImageDTO.class, link);

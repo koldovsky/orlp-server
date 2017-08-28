@@ -186,8 +186,8 @@ public class ImageService {
      *
      * @return List of images
      */
-    public List<Image> getImagesForCurrentUser() {
+    public List<Image> getImagesForCurrentUser() throws NotAuthorisedUserException {
         Long userId = userService.getAuthorizedUser().getId();
-        return imageRepository.getImagesWithoutContentbyId(userId);
+        return imageRepository.getImagesWithoutContentById(userId);
     }
 }

@@ -77,7 +77,7 @@ public class CourseService {
         courseRepository.save(course);
     }
 
-    public void deleteGlobalCourse(Long course_id) {
+    public void deleteGlobalCourse(Long course_id) throws NotAuthorisedUserException {
         User user = userService.getAuthorizedUser();
         Set<Course> courses = user.getCourses();
         for (Course course : courses) {
@@ -114,7 +114,7 @@ public class CourseService {
         return listOfId;
     }
 
-    public void createPrivateCourse(Course privateCourse, Long category_id) {
+    public void createPrivateCourse(Course privateCourse, Long category_id) throws NotAuthorisedUserException {
         User user = userService.getAuthorizedUser();
         Image image = imageRepository.findImageById(privateCourse.getImage().getId());
         Course course = new Course();
@@ -137,7 +137,7 @@ public class CourseService {
         courseRepository.save(course);
     }
 
-    public void deleteLocalCourse(Long course_id) {
+    public void deleteLocalCourse(Long course_id) throws NotAuthorisedUserException {
         User user = userService.getAuthorizedUser();
         Set<Course> courses = user.getCourses();
         for (Course course : courses) {
