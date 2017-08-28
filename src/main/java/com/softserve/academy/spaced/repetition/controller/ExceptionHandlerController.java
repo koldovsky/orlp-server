@@ -58,7 +58,7 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(NotAuthorisedUserException.class)
     ResponseEntity<MessageDTO> handleNotAuthorisedUserException() {
-        return new ResponseEntity<MessageDTO>(new MessageDTO("Operation is unavailable for unauthorized users!"), HttpStatus.FORBIDDEN);
+        return new ResponseEntity<MessageDTO>(new MessageDTO("Operation is unavailable for unauthorized users!"), HttpStatus.UNAUTHORIZED);
     }
 
     @ExceptionHandler(UnknownHostException.class)
