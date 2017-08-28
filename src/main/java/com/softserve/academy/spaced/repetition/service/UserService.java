@@ -1,6 +1,7 @@
 package com.softserve.academy.spaced.repetition.service;
 
 import com.softserve.academy.spaced.repetition.domain.*;
+import com.softserve.academy.spaced.repetition.exceptions.NotAuthorisedUserException;
 import com.softserve.academy.spaced.repetition.repository.DeckRepository;
 import com.softserve.academy.spaced.repetition.repository.UserRepository;
 import com.softserve.academy.spaced.repetition.security.JwtUser;
@@ -83,9 +84,16 @@ public class UserService {
         return user;
     }
     @Transactional
-    public User getAuthorizedUser() {
-        JwtUser jwtUser = (JwtUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return userRepository.findUserByAccountEmail(jwtUser.getUsername());
+    public User getAuthorizedUser() throws NotAuthorisedUserException {
+        User user = null;
+        JwtUser jwtUser = null;
+        try {
+            jwtUser = (JwtUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            user = userRepository.findUserByAccountEmail(jwtUser.getUsername());
+        } catch (ClassCastException e){
+            throw new NotAuthorisedUserException();
+        }
+        return user;
     }
     @Transactional
     public Set<Course> getAllCoursesByUserId(Long user_id) {
