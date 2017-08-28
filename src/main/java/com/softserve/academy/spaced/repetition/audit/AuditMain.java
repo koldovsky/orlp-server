@@ -25,6 +25,13 @@ public class AuditMain {
     @Autowired
     AuditRepository auditRepository;
 
+    /**
+     * Find out and save user's activity.
+     * Save: account email, action type, time, role.
+     *
+     * @throws - {@link UnknownHostException}
+     *
+     */
     @After("@annotation(auditable)")
     @Transactional
     public void logAuditActivity(Auditable auditable) throws UnknownHostException {
