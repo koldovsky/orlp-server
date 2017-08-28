@@ -62,27 +62,37 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(UnknownHostException.class)
-    ResponseEntity<MessageDTO> handleUnknownHostException() {
-        return new ResponseEntity<MessageDTO>(new MessageDTO("The IP address of a host could not be determined"), HttpStatus.CONFLICT);
+    ResponseEntity <MessageDTO> handleUnknownHostException() {
+        return new ResponseEntity <MessageDTO>(new MessageDTO("The IP address of a host could not be determined"), HttpStatus.CONFLICT);
     }
+
     @ExceptionHandler(BlankFieldException.class)
-    ResponseEntity<MessageDTO> handleBlanckFieldException() {
-        return new ResponseEntity<MessageDTO>(new MessageDTO("Blank fields is not required"), HttpStatus.BAD_REQUEST);
+    ResponseEntity <MessageDTO> handleBlanckFieldException() {
+        return new ResponseEntity <MessageDTO>(new MessageDTO("Blank fields is not required"), HttpStatus.BAD_REQUEST);
     }
+
     @ExceptionHandler(EmailUniquesException.class)
-    ResponseEntity<MessageDTO> handleEmailUniquesException() {
-        return new ResponseEntity<MessageDTO>(new MessageDTO("Email exists"), HttpStatus.NOT_FOUND);
+    ResponseEntity <MessageDTO> handleEmailUniquesException() {
+        return new ResponseEntity <MessageDTO>(new MessageDTO("Email exists"), HttpStatus.NOT_FOUND);
     }
+
     @ExceptionHandler(MailException.class)
-    ResponseEntity<MessageDTO> handleMailException() {
-        return new ResponseEntity<MessageDTO>(new MessageDTO("Mail not sent"), HttpStatus.SERVICE_UNAVAILABLE);
+    ResponseEntity <MessageDTO> handleMailException() {
+        return new ResponseEntity <MessageDTO>(new MessageDTO("Mail not sent"), HttpStatus.SERVICE_UNAVAILABLE);
     }
+
     @ExceptionHandler(ExpiredTokenForVerificationException.class)
-    ResponseEntity<MessageDTO> handlExpiredTokenForVerificationException() {
-        return new ResponseEntity<MessageDTO>(new MessageDTO("No token found"), HttpStatus.NOT_FOUND);
+    ResponseEntity <MessageDTO> handlExpiredTokenForVerificationException() {
+        return new ResponseEntity <MessageDTO>(new MessageDTO("No token found"), HttpStatus.NOT_FOUND);
     }
+
     @ExceptionHandler(EmailDoesntExistException.class)
-    ResponseEntity<MessageDTO> handleEmailDoesntExistException() {
-        return new ResponseEntity<MessageDTO>(new MessageDTO("Email not exists"), HttpStatus.NOT_FOUND);
+    ResponseEntity <MessageDTO> handleEmailDoesntExistException() {
+        return new ResponseEntity <MessageDTO>(new MessageDTO("Email not exists"), HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(ObjectHasNullFieldsException.class)
+    ResponseEntity <MessageDTO> handleObjectHasNullFieldsException() {
+        return new ResponseEntity <MessageDTO>(new MessageDTO("Blank fields is not required"), HttpStatus.BAD_REQUEST);
     }
 }
