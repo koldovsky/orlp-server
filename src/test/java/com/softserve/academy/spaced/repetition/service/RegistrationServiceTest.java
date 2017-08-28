@@ -6,18 +6,13 @@ import com.softserve.academy.spaced.repetition.domain.User;
 import com.softserve.academy.spaced.repetition.exceptions.BlankFieldException;
 import com.softserve.academy.spaced.repetition.exceptions.EmailUniquesException;
 import com.softserve.academy.spaced.repetition.exceptions.ObjectHasNullFieldsException;
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.mockito.Answers;
-import org.mockito.Mockito;
-import org.mockito.stubbing.Answer;
-
-import static org.mockito.Mockito.*;
 
 public class RegistrationServiceTest {
     private static User userNoNullFields;
     private static User userContainsNullFields;
-    private static RegistrationService registrationService = new RegistrationService();
 
     @BeforeClass
     public static void setUp() {
@@ -37,14 +32,16 @@ public class RegistrationServiceTest {
 
     @Test(expected = ObjectHasNullFieldsException.class)
     public void nullFieldsValidation_UserContainsFieldsThatIsNull_ObjectHasNullFieldsException() throws ObjectHasNullFieldsException, BlankFieldException, EmailUniquesException {
+        RegistrationService registrationService = new RegistrationService();
         registrationService.nullFieldsValidation(userContainsNullFields);
     }
+
     @Test
     public void nullFieldsValidation_UserContainsNotNullFields_NormalExecution() throws ObjectHasNullFieldsException, BlankFieldException, EmailUniquesException {
-        RegistrationService registrationService = mock(RegistrationService.class);
-        registrationService.nullFieldsValidation(userContainsNullFields);
-        doCallRealMethod().when(registrationService.blankFieldsValidation(any()));
-
+        RegistrationService registrationService = new RegistrationService();
+        boolean actual = registrationService.nullFieldsValidation(userNoNullFields);
+        boolean expected = true;
+        Assert.assertEquals(actual, expected);
     }
 
     @Test

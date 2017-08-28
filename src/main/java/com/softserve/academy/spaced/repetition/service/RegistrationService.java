@@ -28,20 +28,22 @@ public class RegistrationService {
 
 
     public User registerNewUser(User user) throws BlankFieldException, EmailUniquesException, ObjectHasNullFieldsException {
-        return nullFieldsValidation(user);
+        if (nullFieldsValidation(user) && blankFieldsValidation(user) && emailUniquesValidation(user)) {
+            return createNewUser(user);
+        }
     }
 
-    public User nullFieldsValidation(User user) throws BlankFieldException, EmailUniquesException, ObjectHasNullFieldsException {
+    public boolean nullFieldsValidation(User user) throws BlankFieldException, EmailUniquesException, ObjectHasNullFieldsException {
         if (user.getPerson() != null && user.getAccount() != null) {
-            return blankFieldsValidation(user);
+            return true;
         } else {
             throw new ObjectHasNullFieldsException();
         }
     }
 
-    public User blankFieldsValidation(User user) throws BlankFieldException, EmailUniquesException {
+    public boolean blankFieldsValidation(User user) throws BlankFieldException, EmailUniquesException {
         if (ifUserContainsBlankFields(user)) {
-            return emailUniquesValidation(user);
+            return true;
         } else {
             throw new BlankFieldException();
         }
@@ -56,9 +58,9 @@ public class RegistrationService {
         return false;
     }
 
-    public User emailUniquesValidation(User user) throws EmailUniquesException {
+    public boolean emailUniquesValidation(User user) throws EmailUniquesException {
         if (userRepository.findUserByAccountEmail(user.getAccount().getEmail().toLowerCase()) == null) {
-            return createNewUser(user);
+            return true;
         } else {
             throw new EmailUniquesException();
         }
