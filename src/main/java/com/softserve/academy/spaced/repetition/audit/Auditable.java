@@ -5,8 +5,13 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/**
+ * Annotation for tracking user's activity.
+ * Accept enum ActionType.
+ *
+ */
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.METHOD, ElementType.TYPE})
+@Target({ElementType.METHOD})
 public @interface Auditable {
     AuditingActionType actionType();
 }
