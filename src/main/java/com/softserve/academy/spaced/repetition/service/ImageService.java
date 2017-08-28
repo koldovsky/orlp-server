@@ -39,19 +39,16 @@ public class ImageService {
      *
      * @param file - image uploaded by User
      * @return
-     * @throws ImageRepositorySizeQuotaExceededException  - is dropping when user has exceeded the quote of disk-space for his own images
-     * @throws NotAuthorisedUserException - is dropping when the user which wants to add the image is not authorised
+     * @throws ImageRepositorySizeQuotaExceededException - is dropping when user has exceeded the quote of disk-space for his own images
+     * @throws NotAuthorisedUserException                - is dropping when the user which wants to add the image is not authorised
      */
     public Image addImageToDB(MultipartFile file) throws ImageRepositorySizeQuotaExceededException, NotAuthorisedUserException {
         long fileSize = file.getSize();
         Image image = null;
         Long imageId = 0L;
-        User user = null;
-        try {
-            user = userService.getAuthorizedUser();
-        } catch (ClassCastException e) {
-            throw new NotAuthorisedUserException();
-        }
+
+        User user = userService.getAuthorizedUser();
+
         if (fileSize > getUsersLimitInBytesForImagesLeft(user.getId())) {
             throw new ImageRepositorySizeQuotaExceededException();
         }
@@ -63,7 +60,7 @@ public class ImageService {
             String imageType = file.getContentType();
             image = new Image(base64, imageType, user, fileSize);
             imageRepository.save(image);
-            image = imageRepository.getImageWithoutBase64(image.getId());
+            image = imageRepository.getImageWithoutContent(image.getId());
         }
         return image;
     }
@@ -138,7 +135,7 @@ public class ImageService {
      * Deletes the image with determined id
      *
      * @param id - id of the image we would like to delete
-     * @throws CanNotBeDeletedException - is dropping when the image which we want to delete is already in use
+     * @throws CanNotBeDeletedException   - is dropping when the image which we want to delete is already in use
      * @throws NotOwnerOperationException - is dropping when the image which we want to delete is already in use
      * @throws NotAuthorisedUserException - is dropping when the user which wants to delete the image is not authorised
      */

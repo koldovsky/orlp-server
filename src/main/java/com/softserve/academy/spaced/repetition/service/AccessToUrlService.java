@@ -1,6 +1,7 @@
 package com.softserve.academy.spaced.repetition.service;
 
 import com.softserve.academy.spaced.repetition.domain.Folder;
+import com.softserve.academy.spaced.repetition.exceptions.NotAuthorisedUserException;
 import com.softserve.academy.spaced.repetition.repository.*;
 import org.apache.http.HttpException;
 import org.apache.http.HttpStatus;
@@ -71,7 +72,7 @@ public class AccessToUrlService {
         return hasAccessToDeck(category_id, course_id, deck_id) & (cardRepository.hasAccessToCard(deck_id, card_id).size() > 0);
     }
 
-    public boolean hasAccessToFolder(Long folder_id) {
+    public boolean hasAccessToFolder(Long folder_id) throws NotAuthorisedUserException {
         Long authorizedUserFolderId = userService.getAuthorizedUser().getFolder().getId();
 
         return  Objects.equals(authorizedUserFolderId, folder_id);

@@ -7,6 +7,7 @@ import com.softserve.academy.spaced.repetition.DTO.impl.CourseTopDTO;
 import com.softserve.academy.spaced.repetition.audit.Auditable;
 import com.softserve.academy.spaced.repetition.audit.AuditingActionType;
 import com.softserve.academy.spaced.repetition.domain.Course;
+import com.softserve.academy.spaced.repetition.exceptions.NotAuthorisedUserException;
 import com.softserve.academy.spaced.repetition.service.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Link;
@@ -104,13 +105,13 @@ public class CourseController {
 
     @Auditable(actionType = AuditingActionType.ADD_COURSE)
     @PutMapping("/api/user/courses/{course_id}")
-    public ResponseEntity addCourse(@PathVariable Long course_id) {
+    public ResponseEntity addCourse(@PathVariable Long course_id) throws NotAuthorisedUserException {
         Course course = courseService.updateListOfCoursesOfTheAuthorizedUser(course_id);
         return new ResponseEntity(HttpStatus.OK);
     }
 
     @GetMapping("/api/private/user/courses")
-    public ResponseEntity<List<Long>> getIdAllCoursesOfTheCurrentUser() {
+    public ResponseEntity<List<Long>> getIdAllCoursesOfTheCurrentUser() throws NotAuthorisedUserException {
         List<Long> id = courseService.getAllCoursesIdOfTheCurrentUser();
 
         return new ResponseEntity<List<Long>>(id, HttpStatus.OK);

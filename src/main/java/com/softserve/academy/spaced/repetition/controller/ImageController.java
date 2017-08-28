@@ -61,7 +61,7 @@ public class ImageController {
      */
     @GetMapping("/api/service/images/user/{userId}")
     public ResponseEntity<List<ImageDTO>> getAllImagesByUserId(@RequestParam("userId") Long userId) {
-        List<Image> listId = imageRepository.getImagesWithoutBase64byId(userId);
+        List<Image> listId = imageRepository.getImagesWithoutContentById(userId);
         Link link = linkTo(methodOn(ImageController.class).getImageList()).withSelfRel();
         List<ImageDTO> imageDTOList = DTOBuilder.buildDtoListForCollection(listId, ImageDTO.class, link);
         return new ResponseEntity<>(imageDTOList, HttpStatus.OK);
@@ -89,7 +89,7 @@ public class ImageController {
      */
     @GetMapping(value = "/api/admin/service/image")
     public ResponseEntity<List<ImageDTO>> getImageList() {
-        List<Image> listId = imageRepository.getImagesWithoutBase64();
+        List<Image> listId = imageRepository.getImagesWithoutContent();
         Link link = linkTo(methodOn(ImageController.class).getImageList()).withSelfRel();
         List<ImageDTO> imageDTOList = DTOBuilder.buildDtoListForCollection(listId, ImageDTO.class, link);
         return new ResponseEntity<>(imageDTOList, HttpStatus.OK);
