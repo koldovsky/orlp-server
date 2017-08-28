@@ -1,5 +1,6 @@
 package com.softserve.academy.spaced.repetition.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.softserve.academy.spaced.repetition.DTO.EntityInterface;
 
 import javax.persistence.*;
@@ -30,10 +31,19 @@ public class Course implements EntityInterface {
     @Column(name = "numb_of_users_ratings")
     private long numbOfUsersRatings;
 
+    @Column(name = "published")
+    private boolean published;
+
+    @OneToOne
+    @JoinColumn(name = "user_id")
+    private User owner;
+
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
     private Category category;
 
+    @JsonIgnore
     @ManyToMany
     @JoinTable(name = "course_decks", joinColumns = {
             @JoinColumn(name = "course_id")},
@@ -83,12 +93,28 @@ public class Course implements EntityInterface {
         this.decks = decks;
     }
 
+    public boolean isPublished() {
+        return published;
+    }
+
+    public void setPublished(boolean published) {
+        this.published = published;
+    }
+
     public Image getImage() {
         return image;
     }
 
     public void setImage(Image image) {
         this.image = image;
+    }
+
+    public User getOwner() {
+        return owner;
+    }
+
+    public void setOwner(User owner) {
+        this.owner = owner;
     }
 
     public double getRating() {
