@@ -2,6 +2,14 @@ package com.softserve.academy.spaced.repetition.service;
 
 import com.softserve.academy.spaced.repetition.domain.*;
 import com.softserve.academy.spaced.repetition.repository.*;
+import com.softserve.academy.spaced.repetition.domain.Category;
+import com.softserve.academy.spaced.repetition.domain.Course;
+import com.softserve.academy.spaced.repetition.domain.Deck;
+import com.softserve.academy.spaced.repetition.domain.User;
+import com.softserve.academy.spaced.repetition.exceptions.NotAuthorisedUserException;
+import com.softserve.academy.spaced.repetition.repository.CourseRepository;
+import com.softserve.academy.spaced.repetition.repository.DeckRepository;
+import com.softserve.academy.spaced.repetition.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -84,7 +92,7 @@ public class CourseService {
         courseRepository.delete(course_id);
     }
 
-    public Course updateListOfCoursesOfTheAuthorizedUser(Long courseId) {
+    public Course updateListOfCoursesOfTheAuthorizedUser(Long courseId) throws NotAuthorisedUserException {
         Course course = courseRepository.findOne(courseId);
         User user = userService.getAuthorizedUser();
         if (user.getCourses().contains(course)) {
@@ -96,7 +104,7 @@ public class CourseService {
         return course;
     }
 
-    public List<Long> getAllCoursesIdOfTheCurrentUser() {
+    public List <Long> getAllCoursesIdOfTheCurrentUser() throws NotAuthorisedUserException {
         User user = userService.getAuthorizedUser();
         Set<Course> listOfCourses = userService.getAllCoursesByUserId(user.getId());
         List<Long> listOfId = new ArrayList<>();

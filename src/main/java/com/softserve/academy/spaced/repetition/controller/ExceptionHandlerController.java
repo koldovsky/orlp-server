@@ -4,6 +4,7 @@ import com.softserve.academy.spaced.repetition.DTO.impl.MessageDTO;
 import com.softserve.academy.spaced.repetition.exceptions.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.MailException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -20,7 +21,7 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(MultipartException.class)
     ResponseEntity <MessageDTO> handleLargeFileException() {
-        return new ResponseEntity <>(new MessageDTO("File upload error: file is too large."), HttpStatus.CONFLICT);
+        return new ResponseEntity <>(new MessageDTO("File upload error: file is too large."), HttpStatus.FORBIDDEN);
     }
 
     @ExceptionHandler(MoreThanOneTimeRateException.class)
@@ -42,26 +43,56 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(ImageRepositorySizeQuotaExceededException.class)
     ResponseEntity <MessageDTO> handleImageRepositorySizeQuotaExceededException() {
-        return new ResponseEntity <>(new MessageDTO("You have exceeded your quota for uploading images. You should delete some images before new upload."), HttpStatus.CONFLICT);
+        return new ResponseEntity <>(new MessageDTO("You have exceeded your quota for uploading images. You should delete some images before new upload."), HttpStatus.FORBIDDEN);
     }
 
     @ExceptionHandler(CanNotBeDeletedException.class)
     ResponseEntity <MessageDTO> handleCanNotBeDeletedException() {
-        return new ResponseEntity <MessageDTO>(new MessageDTO("Current image is already in use!"), HttpStatus.CONFLICT);
+        return new ResponseEntity <MessageDTO>(new MessageDTO("Current image is already in use!"), HttpStatus.FORBIDDEN);
     }
 
     @ExceptionHandler(NotOwnerOperationException.class)
     ResponseEntity <MessageDTO> handleNotOwnerOperationException() {
-        return new ResponseEntity <MessageDTO>(new MessageDTO("Operation is not allowed for current user!"), HttpStatus.CONFLICT);
+        return new ResponseEntity <MessageDTO>(new MessageDTO("Operation is not allowed for current user!"), HttpStatus.FORBIDDEN);
     }
 
     @ExceptionHandler(NotAuthorisedUserException.class)
     ResponseEntity<MessageDTO> handleNotAuthorisedUserException() {
-        return new ResponseEntity<MessageDTO>(new MessageDTO("Operation is unavailable for unauthorized users!"), HttpStatus.CONFLICT);
+        return new ResponseEntity<MessageDTO>(new MessageDTO("Operation is unavailable for unauthorized users!"), HttpStatus.FORBIDDEN);
     }
 
     @ExceptionHandler(UnknownHostException.class)
-    ResponseEntity<MessageDTO> handleUnknownHostException() {
-        return new ResponseEntity<MessageDTO>(new MessageDTO("The IP address of a host could not be determined"), HttpStatus.CONFLICT);
+    ResponseEntity <MessageDTO> handleUnknownHostException() {
+        return new ResponseEntity <MessageDTO>(new MessageDTO("The IP address of a host could not be determined"), HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(BlankFieldException.class)
+    ResponseEntity <MessageDTO> handleBlanckFieldException() {
+        return new ResponseEntity <MessageDTO>(new MessageDTO("Blank fields is not required"), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(EmailUniquesException.class)
+    ResponseEntity <MessageDTO> handleEmailUniquesException() {
+        return new ResponseEntity <MessageDTO>(new MessageDTO("Email exists"), HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(MailException.class)
+    ResponseEntity <MessageDTO> handleMailException() {
+        return new ResponseEntity <MessageDTO>(new MessageDTO("Mail not sent"), HttpStatus.SERVICE_UNAVAILABLE);
+    }
+
+    @ExceptionHandler(ExpiredTokenForVerificationException.class)
+    ResponseEntity <MessageDTO> handlExpiredTokenForVerificationException() {
+        return new ResponseEntity <MessageDTO>(new MessageDTO("No token found"), HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(EmailDoesntExistException.class)
+    ResponseEntity <MessageDTO> handleEmailDoesntExistException() {
+        return new ResponseEntity <MessageDTO>(new MessageDTO("Email not exists"), HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(ObjectHasNullFieldsException.class)
+    ResponseEntity <MessageDTO> handleObjectHasNullFieldsException() {
+        return new ResponseEntity <MessageDTO>(new MessageDTO("Blank fields is not required"), HttpStatus.BAD_REQUEST);
     }
 }

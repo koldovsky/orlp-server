@@ -48,7 +48,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .passwordEncoder(passwordEncoder());
     }
 
-    @Value("${spring.origin.url}")
+    @Value("${app.origin.url}")
     private String url;
 
     @Bean

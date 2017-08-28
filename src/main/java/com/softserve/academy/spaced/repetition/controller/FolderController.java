@@ -9,6 +9,7 @@ import com.softserve.academy.spaced.repetition.audit.Auditable;
 import com.softserve.academy.spaced.repetition.audit.AuditingActionType;
 import com.softserve.academy.spaced.repetition.domain.Card;
 import com.softserve.academy.spaced.repetition.domain.Deck;
+import com.softserve.academy.spaced.repetition.exceptions.NotAuthorisedUserException;
 import com.softserve.academy.spaced.repetition.service.DeckService;
 import com.softserve.academy.spaced.repetition.service.FolderService;
 import com.softserve.academy.spaced.repetition.service.UserService;
@@ -38,7 +39,7 @@ public class FolderController {
 
     @Auditable(actionType = AuditingActionType.ADD_DECK_TO_FOLDER)
     @PutMapping("/api/user/folder/add/deck/{deckId}")
-    public ResponseEntity<DeckPublicDTO> addDeckToFolder(@PathVariable Long deckId) {
+    public ResponseEntity<DeckPublicDTO> addDeckToFolder(@PathVariable Long deckId) throws NotAuthorisedUserException {
         Deck deck = folderService.addDeck(deckId);
         Link selfLink = linkTo(methodOn(DeckController.class).getDeckByCategoryId(deck.getCategory().getId(), deckId)).withSelfRel();
         DeckPublicDTO deckPublicDTO = DTOBuilder.buildDtoForEntity(deck, DeckPublicDTO.class, selfLink);
@@ -59,7 +60,7 @@ public class FolderController {
     }
 
     @GetMapping("/api/private/user/folder/decks/id")
-    public ResponseEntity<List<Long>> getIdAllDecksInFolder() {
+    public ResponseEntity<List<Long>> getIdAllDecksInFolder() throws NotAuthorisedUserException {
         List<Long> id = folderService.getAllDecksIdWithFolder();
 
         return new ResponseEntity<List<Long>>(id, HttpStatus.OK);

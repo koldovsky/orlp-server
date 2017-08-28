@@ -26,7 +26,7 @@ public class GoogleAuthUtil {
     private final String LAST_NAME = "family_name";
     private final String IMAGE = "picture";
 
-    @Value("${spring.social.google.client-id}")
+    @Value("${app.social.google.client-id}")
     private String clientId;
 
     @Autowired
