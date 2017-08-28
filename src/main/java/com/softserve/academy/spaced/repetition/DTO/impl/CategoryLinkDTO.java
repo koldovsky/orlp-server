@@ -19,6 +19,9 @@ public class CategoryLinkDTO extends DTO<Category> {
         add(linkTo(methodOn(DeckController.class).getAllDecksByCategoryId(getEntity().getId())).withRel("decks"));
     }
 
+    public Long getCategoryId() {
+        return getEntity().getId();
+    }
 
     public String getName() {
         return getEntity().getName();

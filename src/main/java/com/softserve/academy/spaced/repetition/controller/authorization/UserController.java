@@ -6,6 +6,7 @@ import com.softserve.academy.spaced.repetition.DTO.impl.UserDTO;
 import com.softserve.academy.spaced.repetition.DTO.impl.UserLinksDTO;
 import com.softserve.academy.spaced.repetition.domain.Course;
 import com.softserve.academy.spaced.repetition.domain.User;
+import com.softserve.academy.spaced.repetition.exceptions.NotAuthorisedUserException;
 import com.softserve.academy.spaced.repetition.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Link;
@@ -29,15 +30,23 @@ public class UserController {
     UserService userService;
 
     @GetMapping("api/private/user/details")
-    public ResponseEntity <UserDTO> getAuthorizedUserPublicInfo() {
+    public ResponseEntity <UserDTO> getAuthorizedUserPublicInfo() throws NotAuthorisedUserException {
         User user = userService.getAuthorizedUser();
         Link link = linkTo(methodOn(UserController.class).getAuthorizedUserWithLinks()).withSelfRel();
         UserDTO userDTO = DTOBuilder.buildDtoForEntity(user, UserDTO.class, link);
         return new ResponseEntity <>(userDTO, HttpStatus.OK);
     }
 
+    @GetMapping("api/private/user/{user_id}")
+    public ResponseEntity <UserDTO> getUserById(@PathVariable Long user_id) {
+        User user = userService.getUserById(user_id);
+        Link link = linkTo(methodOn(UserController.class).getUserById(user_id)).withSelfRel();
+        UserDTO userDTO = DTOBuilder.buildDtoForEntity(user, UserDTO.class, link);
+        return new ResponseEntity <>(userDTO, HttpStatus.OK);
+    }
+
     @GetMapping("api/private/user")
-    public ResponseEntity <UserLinksDTO> getAuthorizedUserWithLinks() {
+    public ResponseEntity <UserLinksDTO> getAuthorizedUserWithLinks() throws NotAuthorisedUserException {
         User user = userService.getAuthorizedUser();
         Link link = linkTo(methodOn(UserController.class).getAuthorizedUserWithLinks()).withSelfRel();
         UserLinksDTO userDTO = DTOBuilder.buildDtoForEntity(user, UserLinksDTO.class, link);

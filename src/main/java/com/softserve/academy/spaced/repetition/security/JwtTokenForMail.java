@@ -17,10 +17,10 @@ public class JwtTokenForMail extends JwtTokenUtil {
     private static final String USER_EMAIL = "email";
     private static final String DATE_OF_CREATION = "date";
 
-    @Value("${jwt.expiration}")
+    @Value("${app.jwt.expiration}")
     private Long expiration;
 
-    @Value("${jwt.secret}")
+    @Value("${app.jwt.secret}")
     private String secret;
 
     public String generateTokenForMail(User user) {
