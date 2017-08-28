@@ -56,12 +56,11 @@ public class ImageController {
     /**
      * Gets list of imageDTOs with links on each image of defined user by his/her id
      *
-     * @param userId - users id
      * @return list of imageDTOs
      */
-    @GetMapping("/api/service/images/user/{userId}")
-    public ResponseEntity<List<ImageDTO>> getAllImagesByUserId(@RequestParam("userId") Long userId) {
-        List<Image> listId = imageRepository.getImagesWithoutContentById(userId);
+    @GetMapping("/api/service/images/user")
+    public ResponseEntity<List<ImageDTO>> getAllImagesByUserId() {
+        List<Image> listId = imageService.getImagesForCurrentUser();
         Link link = linkTo(methodOn(ImageController.class).getImageList()).withSelfRel();
         List<ImageDTO> imageDTOList = DTOBuilder.buildDtoListForCollection(listId, ImageDTO.class, link);
         return new ResponseEntity<>(imageDTOList, HttpStatus.OK);
