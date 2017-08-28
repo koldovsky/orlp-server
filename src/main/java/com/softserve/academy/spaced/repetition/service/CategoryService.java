@@ -1,10 +1,7 @@
 package com.softserve.academy.spaced.repetition.service;
 
-
 import java.util.List;
 
-import com.softserve.academy.spaced.repetition.domain.Course;
-import com.softserve.academy.spaced.repetition.repository.CourseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,8 +15,6 @@ public class CategoryService {
     @Autowired
     private CategoryRepository categoryRepository;
     @Autowired
-    private CourseRepository courseRepository;
-    @Autowired
     private ImageService imageService;
 
     @Transactional
@@ -30,10 +25,8 @@ public class CategoryService {
 
     @Transactional
     public Category getCategoryById(Long id) {
-        Category categories = categoryRepository.findById(id);
-        courseRepository.getAllCoursesByCategoryId(id);
-        categories.getCourses();
-        return categories;
+        Category category = categoryRepository.findById(id);
+        return category;
 
     }
 

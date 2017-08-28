@@ -1,12 +1,7 @@
 package com.softserve.academy.spaced.repetition.service;
 
-import com.softserve.academy.spaced.repetition.domain.Category;
-import com.softserve.academy.spaced.repetition.domain.Course;
-import com.softserve.academy.spaced.repetition.domain.Deck;
-import com.softserve.academy.spaced.repetition.domain.User;
-import com.softserve.academy.spaced.repetition.repository.CourseRepository;
-import com.softserve.academy.spaced.repetition.repository.DeckRepository;
-import com.softserve.academy.spaced.repetition.repository.UserRepository;
+import com.softserve.academy.spaced.repetition.domain.*;
+import com.softserve.academy.spaced.repetition.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,26 +15,30 @@ public class CourseService {
     @Autowired
     private CourseRepository courseRepository;
     @Autowired
-    private DeckRepository deckRepository;
-    @Autowired
     private UserService userService;
     @Autowired
     private UserRepository userRepository;
     @Autowired
     private ImageService imageService;
+    @Autowired
+    private ImageRepository imageRepository;
+    @Autowired
+    private CategoryRepository categoryRepository;
+    @Autowired
+    private DeckRepository deckRepository;
 
     @Transactional
-    public List <Course> getAllCourses() {
-        return courseRepository.findAll();
+    public List<Course> getAllCourses() {
+        return courseRepository.findAllByPublishedTrue();
     }
 
     @Transactional
-    public List <Course> getAllCoursesByCategoryId(Long category_id) {
-        return courseRepository.getAllCoursesByCategoryId(category_id);
+    public List<Course> getAllCoursesByCategoryId(Long category_id) {
+        return courseRepository.getAllCoursesByCategoryIdAndPublishedTrue(category_id);
     }
 
     @Transactional
-    public List <Deck> getAllDecksByCourseId(Long category_id, Long course_id) {
+    public List<Deck> getAllDecksByCourseId(Long category_id, Long course_id) {
         Course course = courseRepository.getCourseByCategoryIdAndId(category_id, course_id);
         return course.getDecks();
     }
@@ -56,13 +55,13 @@ public class CourseService {
         courseRepository.save(course);
     }
 
-    public List <Course> get4Course() {
-        List <Course> courses = courseRepository.findTop4ByOrderById();
+    public List<Course> get4Course() {
+        List<Course> courses = courseRepository.findTop4ByOrderById();
         return courses;
     }
 
     public List<Course> getAllOrderedCourses() {
-        return courseRepository.findAllByOrderByRatingDesc();
+        return courseRepository.findAllByPublishedTrueOrderByRatingDesc();
     }
 
     public void updateCourse(Long course_id, Course course) {
@@ -70,7 +69,18 @@ public class CourseService {
         courseRepository.save(course);
     }
 
-    public void deleteCourse(Long course_id) {
+    public void deleteGlobalCourse(Long course_id) {
+        User user = userService.getAuthorizedUser();
+        Set<Course> courses = user.getCourses();
+        for (Course course : courses) {
+            if (course.getId() == course_id) {
+                course.setPublished(false);
+                courses.remove(course);
+                break;
+            }
+        }
+
+        userRepository.save(user);
         courseRepository.delete(course_id);
     }
 
@@ -86,13 +96,55 @@ public class CourseService {
         return course;
     }
 
-    public List <Long> getAllCoursesIdOfTheCurrentUser() {
+    public List<Long> getAllCoursesIdOfTheCurrentUser() {
         User user = userService.getAuthorizedUser();
-        Set <Course> listOfCourses = userService.getAllCoursesByUserId(user.getId());
-        List <Long> listOfId = new ArrayList <>();
+        Set<Course> listOfCourses = userService.getAllCoursesByUserId(user.getId());
+        List<Long> listOfId = new ArrayList<>();
         for (Course course : listOfCourses) {
             listOfId.add(course.getId());
         }
         return listOfId;
+    }
+
+    public void createPrivateCourse(Course privateCourse, Long category_id) {
+        User user = userService.getAuthorizedUser();
+        Image image = imageRepository.findImageById(privateCourse.getImage().getId());
+        Course course = new Course();
+        course.setName(privateCourse.getName());
+        course.setDescription(privateCourse.getDescription());
+        course.setImage(image);
+        course.setCategory(categoryRepository.findById(category_id));
+        course.setPublished(false);
+        course.setOwner(user);
+        courseRepository.save(course);
+
+        user.getCourses().add(course);
+        userRepository.save(user);
+    }
+
+
+    public void updateCourseAccess(Long course_id, Course courseAccess) {
+        Course course = courseRepository.findOne(course_id);
+        course.setPublished(courseAccess.isPublished());
+        courseRepository.save(course);
+    }
+
+    public void deleteLocalCourse(Long course_id) {
+        User user = userService.getAuthorizedUser();
+        Set<Course> courses = user.getCourses();
+        for (Course course : courses) {
+            if (course.getId() == course_id) {
+                courses.remove(course);
+                break;
+            }
+        }
+
+        userRepository.save(user);
+    }
+
+    public void addDeckToCourse(Long course_id, Long deck_id) {
+        Course course = courseRepository.findOne(course_id);
+        course.getDecks().add(deckRepository.getDeckById(deck_id));
+        courseRepository.save(course);
     }
 }

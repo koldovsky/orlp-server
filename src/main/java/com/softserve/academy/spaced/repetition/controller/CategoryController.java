@@ -28,11 +28,11 @@ public class CategoryController {
 
     @Auditable(actionType = AuditingActionType.VIEW_ALL_CATEGORIES)
     @GetMapping("/api/category")
-    public ResponseEntity <List <CategoryPublicDTO>> getAllCategories() {
+    public ResponseEntity <List <CategoryLinkDTO>> getAllCategories() {
         List <Category> categoryList = categoryService.getAllCategory();
         Link collectionLink = linkTo(methodOn(CategoryController.class).getAllCategories()).withRel("category");
-        List <CategoryPublicDTO> categories = DTOBuilder.buildDtoListForCollection(categoryList,
-                CategoryPublicDTO.class, collectionLink);
+        List <CategoryLinkDTO> categories = DTOBuilder.buildDtoListForCollection(categoryList,
+                CategoryLinkDTO.class, collectionLink);
         return new ResponseEntity <>(categories, HttpStatus.OK);
     }
 
