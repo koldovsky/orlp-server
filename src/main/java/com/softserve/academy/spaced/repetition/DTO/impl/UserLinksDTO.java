@@ -21,6 +21,10 @@ public class UserLinksDTO extends DTO<User> {
 
     }
 
+    public Long getUserId() {
+        return getEntity().getId();
+    }
+
     public String getFirstName() { return getEntity().getPerson().getFirstName(); }
 
     public String getLastName() { return getEntity().getPerson().getLastName(); }
