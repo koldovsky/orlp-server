@@ -30,19 +30,19 @@ public class RegistrationServiceTest {
         userContainsNullFields.setPerson(null);
     }
 
-    @Test(expected = ObjectHasNullFieldsException.class)
-    public void nullFieldsValidation_UserContainsFieldsThatIsNull_ObjectHasNullFieldsException() throws ObjectHasNullFieldsException, BlankFieldException, EmailUniquesException {
-        RegistrationService registrationService = new RegistrationService();
-        registrationService.nullFieldsValidation(userContainsNullFields);
-    }
-
-    @Test
-    public void nullFieldsValidation_UserContainsNotNullFields_NormalExecution() throws ObjectHasNullFieldsException, BlankFieldException, EmailUniquesException {
-        RegistrationService registrationService = new RegistrationService();
-        boolean actual = registrationService.nullFieldsValidation(userNoNullFields);
-        boolean expected = true;
-        Assert.assertEquals(actual, expected);
-    }
+//    @Test(expected = ObjectHasNullFieldsException.class)
+//    public void nullFieldsValidation_UserContainsFieldsThatIsNull_ObjectHasNullFieldsException() throws ObjectHasNullFieldsException, BlankFieldException, EmailUniquesException {
+//        RegistrationService registrationService = new RegistrationService();
+//        registrationService.nullFieldsValidation(userContainsNullFields);
+//    }
+//
+//    @Test
+//    public void nullFieldsValidation_UserContainsNotNullFields_NormalExecution() throws ObjectHasNullFieldsException, BlankFieldException, EmailUniquesException {
+//        RegistrationService registrationService = new RegistrationService();
+//        boolean actual = registrationService.nullFieldsValidation(userNoNullFields);
+//        boolean expected = true;
+//        Assert.assertEquals(actual, expected);
+//    }
 
     @Test
     public void blankFieldsValidation_AllFieldsOfTheUserIsNotNull_ReturnUser() throws Exception {

@@ -5,6 +5,10 @@ import com.softserve.academy.spaced.repetition.exceptions.BlankFieldException;
 import com.softserve.academy.spaced.repetition.exceptions.EmailUniquesException;
 import com.softserve.academy.spaced.repetition.exceptions.ObjectHasNullFieldsException;
 import com.softserve.academy.spaced.repetition.repository.UserRepository;
+import com.softserve.academy.spaced.repetition.service.validators.AbstractValidator;
+import com.softserve.academy.spaced.repetition.service.validators.BlankFeildValidator;
+import com.softserve.academy.spaced.repetition.service.validators.EmailUniqiesValidator;
+import com.softserve.academy.spaced.repetition.service.validators.NullFieldsValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -25,45 +29,23 @@ public class RegistrationService {
     private PasswordEncoder passwordEncoder;
     @Autowired
     private MailService mailService;
-
+    @Autowired
+    private EmailUniqiesValidator emailUniquesValidator;
+    @Autowired
+    private BlankFeildValidator blankFeildValidator;
+    @Autowired
+    private NullFieldsValidator nullFieldsValidator;
 
     public User registerNewUser(User user) throws BlankFieldException, EmailUniquesException, ObjectHasNullFieldsException {
-        if (nullFieldsValidation(user) && blankFieldsValidation(user) && emailUniquesValidation(user)) {
-            return createNewUser(user);
-        }
+        AbstractValidator validator = getChainOfValidators();
+        validator.doValidate(user);
+        return createNewUser(user);
     }
 
-    public boolean nullFieldsValidation(User user) throws BlankFieldException, EmailUniquesException, ObjectHasNullFieldsException {
-        if (user.getPerson() != null && user.getAccount() != null) {
-            return true;
-        } else {
-            throw new ObjectHasNullFieldsException();
-        }
-    }
-
-    public boolean blankFieldsValidation(User user) throws BlankFieldException, EmailUniquesException {
-        if (ifUserContainsBlankFields(user)) {
-            return true;
-        } else {
-            throw new BlankFieldException();
-        }
-    }
-
-    public boolean ifUserContainsBlankFields(User user) {
-        if (!user.getAccount().getPassword().isEmpty() && !user.getAccount().getEmail().isEmpty()
-                && !user.getPerson().getFirstName().isEmpty()
-                && !user.getPerson().getLastName().isEmpty()) {
-            return true;
-        }
-        return false;
-    }
-
-    public boolean emailUniquesValidation(User user) throws EmailUniquesException {
-        if (userRepository.findUserByAccountEmail(user.getAccount().getEmail().toLowerCase()) == null) {
-            return true;
-        } else {
-            throw new EmailUniquesException();
-        }
+    private AbstractValidator getChainOfValidators() {
+        nullFieldsValidator.setNextValidator(blankFeildValidator);
+        blankFeildValidator.setNextValidator(emailUniquesValidator);
+        return nullFieldsValidator;
     }
 
     public User createNewUser(User user) {
