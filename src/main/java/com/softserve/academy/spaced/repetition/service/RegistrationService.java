@@ -28,22 +28,20 @@ public class RegistrationService {
 
 
     public User registerNewUser(User user) throws BlankFieldException, EmailUniquesException, ObjectHasNullFieldsException {
-        if (nullFieldsValidation(user) && blankFieldsValidation(user) && emailUniquesValidation(user)) {
-            return createNewUser(user);
-        }
+        return nullFieldsValidation(user);
     }
 
-    public boolean nullFieldsValidation(User user) throws BlankFieldException, EmailUniquesException, ObjectHasNullFieldsException {
+    public User nullFieldsValidation(User user) throws BlankFieldException, EmailUniquesException, ObjectHasNullFieldsException {
         if (user.getPerson() != null && user.getAccount() != null) {
-            return true;
+            return blankFieldsValidation(user);
         } else {
             throw new ObjectHasNullFieldsException();
         }
     }
 
-    public boolean blankFieldsValidation(User user) throws BlankFieldException, EmailUniquesException {
+    public User blankFieldsValidation(User user) throws BlankFieldException, EmailUniquesException {
         if (ifUserContainsBlankFields(user)) {
-            return true;
+            return emailUniquesValidation(user);
         } else {
             throw new BlankFieldException();
         }
@@ -58,9 +56,9 @@ public class RegistrationService {
         return false;
     }
 
-    public boolean emailUniquesValidation(User user) throws EmailUniquesException {
+    public User emailUniquesValidation(User user) throws EmailUniquesException {
         if (userRepository.findUserByAccountEmail(user.getAccount().getEmail().toLowerCase()) == null) {
-            return true;
+            return createNewUser(user);
         } else {
             throw new EmailUniquesException();
         }
@@ -83,5 +81,6 @@ public class RegistrationService {
         mailService.sendConfirmationMail(user);
     }
 }
+
 
 
