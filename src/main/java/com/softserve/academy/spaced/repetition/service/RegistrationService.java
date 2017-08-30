@@ -4,7 +4,6 @@ import com.softserve.academy.spaced.repetition.domain.*;
 import com.softserve.academy.spaced.repetition.exceptions.BlankFieldException;
 import com.softserve.academy.spaced.repetition.exceptions.EmailUniquesException;
 import com.softserve.academy.spaced.repetition.exceptions.ObjectHasNullFieldsException;
-import com.softserve.academy.spaced.repetition.repository.UserRepository;
 import com.softserve.academy.spaced.repetition.service.validators.AbstractValidator;
 import com.softserve.academy.spaced.repetition.service.validators.BlankFeildValidator;
 import com.softserve.academy.spaced.repetition.service.validators.EmailUniqiesValidator;
@@ -21,8 +20,6 @@ import java.util.Set;
 @Service
 public class RegistrationService {
 
-    @Autowired
-    private UserRepository userRepository;
     @Autowired
     private UserService userService;
     @Autowired
@@ -65,5 +62,3 @@ public class RegistrationService {
         mailService.sendConfirmationMail(user);
     }
 }
-
-
