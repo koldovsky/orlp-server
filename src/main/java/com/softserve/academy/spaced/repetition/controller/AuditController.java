@@ -22,6 +22,11 @@ public class AuditController {
     @Autowired
     private AuditService auditService;
 
+    /**
+     * Get list of audit with self-link
+     *
+     * @return - list of audit
+     */
     @GetMapping("api/admin/audit")
     public ResponseEntity<List<AuditPublicDTO>> getFullAuditList() {
         List<Audit> auditList = auditService.getFullAuditList();
@@ -30,6 +35,11 @@ public class AuditController {
         return new ResponseEntity<>(auditDTOList, HttpStatus.OK);
     }
 
+    /**
+     * Get list of audit sorted by account email on growth with self-link
+     *
+     * @return - list of audit
+     */
     @GetMapping("api/admin/audit/sort/email/rise")
     public ResponseEntity<List<AuditPublicDTO>> getAuditListSortedByAccountEmailAsc() {
         List<Audit> auditList = auditService.getAuditListSortedByAccountEmailAsc();
@@ -38,6 +48,11 @@ public class AuditController {
         return new ResponseEntity<>(auditDTOList, HttpStatus.OK);
     }
 
+    /**
+     * Get list of audit sorted by account email in descending order with self-link
+     *
+     * @return - list of audit
+     */
     @GetMapping("api/admin/audit/sort/email/fall")
     public ResponseEntity<List<AuditPublicDTO>> getAuditListSortedByAccountEmailDesc() {
         List<Audit> auditList = auditService.getAuditListSortedByAccountEmailDesc();
@@ -46,6 +61,11 @@ public class AuditController {
         return new ResponseEntity<>(auditDTOList, HttpStatus.OK);
     }
 
+    /**
+     * Get list of audit sorted by action on growth with self-link
+     *
+     * @return - list of audit
+     */
     @GetMapping("api/admin/audit/sort/action/rise")
     public ResponseEntity<List<AuditPublicDTO>> getAuditListSortedByActionAsc() {
         List<Audit> auditList = auditService.getAuditListSortedByActionAsc();
@@ -54,6 +74,11 @@ public class AuditController {
         return new ResponseEntity<>(auditDTOList, HttpStatus.OK);
     }
 
+    /**
+     * Get list of audit sorted by action in descending order with self-link
+     *
+     * @return - list of audit
+     */
     @GetMapping("api/admin/audit/sort/action/fall")
     public ResponseEntity<List<AuditPublicDTO>> getAuditListSortedByActionAscDesc() {
         List<Audit> auditList = auditService.getAuditListSortedByActionAscDesc();
@@ -62,6 +87,11 @@ public class AuditController {
         return new ResponseEntity<>(auditDTOList, HttpStatus.OK);
     }
 
+    /**
+     * Get list of audit sorted by ip-address on growth with self-link
+     *
+     * @return - list of audit
+     */
     @GetMapping("api/admin/audit/sort/ip/rise")
     public ResponseEntity<List<AuditPublicDTO>> getAuditListSortedByIpAddressAsc() {
         List<Audit> auditList = auditService.getAuditListSortedByIpAddressAsc();
@@ -70,6 +100,11 @@ public class AuditController {
         return new ResponseEntity<>(auditDTOList, HttpStatus.OK);
     }
 
+    /**
+     * Get list of audit sorted by ip-address in descending order with self-link
+     *
+     * @return - list of audit
+     */
     @GetMapping("api/admin/audit/sort/ip/fall")
     public ResponseEntity<List<AuditPublicDTO>> getAuditListSortedByIpAddressDesc() {
         List<Audit> auditList = auditService.getAuditListSortedByIpAddressDesc();
@@ -78,6 +113,11 @@ public class AuditController {
         return new ResponseEntity<>(auditDTOList, HttpStatus.OK);
     }
 
+    /**
+     * Get list of audit sorted by time on growth with self-link
+     *
+     * @return - list of audit
+     */
     @GetMapping("api/admin/audit/sort/time/rise")
     public ResponseEntity<List<AuditPublicDTO>> getAuditListSortedByTimeAsc() {
         List<Audit> auditList = auditService.getAuditListSortedByTimeAsc();
@@ -86,6 +126,11 @@ public class AuditController {
         return new ResponseEntity<>(auditDTOList, HttpStatus.OK);
     }
 
+    /**
+     * Get list of audit sorted by time in descending order with self-link
+     *
+     * @return - list of audit
+     */
     @GetMapping("api/admin/audit/sort/time/fall")
     public ResponseEntity<List<AuditPublicDTO>> getAuditListSortedByTimeDesc() {
         List<Audit> auditList = auditService.getAuditListSortedByTimeDesc();
@@ -94,6 +139,11 @@ public class AuditController {
         return new ResponseEntity<>(auditDTOList, HttpStatus.OK);
     }
 
+    /**
+     * Get list of audit sorted by role on growth with self-link
+     *
+     * @return - list of audit
+     */
     @GetMapping("api/admin/audit/sort/role/rise")
     public ResponseEntity<List<AuditPublicDTO>> getAuditListSortedByRoleAsc() {
         List<Audit> auditList = auditService.getAuditListSortedByRoleAsc();
@@ -102,6 +152,11 @@ public class AuditController {
         return new ResponseEntity<>(auditDTOList, HttpStatus.OK);
     }
 
+    /**
+     * Get list of audit sorted by role in descending order with self-link
+     *
+     * @return - list of audit
+     */
     @GetMapping("api/admin/audit/sort/role/fall")
     public ResponseEntity<List<AuditPublicDTO>> getAuditListSortedByRoleDesc() {
         List<Audit> auditList = auditService.getAuditListSortedByRoleDesc();
