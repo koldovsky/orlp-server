@@ -4,6 +4,7 @@ import com.softserve.academy.spaced.repetition.audit.Auditable;
 import com.softserve.academy.spaced.repetition.audit.AuditingActionType;
 import com.softserve.academy.spaced.repetition.domain.*;
 import com.softserve.academy.spaced.repetition.repository.AccountRepository;
+import com.softserve.academy.spaced.repetition.repository.AuthorityRepository;
 import com.softserve.academy.spaced.repetition.repository.UserRepository;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -24,10 +25,11 @@ import java.util.Map;
 public class FacebookAuthUtil {
 
     @Autowired
-    AccountRepository accountRepository;
-
+    private AccountRepository accountRepository;
     @Autowired
-    UserRepository userRepository;
+    private UserRepository userRepository;
+    @Autowired
+    private AuthorityRepository authorityRepository;
 
     public String getFBGraph(String accessToken) {
         String graph = null;
@@ -89,7 +91,8 @@ public class FacebookAuthUtil {
         account.setPassword("-1");
         account.setLastPasswordResetDate(new Date());
         account.setStatus(AccountStatus.ACTIVE);
-        account.setAuthorities(Collections.singleton(new Authority(AuthorityName.ROLE_USER)));
+        Authority authority = authorityRepository.findAuthorityByName(AuthorityName.ROLE_USER);
+        account.setAuthorities(Collections.singleton(authority));
         person.setFirstName((String) fbProfileData.get("first_name"));
         person.setLastName((String) fbProfileData.get("last_name"));
         user.setAccount(account);
