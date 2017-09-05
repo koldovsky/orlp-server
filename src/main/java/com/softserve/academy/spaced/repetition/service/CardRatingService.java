@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
@@ -26,8 +27,9 @@ public class CardRatingService {
     private DeckRepository deckRepository;
 
     @Autowired
-    RatingCountService ratingCountService;
+    private RatingCountService ratingCountService;
 
+    @Transactional
     public void addCardRating(CardRating cardRating, Long deckId, Long cardId) {
         JwtUser user = (JwtUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String username = user.getUsername();

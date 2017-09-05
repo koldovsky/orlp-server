@@ -135,6 +135,7 @@ public class CourseController {
         return new ResponseEntity<List<Long>>(id, HttpStatus.OK);
     }
 
+    @Auditable(actionType = AuditingActionType.CREATE_PRIVATE_COURSE)
     @PostMapping("/api/category/{category_id}/private/user/create/course")
     public ResponseEntity<Course> createPrivateCourse(@RequestBody Course privateCourse, @PathVariable Long category_id) throws NotAuthorisedUserException {
         courseService.createPrivateCourse(privateCourse, category_id);
