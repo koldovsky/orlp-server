@@ -11,6 +11,9 @@ import com.softserve.academy.spaced.repetition.repository.DeckRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
+import java.util.List;
+
 @Service
 public class CardRatingService {
 
@@ -22,6 +25,9 @@ public class CardRatingService {
 
     @Autowired
     private DeckRepository deckRepository;
+
+    @Autowired
+    private RatingCountService ratingCountService;
 
     @Autowired
     private UserService userService;
