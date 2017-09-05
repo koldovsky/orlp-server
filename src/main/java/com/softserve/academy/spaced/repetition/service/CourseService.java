@@ -64,7 +64,7 @@ public class CourseService {
     }
 
     public List<Course> get4Course() {
-        List<Course> courses = courseRepository.findTop4ByOrderById();
+        List<Course> courses = courseRepository.findTop4ByOrderByRating();
         return courses;
     }
 

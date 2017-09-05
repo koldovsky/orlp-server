@@ -2,7 +2,6 @@ package com.softserve.academy.spaced.repetition.controller;
 
 import com.softserve.academy.spaced.repetition.DTO.DTOBuilder;
 import com.softserve.academy.spaced.repetition.DTO.impl.CardPublicDTO;
-import com.softserve.academy.spaced.repetition.DTO.impl.DeckLinkByCategoryDTO;
 import com.softserve.academy.spaced.repetition.DTO.impl.DeckLinkByFolderDTO;
 import com.softserve.academy.spaced.repetition.DTO.impl.DeckPublicDTO;
 import com.softserve.academy.spaced.repetition.audit.Auditable;
@@ -12,7 +11,6 @@ import com.softserve.academy.spaced.repetition.domain.Deck;
 import com.softserve.academy.spaced.repetition.exceptions.NotAuthorisedUserException;
 import com.softserve.academy.spaced.repetition.service.DeckService;
 import com.softserve.academy.spaced.repetition.service.FolderService;
-import com.softserve.academy.spaced.repetition.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Link;
 import org.springframework.http.HttpStatus;
@@ -29,9 +27,6 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 public class FolderController {
 
     @Autowired
-    private UserService userService;
-
-    @Autowired
     private FolderService folderService;
 
     @Autowired
@@ -44,7 +39,7 @@ public class FolderController {
         Link selfLink = linkTo(methodOn(DeckController.class).getDeckByCategoryId(deck.getCategory().getId(), deckId)).withSelfRel();
         DeckPublicDTO deckPublicDTO = DTOBuilder.buildDtoForEntity(deck, DeckPublicDTO.class, selfLink);
 
-        return new ResponseEntity<DeckPublicDTO>(deckPublicDTO, HttpStatus.OK);
+        return new ResponseEntity<>(deckPublicDTO, HttpStatus.OK);
     }
 
     @Auditable(actionType = AuditingActionType.VIEW_DECK_IN_FOLDER)
@@ -56,14 +51,14 @@ public class FolderController {
         Link collectionLink = linkTo(methodOn(FolderController.class).getAllDecksWithFolder(folder_id)).withSelfRel();
         List<DeckLinkByFolderDTO> decks = DTOBuilder.buildDtoListForCollection(deckList, DeckLinkByFolderDTO.class, collectionLink);
 
-        return new ResponseEntity<List<DeckLinkByFolderDTO>>(decks, HttpStatus.OK);
+        return new ResponseEntity<>(decks, HttpStatus.OK);
     }
 
     @GetMapping("/api/private/user/folder/decks/id")
     public ResponseEntity<List<Long>> getIdAllDecksInFolder() throws NotAuthorisedUserException {
         List<Long> id = folderService.getAllDecksIdWithFolder();
 
-        return new ResponseEntity<List<Long>>(id, HttpStatus.OK);
+        return new ResponseEntity<>(id, HttpStatus.OK);
     }
 
     @GetMapping("/api/private/user/folder/{folder_id}/decks/{deck_id}")
@@ -73,7 +68,7 @@ public class FolderController {
         Link selfLink = linkTo(methodOn(FolderController.class).getDeckByFolderId(folder_id, deck_id)).withSelfRel();
         DeckLinkByFolderDTO linkDTO = DTOBuilder.buildDtoForEntity(deck, DeckLinkByFolderDTO.class, selfLink);
 
-        return new ResponseEntity<DeckLinkByFolderDTO>(linkDTO, HttpStatus.OK);
+        return new ResponseEntity<>(linkDTO, HttpStatus.OK);
     }
 
     @Auditable(actionType = AuditingActionType.START_LEARNING_VIA_FOLDER)
@@ -84,6 +79,12 @@ public class FolderController {
         Link collectionLink = linkTo(methodOn(FolderController.class).getCardsByFolderAndDeck(folder_id, deck_id)).withSelfRel();
         List<CardPublicDTO> cardsPublic = DTOBuilder.buildDtoListForCollection(cards, CardPublicDTO.class, collectionLink);
 
-        return new ResponseEntity<List<CardPublicDTO>>(cardsPublic, HttpStatus.OK);
+        return new ResponseEntity<>(cardsPublic, HttpStatus.OK);
+    }
+
+    @Auditable(actionType = AuditingActionType.DELETE_DECK)
+    @DeleteMapping(value = "/api/user/folder/decks/{deck_id}")
+    public void deleteUserDeck(@PathVariable Long deck_id) throws NotAuthorisedUserException {
+        folderService.deleteDeck(deck_id);
     }
 }

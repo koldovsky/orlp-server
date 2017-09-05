@@ -28,9 +28,6 @@ public class Course implements EntityInterface {
     @Column(name = "rating")
     private double rating;
 
-    @Column(name = "numb_of_users_ratings")
-    private long numbOfUsersRatings;
-
     @Column(name = "published")
     private boolean published;
 
@@ -123,14 +120,6 @@ public class Course implements EntityInterface {
 
     public void setRating(double rating) {
         this.rating = rating;
-    }
-
-    public long getNumbOfUsersRatings() {
-        return numbOfUsersRatings;
-    }
-
-    public void setNumbOfUsersRatings(long numbOfUsersRatings) {
-        this.numbOfUsersRatings = numbOfUsersRatings;
     }
 
     @Override

@@ -6,21 +6,23 @@ import org.springframework.hateoas.Link;
 
 public class CardRatingPublicDTO extends DTO<CardRating> {
 
-    public CardRatingPublicDTO(CardRating cardRating,Link link) {
-        super(cardRating,link);
+    public CardRatingPublicDTO(CardRating cardRating, Link link) {
+        super(cardRating, link);
     }
-    public String getAccountEmail(){
+
+    public String getAccountEmail() {
         return getEntity().getAccountEmail();
     }
 
-    public long getDeckId(){
+    public long getDeckId() {
         return getEntity().getDeckId();
     }
 
-    public long getCardId(){
+    public long getCardId() {
         return getEntity().getCardId();
     }
-    public int getRating(){
+
+    public int getRating() {
         return getEntity().getRating();
     }
 

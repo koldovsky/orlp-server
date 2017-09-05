@@ -20,20 +20,14 @@ public class DTOBuilder {
         T newInstance = null;
         try {
             newInstance = declaredConstructor.newInstance(entity, selfLink.withSelfRel());
-        } catch (NullPointerException e) {
-            e.printStackTrace();
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
+        } catch (NullPointerException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
             e.printStackTrace();
         }
         return newInstance;
     }
 
     public static <M extends EntityInterface, T extends DTO<M>> List<T> buildDtoListForCollection(List<M> collection, Class<T> dtoClass, Link collectionLink) {
-        List<T> result = new ArrayList<T>();
+        List<T> result = new ArrayList<>();
         if (collection == null) {
             return result;
         }

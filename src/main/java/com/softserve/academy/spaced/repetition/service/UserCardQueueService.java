@@ -1,10 +1,10 @@
 package com.softserve.academy.spaced.repetition.service;
 
+import com.softserve.academy.spaced.repetition.domain.User;
 import com.softserve.academy.spaced.repetition.domain.UserCardQueue;
+import com.softserve.academy.spaced.repetition.exceptions.NotAuthorisedUserException;
 import com.softserve.academy.spaced.repetition.repository.UserCardQueueRepository;
-import com.softserve.academy.spaced.repetition.security.JwtUser;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -13,17 +13,20 @@ import java.util.Date;
 public class UserCardQueueService {
 
     @Autowired
-    UserCardQueueRepository userCardQueueRepository;
+    private UserCardQueueRepository userCardQueueRepository;
 
-    public void addUserCardQueue(UserCardQueue userCardQueue, long cardId, long deckId) {
-        JwtUser user = (JwtUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String username = user.getUsername();
-        UserCardQueue userCardQueueByAccountEmailAndCardId = userCardQueueRepository.findUserCardQueueByAccountEmailAndCardId(username, cardId);
+    @Autowired
+    private UserService userService;
 
-        if (userCardQueueByAccountEmailAndCardId != null) {
-            userCardQueue.setId(userCardQueueByAccountEmailAndCardId.getId());
+    public void addUserCardQueue(UserCardQueue userCardQueue, long cardId, long deckId) throws NotAuthorisedUserException {
+        User user = userService.getAuthorizedUser();
+        String email = user.getAccount().getEmail();
+        UserCardQueue cardQueue = userCardQueueRepository.findUserCardQueueByAccountEmailAndCardId(email, cardId);
+
+        if (cardQueue != null) {
+            userCardQueue.setId(cardQueue.getId());
         }
-        userCardQueue.setAccountEmail(username);
+        userCardQueue.setAccountEmail(email);
         userCardQueue.setCardId(cardId);
         userCardQueue.setDeckId(deckId);
         userCardQueue.setCardDate(new Date());

@@ -40,7 +40,7 @@ public class ManageUserController {
     }
 
     /**
-     * Gets user by his/her id
+     * Gets user by id
      *
      * @param id - users id
      * @return managed by admin usersDTO

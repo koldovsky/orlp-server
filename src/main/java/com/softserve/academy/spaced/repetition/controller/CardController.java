@@ -5,6 +5,7 @@ import com.softserve.academy.spaced.repetition.DTO.impl.CardPublicDTO;
 import com.softserve.academy.spaced.repetition.audit.Auditable;
 import com.softserve.academy.spaced.repetition.audit.AuditingActionType;
 import com.softserve.academy.spaced.repetition.domain.Card;
+import com.softserve.academy.spaced.repetition.exceptions.NotAuthorisedUserException;
 import com.softserve.academy.spaced.repetition.service.CardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Link;
@@ -23,6 +24,14 @@ public class CardController {
 
     @Autowired
     private CardService cardService;
+
+    @GetMapping("/api/category/decks/{deck_id}/learn/cards")
+    public ResponseEntity<List<CardPublicDTO>> getLearningCards(@PathVariable long deck_id) throws NotAuthorisedUserException {
+        List<Card> learningCards = cardService.getCardsQueue(deck_id);
+        Link collectionLink = linkTo(methodOn(DeckController.class).getCardsByDeck(deck_id)).withSelfRel();
+        List<CardPublicDTO> cards = DTOBuilder.buildDtoListForCollection(learningCards, CardPublicDTO.class, collectionLink);
+        return new ResponseEntity<>(cards, HttpStatus.OK);
+    }
 
     @GetMapping(value = "/api/category/{category_id}/courses/{course_id}/decks/{deck_id}/cards/{card_id}")
     @PreAuthorize(value = "@accessToUrlService.hasAccessToCard(#category_id, #course_id, #deck_id, #card_id)")
@@ -87,13 +96,5 @@ public class CardController {
     @DeleteMapping(value = {"/api/category/{categoryId}/decks/{deckId}/cards/{id}", "/api/courses/{courseId}/decks/{deckId}/cards/{id}"})
     public void deleteCard(@PathVariable Long id) {
         cardService.deleteCard(id);
-    }
-
-    @GetMapping("/api/category/{category_id}/decks/{deck_id}/learn/cards")
-    public ResponseEntity<List<CardPublicDTO>> getLearningCards(@PathVariable long category_id,@PathVariable long deck_id) {
-        List<Card> learningCards = cardService.getCardsQueue(deck_id);
-        Link collectionLink = linkTo(methodOn(DeckController.class).getCardsByCategoryAndDeck(category_id,deck_id)).withSelfRel();
-        List<CardPublicDTO> cards = DTOBuilder.buildDtoListForCollection(learningCards, CardPublicDTO.class, collectionLink);
-        return new ResponseEntity<>(cards, HttpStatus.OK);
     }
 }
