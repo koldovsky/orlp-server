@@ -4,6 +4,7 @@ import com.softserve.academy.spaced.repetition.DTO.DTO;
 import com.softserve.academy.spaced.repetition.controller.CardController;
 import com.softserve.academy.spaced.repetition.controller.DeckController;
 import com.softserve.academy.spaced.repetition.domain.Deck;
+import com.softserve.academy.spaced.repetition.exceptions.NotAuthorisedUserException;
 import org.springframework.hateoas.Link;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
@@ -12,9 +13,9 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
 public class DeckLinkByCategoryDTO extends DTO<Deck> {
 
-    public DeckLinkByCategoryDTO(Deck deck, Link link) {
+    public DeckLinkByCategoryDTO(Deck deck, Link link) throws NotAuthorisedUserException {
         super(deck, link);
-        Link linkCards = linkTo(methodOn(CardController.class).getLearningCards((long) -1, getEntity().getId())).withRel("cards");
+        Link linkCards = linkTo(methodOn(CardController.class).getLearningCards(getEntity().getId())).withRel("cards");
         add(getLinkWithReplacedParentPart(linkCards).withRel("cards"));
     }
 

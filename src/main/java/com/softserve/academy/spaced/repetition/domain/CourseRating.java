@@ -1,19 +1,18 @@
 package com.softserve.academy.spaced.repetition.domain;
 
 import com.softserve.academy.spaced.repetition.DTO.EntityInterface;
-
 import javax.persistence.*;
 
 @Entity
 @Table(name = "course_rating")
-public class CourseRating implements EntityInterface{
+public class CourseRating implements EntityInterface {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "rating_id")
     private long id;
 
-    @Column(name = "account_email",nullable = false)
+    @Column(name = "account_email", nullable = false)
     private String accountEmail;
 
     @Column(name = "course_id", nullable = false)
@@ -22,7 +21,7 @@ public class CourseRating implements EntityInterface{
     @Column(name = "rating", nullable = false)
     private int rating;
 
-    public CourseRating(){
+    public CourseRating() {
 
     }
 

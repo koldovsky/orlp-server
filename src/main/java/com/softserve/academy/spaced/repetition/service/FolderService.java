@@ -1,22 +1,15 @@
 package com.softserve.academy.spaced.repetition.service;
 
-import com.softserve.academy.spaced.repetition.DTO.impl.DeckPublicDTO;
 import com.softserve.academy.spaced.repetition.domain.Deck;
 import com.softserve.academy.spaced.repetition.domain.Folder;
 import com.softserve.academy.spaced.repetition.domain.User;
 import com.softserve.academy.spaced.repetition.exceptions.NotAuthorisedUserException;
 import com.softserve.academy.spaced.repetition.repository.DeckRepository;
 import com.softserve.academy.spaced.repetition.repository.FolderRepository;
-import com.softserve.academy.spaced.repetition.repository.UserRepository;
-import com.softserve.academy.spaced.repetition.security.JwtUser;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class FolderService {
@@ -26,9 +19,6 @@ public class FolderService {
 
     @Autowired
     private UserService userService;
-
-    @Autowired
-    private UserRepository userRepository;
 
     @Autowired
     private DeckRepository deckRepository;
@@ -59,5 +49,18 @@ public class FolderService {
         Long folderId = authorizedUser.getFolder().getId();
 
         return folderRepository.selectAllDeckIdWithFolder(folderId);
+    }
+
+    public void deleteDeck(Long deck_id) throws NotAuthorisedUserException {
+        User user = userService.getAuthorizedUser();
+        Folder folder = user.getFolder();
+        Collection<Deck> userDecks = folder.getDecks();
+        for (Deck deck: userDecks) {
+            if (deck.getId() == deck_id) {
+                userDecks.remove(deck);
+                break;
+            }
+        }
+        folderRepository.save(folder);
     }
 }
