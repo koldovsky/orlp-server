@@ -6,8 +6,8 @@ import org.springframework.stereotype.Service;
 
 @Service
 
-public class BlankFeildValidator extends AbstractValidator <User> {
-    public BlankFeildValidator() {
+public class BlankFieldValidator extends AbstractValidator <User> {
+    public BlankFieldValidator() {
     }
 
     @Override
