@@ -9,23 +9,14 @@ import java.sql.SQLException;
 @Service
 public class SqliteConnector extends DbConnector {
     private final static String DRIVER = "org.sqlite.JDBC";
-    private String path = "jdbc:sqlite:";
-
+    private final static String PATH = "jdbc:sqlite:";
 
     @Override
-    public Connection getConnection(String relativePath) {
+    public Connection getConnection(String relativePath) throws ClassNotFoundException, SQLException {
         Connection conn = null;
-        try {
-            Class.forName(DRIVER);
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-        try {
-            conn = DriverManager.getConnection(path + relativePath);
-            System.out.println("Connection to SQLite has been established.");
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        Class.forName(DRIVER);
+        conn = DriverManager.getConnection(PATH + relativePath);
+        System.out.println("Connection to SQLite has been established.");
         return conn;
     }
 }

@@ -6,13 +6,9 @@ import com.softserve.academy.spaced.repetition.repository.CardRepository;
 import com.softserve.academy.spaced.repetition.repository.DeckRepository;
 import com.softserve.academy.spaced.repetition.security.JwtUser;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.ApplicationHome;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
-import javax.transaction.Transactional;
-import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,6 +27,10 @@ public class CardService {
         return cardRepository.findOne(id);
     }
 
+    public List <Card> getCards(String question) {
+        return cardRepository.findAllByQuestion(question);
+    }
+
     public void addCard(Card card, Long deckId) {
         Deck deck = deckRepository.findOne(deckId);
         deck.getCards().add(cardRepository.save(card));
@@ -44,7 +44,7 @@ public class CardService {
     public List <Card> getCardsQueue(long deckId) {
         JwtUser user = (JwtUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String username = user.getUsername();
-        List<Card> cardsQueue = new ArrayList<>();
+        List <Card> cardsQueue = new ArrayList <>();
         cardsQueue.addAll(getCardsForLearningWithOutStatus(username, deckId));
 
         if (cardsQueue.size() < NUMB_OF_LEARNING_CARDS) {
@@ -53,11 +53,11 @@ public class CardService {
         return cardsQueue;
     }
 
-    public List<Card> getCardsQueueForLearningWithStatus(String accountEmail, long deckId) {
+    public List <Card> getCardsQueueForLearningWithStatus(String accountEmail, long deckId) {
         return cardRepository.CardsQueueForLearningWithStatus(accountEmail, deckId, NUMB_OF_LEARNING_CARDS);
     }
 
-    public List<Card> getCardsForLearningWithOutStatus(String accountEmail, long deckId) {
+    public List <Card> getCardsForLearningWithOutStatus(String accountEmail, long deckId) {
         return cardRepository.CardsForLearningWithOutStatus(accountEmail, deckId, NUMB_OF_LEARNING_CARDS);
     }
 

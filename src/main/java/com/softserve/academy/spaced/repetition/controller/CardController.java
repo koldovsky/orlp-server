@@ -15,6 +15,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.List;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
@@ -108,7 +110,7 @@ public class CardController {
      * @return - HttpStatus
      */
     @PostMapping("/api/cardsUpload")
-    public ResponseEntity uploadCard(@RequestParam("file") MultipartFile file) {
+    public ResponseEntity uploadCard(@RequestParam("file") MultipartFile file) throws SQLException, IOException, ClassNotFoundException {
         cardLoadService.loadCard(file);
         return new ResponseEntity <>(HttpStatus.OK);
     }
