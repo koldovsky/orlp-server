@@ -15,18 +15,12 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 import javax.servlet.http.HttpServletRequest;
 import java.net.UnknownHostException;
 
-
 @ControllerAdvice
 public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(MultipartException.class)
     ResponseEntity <MessageDTO> handleLargeFileException() {
         return new ResponseEntity <>(new MessageDTO("File upload error: file is too large."), HttpStatus.FORBIDDEN);
-    }
-
-    @ExceptionHandler(MoreThanOneTimeRateException.class)
-    ResponseEntity <MessageDTO> handleMoreThanOneTimeRateException() {
-        return new ResponseEntity <>(new MessageDTO("Object was rated more than one time."), HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler(NullPointerException.class)

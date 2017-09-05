@@ -61,8 +61,8 @@ public class CourseController {
 
     @Auditable(actionType = AuditingActionType.VIEW_TOP_COURSES)
     @GetMapping("/api/course/top")
-    public ResponseEntity<List<CourseTopDTO>> get4Course() {
-        List<Course> courseList = courseService.get4Course();
+    public ResponseEntity<List<CourseTopDTO>> getTopCourse() {
+        List<Course> courseList = courseService.getTopCourse();
         List<CourseTopDTO> courses = new ArrayList<>();
         for (Course course : courseList) {
             Link selfLink = linkTo(methodOn(CourseController.class).getCourseById(course.getCategory().getId(), course.getId())).withSelfRel();

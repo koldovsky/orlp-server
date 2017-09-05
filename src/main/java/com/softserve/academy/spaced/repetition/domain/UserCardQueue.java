@@ -8,14 +8,14 @@ import java.util.Date;
 
 @Entity
 @Table(name = "user_card_queue")
-public class UserCardQueue implements EntityInterface{
+public class UserCardQueue implements EntityInterface {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "user_card_queue_id")
     private Long id;
 
-    @Column(name = "account_email",nullable = false)
+    @Column(name = "account_email", nullable = false)
     private String accountEmail;
 
     @Column(name = "card_id", nullable = false)

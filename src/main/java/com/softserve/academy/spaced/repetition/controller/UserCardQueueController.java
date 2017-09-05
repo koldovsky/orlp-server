@@ -3,6 +3,7 @@ package com.softserve.academy.spaced.repetition.controller;
 import com.softserve.academy.spaced.repetition.DTO.DTOBuilder;
 import com.softserve.academy.spaced.repetition.DTO.impl.UserCardQueuePublicDTO;
 import com.softserve.academy.spaced.repetition.domain.UserCardQueue;
+import com.softserve.academy.spaced.repetition.exceptions.NotAuthorisedUserException;
 import com.softserve.academy.spaced.repetition.service.UserCardQueueService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Link;
@@ -26,7 +27,7 @@ public class UserCardQueueController {
 
     @PostMapping("/api/user/deck/{deck_id}/card/{card_id}/queue")
     @PreAuthorize(value = "@accessToUrlService.hasAccessToCard(#deck_id,#card_id)")
-    public ResponseEntity<UserCardQueuePublicDTO> addUserCardQueue(@RequestBody UserCardQueue userCardQueue, @PathVariable long card_id, @PathVariable long deck_id) {
+    public ResponseEntity<UserCardQueuePublicDTO> addUserCardQueue(@RequestBody UserCardQueue userCardQueue, @PathVariable long card_id, @PathVariable long deck_id) throws NotAuthorisedUserException {
         userCardQueueService.addUserCardQueue(userCardQueue, card_id, deck_id);
         Link selfLink = linkTo(methodOn(UserCardQueueController.class).getUserCardQueueById(userCardQueue.getId())).withSelfRel();
         UserCardQueuePublicDTO userCardQueuePublicDTO = DTOBuilder.buildDtoForEntity(userCardQueue, UserCardQueuePublicDTO.class, selfLink);

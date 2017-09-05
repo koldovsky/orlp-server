@@ -7,7 +7,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "Deck")
-public class Deck  implements EntityInterface{
+public class Deck implements EntityInterface {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

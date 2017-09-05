@@ -21,7 +21,8 @@ public class Folder implements EntityInterface {
             inverseJoinColumns = {@JoinColumn(name = "deck_id")})
     private Set<Deck> decks;
 
-    public Folder() {}
+    public Folder() {
+    }
 
     public Long getId() {
         return id;
