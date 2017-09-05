@@ -13,11 +13,11 @@ import java.util.regex.Pattern;
 
 @Service
 public class AnkiCardExtractor implements CardDataExtractor {
-    private final static String QUESTIONQUERY = "SELECT sfld FROM notes";
-    private final static String ANSWERQUERY = "SELECT flds FROM notes";
-    private final static String QUESTIONCOLUMNNAME = "sfld";
-    private final static String ANSWERCOLUMNNAME = "flds";
-    private final static String REGEXFORTAGS = "<[^>]*>";
+    private final static String QUESTION_QUERY = "SELECT sfld FROM notes";
+    private final static String ANSWER_QUERY = "SELECT flds FROM notes";
+    private final static String QUESTION_COLUMN_NAME = "sfld";
+    private final static String ANSWER_COLUMN_NAME = "flds";
+    private final static String REGEX_FOR_TAGS = "<[^>]*>";
     @Autowired
     private SqliteConnector connector;
 
@@ -25,8 +25,8 @@ public class AnkiCardExtractor implements CardDataExtractor {
     public Map <String, String> extractData(String path) {
         connector.setConnector(connector);
         Connection connection = connector.getConnection(path);
-        List <String> questions = _extractDate(connection, QUESTIONQUERY, QUESTIONCOLUMNNAME);
-        List <String> answers = _extractDate(connection, ANSWERQUERY, ANSWERCOLUMNNAME);
+        List <String> questions = _extractDate(connection, QUESTION_QUERY, QUESTION_COLUMN_NAME);
+        List <String> answers = _extractDate(connection, ANSWER_QUERY, ANSWER_COLUMN_NAME);
         answers = deleteTags(answers, questions);
         return formMap(questions, answers);
     }
@@ -49,7 +49,7 @@ public class AnkiCardExtractor implements CardDataExtractor {
 
     private List <String> deleteTags(List <String> questions, List <String> answers) {
         List <String> result = new ArrayList <String>();
-        Pattern pattern = Pattern.compile(REGEXFORTAGS);
+        Pattern pattern = Pattern.compile(REGEX_FOR_TAGS);
         Iterator <String> iter = answers.iterator();
         for (String elem : questions) {
             Matcher matcher = pattern.matcher(elem);

@@ -27,18 +27,15 @@ public class CardService {
     @Autowired
     private DeckRepository deckRepository;
 
-    @Transactional
     public Card getCard(Long id) {
         return cardRepository.findOne(id);
     }
 
-    @Transactional
     public void addCard(Card card, Long deckId) {
         Deck deck = deckRepository.findOne(deckId);
         deck.getCards().add(cardRepository.save(card));
     }
 
-    @Transactional
     public void updateCard(Long id, Card card) {
         card.setId(id);
         cardRepository.save(card);
@@ -64,7 +61,6 @@ public class CardService {
         return cardRepository.CardsForLearningWithOutStatus(accountEmail, deckId, NUMB_OF_LEARNING_CARDS);
     }
 
-    @Transactional
     public void deleteCard(Long id) {
         cardRepository.delete(id);
     }

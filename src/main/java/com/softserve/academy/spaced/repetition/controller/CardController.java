@@ -5,8 +5,6 @@ import com.softserve.academy.spaced.repetition.DTO.impl.CardPublicDTO;
 import com.softserve.academy.spaced.repetition.audit.Auditable;
 import com.softserve.academy.spaced.repetition.audit.AuditingActionType;
 import com.softserve.academy.spaced.repetition.domain.Card;
-import com.softserve.academy.spaced.repetition.exceptions.ImageRepositorySizeQuotaExceededException;
-import com.softserve.academy.spaced.repetition.exceptions.NotAuthorisedUserException;
 import com.softserve.academy.spaced.repetition.service.CardService;
 import com.softserve.academy.spaced.repetition.service.cardLoaders.CardLoadService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -106,13 +104,11 @@ public class CardController {
     /**
      * Upload anki cards
      *
-     * @param file - image-file
-     * @return - upploaded image DTO, HttpStatus
-     * @throws ImageRepositorySizeQuotaExceededException - is dropping when user has exceeded the quote of disk-space for his own images
-     * @throws NotAuthorisedUserException                - is dropping when the user which wants to add the image is not authorised
+     * @param file - card-file
+     * @return - HttpStatus
      */
     @PostMapping("/api/cardsUpload")
-    public ResponseEntity <?> uploadCard(@RequestParam("file") MultipartFile file) {
+    public ResponseEntity uploadCard(@RequestParam("file") MultipartFile file) {
         cardLoadService.loadCard(file);
         return new ResponseEntity <>(HttpStatus.OK);
     }
