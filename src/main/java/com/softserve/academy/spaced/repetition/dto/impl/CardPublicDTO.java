@@ -29,9 +29,4 @@ public class CardPublicDTO extends DTO<Card> {
     public double getRating(){
         return getEntity().getRating();
     }
-
-    public long getNumbOfUsersRatings(){
-        return  getEntity().getNumbOfUsersRatings();
-    }
-
 }

@@ -13,7 +13,7 @@ public class CardRating implements EntityInterface {
     @Column(name = "rating_id")
     private long id;
 
-    @Column(name = "account_email",nullable = false)
+    @Column(name = "account_email", nullable = false)
     private String accountEmail;
 
     @Column(name = "deck_id", nullable = false)
@@ -29,7 +29,7 @@ public class CardRating implements EntityInterface {
 
     }
 
-    public CardRating(Long id){
+    public CardRating(Long id) {
         this.id = id;
     }
 
@@ -69,7 +69,7 @@ public class CardRating implements EntityInterface {
         this.cardId = cardId;
     }
 
-    public int getRating() {
+    public Integer getRating() {
         return rating;
     }
 
