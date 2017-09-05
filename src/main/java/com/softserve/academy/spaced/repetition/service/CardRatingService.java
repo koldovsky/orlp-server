@@ -27,9 +27,6 @@ public class CardRatingService {
     private DeckRepository deckRepository;
 
     @Autowired
-    private RatingCountService ratingCountService;
-
-    @Autowired
     private UserService userService;
 
     public void addCardRating(CardRating cardRating, Long deckId, Long cardId) throws NotAuthorisedUserException {
