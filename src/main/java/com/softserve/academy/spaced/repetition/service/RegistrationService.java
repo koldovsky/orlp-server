@@ -6,7 +6,7 @@ import com.softserve.academy.spaced.repetition.exceptions.BlankFieldException;
 import com.softserve.academy.spaced.repetition.exceptions.EmailUniquesException;
 import com.softserve.academy.spaced.repetition.exceptions.ObjectHasNullFieldsException;
 import com.softserve.academy.spaced.repetition.service.validators.AbstractValidator;
-import com.softserve.academy.spaced.repetition.service.validators.BlankFeildValidator;
+import com.softserve.academy.spaced.repetition.service.validators.BlankFieldValidator;
 import com.softserve.academy.spaced.repetition.service.validators.EmailUniqiesValidator;
 import com.softserve.academy.spaced.repetition.service.validators.NullFieldsValidator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +30,7 @@ public class RegistrationService {
     @Autowired
     private EmailUniqiesValidator emailUniquesValidator;
     @Autowired
-    private BlankFeildValidator blankFeildValidator;
+    private BlankFieldValidator blankFieldValidator;
     @Autowired
     private NullFieldsValidator nullFieldsValidator;
 
@@ -41,8 +41,8 @@ public class RegistrationService {
     }
 
     private AbstractValidator getChainOfValidators() {
-        nullFieldsValidator.setNextValidator(blankFeildValidator);
-        blankFeildValidator.setNextValidator(emailUniquesValidator);
+        nullFieldsValidator.setNextValidator(blankFieldValidator);
+        blankFieldValidator.setNextValidator(emailUniquesValidator);
         return nullFieldsValidator;
     }
 
