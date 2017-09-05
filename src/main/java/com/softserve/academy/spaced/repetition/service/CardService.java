@@ -47,7 +47,7 @@ public class CardService {
     public List <Card> getCardsQueue(long deckId) {
         JwtUser user = (JwtUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String username = user.getUsername();
-        List <Card> cardsQueue = new ArrayList <>();
+        List<Card> cardsQueue = new ArrayList<>();
         cardsQueue.addAll(getCardsForLearningWithOutStatus(username, deckId));
 
         if (cardsQueue.size() < NUMB_OF_LEARNING_CARDS) {
@@ -56,11 +56,11 @@ public class CardService {
         return cardsQueue;
     }
 
-    public List <Card> getCardsQueueForLearningWithStatus(String accountEmail, long deckId) {
+    public List<Card> getCardsQueueForLearningWithStatus(String accountEmail, long deckId) {
         return cardRepository.CardsQueueForLearningWithStatus(accountEmail, deckId, NUMB_OF_LEARNING_CARDS);
     }
 
-    public List <Card> getCardsForLearningWithOutStatus(String accountEmail, long deckId) {
+    public List<Card> getCardsForLearningWithOutStatus(String accountEmail, long deckId) {
         return cardRepository.CardsForLearningWithOutStatus(accountEmail, deckId, NUMB_OF_LEARNING_CARDS);
     }
 

@@ -8,9 +8,9 @@ import org.aspectj.lang.annotation.Aspect;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
-import javax.transaction.Transactional;
-import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Date;
 
@@ -28,15 +28,11 @@ public class AuditMain {
     /**
      * Find out and save user's activity.
      * Save: account email, action type, time, role.
-     *
-     * @throws - {@link UnknownHostException}
-     *
      */
     @After("@annotation(auditable)")
-    @Transactional
-    public void logAuditActivity(Auditable auditable) throws UnknownHostException {
+    public void logAuditActivity(Auditable auditable) {
         String accountEmail;
-        String role = "";
+        String role;
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (principal instanceof String) {
             if (principal.equals(PRINCIPAL)) {
@@ -53,7 +49,8 @@ public class AuditMain {
         auditRepository.save(new Audit(accountEmail, auditable.actionType(), new Date(), getIpAddress(), role));
     }
 
-    public String getIpAddress() throws UnknownHostException {
-        return InetAddress.getLocalHost().getHostAddress().toString();
+    public String getIpAddress() {
+        return ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes())
+                .getRequest().getRemoteAddr();
     }
 }
