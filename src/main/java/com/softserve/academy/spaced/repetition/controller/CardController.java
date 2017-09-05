@@ -26,6 +26,7 @@ public class CardController {
 
     @Autowired
     private CardService cardService;
+
     @Autowired
     private CardLoadService cardLoadService;
 
@@ -103,11 +104,11 @@ public class CardController {
     }
 
     @GetMapping("/api/category/{category_id}/decks/{deck_id}/learn/cards")
-    public ResponseEntity <List <CardPublicDTO>> getLearningCards(@PathVariable long category_id, @PathVariable long deck_id) {
-        List <Card> learningCards = cardService.getCardsQueue(deck_id);
+    public ResponseEntity<List<CardPublicDTO>> getLearningCards(@PathVariable long category_id, @PathVariable long deck_id) throws NotAuthorisedUserException {
+        List<Card> learningCards = cardService.getCardsQueue(deck_id);
         Link collectionLink = linkTo(methodOn(DeckController.class).getCardsByCategoryAndDeck(category_id, deck_id)).withSelfRel();
-        List <CardPublicDTO> cards = DTOBuilder.buildDtoListForCollection(learningCards, CardPublicDTO.class, collectionLink);
-        return new ResponseEntity <>(cards, HttpStatus.OK);
+        List<CardPublicDTO> cards = DTOBuilder.buildDtoListForCollection(learningCards, CardPublicDTO.class, collectionLink);
+        return new ResponseEntity<>(cards, HttpStatus.OK);
     }
 
     /**
@@ -119,6 +120,6 @@ public class CardController {
     @PostMapping("/api/cardsUpload")
     public ResponseEntity uploadCard(@RequestParam("file") MultipartFile file) {
         cardLoadService.loadCard(file);
-        return new ResponseEntity <>(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }
