@@ -3,14 +3,10 @@ package com.softserve.academy.spaced.repetition.service.cardLoaders;
 import org.springframework.stereotype.Service;
 
 import java.sql.Connection;
+import java.sql.SQLException;
 
 @Service
 public abstract class DbConnector {
-    private DbConnector connector;
+    public abstract Connection getConnection(String path) throws ClassNotFoundException, SQLException;
 
-    public abstract Connection getConnection(String path);
-
-    public void setConnector(DbConnector connector) {
-        this.connector = connector;
-    }
 }

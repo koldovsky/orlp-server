@@ -9,22 +9,22 @@ import java.io.IOException;
 
 @Service
 public class AnkiCardUploader implements CardUploader {
-    private final static String FILEPATH = "src/main/resources/data/uploadedCards/card.db";
-    private final static String DRIVER = "org.sqlite.JDBC";
+    private String FILE_PATH;
 
     @Override
-    public String uploadFile(MultipartFile file) {
+    public void setFilePath(String filePath) {
+        this.FILE_PATH = filePath;
+    }
+
+    @Override
+    public String uploadFile(MultipartFile file) throws IOException {
         String relativePath = "";
-        File newFile = new File(FILEPATH);
-        try {
-            newFile.createNewFile();
-            relativePath = newFile.getAbsolutePath();
-            FileOutputStream fos = new FileOutputStream(newFile);
-            fos.write(file.getBytes());
-            fos.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        File newFile = new File(FILE_PATH);
+        newFile.createNewFile();
+        relativePath = newFile.getAbsolutePath();
+        FileOutputStream fos = new FileOutputStream(newFile);
+        fos.write(file.getBytes());
+        fos.close();
         return relativePath;
     }
 }
