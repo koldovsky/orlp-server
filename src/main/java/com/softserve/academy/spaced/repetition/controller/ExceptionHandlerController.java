@@ -89,4 +89,19 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
     ResponseEntity <MessageDTO> handleObjectHasNullFieldsException() {
         return new ResponseEntity <MessageDTO>(new MessageDTO("Blank fields is not required"), HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(FileConnectionException.class)
+    ResponseEntity <MessageDTO> handleFileConnectionException() {
+        return new ResponseEntity <MessageDTO>(new MessageDTO("Can't read data from uploaded file"), HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(WrongFormatException.class)
+    ResponseEntity <MessageDTO> handleWrongFormatException() {
+        return new ResponseEntity <MessageDTO>(new MessageDTO("Not valid file format"), HttpStatus.NOT_ACCEPTABLE);
+    }
+
+    @ExceptionHandler(NoSuchFileException.class)
+    ResponseEntity <MessageDTO> handleNoSuchFileException() {
+        return new ResponseEntity <MessageDTO>(new MessageDTO("Such file not found"), HttpStatus.NOT_FOUND);
+    }
 }

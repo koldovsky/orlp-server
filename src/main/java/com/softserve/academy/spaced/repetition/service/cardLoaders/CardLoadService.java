@@ -19,15 +19,10 @@ public class CardLoadService {
     @Qualifier("cardUploader")
     private CardUploader cardUploader;
 
-    public Map <String, String> loadCard(MultipartFile multipartFile) throws IOException, SQLException, ClassNotFoundException {
+    public Map <String, String> loadCard(MultipartFile multipartFile, Long deckId) throws IOException, SQLException, ClassNotFoundException {
         String relativePath = cardUploader.uploadFile(multipartFile);
         Map <String, String> map = cardDataExtractor.extractData(relativePath);
-        extractedDataIntoDbSaver.save(map, 1L);
-        for (Map.Entry <String, String> elem : map.entrySet()) {
-            System.out.println(elem.getKey() + " >>>>>>>>" + elem.getValue());
-            System.out.println();
-        }
-
+        extractedDataIntoDbSaver.save(map, deckId);
         return map;
     }
 }
