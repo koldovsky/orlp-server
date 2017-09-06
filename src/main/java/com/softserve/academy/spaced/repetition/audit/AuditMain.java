@@ -11,14 +11,13 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import java.net.UnknownHostException;
 import java.util.Date;
 
 @Aspect
 @Component
 public class AuditMain {
 
-    private final String PRINCIPAL = "anonymousUser";
+    private final String PRINCIPAL_ANNONYMOUS = "anonymousUser";
     private final String EMAIL_FOR_UNAUTHORIZED_USER = "ANONYMOUS";
     private final String ROLE_FOR_GUEST = "[ROLE_GUEST]";
 
@@ -35,7 +34,7 @@ public class AuditMain {
         String role;
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (principal instanceof String) {
-            if (principal.equals(PRINCIPAL)) {
+            if (principal.equals(PRINCIPAL_ANNONYMOUS)) {
                 accountEmail = EMAIL_FOR_UNAUTHORIZED_USER;
             } else {
                 accountEmail = String.valueOf(principal);
@@ -46,7 +45,7 @@ public class AuditMain {
             accountEmail = jwtUser.getUsername();
             role = jwtUser.getAuthorities().toString();
         }
-        auditRepository.save(new Audit(accountEmail, auditable.actionType(), new Date(), getIpAddress(), role));
+        auditRepository.save(new Audit(accountEmail, auditable.action(), new Date(), getIpAddress(), role));
     }
 
     public String getIpAddress() {

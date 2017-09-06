@@ -1,6 +1,6 @@
 package com.softserve.academy.spaced.repetition.audit;
 
-public enum AuditingActionType {
+public enum AuditingAction {
     SIGN_IN,
     SIGN_IN_VIA_GOOGLE,
     SIGN_IN_VIA_FACEBOOK,

@@ -5,7 +5,7 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.softserve.academy.spaced.repetition.audit.Auditable;
-import com.softserve.academy.spaced.repetition.audit.AuditingActionType;
+import com.softserve.academy.spaced.repetition.audit.AuditingAction;
 import com.softserve.academy.spaced.repetition.domain.*;
 import com.softserve.academy.spaced.repetition.repository.AccountRepository;
 import com.softserve.academy.spaced.repetition.repository.AuthorityRepository;
@@ -69,7 +69,7 @@ public class GoogleAuthUtil {
         return (String) payload.get(LAST_NAME);
     }
 
-    @Auditable(actionType = AuditingActionType.SIGN_UP_GOOGLE)
+    @Auditable(action = AuditingAction.SIGN_UP_GOOGLE)
     public void saveNewGoogleUser(GoogleIdToken googleIdToken) {
         GoogleIdToken.Payload payload = googleIdToken.getPayload();
         User user = new User();
