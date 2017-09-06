@@ -1,7 +1,7 @@
 package com.softserve.academy.spaced.repetition.security.controller;
 
 import com.softserve.academy.spaced.repetition.audit.Auditable;
-import com.softserve.academy.spaced.repetition.audit.AuditingActionType;
+import com.softserve.academy.spaced.repetition.audit.AuditingAction;
 import com.softserve.academy.spaced.repetition.security.DTO.JwtAuthenticationRequest;
 import com.softserve.academy.spaced.repetition.security.DTO.JwtAuthenticationResponse;
 import com.softserve.academy.spaced.repetition.security.service.AuthenticationRestService;
@@ -26,21 +26,21 @@ public class AuthenticationRestController {
     @Autowired
     private AuthenticationRestService authenticationRestService;
 
-    @Auditable(actionType = AuditingActionType.SIGN_IN)
+    @Auditable(action = AuditingAction.SIGN_IN)
     @RequestMapping(value = "${app.jwt.route.authentication.path}", method = RequestMethod.POST)
     public ResponseEntity<JwtAuthenticationResponse> createAuthenticationToken(@RequestBody JwtAuthenticationRequest authenticationRequest, Device device) throws AuthenticationException {
         HttpHeaders headers = authenticationRestService.getAuthHeaders(authenticationRequest.getUsername(), authenticationRequest.getPassword(), authenticationRequest.getCaptcha(), device);
         return new ResponseEntity<>(new JwtAuthenticationResponse("Ok"), headers, HttpStatus.OK);
     }
 
-    @Auditable(actionType = AuditingActionType.SIGN_IN_VIA_GOOGLE)
+    @Auditable(action = AuditingAction.SIGN_IN_VIA_GOOGLE)
     @RequestMapping(value = "${app.social.google.path}", method = RequestMethod.POST)
     public ResponseEntity<JwtAuthenticationResponse> createAuthenticationTokenFromSocial(@RequestBody String idToken, Device device) {
         HttpHeaders headers = authenticationRestService.getGoogleHeaders(idToken, device);
         return new ResponseEntity<>(new JwtAuthenticationResponse("Ok"), headers, HttpStatus.OK);
     }
 
-    @Auditable(actionType = AuditingActionType.SIGN_IN_VIA_FACEBOOK)
+    @Auditable(action = AuditingAction.SIGN_IN_VIA_FACEBOOK)
     @RequestMapping(value = "${app.social.facebook.path}", method = RequestMethod.POST)
     public ResponseEntity<JwtAuthenticationResponse> createAuthenticationTokenFromFacebook(@RequestBody String token, Device device) throws GeneralSecurityException, IOException {
         HttpHeaders headers = authenticationRestService.getFacebookHeaders(token, device);

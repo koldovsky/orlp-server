@@ -4,7 +4,7 @@ import com.softserve.academy.spaced.repetition.DTO.DTOBuilder;
 import com.softserve.academy.spaced.repetition.DTO.impl.ImageDTO;
 import com.softserve.academy.spaced.repetition.DTO.impl.UploadingImageDTO;
 import com.softserve.academy.spaced.repetition.audit.Auditable;
-import com.softserve.academy.spaced.repetition.audit.AuditingActionType;
+import com.softserve.academy.spaced.repetition.audit.AuditingAction;
 import com.softserve.academy.spaced.repetition.domain.Image;
 import com.softserve.academy.spaced.repetition.exceptions.CanNotBeDeletedException;
 import com.softserve.academy.spaced.repetition.exceptions.ImageRepositorySizeQuotaExceededException;
@@ -12,7 +12,6 @@ import com.softserve.academy.spaced.repetition.exceptions.NotAuthorisedUserExcep
 import com.softserve.academy.spaced.repetition.exceptions.NotOwnerOperationException;
 import com.softserve.academy.spaced.repetition.repository.ImageRepository;
 import com.softserve.academy.spaced.repetition.service.ImageService;
-import com.softserve.academy.spaced.repetition.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Link;
 import org.springframework.http.HttpStatus;
@@ -32,8 +31,6 @@ public class ImageController {
     @Autowired
     private ImageService imageService;
     @Autowired
-    private UserService userService;
-    @Autowired
     private ImageRepository imageRepository;
 
     /**
@@ -44,7 +41,7 @@ public class ImageController {
      * @throws ImageRepositorySizeQuotaExceededException - is dropping when user has exceeded the quote of disk-space for his own images
      * @throws NotAuthorisedUserException                - is dropping when the user which wants to add the image is not authorised
      */
-    @Auditable(actionType = AuditingActionType.UPLOAD_IMAGE)
+    @Auditable(action = AuditingAction.UPLOAD_IMAGE)
     @PostMapping("/api/service/image")
     public ResponseEntity<UploadingImageDTO> addImageToDB(@RequestParam("file") MultipartFile file) throws ImageRepositorySizeQuotaExceededException, NotAuthorisedUserException {
         Image image = imageService.addImageToDB(file);
@@ -89,7 +86,7 @@ public class ImageController {
      *
      * @return list of ImageDTO
      */
-    @Auditable(actionType = AuditingActionType.VIEW_ALL_IMAGE_ADMIN)
+    @Auditable(action = AuditingAction.VIEW_ALL_IMAGE_ADMIN)
     @GetMapping(value = "/api/admin/service/image")
     public ResponseEntity<List<ImageDTO>> getImageList() {
         List<Image> listId = imageRepository.getImagesWithoutContent();
@@ -107,7 +104,7 @@ public class ImageController {
      * @throws CanNotBeDeletedException   - is dropping when the image which we want to delete is already in use
      * @throws NotOwnerOperationException - is dropping when the the image which we want to delete not belongs to us as to owner
      */
-    @Auditable(actionType = AuditingActionType.DELETE_IMAGE)
+    @Auditable(action = AuditingAction.DELETE_IMAGE)
     @DeleteMapping(value = "/api/service/image/{id}")
     public ResponseEntity<?> deleteImage(@PathVariable("id") Long id) throws CanNotBeDeletedException, NotOwnerOperationException, NotAuthorisedUserException {
         imageService.deleteImage(id);

@@ -1,4 +1,4 @@
-(1, 'gpolland0@cnbc.com', 'luGyEkynFm');
+(1, 'admin@gmail.com', 'admin');
 (2, 'sgofforth1@tmall.com', 'BcgSmQuhhzd');
 (3, 'kewins2@gizmodo.com', 'HZjalCX6R9q');
 (4, 'wlouys3@sitemeter.com', '3KegUhAjnI');
