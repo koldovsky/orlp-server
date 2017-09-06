@@ -6,6 +6,10 @@ import com.softserve.academy.spaced.repetition.audit.Auditable;
 import com.softserve.academy.spaced.repetition.audit.AuditingActionType;
 import com.softserve.academy.spaced.repetition.domain.Card;
 import com.softserve.academy.spaced.repetition.exceptions.NotAuthorisedUserException;
+import com.softserve.academy.spaced.repetition.exceptions.FileConnectionException;
+import com.softserve.academy.spaced.repetition.exceptions.NoSuchFileException;
+import com.softserve.academy.spaced.repetition.exceptions.NotAuthorisedUserException;
+import com.softserve.academy.spaced.repetition.exceptions.WrongFormatException;
 import com.softserve.academy.spaced.repetition.service.CardService;
 import com.softserve.academy.spaced.repetition.service.cardLoaders.CardLoadService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +20,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.List;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
@@ -115,11 +121,23 @@ public class CardController {
      * Upload anki cards
      *
      * @param file - card-file
-     * @return - HttpStatus
+     * @return - HttpStatus.Ok
+     * @throws FileConnectionException - is dropping when classloader failed in loading Driver to uploading file.
+     * @throws WrongFormatException    - is dropping when uploading file has wrong format.
+     * @throws NoSuchFileException     - is dropping when file is not found.
      */
     @PostMapping("/api/cardsUpload")
-    public ResponseEntity uploadCard(@RequestParam("file") MultipartFile file) {
-        cardLoadService.loadCard(file);
-        return new ResponseEntity<>(HttpStatus.OK);
+    public ResponseEntity uploadCard(@RequestParam("file") MultipartFile file, Long deckId)
+            throws FileConnectionException, WrongFormatException, NoSuchFileException {
+        try {
+            cardLoadService.loadCard(file, deckId);
+        } catch (IOException e) {
+            throw new NoSuchFileException();
+        } catch (SQLException e) {
+            throw new WrongFormatException();
+        } catch (ClassNotFoundException e) {
+            throw new FileConnectionException();
+        }
+        return new ResponseEntity <>(HttpStatus.OK);
     }
 }

@@ -20,38 +20,42 @@ import java.util.Set;
 
 @Service
 public class CourseService {
+    public static final int TOP_COURSES = 4;
+
     @Autowired
     private CourseRepository courseRepository;
+
     @Autowired
     private UserService userService;
+
     @Autowired
     private UserRepository userRepository;
+
     @Autowired
     private ImageService imageService;
+
     @Autowired
     private ImageRepository imageRepository;
+
     @Autowired
     private CategoryRepository categoryRepository;
+
     @Autowired
     private DeckRepository deckRepository;
 
-    @Transactional
     public List<Course> getAllCourses() {
         return courseRepository.findAllByPublishedTrue();
     }
 
-    @Transactional
     public List<Course> getAllCoursesByCategoryId(Long category_id) {
         return courseRepository.getAllCoursesByCategoryIdAndPublishedTrue(category_id);
     }
 
-    @Transactional
     public List<Deck> getAllDecksByCourseId(Long category_id, Long course_id) {
         Course course = courseRepository.getCourseByCategoryIdAndId(category_id, course_id);
         return course.getDecks();
     }
 
-    @Transactional
     public Course getCourseById(Long category_id, Long course_id) {
         return courseRepository.getCourseByCategoryIdAndId(category_id, course_id);
     }
@@ -63,8 +67,9 @@ public class CourseService {
         courseRepository.save(course);
     }
 
-    public List<Course> get4Course() {
-        List<Course> courses = courseRepository.findTop4ByOrderByRating();
+    public List<Course> getTopCourse() {
+        List<Course> courses = courseRepository.findCoursesOrderByRating();
+        courses = courses.subList(0, TOP_COURSES);
         return courses;
     }
 

@@ -1,6 +1,7 @@
 package com.softserve.academy.spaced.repetition.service.cardLoaders;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.sql.Connection;
@@ -19,11 +20,11 @@ public class AnkiCardExtractor implements CardDataExtractor {
     private final static String ANSWER_COLUMN_NAME = "flds";
     private final static String REGEX_FOR_TAGS = "<[^>]*>";
     @Autowired
-    private SqliteConnector connector;
+    @Qualifier("cardConnector")
+    private DbConnector connector;
 
     @Override
-    public Map <String, String> extractData(String path) {
-        connector.setConnector(connector);
+    public Map <String, String> extractData(String path) throws SQLException, ClassNotFoundException {
         Connection connection = connector.getConnection(path);
         List <String> questions = _extractDate(connection, QUESTION_QUERY, QUESTION_COLUMN_NAME);
         List <String> answers = _extractDate(connection, ANSWER_QUERY, ANSWER_COLUMN_NAME);
@@ -31,18 +32,14 @@ public class AnkiCardExtractor implements CardDataExtractor {
         return formMap(questions, answers);
     }
 
-    private List <String> _extractDate(Connection conn, String query, String columnName) {
+    private List <String> _extractDate(Connection conn, String query, String columnName) throws SQLException {
         List <String> list = new ArrayList <String>();
         Statement statement = null;
         ResultSet res = null;
-        try {
-            statement = conn.createStatement();
-            res = statement.executeQuery(query);
-            while (res.next()) {
-                list.add(res.getString(columnName));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
+        statement = conn.createStatement();
+        res = statement.executeQuery(query);
+        while (res.next()) {
+            list.add(res.getString(columnName));
         }
         return list;
     }
