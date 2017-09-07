@@ -308,7 +308,7 @@ insert into deck (deck_id, description, name, rating, category_id, user_id) valu
 
 
 
-insert into card (card_id, answer, question, rating) values (1, 'Java is a high-level programming language originally developed by Sun Microsystems and released in 1995. Java runs on a variety of platforms, such as Windows, Mac OS, and the various versions of UNIX.', 'What do you know about Java?', 0);
+insert into card (card_id, answer, question, rating) values (1, 'There are 4 access modifiers in Java: public, protected, default and private', 'How many access modifiers do you know in Java?', 0);
 insert into card (card_id, answer, question, rating) values (2, 'Java runs on a variety of platforms, such as Windows, Mac OS, and the various versions of UNIX/Linux like HP-Unix, Sun Solaris, Redhat Linux, Ubuntu, CentOS, etc.', 'What are the supported platforms by Java Programming Language?', 0);
 insert into card (card_id, answer, question, rating) values (3, 'Some features include Object Oriented, Platform Independent, Robust, Interpreted, Multi-threaded', 'List any five features of Java?', 0);
 insert into card (card_id, answer, question, rating) values (4, 'It’s compiler generates an architecture-neutral object file format, which makes the compiled code to be executable on many processors, with the presence of Java runtime system.', 'Why is Java Architectural Neutral?', 0);

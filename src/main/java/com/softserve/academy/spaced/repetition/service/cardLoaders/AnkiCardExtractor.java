@@ -26,13 +26,13 @@ public class AnkiCardExtractor implements CardDataExtractor {
     @Override
     public Map <String, String> extractData(String path) throws SQLException, ClassNotFoundException {
         Connection connection = connector.getConnection(path);
-        List <String> questions = _extractDate(connection, QUESTION_QUERY, QUESTION_COLUMN_NAME);
-        List <String> answers = _extractDate(connection, ANSWER_QUERY, ANSWER_COLUMN_NAME);
+        List <String> questions = _extractData(connection, QUESTION_QUERY, QUESTION_COLUMN_NAME);
+        List <String> answers = _extractData(connection, ANSWER_QUERY, ANSWER_COLUMN_NAME);
         answers = deleteTags(answers, questions);
         return formMap(questions, answers);
     }
 
-    private List <String> _extractDate(Connection conn, String query, String columnName) throws SQLException {
+    private List <String> _extractData(Connection conn, String query, String columnName) throws SQLException {
         List <String> list = new ArrayList <String>();
         Statement statement = null;
         ResultSet res = null;

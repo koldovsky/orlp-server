@@ -32,15 +32,13 @@ public class ImageController {
     @Autowired
     private ImageService imageService;
     @Autowired
-    private UserService userService;
-    @Autowired
     private ImageRepository imageRepository;
 
     /**
      * Upload and add the image to the database
      *
      * @param file - image-file
-     * @return - upploaded image DTO, HttpStatus
+     * @return - uploaded image DTO,
      * @throws ImageRepositorySizeQuotaExceededException - is dropping when user has exceeded the quote of disk-space for his own images
      * @throws NotAuthorisedUserException                - is dropping when the user which wants to add the image is not authorised
      */

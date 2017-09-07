@@ -24,8 +24,6 @@ public class RegistrationController {
     @Autowired
     private RegistrationService registrationService;
     @Autowired
-    private UserRepository userRepository;
-    @Autowired
     private AccountVerificationByEmailService verificationService;
 
     @Auditable(actionType = AuditingActionType.SIGN_UP)

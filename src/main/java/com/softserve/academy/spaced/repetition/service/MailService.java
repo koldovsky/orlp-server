@@ -51,7 +51,7 @@ public class MailService {
     }
 
     private String getFreeMarkerTemplateContent(Map <String, Object> model) {
-        StringBuffer content = new StringBuffer();
+        StringBuilder content = new StringBuilder();
         try {
             content.append(FreeMarkerTemplateUtils.processTemplateIntoString(
                     freemarkerConfiguration.getTemplate("registrationVerificationMailTemplate.txt"), model));

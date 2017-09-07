@@ -7,11 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class EmailUniqiesValidator extends AbstractValidator <User> {
+public class EmailUniquesValidator extends AbstractValidator <User> {
     @Autowired
     private UserRepository userRepository;
 
-    public EmailUniqiesValidator() {
+    public EmailUniquesValidator() {
     }
 
     @Override
