@@ -22,51 +22,43 @@ public class UserService {
     @Autowired
     private DeckRepository deckRepository;
 
-    @Transactional
     public void addUser(User user) {
         userRepository.save(user);
     }
 
-    @Transactional
     public User findUserByEmail(String email) {
         return userRepository.findUserByAccountEmail(email);
     }
 
-    @Transactional
     public List<User> getAllUsers() {
         return userRepository.findAll();
     }
 
-    @Transactional
     public User setUsersStatusActive(Long id) {
         User user = userRepository.findOne(id);
         user.getAccount().setStatus(AccountStatus.ACTIVE);
         userRepository.save(user);
-        return user;
+        return userRepository.findOne(id);
     }
 
-    @Transactional
     public User setUsersStatusDeleted(Long id) {
         User user = userRepository.findOne(id);
         user.getAccount().setStatus(AccountStatus.DELETED);
         userRepository.save(user);
-        return user;
+        return userRepository.findOne(id);
     }
 
-    @Transactional
     public User setUsersStatusBlocked(Long id) {
         User user = userRepository.findOne(id);
         user.getAccount().setStatus(AccountStatus.BLOCKED);
         userRepository.save(user);
-        return user;
+        return userRepository.findOne(id);
     }
 
-    @Transactional
     public User getUserById(Long userId) {
         return userRepository.findOne(userId);
     }
 
-    @Transactional
     public User addExistingDeckToUsersFolder(Long userId, Long deckId) {
         User user = userRepository.findOne(userId);
         Folder usersFolder = user.getFolder();
@@ -81,7 +73,6 @@ public class UserService {
         return user;
     }
 
-    @Transactional
     public User getAuthorizedUser() throws NotAuthorisedUserException {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (principal instanceof String) {
@@ -92,13 +83,11 @@ public class UserService {
         }
     }
 
-    @Transactional
     public Set<Course> getAllCoursesByUserId(Long user_id) {
         User user = userRepository.findOne(user_id);
         return user.getCourses();
     }
 
-    @Transactional
     public User removeDeckFromUsersFolder(Long userId, Long deckId) {
         Deck deck = deckRepository.getDeckByItsIdAndOwnerOfDeck(deckId, userId);
         User user = userRepository.findOne(userId);
@@ -120,7 +109,6 @@ public class UserService {
         return user;
     }
 
-    @Transactional
     public List<Deck> getAllDecksFromUsersFolder(Long userId) {
         User user = userRepository.findOne(userId);
         Folder usersFolder = user.getFolder();

@@ -43,19 +43,15 @@ public class ImageService {
      * @throws NotAuthorisedUserException                - is dropping when the user which wants to add the image is not authorised
      */
     public Image addImageToDB(MultipartFile file) throws ImageRepositorySizeQuotaExceededException, NotAuthorisedUserException {
-        long fileSize = file.getSize();
         Image image = null;
-        Long imageId = 0L;
-
+        long fileSize = file.getSize();
         User user = userService.getAuthorizedUser();
-
         if (fileSize > getUsersLimitInBytesForImagesLeft(user.getId())) {
             throw new ImageRepositorySizeQuotaExceededException();
         }
         if (fileSize > maxFileSize) {
             throw new MultipartException("File upload error: file is too large.");
         } else {
-
             String base64 = encodeToBase64(file);
             String imageType = file.getContentType();
             image = new Image(base64, imageType, user, fileSize);
@@ -72,17 +68,17 @@ public class ImageService {
      * @return String, which contains decoded image content
      */
     public byte[] getDecodedImageContentByImageId(Long id) {
-        byte[] imageContentet = null;
+        byte[] imageContent = null;
         List<Long> idList = imageRepository.getIdList();
         for (Long existingId : idList) {
             if (id.equals(existingId)) {
                 Image image = imageRepository.findImageById(id);
                 String encodedFileContent = image.getImagebase64();
-                imageContentet = decodeFromBase64(encodedFileContent);
+                imageContent = decodeFromBase64(encodedFileContent);
                 break;
             }
         }
-        return imageContentet;
+        return imageContent;
     }
 
     /**
@@ -96,7 +92,6 @@ public class ImageService {
         byte[] bytes = new byte[(int) file.getSize()];
         try {
             bytes = file.getBytes();
-            String s = bytes.toString();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -111,7 +106,6 @@ public class ImageService {
      * @return decoded file-content
      */
     private byte[] decodeFromBase64(String encodedFileContent) {
-
         return Base64.decodeBase64(encodedFileContent);
     }
 
@@ -122,7 +116,6 @@ public class ImageService {
      * @return number of bytes that left to upload
      */
     public Long getUsersLimitInBytesForImagesLeft(Long userId) {
-
         Long bytesUsed = imageRepository.getSumOfImagesSizesOfUserById(userId);
         if (bytesUsed == null) {
             bytesUsed = 0L;
@@ -143,11 +136,7 @@ public class ImageService {
         Image image = imageRepository.findImageById(id);
         Long imageOwnerId = image.getCreatedBy().getId();
         Long userId = 0L;
-        try {
-            userId = userService.getAuthorizedUser().getId();
-        } catch (ClassCastException e) {
-            throw new NotAuthorisedUserException();
-        }
+        userId = userService.getAuthorizedUser().getId();
         if (imageOwnerId != userId) {
             throw new NotOwnerOperationException();
         }

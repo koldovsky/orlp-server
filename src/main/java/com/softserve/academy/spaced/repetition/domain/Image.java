@@ -27,7 +27,7 @@ public class Image implements EntityInterface {
     @Column(name = "size", nullable = false)
     private Long size;
 
-    @Type(type= "org.hibernate.type.NumericBooleanType")
+    @Type(type = "org.hibernate.type.NumericBooleanType")
     @Column(name = "is_used")
     private boolean isUsed;
 
@@ -46,7 +46,6 @@ public class Image implements EntityInterface {
     public Image(String imagebase64) {
         this.imagebase64 = imagebase64;
     }
-
 
     public Image(String imagebase64, String type) {
         this.imagebase64 = imagebase64;
