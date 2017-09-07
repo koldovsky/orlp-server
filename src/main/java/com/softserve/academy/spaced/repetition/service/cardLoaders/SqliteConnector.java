@@ -7,7 +7,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 @Service
-public class SqliteConnector extends DbConnector {
+public class SqliteConnector implements DbConnector {
     /**
      * Driver to sqlite DataBase. Depends on our uploaded file.
      */

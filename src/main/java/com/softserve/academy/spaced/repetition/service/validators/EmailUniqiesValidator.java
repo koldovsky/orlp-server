@@ -11,9 +11,6 @@ public class EmailUniqiesValidator extends AbstractValidator <User> {
     @Autowired
     private UserRepository userRepository;
 
-    public EmailUniqiesValidator() {
-    }
-
     @Override
     protected void validate(User user) throws EmailUniquesException {
         if (userRepository.findUserByAccountEmail(user.getAccount().getEmail()) != null) {

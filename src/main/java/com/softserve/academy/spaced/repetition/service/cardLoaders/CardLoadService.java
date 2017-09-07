@@ -14,7 +14,7 @@ public class CardLoadService {
     @Autowired
     private CardDataExtractor cardDataExtractor;
     @Autowired
-    private ExtractedDataIntoDbSaver extractedDataIntoDbSaver;
+    private DataSaver dataSaver;
     @Autowired
     @Qualifier("cardUploader")
     private CardUploader cardUploader;
@@ -22,7 +22,7 @@ public class CardLoadService {
     public Map <String, String> loadCard(MultipartFile multipartFile, Long deckId) throws IOException, SQLException, ClassNotFoundException {
         String relativePath = cardUploader.uploadFile(multipartFile);
         Map <String, String> map = cardDataExtractor.extractData(relativePath);
-        extractedDataIntoDbSaver.save(map, deckId);
+        dataSaver.save(map, deckId);
         return map;
     }
 }
