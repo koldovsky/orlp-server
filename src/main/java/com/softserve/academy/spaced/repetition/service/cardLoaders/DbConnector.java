@@ -6,7 +6,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 @Service
-public abstract class DbConnector {
-    public abstract Connection getConnection(String path) throws ClassNotFoundException, SQLException;
+public interface DbConnector {
+    Connection getConnection(String path) throws ClassNotFoundException, SQLException;
 
 }

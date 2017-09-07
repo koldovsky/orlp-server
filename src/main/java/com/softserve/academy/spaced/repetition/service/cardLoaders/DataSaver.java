@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-public class ExtractedDataIntoDbSaver {
+public class DataSaver {
     @Autowired
     private CardService cardService;
     @Autowired

@@ -33,7 +33,7 @@ public class RegistrationController {
     public ResponseEntity <Person> addUser(@RequestBody User userFromClient) throws BlankFieldException, MailException, EmailUniquesException, ObjectHasNullFieldsException {
         User user = registrationService.registerNewUser(userFromClient);
         registrationService.sendConfirmationEmailMessage(user);
-        return new ResponseEntity <Person>(user.getPerson(), HttpStatus.CREATED);
+        return new ResponseEntity <>(user.getPerson(), HttpStatus.CREATED);
     }
 
     @RequestMapping(value = "/registrationConfirm", method = RequestMethod.POST)
