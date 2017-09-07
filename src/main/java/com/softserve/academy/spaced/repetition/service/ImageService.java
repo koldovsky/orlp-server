@@ -27,8 +27,6 @@ public class ImageService {
     private UserService userService;
     @Autowired
     private ImageRepository imageRepository;
-    @Autowired
-    private UserRepository userRepository;
     @Value("${app.images.maxSize}")
     private Long maxFileSize;
     @Value("${app.images.userQuote}")
@@ -43,8 +41,8 @@ public class ImageService {
      * @throws NotAuthorisedUserException                - is dropping when the user which wants to add the image is not authorised
      */
     public Image addImageToDB(MultipartFile file) throws ImageRepositorySizeQuotaExceededException, NotAuthorisedUserException {
-        long fileSize = file.getSize();
         Image image = null;
+        long fileSize = file.getSize();
         User user = userService.getAuthorizedUser();
         if (fileSize > getUsersLimitInBytesForImagesLeft(user.getId())) {
             throw new ImageRepositorySizeQuotaExceededException();
@@ -68,17 +66,17 @@ public class ImageService {
      * @return String, which contains decoded image content
      */
     public byte[] getDecodedImageContentByImageId(Long id) {
-        byte[] imageContentet = null;
+        byte[] imageContent = null;
         List<Long> idList = imageRepository.getIdList();
         for (Long existingId : idList) {
             if (id.equals(existingId)) {
                 Image image = imageRepository.findImageById(id);
                 String encodedFileContent = image.getImagebase64();
-                imageContentet = decodeFromBase64(encodedFileContent);
+                imageContent = decodeFromBase64(encodedFileContent);
                 break;
             }
         }
-        return imageContentet;
+        return imageContent;
     }
 
     /**
@@ -92,7 +90,6 @@ public class ImageService {
         byte[] bytes = new byte[(int) file.getSize()];
         try {
             bytes = file.getBytes();
-            String s = bytes.toString();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -139,11 +136,7 @@ public class ImageService {
         Image image = imageRepository.findImageById(id);
         Long imageOwnerId = image.getCreatedBy().getId();
         Long userId = 0L;
-        try {
-            userId = userService.getAuthorizedUser().getId();
-        } catch (ClassCastException e) {
-            throw new NotAuthorisedUserException();
-        }
+        userId = userService.getAuthorizedUser().getId();
         if (imageOwnerId != userId) {
             throw new NotOwnerOperationException();
         }
