@@ -6,7 +6,7 @@ import com.softserve.academy.spaced.repetition.DTO.impl.DeckLinkByCategoryDTO;
 import com.softserve.academy.spaced.repetition.DTO.impl.DeckLinkByCourseDTO;
 import com.softserve.academy.spaced.repetition.DTO.impl.DeckPublicDTO;
 import com.softserve.academy.spaced.repetition.audit.Auditable;
-import com.softserve.academy.spaced.repetition.audit.AuditingActionType;
+import com.softserve.academy.spaced.repetition.audit.AuditingAction;
 import com.softserve.academy.spaced.repetition.domain.Card;
 import com.softserve.academy.spaced.repetition.domain.Deck;
 import com.softserve.academy.spaced.repetition.service.DeckService;
@@ -28,7 +28,7 @@ public class DeckController {
     @Autowired
     private DeckService deckService;
 
-    @Auditable(actionType = AuditingActionType.VIEW_DECKS_VIA_CATEGORY)
+    @Auditable(action = AuditingAction.VIEW_DECKS_VIA_CATEGORY)
     @GetMapping(value = "/api/category/{category_id}/decks")
     @PreAuthorize(value = "@accessToUrlService.hasAccessToDeck(#category_id)")
     public ResponseEntity<List<DeckLinkByCategoryDTO>> getAllDecksByCategoryId(@PathVariable Long category_id) {
@@ -48,7 +48,7 @@ public class DeckController {
         return new ResponseEntity<>(decks, HttpStatus.OK);
     }
 
-    @Auditable(actionType = AuditingActionType.VIEW_DECKS_VIA_COURSE)
+    @Auditable(action = AuditingAction.VIEW_DECKS_VIA_COURSE)
     @GetMapping(value = "/api/category/{category_id}/courses/{course_id}/decks")
     @PreAuthorize(value = "@accessToUrlService.hasAccessToCourse(#category_id, #course_id)")
     public ResponseEntity<List<DeckLinkByCourseDTO>> getAllDecksByCourseId(@PathVariable Long category_id, @PathVariable Long course_id) {
@@ -77,7 +77,7 @@ public class DeckController {
         return new ResponseEntity<>(linkDTO, HttpStatus.OK);
     }
 
-    @Auditable(actionType = AuditingActionType.START_LEARNING_DECK_VIA_CATEGORY)
+    @Auditable(action = AuditingAction.START_LEARNING_DECK_VIA_CATEGORY)
     @GetMapping(value = "/api/category/{category_id}/decks/{deck_id}/cards")
     @PreAuthorize(value = "@accessToUrlService.hasAccessToDeckFromCategory(#category_id, #deck_id)")
     public ResponseEntity<List<CardPublicDTO>> getCardsByCategoryAndDeck(@PathVariable Long category_id, @PathVariable Long deck_id) {
@@ -95,7 +95,7 @@ public class DeckController {
         return new ResponseEntity<>(cardsPublic, HttpStatus.OK);
     }
 
-    @Auditable(actionType = AuditingActionType.START_LEARNING_DECK_VIA_COURSE)
+    @Auditable(action = AuditingAction.START_LEARNING_DECK_VIA_COURSE)
     @GetMapping(value = "/api/category/{category_id}/courses/{course_id}/decks/{deck_id}/cards")
     @PreAuthorize(value = "@accessToUrlService.hasAccessToDeck(#category_id, #course_id, #deck_id)")
     public ResponseEntity<List<CardPublicDTO>> getCardsByCourseAndDeck(@PathVariable Long category_id, @PathVariable Long course_id, @PathVariable Long deck_id) {
@@ -105,7 +105,7 @@ public class DeckController {
         return new ResponseEntity<>(cardsPublic, HttpStatus.OK);
     }
 
-    @Auditable(actionType = AuditingActionType.CREATE_DECK_IN_CATEGORY)
+    @Auditable(action = AuditingAction.CREATE_DECK_IN_CATEGORY)
     @PostMapping(value = "/api/category/{category_id}/decks")
     @PreAuthorize(value = "@accessToUrlService.hasAccessToDeck(#category_id)")
     public ResponseEntity<DeckPublicDTO> addDeckToCategory(@RequestBody Deck deck, @PathVariable Long category_id) {
@@ -115,7 +115,7 @@ public class DeckController {
         return new ResponseEntity<>(deckPublicDTO, HttpStatus.CREATED);
     }
 
-    @Auditable(actionType = AuditingActionType.CREATE_DECK_IN_COURSE)
+    @Auditable(action = AuditingAction.CREATE_DECK_IN_COURSE)
     @PostMapping(value = "/api/category/{category_id}/courses/{course_id}/decks")
     @PreAuthorize(value = "@accessToUrlService.hasAccessToCourse(#category_id, #course_id)")
     public ResponseEntity<DeckPublicDTO> addDeckToCourse(@RequestBody Deck deck, @PathVariable Long category_id, @PathVariable Long course_id) {
@@ -125,13 +125,13 @@ public class DeckController {
         return new ResponseEntity<>(deckPublicDTO, HttpStatus.CREATED);
     }
 
-    @Auditable(actionType = AuditingActionType.EDIT_DECK)
+    @Auditable(action = AuditingAction.EDIT_DECK)
     @PutMapping(value = "/api/user/{user_id}/decks/{deck_id}")
     public void updateDeck(@RequestBody Deck deck, @PathVariable Long deck_id) {
         deckService.updateDeck(deck, deck_id);
     }
 
-    @Auditable(actionType = AuditingActionType.DELETE_DECK)
+    @Auditable(action = AuditingAction.DELETE_DECK)
     @DeleteMapping(value = "/api/user/{user_id}/decks/{deck_id}")
     public void deleteDeck(@PathVariable Long deck_id) {
         deckService.deleteDeck(deck_id);

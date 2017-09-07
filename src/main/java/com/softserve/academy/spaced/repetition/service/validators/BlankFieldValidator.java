@@ -5,7 +5,6 @@ import com.softserve.academy.spaced.repetition.exceptions.BlankFieldException;
 import org.springframework.stereotype.Service;
 
 @Service
-
 public class BlankFieldValidator extends AbstractValidator <User> {
     public BlankFieldValidator() {
     }

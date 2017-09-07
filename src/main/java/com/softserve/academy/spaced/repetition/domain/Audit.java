@@ -1,7 +1,7 @@
 package com.softserve.academy.spaced.repetition.domain;
 
 import com.softserve.academy.spaced.repetition.DTO.EntityInterface;
-import com.softserve.academy.spaced.repetition.audit.AuditingActionType;
+import com.softserve.academy.spaced.repetition.audit.AuditingAction;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -20,7 +20,7 @@ public class Audit implements EntityInterface {
 
     @Column(name = "action", nullable = false)
     @Enumerated(EnumType.STRING)
-    private AuditingActionType action;
+    private AuditingAction action;
 
     @Column(name = "time", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
@@ -35,7 +35,7 @@ public class Audit implements EntityInterface {
     public Audit() {
     }
 
-    public Audit(String accountEmail, AuditingActionType action, Date time, String ipAddress, String role) {
+    public Audit(String accountEmail, AuditingAction action, Date time, String ipAddress, String role) {
         this.accountEmail = accountEmail;
         this.action = action;
         this.time = time;
@@ -60,11 +60,11 @@ public class Audit implements EntityInterface {
         this.accountEmail = accountEmail;
     }
 
-    public AuditingActionType getAction() {
+    public AuditingAction getAction() {
         return action;
     }
 
-    public void setAction(AuditingActionType action) {
+    public void setAction(AuditingAction action) {
         this.action = action;
     }
 

@@ -33,7 +33,7 @@ public class UserService {
     }
 
     @Transactional
-    public List <User> getAllUsers() {
+    public List<User> getAllUsers() {
         return userRepository.findAll();
     }
 
@@ -42,7 +42,7 @@ public class UserService {
         User user = userRepository.findOne(id);
         user.getAccount().setStatus(AccountStatus.ACTIVE);
         userRepository.save(user);
-        return userRepository.findOne(id);
+        return user;
     }
 
     @Transactional
@@ -50,7 +50,7 @@ public class UserService {
         User user = userRepository.findOne(id);
         user.getAccount().setStatus(AccountStatus.DELETED);
         userRepository.save(user);
-        return userRepository.findOne(id);
+        return user;
     }
 
     @Transactional
@@ -58,7 +58,7 @@ public class UserService {
         User user = userRepository.findOne(id);
         user.getAccount().setStatus(AccountStatus.BLOCKED);
         userRepository.save(user);
-        return userRepository.findOne(id);
+        return user;
     }
 
     @Transactional
@@ -68,11 +68,8 @@ public class UserService {
 
     @Transactional
     public User addExistingDeckToUsersFolder(Long userId, Long deckId) {
-
         User user = userRepository.findOne(userId);
         Folder usersFolder = user.getFolder();
-
-
         for (Deck deck : usersFolder.getDecks()) {
             if (deck.getId().equals(deckId)) {
                 return null;
@@ -83,23 +80,24 @@ public class UserService {
         userRepository.save(user);
         return user;
     }
+
     @Transactional
     public User getAuthorizedUser() throws NotAuthorisedUserException {
-        User user = null;
-        JwtUser jwtUser = null;
-        try {
-            jwtUser = (JwtUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            user = userRepository.findUserByAccountEmail(jwtUser.getUsername());
-        } catch (ClassCastException e){
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (principal instanceof String) {
             throw new NotAuthorisedUserException();
+        } else {
+            JwtUser jwtUser = (JwtUser) principal;
+            return userRepository.findUserByAccountEmail(jwtUser.getUsername());
         }
-        return user;
     }
+
     @Transactional
     public Set<Course> getAllCoursesByUserId(Long user_id) {
         User user = userRepository.findOne(user_id);
         return user.getCourses();
     }
+
     @Transactional
     public User removeDeckFromUsersFolder(Long userId, Long deckId) {
         Deck deck = deckRepository.getDeckByItsIdAndOwnerOfDeck(deckId, userId);
@@ -121,6 +119,7 @@ public class UserService {
         }
         return user;
     }
+
     @Transactional
     public List<Deck> getAllDecksFromUsersFolder(Long userId) {
         User user = userRepository.findOne(userId);

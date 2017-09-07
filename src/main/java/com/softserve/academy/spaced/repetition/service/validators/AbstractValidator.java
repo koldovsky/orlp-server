@@ -13,15 +13,14 @@ public abstract class AbstractValidator<T> {
         this.nextValidator = nextValidator;
     }
 
-    public AbstractValidator() {
-    }
-
-    public void doValidate(T obj) throws BlankFieldException, EmailUniquesException, ObjectHasNullFieldsException {
+    public void doValidate(T obj)
+            throws BlankFieldException, EmailUniquesException, ObjectHasNullFieldsException {
         validate(obj);
         if (nextValidator != null) {
             nextValidator.doValidate(obj);
         }
     }
 
-    protected abstract void validate(T obj) throws BlankFieldException, EmailUniquesException, ObjectHasNullFieldsException;
+    protected abstract void validate(T obj)
+            throws BlankFieldException, EmailUniquesException, ObjectHasNullFieldsException;
 }

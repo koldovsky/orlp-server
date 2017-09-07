@@ -2,7 +2,7 @@ package com.softserve.academy.spaced.repetition.controller;
 
 
 import com.softserve.academy.spaced.repetition.audit.Auditable;
-import com.softserve.academy.spaced.repetition.audit.AuditingActionType;
+import com.softserve.academy.spaced.repetition.audit.AuditingAction;
 import com.softserve.academy.spaced.repetition.domain.Person;
 import com.softserve.academy.spaced.repetition.domain.User;
 import com.softserve.academy.spaced.repetition.exceptions.*;
@@ -26,12 +26,12 @@ public class RegistrationController {
     @Autowired
     private AccountVerificationByEmailService verificationService;
 
-    @Auditable(actionType = AuditingActionType.SIGN_UP)
+    @Auditable(action = AuditingAction.SIGN_UP)
     @RequestMapping(value = "/registration", method = RequestMethod.POST)
     public ResponseEntity <Person> addUser(@RequestBody User userFromClient) throws BlankFieldException, MailException, EmailUniquesException, ObjectHasNullFieldsException {
         User user = registrationService.registerNewUser(userFromClient);
         registrationService.sendConfirmationEmailMessage(user);
-        return new ResponseEntity <Person>(user.getPerson(), HttpStatus.CREATED);
+        return new ResponseEntity <>(user.getPerson(), HttpStatus.CREATED);
     }
 
     @RequestMapping(value = "/registrationConfirm", method = RequestMethod.POST)

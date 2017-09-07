@@ -44,7 +44,6 @@ public class JwtTokenForMail extends JwtTokenUtil {
 
     public String decryptToken(String token) throws ExpiredTokenForVerificationException {
         final String email = getEmailFromToken(token);
-        final Date created = getCreatedDateFromToken(token);
         if (!isTokenExpired(token)) {
             return email;
         }
@@ -68,17 +67,6 @@ public class JwtTokenForMail extends JwtTokenUtil {
         return email;
     }
 
-    public Date getCreatedDateFromToken(String token) {
-        Date created;
-        try {
-            final Claims claims = getClaimsFromToken(token);
-            created = new Date((Long) claims.get(DATE_OF_CREATION));
-        } catch (Exception e) {
-            created = null;
-        }
-        return created;
-    }
-
     private Claims getClaimsFromToken(String token) {
         Claims claims;
         try {
@@ -91,8 +79,4 @@ public class JwtTokenForMail extends JwtTokenUtil {
         }
         return claims;
     }
-
-
-
-
 }

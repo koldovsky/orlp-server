@@ -7,12 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class EmailUniquesValidator extends AbstractValidator <User> {
+public class EmailUniqiesValidator extends AbstractValidator <User> {
     @Autowired
     private UserRepository userRepository;
-
-    public EmailUniquesValidator() {
-    }
 
     @Override
     protected void validate(User user) throws EmailUniquesException {

@@ -1,4 +1,4 @@
-insert into account (account_id, email, lastpasswordresetdate, password, status) values (1, 'gpolland0@cnbc.com', '2016-12-08 14:43:51', '$2a$10$fRRUkTQN7QTG7nMQrOJBNuddDFECvn4T0k.lWv9bnIIdN7VcLt1Ym', 'ACTIVE');
+insert into account (account_id, email, lastpasswordresetdate, password, status) values (1, 'admin@gmail.com', '2016-12-08 14:43:51', '$2a$10$G/a.xLH./5.kiNTJOnad1e11eus2b4PZeGBIMvdQF3PsvwU53jj8e', 'ACTIVE');
 insert into account (account_id, email, lastpasswordresetdate, password, status) values (2, 'sgofforth1@tmall.com', '2017-07-10 18:55:14', '$2a$10$SVNLqLdsaKIPFg1OYM3/9ex7zYAOZULPpNtR7AM4akaUQQfEW.7pq', 'ACTIVE');
 insert into account (account_id, email, lastpasswordresetdate, password, status) values (3, 'kewins2@gizmodo.com', '2017-01-28 08:45:45', '$2a$10$wb9JrCtvhI/CyLhDmOYyLu182d8s2bAoLYmcblhdV7ZsphpZ19oz6', 'ACTIVE');
 insert into account (account_id, email, lastpasswordresetdate, password, status) values (4, 'wlouys3@sitemeter.com', '2017-01-18 07:42:18', '$2a$10$yLIfni8wmtIYn6NQ6Zg2Nu6k9mH1X4zMoBPhrOOrbZ2h6VyxnX6SW', 'ACTIVE');
@@ -53,6 +53,7 @@ insert into authority (authority_id, name) values (1, 'ROLE_USER');
 insert into authority (authority_id, name) values (2, 'ROLE_ADMIN');
 
 insert into account_authority (account_id, authority_id) values (1, 1);
+insert into account_authority (account_id, authority_id) values (1, 2);
 insert into account_authority (account_id, authority_id) values (2, 1);
 insert into account_authority (account_id, authority_id) values (3, 1);
 insert into account_authority (account_id, authority_id) values (4, 1);
@@ -103,7 +104,7 @@ insert into account_authority (account_id, authority_id) values (48, 1);
 insert into account_authority (account_id, authority_id) values (49, 1);
 insert into account_authority (account_id, authority_id) values (50, 1);
 
-insert into person (person_id, first_name, last_name) values (1, 'Britte', 'Hastwall');
+insert into person (person_id, first_name, last_name) values (1, 'Admin', 'Admin');
 insert into person (person_id, first_name, last_name) values (2, 'Lilith', 'Penhall');
 insert into person (person_id, first_name, last_name) values (3, 'Jammal', 'Ritmeier');
 insert into person (person_id, first_name, last_name) values (4, 'Lavena', 'Beardow');

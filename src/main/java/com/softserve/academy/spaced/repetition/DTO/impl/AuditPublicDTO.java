@@ -1,13 +1,9 @@
 package com.softserve.academy.spaced.repetition.DTO.impl;
 
 import com.softserve.academy.spaced.repetition.DTO.DTO;
-import com.softserve.academy.spaced.repetition.audit.AuditingActionType;
+import com.softserve.academy.spaced.repetition.audit.AuditingAction;
 import com.softserve.academy.spaced.repetition.domain.Audit;
 import org.springframework.hateoas.Link;
-
-import javax.xml.crypto.Data;
-import java.sql.Timestamp;
-import java.util.Date;
 
 public class AuditPublicDTO extends DTO<Audit> {
 
@@ -19,7 +15,7 @@ public class AuditPublicDTO extends DTO<Audit> {
         return getEntity().getAccountEmail();
     }
 
-    public AuditingActionType getAction() {
+    public AuditingAction getAction() {
         return getEntity().getAction();
     }
 

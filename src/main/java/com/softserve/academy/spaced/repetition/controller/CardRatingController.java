@@ -3,7 +3,7 @@ package com.softserve.academy.spaced.repetition.controller;
 import com.softserve.academy.spaced.repetition.DTO.DTOBuilder;
 import com.softserve.academy.spaced.repetition.DTO.impl.CardRatingPublicDTO;
 import com.softserve.academy.spaced.repetition.audit.Auditable;
-import com.softserve.academy.spaced.repetition.audit.AuditingActionType;
+import com.softserve.academy.spaced.repetition.audit.AuditingAction;
 import com.softserve.academy.spaced.repetition.domain.CardRating;
 import com.softserve.academy.spaced.repetition.exceptions.NotAuthorisedUserException;
 import com.softserve.academy.spaced.repetition.exceptions.RatingsBadValueException;
@@ -51,7 +51,7 @@ public class CardRatingController {
      * @throws RatingsBadValueException
      * @throws NotAuthorisedUserException
      */
-    @Auditable(actionType = AuditingActionType.RATE_CARD)
+    @Auditable(action = AuditingAction.RATE_CARD)
     @PostMapping("/api/private/decks/{deckId}/cards/{cardId}/rate")
     @PreAuthorize(value = "@accessToUrlService.hasAccessToCard(#deckId, #cardId)")
     public ResponseEntity<CardRatingPublicDTO> addCardRating(@RequestBody CardRating cardRating, @PathVariable Long deckId, @PathVariable Long cardId) throws RatingsBadValueException, NotAuthorisedUserException {

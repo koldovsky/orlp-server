@@ -26,13 +26,13 @@ public class AnkiCardExtractor implements CardDataExtractor {
     @Override
     public Map <String, String> extractData(String path) throws SQLException, ClassNotFoundException {
         Connection connection = connector.getConnection(path);
-        List <String> questions = _extractData(connection, QUESTION_QUERY, QUESTION_COLUMN_NAME);
-        List <String> answers = _extractData(connection, ANSWER_QUERY, ANSWER_COLUMN_NAME);
+        List <String> questions = extractDateInToList(connection, QUESTION_QUERY, QUESTION_COLUMN_NAME);
+        List <String> answers = extractDateInToList(connection, ANSWER_QUERY, ANSWER_COLUMN_NAME);
         answers = deleteTags(answers, questions);
         return formMap(questions, answers);
     }
 
-    private List <String> _extractData(Connection conn, String query, String columnName) throws SQLException {
+    private List <String> extractDateInToList(Connection conn, String query, String columnName) throws SQLException {
         List <String> list = new ArrayList <String>();
         Statement statement = null;
         ResultSet res = null;
@@ -47,7 +47,6 @@ public class AnkiCardExtractor implements CardDataExtractor {
     private List <String> deleteTags(List <String> questions, List <String> answers) {
         List <String> result = new ArrayList <String>();
         Pattern pattern = Pattern.compile(REGEX_FOR_TAGS);
-        Iterator <String> iter = answers.iterator();
         for (String elem : questions) {
             Matcher matcher = pattern.matcher(elem);
             result.add(matcher.replaceAll(""));
@@ -56,7 +55,7 @@ public class AnkiCardExtractor implements CardDataExtractor {
     }
 
     private Map <String, String> formMap(List <String> questions, List <String> answers) {
-        Map <String, String> map = new HashMap <String, String>();
+        Map <String, String> map = new HashMap <>();
         Iterator <String> iterAnswer = answers.iterator();
         Iterator <String> iterQuestion = questions.iterator();
         while (iterAnswer.hasNext() && iterQuestion.hasNext()) {
