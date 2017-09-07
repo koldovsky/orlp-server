@@ -22,7 +22,7 @@ public class AuditMain {
     private final String ROLE_FOR_GUEST = "[ROLE_GUEST]";
 
     @Autowired
-    AuditRepository auditRepository;
+    private AuditRepository auditRepository;
 
     /**
      * Find out and save user's activity.

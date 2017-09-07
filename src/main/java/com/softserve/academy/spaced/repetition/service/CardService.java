@@ -29,10 +29,6 @@ public class CardService {
         return cardRepository.findOne(id);
     }
 
-    public List <Card> getCards(String question) {
-        return cardRepository.findAllByQuestion(question);
-    }
-
     public void addCard(Card card, Long deckId) {
         Deck deck = deckRepository.findOne(deckId);
         deck.getCards().add(cardRepository.save(card));
@@ -43,7 +39,7 @@ public class CardService {
         cardRepository.save(card);
     }
 
-    public List <Card> getCardsQueue(long deckId) throws NotAuthorisedUserException{
+    public List<Card> getCardsQueue(long deckId) throws NotAuthorisedUserException {
         User user = userService.getAuthorizedUser();
         String email = user.getAccount().getEmail();
         List<Card> cardsQueue = cardRepository.cardsForLearningWithOutStatus(email, deckId, CARDS_NUMBER);

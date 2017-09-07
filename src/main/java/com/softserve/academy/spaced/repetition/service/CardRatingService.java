@@ -11,9 +11,6 @@ import com.softserve.academy.spaced.repetition.repository.DeckRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
-import java.util.List;
-
 @Service
 public class CardRatingService {
 
@@ -44,10 +41,10 @@ public class CardRatingService {
         cardRatingRepository.save(cardRating);
 
         Card card = cardRepository.findOne(cardId);
-        Deck deck = deckRepository.findOne(deckId);
         double cardAverageRating = cardRatingRepository.findRatingByCardId(cardId);
-        double deckAverageRating = cardRatingRepository.findRatingByDeckId(deckId);
         card.setRating(cardAverageRating);
+        Deck deck = deckRepository.findOne(deckId);
+        double deckAverageRating = cardRatingRepository.findRatingByDeckId(deckId);
         deck.setRating(deckAverageRating);
         cardRepository.save(card);
     }

@@ -65,12 +65,12 @@ public class CourseController {
         List<Course> courseList = courseService.getTopCourse();
         List<CourseTopDTO> courses = new ArrayList<>();
         for (Course course : courseList) {
-            Link selfLink = linkTo(methodOn(CourseController.class).getCourseById(course.getCategory().getId(), course.getId())).withSelfRel();
+            Link selfLink = linkTo(methodOn(CourseController.class).getCourseById(course.getCategory().getId(),
+                    course.getId())).withSelfRel();
             courses.add(DTOBuilder.buildDtoForEntity(course, CourseTopDTO.class, selfLink));
         }
         return new ResponseEntity<>(courses, HttpStatus.OK);
     }
-
 
     @GetMapping(value = "/api/category/{category_id}/courses/{course_id}")
     @PreAuthorize(value = "@accessToUrlService.hasAccessToCourse(#category_id, #course_id)")

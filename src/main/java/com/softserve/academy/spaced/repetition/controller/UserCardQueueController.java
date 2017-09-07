@@ -23,10 +23,10 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 public class UserCardQueueController {
 
     @Autowired
-    UserCardQueueService userCardQueueService;
+    private UserCardQueueService userCardQueueService;
 
     @PostMapping("/api/user/deck/{deck_id}/card/{card_id}/queue")
-    @PreAuthorize(value = "@accessToUrlService.hasAccessToCard(#deck_id,#card_id)")
+    @PreAuthorize(value = "@accessToUrlService.hasAccessToCard(#deck_id, #card_id)")
     public ResponseEntity<UserCardQueuePublicDTO> addUserCardQueue(@RequestBody UserCardQueue userCardQueue, @PathVariable long card_id, @PathVariable long deck_id) throws NotAuthorisedUserException {
         userCardQueueService.addUserCardQueue(userCardQueue, card_id, deck_id);
         Link selfLink = linkTo(methodOn(UserCardQueueController.class).getUserCardQueueById(userCardQueue.getId())).withSelfRel();

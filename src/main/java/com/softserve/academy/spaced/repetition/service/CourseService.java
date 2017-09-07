@@ -68,7 +68,7 @@ public class CourseService {
     }
 
     public List<Course> getTopCourse() {
-        List<Course> courses = courseRepository.findCoursesOrderByRating();
+        List<Course> courses = courseRepository.findCourseByOrderByRatingDesc();
         courses = courses.subList(0, TOP_COURSES);
         return courses;
     }
@@ -109,7 +109,7 @@ public class CourseService {
         return course;
     }
 
-    public List <Long> getAllCoursesIdOfTheCurrentUser() throws NotAuthorisedUserException {
+    public List<Long> getAllCoursesIdOfTheCurrentUser() throws NotAuthorisedUserException {
         User user = userService.getAuthorizedUser();
         Set<Course> listOfCourses = userService.getAllCoursesByUserId(user.getId());
         List<Long> listOfId = new ArrayList<>();
