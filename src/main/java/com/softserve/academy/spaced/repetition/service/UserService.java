@@ -38,21 +38,21 @@ public class UserService {
         User user = userRepository.findOne(id);
         user.getAccount().setStatus(AccountStatus.ACTIVE);
         userRepository.save(user);
-        return userRepository.findOne(id);
+        return user;
     }
 
     public User setUsersStatusDeleted(Long id) {
         User user = userRepository.findOne(id);
         user.getAccount().setStatus(AccountStatus.DELETED);
         userRepository.save(user);
-        return userRepository.findOne(id);
+        return user;
     }
 
     public User setUsersStatusBlocked(Long id) {
         User user = userRepository.findOne(id);
         user.getAccount().setStatus(AccountStatus.BLOCKED);
         userRepository.save(user);
-        return userRepository.findOne(id);
+        return user;
     }
 
     public User getUserById(Long userId) {
