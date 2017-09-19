@@ -68,7 +68,4 @@ public class DeckService {
         deckRepository.save(deck);
     }
 
-    public void deleteDeck(Long deck_id) {
-        deckRepository.delete(deck_id);
-    }
 }

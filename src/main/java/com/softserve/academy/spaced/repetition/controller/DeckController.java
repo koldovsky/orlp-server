@@ -1,10 +1,7 @@
 package com.softserve.academy.spaced.repetition.controller;
 
 import com.softserve.academy.spaced.repetition.DTO.DTOBuilder;
-import com.softserve.academy.spaced.repetition.DTO.impl.CardPublicDTO;
-import com.softserve.academy.spaced.repetition.DTO.impl.DeckLinkByCategoryDTO;
-import com.softserve.academy.spaced.repetition.DTO.impl.DeckLinkByCourseDTO;
-import com.softserve.academy.spaced.repetition.DTO.impl.DeckPublicDTO;
+import com.softserve.academy.spaced.repetition.DTO.impl.*;
 import com.softserve.academy.spaced.repetition.audit.Auditable;
 import com.softserve.academy.spaced.repetition.audit.AuditingAction;
 import com.softserve.academy.spaced.repetition.domain.Card;
@@ -131,9 +128,39 @@ public class DeckController {
         deckService.updateDeck(deck, deck_id);
     }
 
-    @Auditable(action = AuditingAction.DELETE_DECK)
-    @DeleteMapping(value = "/api/user/{user_id}/decks/{deck_id}")
-    public void deleteDeck(@PathVariable Long deck_id) {
-        deckService.deleteDeck(deck_id);
+
+    @Auditable(action = AuditingAction.VIEW_DECKS_ADMIN)
+    @GetMapping(value = "/api/admin/decks")
+    public ResponseEntity<List<DeckOfUserManagedByAdminDTO>> getAllDecksForAdmin() {
+        List<Deck> decksList = deckService.getAllOrderedDecks();
+        Link collectionLink = linkTo(methodOn(DeckController.class).getAllDecksForAdmin()).withSelfRel();
+        List<DeckOfUserManagedByAdminDTO> decks = DTOBuilder.buildDtoListForCollection(decksList,
+                DeckOfUserManagedByAdminDTO.class, collectionLink);
+        return new ResponseEntity<>(decks, HttpStatus.OK);
+    }
+
+    @Auditable(action = AuditingAction.VIEW_ONE_DECK_ADMIN)
+    @GetMapping(value = "/api/admin/decks/{deck_id}")
+    public ResponseEntity<DeckOfUserManagedByAdminDTO> getOneDeckForAdmin(@PathVariable Long deck_id){
+        Deck deck = deckService.getDeck(deck_id);
+        Link selfLink = linkTo(methodOn(DeckController.class).getOneDeckForAdmin(deck_id)).withSelfRel();
+        DeckOfUserManagedByAdminDTO deckOfUserManagedByAdminDTO = DTOBuilder.buildDtoForEntity(deck, DeckOfUserManagedByAdminDTO.class,selfLink);
+        return new ResponseEntity<>(deckOfUserManagedByAdminDTO,HttpStatus.OK);
+    }
+
+
+    @Auditable(action = AuditingAction.CREATE_DECK_ADMIN)
+    @PostMapping(value = "/api/admin/decks")
+    public ResponseEntity<DeckPublicDTO> addDeckForAdmin(@RequestBody Deck deck, @PathVariable Long category_id) {
+        deckService.addDeckToCategory(deck, category_id);
+        Link selfLink = linkTo(methodOn(DeckController.class).getDeckByCategoryId(category_id, deck.getId())).withSelfRel();
+        DeckPublicDTO deckPublicDTO = DTOBuilder.buildDtoForEntity(deck, DeckPublicDTO.class, selfLink);
+        return new ResponseEntity<>(deckPublicDTO, HttpStatus.CREATED);
+    }
+
+    @Auditable(action = AuditingAction.EDIT_DECK_ADMIN)
+    @PutMapping(value = "/api/admin/decks/{deck_id}")
+    public void updateDeckForAdmin(@RequestBody Deck deck, @PathVariable Long deck_id) {
+        deckService.updateDeck(deck, deck_id);
     }
 }
