@@ -31,7 +31,9 @@ public class FolderService {
 
         Folder folder = user.getFolder();
         Set<Deck> decks = folder.getDecks();
-        decks.add(deck);
+        if (!decks.add(deck)) {
+            folder.getDecks().remove(deck);
+        }
         folderRepository.save(folder);
 
         return deck;
@@ -56,7 +58,7 @@ public class FolderService {
         Folder folder = user.getFolder();
         Collection<Deck> userDecks = folder.getDecks();
         for (Deck deck: userDecks) {
-            if (deck.getId() == deck_id) {
+            if (deck.getId().equals(deck_id)) {
                 userDecks.remove(deck);
                 break;
             }
