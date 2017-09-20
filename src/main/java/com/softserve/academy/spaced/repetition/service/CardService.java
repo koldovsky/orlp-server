@@ -50,7 +50,16 @@ public class CardService {
         return cardsQueue;
     }
 
-    public void deleteCard(Long id) {
-        cardRepository.delete(id);
+    public void deleteCard(Long deck_id, Long card_id) {
+        Deck deck = deckRepository.getDeckById(deck_id);
+        List<Card> cards = deck.getCards();
+        for(Card card: cards) {
+            if(card.getId()== card_id) {
+                cards.remove(card);
+                break;
+            }
+        }
+        deckRepository.save(deck);
+        cardRepository.delete(card_id);
     }
 }
