@@ -31,6 +31,9 @@ public class FolderService {
 
         Folder folder = user.getFolder();
         Set<Deck> decks = folder.getDecks();
+        if (!decks.add(deck)) {
+            folder.getDecks().remove(deck);
+        }
         decks.add(deck);
         folderRepository.save(folder);
 
