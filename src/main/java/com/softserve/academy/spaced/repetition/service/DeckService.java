@@ -76,7 +76,7 @@ public class DeckService {
         for(Course course: courses){
             decks=course.getDecks();
             for(Deck deck : decks){
-                if (deck.getId() == deck_id) {
+                if (deck.getId().equals(deck_id)) {
                     decks.remove(deck);
                     break;
                 }
