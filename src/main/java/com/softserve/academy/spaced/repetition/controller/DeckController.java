@@ -163,4 +163,18 @@ public class DeckController {
     public void updateDeckForAdmin(@RequestBody Deck deck, @PathVariable Long deck_id) {
         deckService.updateDeck(deck, deck_id);
     }
+
+    @Auditable(action = AuditingAction.DELETE_DECK_ADMIN)
+    @DeleteMapping(value = "/api/admin/decks/{deck_id}")
+    public void deleteDeckForAdmin(@PathVariable Long deck_id) {
+        deckService.deleteDeck(deck_id);
+    }
+
+    @Auditable(action = AuditingAction.DELETE_DECK)
+    @DeleteMapping(value = "/api/user/{user_id}/decks/{deck_id}")
+    public void deleteDeck(@PathVariable Long deck_id) {
+        deckService.deleteDeck(deck_id);
+    }
+
+
 }
