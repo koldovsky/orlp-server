@@ -34,7 +34,6 @@ public class FolderService {
         if (!decks.add(deck)) {
             folder.getDecks().remove(deck);
         }
-        decks.add(deck);
         folderRepository.save(folder);
 
         return deck;
