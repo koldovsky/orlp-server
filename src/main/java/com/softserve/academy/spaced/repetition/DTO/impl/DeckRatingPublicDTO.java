@@ -1,21 +1,21 @@
 package com.softserve.academy.spaced.repetition.DTO.impl;
 
 import com.softserve.academy.spaced.repetition.DTO.DTO;
-import com.softserve.academy.spaced.repetition.domain.CardRating;
+import com.softserve.academy.spaced.repetition.domain.DeckRating;
 import org.springframework.hateoas.Link;
 
-public class CardRatingPublicDTO extends DTO<CardRating> {
+public class DeckRatingPublicDTO extends DTO<DeckRating> {
 
-    public CardRatingPublicDTO(CardRating cardRating, Link link) {
-        super(cardRating, link);
+    public DeckRatingPublicDTO(DeckRating deckRating, Link link) {
+        super(deckRating, link);
     }
 
     public String getAccountEmail() {
         return getEntity().getAccountEmail();
     }
 
-    public long getCardId() {
-        return getEntity().getCardId();
+    public long getDeckId() {
+        return getEntity().getDeckId();
     }
 
     public int getRating() {
