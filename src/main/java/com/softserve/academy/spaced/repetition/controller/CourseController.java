@@ -44,7 +44,8 @@ public class CourseController {
         List<Course> courseList = courseService.getAllCourses();
         List<CourseLinkDTO> courses = new ArrayList<>();
         for (Course course : courseList) {
-            Link selfLink = linkTo(methodOn(CourseController.class).getAllCoursesByCategoryId(course.getCategory().getId())).withSelfRel();
+            Link selfLink = linkTo(methodOn(CourseController.class).getCourseById(course.getCategory().getId(),
+                    course.getId())).withSelfRel();
             courses.add(DTOBuilder.buildDtoForEntity(course, CourseLinkDTO.class, selfLink));
         }
         return new ResponseEntity<>(courses, HttpStatus.OK);
