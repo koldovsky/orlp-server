@@ -155,12 +155,12 @@ public class CourseService {
         userRepository.save(user);
     }
 
-    public void addDeckToCourse(Long course_id, Long deck_id) throws SameDeckInCourseException {
-        Course course = courseRepository.findOne(course_id);
-        if(course.getDecks().stream().anyMatch(deck -> deck.getId()==deck_id)){
+    public void addDeckToCourse(Long courseId, Long deckId) throws SameDeckInCourseException {
+        Course course = courseRepository.findOne(courseId);
+        if(course.getDecks().stream().anyMatch(deck -> deck.getId().equals(deckId))){
             throw new SameDeckInCourseException();
         }
-        course.getDecks().add(deckRepository.getDeckById(deck_id));
+        course.getDecks().add(deckRepository.getDeckById(deckId));
         courseRepository.save(course);
     }
 }
