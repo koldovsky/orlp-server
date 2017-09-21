@@ -27,16 +27,16 @@ public class DeckRatingController {
     @GetMapping("api/rate/deck/{id}")
     public ResponseEntity<DeckRatingPublicDTO> getDeckRatingById(@PathVariable Long deckId) {
         DeckRating deckRating = deckRatingService.getDeckRatingById(deckId);
-        Link selfLink = linkTo(methodOn(com.softserve.academy.spaced.repetition.controller.DeckRatingController.class).getDeckRatingById(deckRating.getId())).withRel("deckRating");
+        Link selfLink = linkTo(methodOn(DeckRatingController.class).getDeckRatingById(deckRating.getId())).withRel("deckRating");
         DeckRatingPublicDTO deckRatingDTO = DTOBuilder.buildDtoForEntity(deckRating, DeckRatingPublicDTO.class, selfLink);
         return new ResponseEntity<>(deckRatingDTO, HttpStatus.OK);
     }
 
     @PostMapping("/api/private/deck/{deckId}")
-    public ResponseEntity<DTO<DeckRating>> addDeckRating(@RequestBody DeckRating deckRating, @PathVariable Long courseId) throws RatingsBadValueException, NotAuthorisedUserException {
+    public ResponseEntity<DTO<DeckRating>> addDeckRating(@RequestBody DeckRating deckRating, @PathVariable Long deckId) throws RatingsBadValueException, NotAuthorisedUserException {
         if ((deckRating.getRating() >= MIN_RATING) && (deckRating.getRating() <= MAX_RATING)) {
-            deckRatingService.addDeckRating(deckRating, courseId);
-            Link selfLink = linkTo(methodOn(com.softserve.academy.spaced.repetition.controller.DeckRatingController.class).getDeckRatingById(deckRating.getId())).withSelfRel();
+            deckRatingService.addDeckRating(deckRating, deckId);
+            Link selfLink = linkTo(methodOn(DeckRatingController.class).getDeckRatingById(deckRating.getId())).withSelfRel();
             DeckRatingPublicDTO deckRatingPublicDTO = DTOBuilder.buildDtoForEntity(deckRating, DeckRatingPublicDTO.class, selfLink);
             return new ResponseEntity<>(deckRatingPublicDTO, HttpStatus.CREATED);
         } else {
