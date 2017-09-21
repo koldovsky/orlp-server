@@ -26,26 +26,19 @@ public class CardRatingService {
     @Autowired
     private UserService userService;
 
-    public void addCardRating(CardRating cardRating, Long deckId, Long cardId) throws NotAuthorisedUserException {
+    public void addCardRating(CardRating cardRating, Long cardId) throws NotAuthorisedUserException {
         User user = userService.getAuthorizedUser();
         String email = user.getAccount().getEmail();
-        CardRating cardRatingByAccountEmail = cardRatingRepository.findCardRatingByAccountEmailAndCardIdAndDeckId(email, cardId, deckId);
-
+        CardRating cardRatingByAccountEmail = cardRatingRepository.findCardRatingByAccountEmailAndCardId(email, cardId);
         if (cardRatingByAccountEmail != null) {
             cardRating.setId(cardRatingByAccountEmail.getId());
         }
-
         cardRating.setAccountEmail(email);
         cardRating.setCardId(cardId);
-        cardRating.setDeckId(deckId);
         cardRatingRepository.save(cardRating);
-
         Card card = cardRepository.findOne(cardId);
         double cardAverageRating = cardRatingRepository.findRatingByCardId(cardId);
         card.setRating(cardAverageRating);
-        Deck deck = deckRepository.findOne(deckId);
-        double deckAverageRating = cardRatingRepository.findRatingByDeckId(deckId);
-        deck.setRating(deckAverageRating);
         cardRepository.save(card);
     }
 
