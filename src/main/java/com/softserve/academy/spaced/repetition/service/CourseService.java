@@ -157,7 +157,7 @@ public class CourseService {
 
     public void addDeckToCourse(Long course_id, Long deck_id) throws SameDeckInCourseException {
         Course course = courseRepository.findOne(course_id);
-        if(course.getDecks().stream().anyMatch(deck -> deck.getId().equals(deck_id))){
+        if(course.getDecks().stream().anyMatch(deck -> deck.getId()==deck_id)){
             throw new SameDeckInCourseException();
         }
         course.getDecks().add(deckRepository.getDeckById(deck_id));
