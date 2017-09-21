@@ -1,4 +1,1 @@
 
-2017-09-20 04:57:00,280 [WARN ][    logger.Log4jImpl] - Exception in service = com.softserve.academy.spaced.repetition.service.UserService@7b4f20b8, method = User com.softserve.academy.spaced.repetition.service.UserService.getAuthorizedUser()
-2017-09-20 04:57:00,282 [WARN ][    logger.Log4jImpl] - Exception in service = com.softserve.academy.spaced.repetition.service.CourseService@3b27e54d, method = Course com.softserve.academy.spaced.repetition.service.CourseService.updateListOfCoursesOfTheAuthorizedUser(Long)
-2017-09-20 04:57:00,282 [WARN ][    logger.Log4jImpl] - Exception in controller = com.softserve.academy.spaced.repetition.controller.CourseController@50c270ff, method = ResponseEntity com.softserve.academy.spaced.repetition.controller.CourseController.addCourse(Long)
