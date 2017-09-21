@@ -1,0 +1,1 @@
+2017-09-21 23:45:23,998 [WARN ][    logger.Log4jImpl] - Exception in controller = com.softserve.academy.spaced.repetition.controller.DeckController@169f19c1, method = void com.softserve.academy.spaced.repetition.controller.DeckController.deleteDeckForAdmin(Long)

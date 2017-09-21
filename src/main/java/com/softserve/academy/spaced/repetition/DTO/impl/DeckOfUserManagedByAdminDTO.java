@@ -10,6 +10,8 @@ public class DeckOfUserManagedByAdminDTO extends DTO<Deck> {
         super(deck, link);
     }
 
+    public Long getDeckId() { return getEntity().getId(); }
+
     public String getName() {
         return getEntity().getName();
     }

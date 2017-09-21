@@ -6,6 +6,7 @@ import com.softserve.academy.spaced.repetition.audit.Auditable;
 import com.softserve.academy.spaced.repetition.audit.AuditingAction;
 import com.softserve.academy.spaced.repetition.domain.Card;
 import com.softserve.academy.spaced.repetition.domain.Deck;
+import com.softserve.academy.spaced.repetition.exceptions.NotAuthorisedUserException;
 import com.softserve.academy.spaced.repetition.service.DeckService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Link;
@@ -150,18 +151,22 @@ public class DeckController {
 
 
     @Auditable(action = AuditingAction.CREATE_DECK_ADMIN)
-    @PostMapping(value = "/api/admin/decks")
-    public ResponseEntity<DeckPublicDTO> addDeckForAdmin(@RequestBody Deck deck, @PathVariable Long category_id) {
-        deckService.addDeckToCategory(deck, category_id);
-        Link selfLink = linkTo(methodOn(DeckController.class).getDeckByCategoryId(category_id, deck.getId())).withSelfRel();
-        DeckPublicDTO deckPublicDTO = DTOBuilder.buildDtoForEntity(deck, DeckPublicDTO.class, selfLink);
-        return new ResponseEntity<>(deckPublicDTO, HttpStatus.CREATED);
+    @PostMapping(value = "/api/admin/decks/{category_id}")
+    public ResponseEntity<Deck> addDeckForAdmin(@RequestBody Deck deck, @PathVariable Long category_id) throws NotAuthorisedUserException {
+        deckService.createNewDeck(deck, category_id);
+        return new ResponseEntity<>(deck, HttpStatus.CREATED);
     }
+
+
 
     @Auditable(action = AuditingAction.EDIT_DECK_ADMIN)
     @PutMapping(value = "/api/admin/decks/{deck_id}")
-    public void updateDeckForAdmin(@RequestBody Deck deck, @PathVariable Long deck_id) {
+    public ResponseEntity updateDeckForAdmin(@RequestBody Deck deck, @PathVariable Long deck_id) {
+        Deck old = deckService.getDeck(deck_id);
+        deck.setCategory(old.getCategory());
+        deck.setDeckOwner(old.getDeckOwner());
         deckService.updateDeck(deck, deck_id);
+        return new ResponseEntity(HttpStatus.OK);
     }
 
     @Auditable(action = AuditingAction.DELETE_DECK_ADMIN)
@@ -175,6 +180,5 @@ public class DeckController {
     public void deleteDeck(@PathVariable Long deck_id) {
         deckService.deleteDeck(deck_id);
     }
-
 
 }
