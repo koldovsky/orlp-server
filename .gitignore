@@ -125,3 +125,6 @@ fabric.properties
 /.idea/
 /target/
 /Spaced.Repetition.iml
+
+
+/src/main/java/com/softserve/academy/spaced/repetition/logger/logs/log.txt
