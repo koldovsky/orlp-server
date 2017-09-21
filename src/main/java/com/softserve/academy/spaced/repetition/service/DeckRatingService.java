@@ -32,7 +32,6 @@ public class DeckRatingService {
         }
         deckRating.setAccountEmail(email);
         deckRating.setDeckId(deckId);
-        deckRating.setDeckId(deckId);
         deckRatingRepository.save(deckRating);
         Deck deck = deckRepository.findOne(deckId);
         double deckAverageRating = deckRatingRepository.findRatingByDeckId(deckId);
