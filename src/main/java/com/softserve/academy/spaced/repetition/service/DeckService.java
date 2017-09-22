@@ -1,13 +1,12 @@
 package com.softserve.academy.spaced.repetition.service;
 
 import com.softserve.academy.spaced.repetition.domain.*;
+
 import com.softserve.academy.spaced.repetition.exceptions.NotAuthorisedUserException;
 import com.softserve.academy.spaced.repetition.repository.CategoryRepository;
 import com.softserve.academy.spaced.repetition.repository.CourseRepository;
 import com.softserve.academy.spaced.repetition.repository.DeckRepository;
-import com.softserve.academy.spaced.repetition.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,9 +25,6 @@ public class DeckService {
 
     @Autowired
     private UserService userService;
-
-    @Autowired
-    private UserRepository userRepository;
 
     public List<Deck> getAllDecks(Long courseId) {
         Course course = courseRepository.findOne(courseId);
@@ -93,12 +89,9 @@ public class DeckService {
 
     public void createNewDeck(Deck newDeck, Long category_id) throws NotAuthorisedUserException {
         User user = userService.getAuthorizedUser();
-        Deck deck = new Deck();
-        deck.setName(newDeck.getName());
-        deck.setDescription(newDeck.getDescription());
-        deck.setCategory(categoryRepository.findById(category_id));
-        deck.setDeckOwner(user);
-        Deck save = deckRepository.save(deck);
+        newDeck.setCategory(categoryRepository.findById(category_id));
+        newDeck.setDeckOwner(user);
+        Deck save = deckRepository.save(newDeck);
         newDeck.setId(save.getId());
     }
 }
