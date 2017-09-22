@@ -106,6 +106,6 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
     }
     @ExceptionHandler(SameDeckInCourseException.class)
     ResponseEntity <MessageDTO> sameDeckInCourse() {
-        return new ResponseEntity <MessageDTO>(new MessageDTO("Such deck already exists"), HttpStatus.NOT_ACCEPTABLE);
+        return new ResponseEntity <MessageDTO>(new MessageDTO("Such deck already exists"), HttpStatus.BAD_REQUEST);
     }
 }
