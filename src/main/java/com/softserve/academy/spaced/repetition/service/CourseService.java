@@ -1,6 +1,7 @@
 package com.softserve.academy.spaced.repetition.service;
 
 import com.softserve.academy.spaced.repetition.domain.*;
+import com.softserve.academy.spaced.repetition.exceptions.SameDeckInCourseException;
 import com.softserve.academy.spaced.repetition.repository.*;
 import com.softserve.academy.spaced.repetition.domain.Category;
 import com.softserve.academy.spaced.repetition.domain.Course;
@@ -151,13 +152,15 @@ public class CourseService {
                 break;
             }
         }
-
         userRepository.save(user);
     }
 
-    public void addDeckToCourse(Long course_id, Long deck_id) {
-        Course course = courseRepository.findOne(course_id);
-        course.getDecks().add(deckRepository.getDeckById(deck_id));
+    public void addDeckToCourse(Long courseId, Long deckId) throws SameDeckInCourseException {
+        Course course = courseRepository.findOne(courseId);
+        if(course.getDecks().stream().anyMatch(deck -> deck.getId().equals(deckId))){
+            throw new SameDeckInCourseException();
+        }
+        course.getDecks().add(deckRepository.getDeckById(deckId));
         courseRepository.save(course);
     }
 }
