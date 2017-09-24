@@ -24,9 +24,9 @@ public class DeckOfUserManagedByAdminDTO extends DTO<Deck> {
         return getEntity().getRating();
     }
 
-    public String getCategory() {
-        return getEntity().getCategory().getName();
-    }
+    public String getCategory() { return getEntity().getCategory().getName(); }
+
+    public Long getCategoryId(){return getEntity().getCategory().getId();}
 
     public String getOwner() {
         return getEntity().getDeckOwner().getAccount().getEmail();

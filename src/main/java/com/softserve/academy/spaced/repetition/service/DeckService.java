@@ -64,8 +64,12 @@ public class DeckService {
         course.getDecks().add(deckRepository.save(deck));
     }
 
-    public void updateDeck(Deck deck, Long deckId) {
-        deck.setId(deckId);
+    @Transactional
+    public void updateDeck(Deck updatedDeck, Long deckId, Long categoryId) {
+        Deck deck = deckRepository.findOne(deckId);
+        deck.setName(updatedDeck.getName());
+        deck.setDescription(updatedDeck.getDescription());
+        deck.setCategory(categoryRepository.findById(categoryId));
         deckRepository.save(deck);
     }
 
@@ -87,11 +91,15 @@ public class DeckService {
         deckRepository.deleteDeckById(deckId);
     }
 
+    @Transactional
     public void createNewDeck(Deck newDeck, Long category_id) throws NotAuthorisedUserException {
         User user = userService.getAuthorizedUser();
-        newDeck.setCategory(categoryRepository.findById(category_id));
-        newDeck.setDeckOwner(user);
-        Deck save = deckRepository.save(newDeck);
+        Deck deck = new Deck();
+        deck.setName(newDeck.getName());
+        deck.setDescription(newDeck.getDescription());
+        deck.setCategory(categoryRepository.findById(category_id));
+        deck.setDeckOwner(user);
+        Deck save = deckRepository.save(deck);
         newDeck.setId(save.getId());
     }
 }

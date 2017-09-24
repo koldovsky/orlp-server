@@ -124,11 +124,16 @@ public class DeckController {
     }
 
     @Auditable(action = AuditingAction.EDIT_DECK)
-    @PutMapping(value = "/api/user/{user_id}/decks/{deck_id}")
-    public void updateDeck(@RequestBody Deck deck, @PathVariable Long deck_id) {
-        deckService.updateDeck(deck, deck_id);
+    @PutMapping(value = "/api/user/{user_id}/decks/{deck_id}/{category_id}")
+    public void updateDeck(@RequestBody Deck deck, @PathVariable Long deck_id, @PathVariable Long category_id) {
+        deckService.updateDeck(deck, deck_id, category_id);
     }
 
+    @Auditable(action = AuditingAction.DELETE_DECK)
+    @DeleteMapping(value = "/api/user/{user_id}/decks/{deck_id}")
+    public void deleteDeck(@PathVariable Long deck_id) {
+        deckService.deleteDeck(deck_id);
+    }
 
     @Auditable(action = AuditingAction.VIEW_DECKS_ADMIN)
     @GetMapping(value = "/api/admin/decks")
@@ -160,12 +165,9 @@ public class DeckController {
 
 
     @Auditable(action = AuditingAction.EDIT_DECK_ADMIN)
-    @PutMapping(value = "/api/admin/decks/{deck_id}")
-    public ResponseEntity updateDeckForAdmin(@RequestBody Deck deck, @PathVariable Long deck_id) {
-        Deck old = deckService.getDeck(deck_id);
-        deck.setCategory(old.getCategory());
-        deck.setDeckOwner(old.getDeckOwner());
-        deckService.updateDeck(deck, deck_id);
+    @PutMapping(value = "/api/admin/decks/{deck_id}/{category_id}")
+    public ResponseEntity updateDeckForAdmin(@RequestBody Deck deck, @PathVariable Long deck_id, @PathVariable Long category_id) {
+        deckService.updateDeck(deck, deck_id, category_id);
         return new ResponseEntity(HttpStatus.OK);
     }
 
@@ -174,11 +176,4 @@ public class DeckController {
     public void deleteDeckForAdmin(@PathVariable Long deck_id) {
         deckService.deleteDeck(deck_id);
     }
-
-    @Auditable(action = AuditingAction.DELETE_DECK)
-    @DeleteMapping(value = "/api/user/{user_id}/decks/{deck_id}")
-    public void deleteDeck(@PathVariable Long deck_id) {
-        deckService.deleteDeck(deck_id);
-    }
-
 }
