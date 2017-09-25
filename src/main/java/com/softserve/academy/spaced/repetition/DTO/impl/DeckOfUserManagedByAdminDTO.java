@@ -10,6 +10,8 @@ public class DeckOfUserManagedByAdminDTO extends DTO<Deck> {
         super(deck, link);
     }
 
+    public Long getDeckId() { return getEntity().getId(); }
+
     public String getName() {
         return getEntity().getName();
     }
@@ -22,9 +24,9 @@ public class DeckOfUserManagedByAdminDTO extends DTO<Deck> {
         return getEntity().getRating();
     }
 
-    public String getCategorie() {
-        return getEntity().getCategory().getName();
-    }
+    public String getCategory() { return getEntity().getCategory().getName(); }
+
+    public Long getCategoryId(){return getEntity().getCategory().getId();}
 
     public String getOwner() {
         return getEntity().getDeckOwner().getAccount().getEmail();

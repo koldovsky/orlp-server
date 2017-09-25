@@ -22,6 +22,8 @@ public interface DeckRepository extends JpaRepository<Deck, Long> {
 
     List<Deck> findAllByOrderByRatingDesc();
 
+    void deleteDeckById(Long id);
+
     @Query(value = "SELECT d.id, d.name, d.description, d.rating, d.category, d.deckOwner FROM Course c  INNER JOIN c.decks AS d WHERE "
             + "c.id = :course_id and d.id = :deck_id")
     List<Deck> hasAccessToDeck(@Param("course_id") Long course_id, @Param("deck_id") Long deck_id);
@@ -34,4 +36,6 @@ public interface DeckRepository extends JpaRepository<Deck, Long> {
 
     @Query(value = "SELECT d FROM Deck d INNER JOIN d.deckOwner u  WHERE d.id = :deck_id AND u.id = :user_id")
     Deck getDeckByItsIdAndOwnerOfDeck(@Param("deck_id") Long deck_id, @Param("user_id") Long user_id);
+
+
 }

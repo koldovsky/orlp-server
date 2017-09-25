@@ -1,14 +1,12 @@
 package com.softserve.academy.spaced.repetition.service;
 
-import com.softserve.academy.spaced.repetition.domain.Card;
-import com.softserve.academy.spaced.repetition.domain.Category;
-import com.softserve.academy.spaced.repetition.domain.Course;
-import com.softserve.academy.spaced.repetition.domain.Deck;
+import com.softserve.academy.spaced.repetition.domain.*;
+
+import com.softserve.academy.spaced.repetition.exceptions.NotAuthorisedUserException;
 import com.softserve.academy.spaced.repetition.repository.CategoryRepository;
 import com.softserve.academy.spaced.repetition.repository.CourseRepository;
 import com.softserve.academy.spaced.repetition.repository.DeckRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,13 +23,16 @@ public class DeckService {
     @Autowired
     private CourseRepository courseRepository;
 
-    public List<Deck> getAllDecks(Long course_id) {
-        Course course = courseRepository.findOne(course_id);
+    @Autowired
+    private UserService userService;
+
+    public List<Deck> getAllDecks(Long courseId) {
+        Course course = courseRepository.findOne(courseId);
         return course.getDecks();
     }
 
-    public List<Deck> getAllDecksByCategory(Long category_id) {
-        Category category = categoryRepository.findOne(category_id);
+    public List<Deck> getAllDecksByCategory(Long categoryId) {
+        Category category = categoryRepository.findOne(categoryId);
         return category.getDecks();
     }
 
@@ -41,34 +42,64 @@ public class DeckService {
     }
 
     @Transactional
-    public Deck getDeck(Long deck_id) {
-        return deckRepository.findOne(deck_id);
+    public Deck getDeck(Long deckId) {
+        return deckRepository.findOne(deckId);
     }
 
-    public List<Card> getAllCardsByDeckId(Long deck_id) {
-        Deck deck = deckRepository.findOne(deck_id);
+    public List<Card> getAllCardsByDeckId(Long deckId) {
+        Deck deck = deckRepository.findOne(deckId);
         return deck.getCards();
     }
 
     @Transactional
-    public void addDeckToCategory(Deck deck, Long category_id) {
-        Category category = categoryRepository.findOne(category_id);
+    public void addDeckToCategory(Deck deck, Long categoryId) {
+        Category category = categoryRepository.findOne(categoryId);
         category.getDecks().add(deckRepository.save(deck));
     }
 
     @Transactional
-    public void addDeckToCourse(Deck deck, Long category_id, Long course_id) {
-        Category category = categoryRepository.findOne(category_id);
-        Course course = courseRepository.findOne(course_id);
+    public void addDeckToCourse(Deck deck, Long categoryId, Long courseId) {
+        Category category = categoryRepository.findOne(categoryId);
+        Course course = courseRepository.findOne(courseId);
         course.getDecks().add(deckRepository.save(deck));
     }
 
-    public void updateDeck(Deck deck, Long deck_id) {
-        deck.setId(deck_id);
+    @Transactional
+    public void updateDeck(Deck updatedDeck, Long deckId, Long categoryId) {
+        Deck deck = deckRepository.findOne(deckId);
+        deck.setName(updatedDeck.getName());
+        deck.setDescription(updatedDeck.getDescription());
+        deck.setCategory(categoryRepository.findById(categoryId));
         deckRepository.save(deck);
     }
 
-    public void deleteDeck(Long deck_id) {
-        deckRepository.delete(deck_id);
+
+    @Transactional
+    public void deleteDeck(Long deckId) {
+        List<Course> courses = courseRepository.findAll();
+        List<Deck> decks;
+        for(Course course: courses){
+            decks=course.getDecks();
+            for(Deck deck : decks){
+                if (deck.getId().equals(deckId)) {
+                    decks.remove(deck);
+                    break;
+                }
+            }
+            courseRepository.save(course);
+        }
+        deckRepository.deleteDeckById(deckId);
+    }
+
+    @Transactional
+    public void createNewDeck(Deck newDeck, Long category_id) throws NotAuthorisedUserException {
+        User user = userService.getAuthorizedUser();
+        Deck deck = new Deck();
+        deck.setName(newDeck.getName());
+        deck.setDescription(newDeck.getDescription());
+        deck.setCategory(categoryRepository.findById(category_id));
+        deck.setDeckOwner(user);
+        Deck save = deckRepository.save(deck);
+        newDeck.setId(save.getId());
     }
 }
