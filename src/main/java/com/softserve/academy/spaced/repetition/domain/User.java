@@ -3,6 +3,7 @@ package com.softserve.academy.spaced.repetition.domain;
 import com.softserve.academy.spaced.repetition.DTO.EntityInterface;
 
 import javax.persistence.*;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -81,4 +82,5 @@ public class User implements EntityInterface {
     public void setCourses(Set<Course> courses) {
         this.courses = courses;
     }
+
 }

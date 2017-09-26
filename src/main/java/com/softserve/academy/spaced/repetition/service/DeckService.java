@@ -102,4 +102,46 @@ public class DeckService {
         Deck save = deckRepository.save(deck);
         newDeck.setId(save.getId());
     }
+
+    @Transactional
+    public int deleteOwnDeck(Long deckId) throws NotAuthorisedUserException {
+        User user = userService.getAuthorizedUser();
+        Deck deck = deckRepository.getDeckById(deckId);
+        if(deck==null) return 2;
+        if(deck.getDeckOwner().getId()==user.getId())
+        {
+            deleteDeck(deckId);
+            return 0;
+        }
+        else return 1;
+    }
+
+    @Transactional
+    public int updateOwnDeck(Deck updatedDeck, Long deckId, Long categoryId) throws NotAuthorisedUserException {
+        User user = userService.getAuthorizedUser();
+        Deck deck = deckRepository.getDeckById(deckId);
+        if(deck==null) return 2;
+        if(deck.getDeckOwner().getId()==user.getId()) {
+            deck.setName(updatedDeck.getName());
+            deck.setDescription(updatedDeck.getDescription());
+            deck.setCategory(categoryRepository.findById(categoryId));
+            deckRepository.save(deck);
+            return 0;
+        }
+        else return 1;
+    }
+
+    public List<Deck> getAllDecksByUser() throws NotAuthorisedUserException {
+        User user = userService.getAuthorizedUser();
+        return deckRepository.findAllByDeckOwner_IdEquals(user.getId());
+    }
+
+    public Deck getDeckUser(Long deckId) throws NotAuthorisedUserException {
+        User user = userService.getAuthorizedUser();
+        Deck deck = deckRepository.getDeckById(deckId);
+        if(deck==null) return null;
+        if(deck.getDeckOwner().getId()==user.getId()) return deck;
+        return null;
+    }
+
 }
