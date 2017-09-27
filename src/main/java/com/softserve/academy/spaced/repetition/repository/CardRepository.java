@@ -2,9 +2,11 @@ package com.softserve.academy.spaced.repetition.repository;
 
 import com.softserve.academy.spaced.repetition.domain.Card;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -36,6 +38,14 @@ public interface CardRepository extends JpaRepository<Card, Long> {
             "end, u.card_data limit :limitNumber", nativeQuery = true)
     List<Card> cardsQueueForLearningWithStatus(@Param("accountEmail") String accountEmail, @Param("deckId") long deckId,
                                                @Param("limitNumber") long limitNumber);
+
+    @Modifying
+    @Query(value =
+            "DELETE " +
+                    "from deck_cards , card " +
+                    "using deck_cards , card " +
+                    "where deck_cards.card_id= :card_id and card.card_id= :card_id", nativeQuery = true)
+    void deleteCardById(@Param("card_id") Long card_id);
 
     List <Card> findAllByQuestion(String question);
 }

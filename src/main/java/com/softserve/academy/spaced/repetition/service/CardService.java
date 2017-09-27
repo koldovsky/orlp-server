@@ -8,6 +8,7 @@ import com.softserve.academy.spaced.repetition.repository.CardRepository;
 import com.softserve.academy.spaced.repetition.repository.DeckRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -50,12 +51,9 @@ public class CardService {
         return cardsQueue;
     }
 
-    public void deleteCard(Long deckId, Long cardId) {
-        Deck deck = deckRepository.getDeckById(deckId);
-        List<Card> cards = deck.getCards();
-        Card cardToDelete = cardRepository.getOne(cardId);
-        cards.remove(cardToDelete);
-        deckRepository.save(deck);
-        cardRepository.delete(cardId);
+
+    @Transactional
+    public void deleteCard(Long cardId) {
+        cardRepository.deleteCardById(cardId);
     }
 }
