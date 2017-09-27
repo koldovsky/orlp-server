@@ -22,9 +22,9 @@ public class CardPublicDTO extends DTO<Card> {
         return getEntity().getAnswer();
     }
 
-    public String getQuestion() {
-        return getEntity().getQuestion();
-    }
+    public String getQuestion() { return getEntity().getQuestion();}
+
+    public String getTitle() { return getEntity().getTitle(); }
 
     public double getRating(){
         return getEntity().getRating();

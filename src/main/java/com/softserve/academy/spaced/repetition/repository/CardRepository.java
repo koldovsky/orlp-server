@@ -17,10 +17,10 @@ public interface CardRepository extends JpaRepository<Card, Long> {
     List<Card> hasAccessToCard(@Param("deck_id") Long deck_id, @Param("card_id") Long card_id);
 
     @Query(value =
-            "select c.card_id, c.question, c.answer, c.rating " +
+            "select c.card_id, c.title, c.question, c.answer, c.rating " +
             "from card c inner join deck_cards d on c.card_id=d.card_id " +
-            "where deck_id = :deckId and (c.card_id, c.question, c.answer, c.rating) not in(" +
-            "select c.card_id, c.question, c.answer, c.rating " +
+            "where deck_id = :deckId and (c.card_id, c.title, c.question, c.answer, c.rating) not in(" +
+            "select c.card_id, c.title, c.question, c.answer, c.rating " +
             "from card c left join user_card_queue u " +
             "on c.card_id=u.card_id " +
             "where u.account_email = :accountEmail) limit :limitNumber", nativeQuery = true)
@@ -28,7 +28,7 @@ public interface CardRepository extends JpaRepository<Card, Long> {
                                              @Param("limitNumber") long limitNumber);
 
     @Query(value =
-            "select c.card_id, c.question, c.answer, c.rating " +
+            "select c.card_id, c.title, c.question, c.answer, c.rating " +
             "from card c inner join user_card_queue u on c.card_id=u.card_id " +
             "where deck_id = :deckId and u.account_email = :accountEmail " +
             "order by case u.status " +
