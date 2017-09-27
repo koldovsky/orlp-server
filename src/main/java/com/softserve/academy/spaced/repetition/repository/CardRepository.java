@@ -40,7 +40,6 @@ public interface CardRepository extends JpaRepository<Card, Long> {
                                                @Param("limitNumber") long limitNumber);
 
     @Modifying
-    @Transactional
     @Query(value =
             "DELETE " +
                     "from deck_cards , card " +
