@@ -16,13 +16,20 @@ public class DeckRating implements EntityInterface {
     @Column(name = "account_email", nullable = false)
     private String accountEmail;
 
-    @Column(name = "deck_id", nullable = false)
-    private long deckId;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "deck_id")
+    private Deck deck;
 
     @Column(name = "rating", nullable = false)
     private int rating;
 
     public DeckRating() {
+    }
+
+    public DeckRating(String accountEmail, Deck deck, int rating) {
+        this.accountEmail = accountEmail;
+        this.deck = deck;
+        this.rating = rating;
     }
 
     public Long getId() {
@@ -33,8 +40,8 @@ public class DeckRating implements EntityInterface {
         return accountEmail;
     }
 
-    public long getDeckId() {
-        return deckId;
+    public Deck getDeck() {
+        return deck;
     }
 
     public int getRating() {
@@ -49,8 +56,8 @@ public class DeckRating implements EntityInterface {
         this.accountEmail = accountEmail;
     }
 
-    public void setDeckId(long deckId) {
-        this.deckId = deckId;
+    public void setDeck(Deck deck) {
+        this.deck = deck;
     }
 
     public void setRating(int rating) {

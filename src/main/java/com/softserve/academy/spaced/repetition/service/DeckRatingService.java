@@ -26,14 +26,14 @@ public class DeckRatingService {
     public void addDeckRating(DeckRating deckRating, Long deckId) throws NotAuthorisedUserException {
         User user = userService.getAuthorizedUser();
         String email = user.getAccount().getEmail();
-        DeckRating deckRatingByAccountEmail = deckRatingRepository.findAllByAccountEmailAndDeckId(email, deckId);
+        DeckRating deckRatingByAccountEmail = deckRatingRepository.findAllByAccountEmailAndDeck_Id(email, deckId);
         if (deckRatingByAccountEmail != null) {
             deckRating.setId(deckRatingByAccountEmail.getId());
         }
-        deckRating.setAccountEmail(email);
-        deckRating.setDeckId(deckId);
-        deckRatingRepository.save(deckRating);
         Deck deck = deckRepository.findOne(deckId);
+        deckRating.setAccountEmail(email);
+        deckRating.setDeck(deck);
+        deckRatingRepository.save(deckRating);
         double deckAverageRating = deckRatingRepository.findRatingByDeckId(deckId);
         deck.setRating(deckAverageRating);
         deckRepository.save(deck);

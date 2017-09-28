@@ -15,7 +15,7 @@ public class CourseRatingPublicDTO extends DTO<CourseRating> {
     }
 
     public long getCourseId(){
-        return getEntity().getCourseId();
+        return getEntity().getCourse().getId();
     }
     public int getRating(){
         return getEntity().getRating();

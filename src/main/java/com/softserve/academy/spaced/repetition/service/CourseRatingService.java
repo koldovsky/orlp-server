@@ -24,15 +24,15 @@ public class CourseRatingService {
     public void addCourseRating(CourseRating courseRating, Long courseId) throws NotAuthorisedUserException {
         User user = userService.getAuthorizedUser();
         String email = user.getAccount().getEmail();
-        CourseRating courseRatingByAccountEmail = courseRatingRepository.findAllByAccountEmailAndCourseId(email, courseId);
+        CourseRating courseRatingByAccountEmail = courseRatingRepository.findAllByAccountEmailAndCourse_Id(email, courseId);
         if (courseRatingByAccountEmail != null) {
             courseRating.setId(courseRatingByAccountEmail.getId());
         }
-        courseRating.setAccountEmail(email);
-        courseRating.setCourseId(courseId);
-        courseRatingRepository.save(courseRating);
         Course course = courseRepository.findOne(courseId);
-        double courseAverageRating = courseRatingRepository.findRatingByCourseId(courseId);
+        courseRating.setAccountEmail(email);
+        courseRating.setCourse(course);
+        courseRatingRepository.save(courseRating);
+        double courseAverageRating = courseRatingRepository.findRatingByCourse_Id(courseId);
         course.setRating(courseAverageRating);
         courseRepository.save(course);
     }
