@@ -25,15 +25,13 @@ public class CourseRatingService {
         User user = userService.getAuthorizedUser();
         String email = user.getAccount().getEmail();
         CourseRating courseRatingByAccountEmail = courseRatingRepository.findAllByAccountEmailAndCourseId(email, courseId);
-
         if (courseRatingByAccountEmail != null) {
             courseRating.setId(courseRatingByAccountEmail.getId());
         }
-        Course course = courseRepository.findOne(courseId);
         courseRating.setAccountEmail(email);
         courseRating.setCourseId(courseId);
         courseRatingRepository.save(courseRating);
-
+        Course course = courseRepository.findOne(courseId);
         double courseAverageRating = courseRatingRepository.findRatingByCourseId(courseId);
         course.setRating(courseAverageRating);
         courseRepository.save(course);
