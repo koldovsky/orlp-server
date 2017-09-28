@@ -31,7 +31,7 @@ public class Deck implements EntityInterface {
     @JoinColumn(name = "user_id")
     private User deckOwner;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "deck_cards", joinColumns = {
             @JoinColumn(name = "deck_id")},
             inverseJoinColumns = {@JoinColumn(name = "card_id")})
