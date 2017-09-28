@@ -115,4 +115,8 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
         return new ResponseEntity <MessageDTO>(new MessageDTO("Such deck not found"), HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler(FileIsNotAnImageException.class)
+    ResponseEntity <MessageDTO> handleFileIsNotAnImageException() {
+        return new ResponseEntity <MessageDTO>(new MessageDTO("File upload error: file is not an image"), HttpStatus.FORBIDDEN);
+    }
 }
