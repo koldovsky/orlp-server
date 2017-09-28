@@ -2,7 +2,9 @@ package com.softserve.academy.spaced.repetition.service;
 
 import com.softserve.academy.spaced.repetition.domain.*;
 
+import com.softserve.academy.spaced.repetition.exceptions.NoSuchDeckException;
 import com.softserve.academy.spaced.repetition.exceptions.NotAuthorisedUserException;
+import com.softserve.academy.spaced.repetition.exceptions.NotOwnerOperationException;
 import com.softserve.academy.spaced.repetition.repository.CategoryRepository;
 import com.softserve.academy.spaced.repetition.repository.CourseRepository;
 import com.softserve.academy.spaced.repetition.repository.DeckRepository;
@@ -25,6 +27,9 @@ public class DeckService {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private FolderService folderService;
 
     public List<Deck> getAllDecks(Long courseId) {
         Course course = courseRepository.findOne(courseId);
@@ -102,4 +107,45 @@ public class DeckService {
         Deck save = deckRepository.save(deck);
         newDeck.setId(save.getId());
     }
+
+    @Transactional
+    public void deleteOwnDeck(Long deckId)
+            throws NotAuthorisedUserException, NoSuchDeckException, NotOwnerOperationException {
+        User user = userService.getAuthorizedUser();
+        Deck deck = deckRepository.getDeckById(deckId);
+        if(deck==null)  throw new NoSuchDeckException();
+        if(deck.getDeckOwner().getId().equals( user.getId() )) {
+            folderService.deleteDeckFromAllUsers(deckId);
+            deleteDeck(deckId);
+        }
+        else throw new NotOwnerOperationException();
+    }
+
+    @Transactional
+    public void updateOwnDeck(Deck updatedDeck, Long deckId, Long categoryId) throws NotAuthorisedUserException, NoSuchDeckException, NotOwnerOperationException {
+        User user = userService.getAuthorizedUser();
+        Deck deck = deckRepository.getDeckById(deckId);
+        if(deck==null)  throw new NoSuchDeckException();
+        if(deck.getDeckOwner().getId().equals( user.getId() )) {
+            deck.setName(updatedDeck.getName());
+            deck.setDescription(updatedDeck.getDescription());
+            deck.setCategory(categoryRepository.findById(categoryId));
+            deckRepository.save(deck);
+         }
+        else throw new NotOwnerOperationException();
+    }
+
+    public List<Deck> getAllDecksByUser() throws NotAuthorisedUserException {
+        User user = userService.getAuthorizedUser();
+        return deckRepository.findAllByDeckOwner_IdEquals(user.getId());
+    }
+
+    public Deck getDeckUser(Long deckId) throws NotAuthorisedUserException, NoSuchDeckException, NotOwnerOperationException {
+        User user = userService.getAuthorizedUser();
+        Deck deck = deckRepository.getDeckById(deckId);
+        if(deck==null) throw new NoSuchDeckException();;
+        if(deck.getDeckOwner().getId().equals( user.getId() )) return deck;
+        else throw new NotOwnerOperationException();
+    }
+
 }

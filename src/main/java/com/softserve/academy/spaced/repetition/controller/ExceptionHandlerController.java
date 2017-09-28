@@ -104,8 +104,15 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
     ResponseEntity <MessageDTO> handleNoSuchFileException() {
         return new ResponseEntity <MessageDTO>(new MessageDTO("Such file not found"), HttpStatus.NOT_FOUND);
     }
+
     @ExceptionHandler(SameDeckInCourseException.class)
     ResponseEntity <MessageDTO> sameDeckInCourse() {
         return new ResponseEntity <MessageDTO>(new MessageDTO("Such deck already exists"), HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(NoSuchDeckException.class)
+    ResponseEntity <MessageDTO> handleNoSuchDeckException() {
+        return new ResponseEntity <MessageDTO>(new MessageDTO("Such deck not found"), HttpStatus.NOT_FOUND);
+    }
+
 }
