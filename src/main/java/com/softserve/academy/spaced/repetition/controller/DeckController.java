@@ -12,6 +12,7 @@ import com.softserve.academy.spaced.repetition.exceptions.NoSuchDeckException;
 import com.softserve.academy.spaced.repetition.exceptions.NotAuthorisedUserException;
 import com.softserve.academy.spaced.repetition.exceptions.NotOwnerOperationException;
 import com.softserve.academy.spaced.repetition.service.DeckService;
+import com.softserve.academy.spaced.repetition.service.FolderService;
 import com.softserve.academy.spaced.repetition.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Link;
@@ -29,6 +30,9 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 public class DeckController {
     @Autowired
     private DeckService deckService;
+
+    @Autowired
+    private FolderService folderService;
 
     @Auditable(action = AuditingAction.VIEW_DECKS_VIA_CATEGORY)
     @GetMapping(value = "/api/category/{category_id}/decks")
@@ -164,6 +168,7 @@ public class DeckController {
     @PostMapping(value = "/api/admin/decks")
     public ResponseEntity<DeckOfUserManagedByAdminDTO> addDeckForAdmin(@RequestBody Deck deck) throws NotAuthorisedUserException {
         Deck deckNew = deckService.createNewDeckAdmin(deck);
+        folderService.addDeck(deckNew.getId());
         Link selfLink = linkTo(methodOn(DeckController.class).addDeckForAdmin(deckNew)).withSelfRel();
         DeckOfUserManagedByAdminDTO deckOfUserManagedByAdminDTO = DTOBuilder.buildDtoForEntity(deckNew, DeckOfUserManagedByAdminDTO.class, selfLink);
         return new ResponseEntity<>(deckOfUserManagedByAdminDTO, HttpStatus.CREATED);
@@ -178,7 +183,8 @@ public class DeckController {
 
     @Auditable(action = AuditingAction.DELETE_DECK_ADMIN)
     @DeleteMapping(value = "/api/admin/decks/{deckId}")
-    public ResponseEntity deleteDeckForAdmin(@PathVariable Long deckId) {
+    public ResponseEntity deleteDeckForAdmin(@PathVariable Long deckId)throws NotAuthorisedUserException {
+        folderService.deleteDeckFromAllUsers(deckId);
         deckService.deleteDeck(deckId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
