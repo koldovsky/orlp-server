@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartException;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.constraints.Null;
 import java.io.IOException;
 import java.util.List;
 
@@ -52,12 +53,15 @@ public class ImageService {
             throw new MultipartException("File upload error: file is too large.");
         } else {
             String base64 = encodeToBase64(file);
-            if (!file.getContentType().split("/")[0].equals("image"))
+            String imageType = file.getContentType();
+            if (imageType != null && !imageType.split("/")[0].equals("image"))
             {
                 throw new FileIsNotAnImageException();
             }
+            else if(imageType == null){
+                throw new NullPointerException();
+            }
             else {
-                String imageType = file.getContentType();
                 image = new Image(base64, imageType, user, fileSize);
                 imageRepository.save(image);
                 image = imageRepository.getImageWithoutContent(image.getId());
