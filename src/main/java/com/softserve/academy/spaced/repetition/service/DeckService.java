@@ -76,18 +76,18 @@ public class DeckService {
 
     @Transactional
     public void deleteDeck(Long deckId) {
-        List<Course> courses = courseRepository.findAll();
-        List<Deck> decks;
-        for(Course course: courses){
-            decks=course.getDecks();
-            for(Deck deck : decks){
-                if (deck.getId().equals(deckId)) {
-                    decks.remove(deck);
-                    break;
-                }
-            }
-            courseRepository.save(course);
-        }
+//        List<Course> courses = courseRepository.findAll();
+//        List<Deck> decks;
+//        for(Course course: courses){
+//            decks=course.getDecks();
+//            for(Deck deck : decks){
+//                if (deck.getId().equals(deckId)) {
+//                    decks.remove(deck);
+//                    break;
+//                }
+//            }
+//            courseRepository.save(course);
+//        }
         deckRepository.deleteDeckById(deckId);
     }
 

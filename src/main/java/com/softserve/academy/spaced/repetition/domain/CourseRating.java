@@ -15,7 +15,7 @@ public class CourseRating implements EntityInterface {
     @Column(name = "account_email", nullable = false)
     private String accountEmail;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "course_id")
     private Course course;
 

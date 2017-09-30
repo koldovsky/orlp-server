@@ -16,7 +16,7 @@ public class DeckRating implements EntityInterface {
     @Column(name = "account_email", nullable = false)
     private String accountEmail;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "deck_id")
     private Deck deck;
 

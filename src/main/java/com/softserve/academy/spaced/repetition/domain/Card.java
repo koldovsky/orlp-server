@@ -3,6 +3,7 @@ package com.softserve.academy.spaced.repetition.domain;
 import com.softserve.academy.spaced.repetition.DTO.EntityInterface;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "Card")
@@ -21,6 +22,9 @@ public class Card implements EntityInterface {
 
     @Column(name = "rating")
     private double rating;
+
+    @OneToMany(mappedBy = "card", cascade = CascadeType.ALL)
+    private List<CardRating> cardRatings;
 
     public Card() {
     }
@@ -66,5 +70,13 @@ public class Card implements EntityInterface {
 
     public void setRating(double rating) {
         this.rating = rating;
+    }
+
+    public List<CardRating> getCardRatings() {
+        return cardRatings;
+    }
+
+    public void setCardRatings(List<CardRating> cardRatings) {
+        this.cardRatings = cardRatings;
     }
 }
