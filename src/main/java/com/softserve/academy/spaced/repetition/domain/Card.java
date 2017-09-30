@@ -23,6 +23,10 @@ public class Card implements EntityInterface {
     @Column(name = "rating")
     private double rating;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "deck_id")
+    private Deck deck;
+
     @OneToMany(mappedBy = "card", cascade = CascadeType.ALL)
     private List<CardRating> cardRatings;
 
@@ -78,5 +82,13 @@ public class Card implements EntityInterface {
 
     public void setCardRatings(List<CardRating> cardRatings) {
         this.cardRatings = cardRatings;
+    }
+
+    public Deck getDeck() {
+        return deck;
+    }
+
+    public void setDeck(Deck deck) {
+        this.deck = deck;
     }
 }
