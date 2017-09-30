@@ -120,7 +120,8 @@ public class DeckController {
     @Auditable(action = AuditingAction.CREATE_DECK_IN_COURSE)
     @PostMapping(value = "/api/category/{category_id}/courses/{course_id}/decks")
     @PreAuthorize(value = "@accessToUrlService.hasAccessToCourse(#category_id, #course_id)")
-    public ResponseEntity<DeckPublicDTO> addDeckToCourse(@RequestBody Deck deck, @PathVariable Long category_id, @PathVariable Long course_id) {
+    public ResponseEntity<DeckPublicDTO> addDeckToCourse(@RequestBody Deck deck,
+                                                         @PathVariable Long category_id, @PathVariable Long course_id) {
         deckService.addDeckToCourse(deck, category_id, course_id);
         Link selfLink = linkTo(methodOn(DeckController.class).getDeckByCourseId(category_id, course_id, deck.getId())).withSelfRel();
         DeckPublicDTO deckPublicDTO = DTOBuilder.buildDtoForEntity(deck, DeckPublicDTO.class, selfLink);
@@ -150,33 +151,36 @@ public class DeckController {
     }
 
     @Auditable(action = AuditingAction.VIEW_ONE_DECK_ADMIN)
-    @GetMapping(value = "/api/admin/decks/{deck_id}")
-    public ResponseEntity<DeckOfUserManagedByAdminDTO> getOneDeckForAdmin(@PathVariable Long deck_id){
-        Deck deck = deckService.getDeck(deck_id);
-        Link selfLink = linkTo(methodOn(DeckController.class).getOneDeckForAdmin(deck_id)).withSelfRel();
-        DeckOfUserManagedByAdminDTO deckOfUserManagedByAdminDTO = DTOBuilder.buildDtoForEntity(deck, DeckOfUserManagedByAdminDTO.class,selfLink);
+    @GetMapping(value = "/api/admin/decks/{deckId}")
+    public ResponseEntity<DeckOfUserManagedByAdminDTO> getOneDeckForAdmin( @PathVariable Long deckId){
+        Deck deck = deckService.getDeck(deckId);
+        Link selfLink = linkTo(methodOn(DeckController.class).getOneDeckForAdmin(deckId)).withSelfRel();
+        DeckOfUserManagedByAdminDTO deckOfUserManagedByAdminDTO = DTOBuilder.buildDtoForEntity(deck,
+                DeckOfUserManagedByAdminDTO.class,selfLink);
         return new ResponseEntity<>(deckOfUserManagedByAdminDTO,HttpStatus.OK);
     }
 
-
     @Auditable(action = AuditingAction.CREATE_DECK_ADMIN)
-    @PostMapping(value = "/api/admin/decks/{category_id}")
-    public ResponseEntity<Deck> addDeckForAdmin(@RequestBody Deck deck, @PathVariable Long category_id) throws NotAuthorisedUserException {
-        deckService.createNewDeck(deck, category_id);
-        return new ResponseEntity<>(deck, HttpStatus.CREATED);
+    @PostMapping(value = "/api/admin/decks")
+    public ResponseEntity<DeckOfUserManagedByAdminDTO> addDeckForAdmin(@RequestBody Deck deck) throws NotAuthorisedUserException {
+        Deck deckNew = deckService.createNewDeckAdmin(deck);
+        Link selfLink = linkTo(methodOn(DeckController.class).addDeckForAdmin(deckNew)).withSelfRel();
+        DeckOfUserManagedByAdminDTO deckOfUserManagedByAdminDTO = DTOBuilder.buildDtoForEntity(deckNew, DeckOfUserManagedByAdminDTO.class, selfLink);
+        return new ResponseEntity<>(deckOfUserManagedByAdminDTO, HttpStatus.CREATED);
     }
 
     @Auditable(action = AuditingAction.EDIT_DECK_ADMIN)
-    @PutMapping(value = "/api/admin/decks/{deck_id}/{category_id}")
-    public ResponseEntity updateDeckForAdmin(@RequestBody Deck deck, @PathVariable Long deck_id, @PathVariable Long category_id) {
-        deckService.updateDeck(deck, deck_id, category_id);
-        return new ResponseEntity(HttpStatus.OK);
+    @PutMapping(value = "/api/admin/decks/{deckId}")
+    public ResponseEntity updateDeckForAdmin(@RequestBody Deck deck, @PathVariable Long deckId) {
+        deckService.updateDeckAdmin(deck, deckId);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @Auditable(action = AuditingAction.DELETE_DECK_ADMIN)
-    @DeleteMapping(value = "/api/admin/decks/{deck_id}")
-    public void deleteDeckForAdmin(@PathVariable Long deck_id) {
-        deckService.deleteDeck(deck_id);
+    @DeleteMapping(value = "/api/admin/decks/{deckId}")
+    public ResponseEntity deleteDeckForAdmin(@PathVariable Long deckId) {
+        deckService.deleteDeck(deckId);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @Auditable(action = AuditingAction.DELETE_DECK_USER)
