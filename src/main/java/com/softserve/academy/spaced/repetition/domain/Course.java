@@ -47,6 +47,9 @@ public class Course implements EntityInterface {
             inverseJoinColumns = {@JoinColumn(name = "deck_id")})
     private List <Deck> decks;
 
+    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL)
+    private List<CourseRating> courseRatings;
+
     public Course() {
     }
 
@@ -120,6 +123,14 @@ public class Course implements EntityInterface {
 
     public void setRating(double rating) {
         this.rating = rating;
+    }
+
+    public List<CourseRating> getCourseRatings() {
+        return courseRatings;
+    }
+
+    public void setCourseRatings(List<CourseRating> courseRatings) {
+        this.courseRatings = courseRatings;
     }
 
     @Override

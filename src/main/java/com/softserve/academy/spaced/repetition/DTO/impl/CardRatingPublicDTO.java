@@ -15,7 +15,7 @@ public class CardRatingPublicDTO extends DTO<CardRating> {
     }
 
     public long getCardId() {
-        return getEntity().getCardId();
+        return getEntity().getCard().getId();
     }
 
     public int getRating() {

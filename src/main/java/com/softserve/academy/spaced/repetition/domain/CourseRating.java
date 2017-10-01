@@ -15,8 +15,9 @@ public class CourseRating implements EntityInterface {
     @Column(name = "account_email", nullable = false)
     private String accountEmail;
 
-    @Column(name = "course_id", nullable = false)
-    private long courseId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "course_id")
+    private Course course;
 
     @Column(name = "rating", nullable = false)
     private int rating;
@@ -25,9 +26,9 @@ public class CourseRating implements EntityInterface {
 
     }
 
-    public CourseRating(String accountEmail, long courseId, int rating) {
+    public CourseRating(String accountEmail, Course course, int rating) {
         this.accountEmail = accountEmail;
-        this.courseId = courseId;
+        this.course = course;
         this.rating = rating;
     }
 
@@ -47,12 +48,12 @@ public class CourseRating implements EntityInterface {
         this.accountEmail = accountEmail;
     }
 
-    public long getCourseId() {
-        return courseId;
+    public Course getCourse() {
+        return course;
     }
 
-    public void setCourseId(long courseId) {
-        this.courseId = courseId;
+    public void setCourse(Course course) {
+        this.course = course;
     }
 
     public int getRating() {

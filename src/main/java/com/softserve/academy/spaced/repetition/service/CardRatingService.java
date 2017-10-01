@@ -29,15 +29,15 @@ public class CardRatingService {
     public void addCardRating(CardRating cardRating, Long cardId) throws NotAuthorisedUserException {
         User user = userService.getAuthorizedUser();
         String email = user.getAccount().getEmail();
-        CardRating cardRatingByAccountEmail = cardRatingRepository.findCardRatingByAccountEmailAndCardId(email, cardId);
+        CardRating cardRatingByAccountEmail = cardRatingRepository.findCardRatingByAccountEmailAndCard_Id(email, cardId);
         if (cardRatingByAccountEmail != null) {
             cardRating.setId(cardRatingByAccountEmail.getId());
         }
-        cardRating.setAccountEmail(email);
-        cardRating.setCardId(cardId);
-        cardRatingRepository.save(cardRating);
         Card card = cardRepository.findOne(cardId);
-        double cardAverageRating = cardRatingRepository.findRatingByCardId(cardId);
+        cardRating.setAccountEmail(email);
+        cardRating.setCard(card);
+        cardRatingRepository.save(cardRating);
+        double cardAverageRating = cardRatingRepository.findRatingByCard_Id(cardId);
         card.setRating(cardAverageRating);
         cardRepository.save(card);
     }

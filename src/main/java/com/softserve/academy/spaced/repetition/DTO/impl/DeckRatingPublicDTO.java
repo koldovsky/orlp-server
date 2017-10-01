@@ -15,7 +15,7 @@ public class DeckRatingPublicDTO extends DTO<DeckRating> {
     }
 
     public long getDeckId() {
-        return getEntity().getDeckId();
+        return getEntity().getDeck().getId();
     }
 
     public int getRating() {

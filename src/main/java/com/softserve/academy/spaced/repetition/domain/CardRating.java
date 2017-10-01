@@ -16,8 +16,9 @@ public class CardRating implements EntityInterface {
     @Column(name = "account_email", nullable = false)
     private String accountEmail;
 
-    @Column(name = "card_id", nullable = false)
-    private long cardId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "card_id")
+    private Card card;
 
     @Column(name = "rating", nullable = false)
     private int rating;
@@ -50,12 +51,12 @@ public class CardRating implements EntityInterface {
         this.accountEmail = accountEmail;
     }
 
-    public long getCardId() {
-        return cardId;
+    public Card getCard() {
+        return card;
     }
 
-    public void setCardId(long cardId) {
-        this.cardId = cardId;
+    public void setCard(Card card) {
+        this.card = card;
     }
 
     public Integer getRating() {

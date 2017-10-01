@@ -7,8 +7,8 @@ import org.springframework.data.repository.query.Param;
 
 public interface CourseRatingRepository extends JpaRepository<CourseRating, Long> {
 
-    @Query("select avg(c.rating) from CourseRating c where c.courseId=:courseId group by c.courseId")
-    Double findRatingByCourseId(@Param("courseId") long courseId);
+    @Query("select avg(c.rating) from CourseRating c where c.course.id =:courseId group by c.course.id")
+    Double findRatingByCourse_Id(@Param("courseId") Long courseId);
 
-    CourseRating findAllByAccountEmailAndCourseId(String accountEmail, long courseId);
+    CourseRating findAllByAccountEmailAndCourse_Id(String accountEmail, Long courseId);
 }

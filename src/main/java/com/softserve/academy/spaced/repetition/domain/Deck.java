@@ -31,11 +31,17 @@ public class Deck implements EntityInterface {
     @JoinColumn(name = "user_id")
     private User deckOwner;
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "deck_cards", joinColumns = {
-            @JoinColumn(name = "deck_id")},
-            inverseJoinColumns = {@JoinColumn(name = "card_id")})
+    @OneToMany(mappedBy = "deck", cascade = CascadeType.ALL)
     private List<Card> cards;
+
+    @ManyToMany
+    @JoinTable(name = "course_decks", joinColumns = {
+            @JoinColumn(name = "deck_id")},
+            inverseJoinColumns = {@JoinColumn(name = "course_id")})
+    private List <Course> courses;
+
+    @OneToMany(mappedBy = "deck", cascade = CascadeType.ALL)
+    private List<DeckRating> deckRatings;
 
     public Deck() {
     }
@@ -94,6 +100,14 @@ public class Deck implements EntityInterface {
 
     public void setRating(double rating) {
         this.rating = rating;
+    }
+
+    public List<DeckRating> getDeckRatings() {
+        return deckRatings;
+    }
+
+    public void setDeckRatings(List<DeckRating> deckRatings) {
+        this.deckRatings = deckRatings;
     }
 
     @Override
