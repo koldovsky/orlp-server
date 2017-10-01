@@ -95,6 +95,7 @@ public class Card implements EntityInterface {
 
     public void setDeck(Deck deck) {
         this.deck = deck;
+    }
 
     public String getTitle() {
         return title;
