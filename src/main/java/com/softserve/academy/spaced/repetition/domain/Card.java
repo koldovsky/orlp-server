@@ -14,6 +14,9 @@ public class Card implements EntityInterface {
     @Column(name = "card_id")
     private Long id;
 
+    @Column(name = "title")
+    private String title;
+
     @Column(name = "question", nullable = false, columnDefinition = "LONGTEXT")
     private String question;
 
@@ -33,13 +36,15 @@ public class Card implements EntityInterface {
     public Card() {
     }
 
-    public Card(String question, String answer) {
+    public Card(String question, String answer, String title) {
+        this.title = title;
         this.question = question;
         this.answer = answer;
     }
 
-    public Card(Long id, String question, String answer) {
+    public Card(Long id, String question, String answer, String title) {
         this.id = id;
+        this.title = title;
         this.question = question;
         this.answer = answer;
     }
@@ -90,5 +95,12 @@ public class Card implements EntityInterface {
 
     public void setDeck(Deck deck) {
         this.deck = deck;
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 }

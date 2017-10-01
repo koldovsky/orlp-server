@@ -18,4 +18,8 @@ public interface FolderRepository extends JpaRepository<Folder, Long> {
 
     @Query(value = "SELECT d from Folder f inner join f.decks as d where d.id = :deck_id and  f.id = :folder_id")
     List<Deck> getAccessToDeckFromFolder(@Param("folder_id") Long folder_id, @Param("deck_id") Long deck_id);
+
+    @Query(value = "SELECT f from Folder f inner join f.decks as d where d.id = :deck_id")
+    List<Folder> getAllFolderWhereIdDecksEquals(@Param("deck_id") Long deck_id);
+
 }

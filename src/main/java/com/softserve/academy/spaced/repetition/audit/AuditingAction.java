@@ -60,5 +60,12 @@ public enum AuditingAction {
     DELETE_DECK,
 
     CREATE_DECK_ADMIN,
-    EDIT_DECK_ADMIN;
+    EDIT_DECK_ADMIN,
+
+    DELETE_DECK_USER,
+    CREATE_DECK_USER,
+    EDIT_DECK_USER,
+    VIEW_DECKS_USER,
+    VIEW_ONE_DECK_USER;
+
 }

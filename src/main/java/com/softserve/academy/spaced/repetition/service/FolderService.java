@@ -8,6 +8,7 @@ import com.softserve.academy.spaced.repetition.repository.DeckRepository;
 import com.softserve.academy.spaced.repetition.repository.FolderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
@@ -64,5 +65,22 @@ public class FolderService {
             }
         }
         folderRepository.save(folder);
+    }
+
+    @Transactional
+    public void deleteDeckFromAllUsers(Long deck_id) throws NotAuthorisedUserException {
+        List<Folder> folders = folderRepository.getAllFolderWhereIdDecksEquals(deck_id);
+        if(folders.size()!=0) {
+            for (Folder folder : folders) {
+                Collection<Deck> folderDecks = folder.getDecks();
+                for (Deck deck : folderDecks) {
+                    if (deck.getId().equals(deck_id)) {
+                        folderDecks.remove(deck);
+                        break;
+                    }
+                }
+                folderRepository.save(folder);
+            }
+        }
     }
 }

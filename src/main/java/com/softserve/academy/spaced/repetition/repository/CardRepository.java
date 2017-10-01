@@ -2,9 +2,11 @@ package com.softserve.academy.spaced.repetition.repository;
 
 import com.softserve.academy.spaced.repetition.domain.Card;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -15,10 +17,10 @@ public interface CardRepository extends JpaRepository<Card, Long> {
     List<Card> hasAccessToCard(@Param("deck_id") Long deck_id, @Param("card_id") Long card_id);
 
     @Query(value =
-            "select c.card_id, c.question, c.answer, c.rating " +
+            "select c.card_id, c.title, c.question, c.answer, c.rating " +
             "from card c inner join deck_cards d on c.card_id=d.card_id " +
-            "where deck_id = :deckId and (c.card_id, c.question, c.answer, c.rating) not in(" +
-            "select c.card_id, c.question, c.answer, c.rating " +
+            "where deck_id = :deckId and (c.card_id, c.title, c.question, c.answer, c.rating) not in(" +
+            "select c.card_id, c.title, c.question, c.answer, c.rating " +
             "from card c left join user_card_queue u " +
             "on c.card_id=u.card_id " +
             "where u.account_email = :accountEmail) limit :limitNumber", nativeQuery = true)
@@ -26,7 +28,7 @@ public interface CardRepository extends JpaRepository<Card, Long> {
                                              @Param("limitNumber") long limitNumber);
 
     @Query(value =
-            "select c.card_id, c.question, c.answer, c.rating " +
+            "select c.card_id, c.title, c.question, c.answer, c.rating " +
             "from card c inner join user_card_queue u on c.card_id=u.card_id " +
             "where deck_id = :deckId and u.account_email = :accountEmail " +
             "order by case u.status " +
@@ -36,6 +38,14 @@ public interface CardRepository extends JpaRepository<Card, Long> {
             "end, u.card_data limit :limitNumber", nativeQuery = true)
     List<Card> cardsQueueForLearningWithStatus(@Param("accountEmail") String accountEmail, @Param("deckId") long deckId,
                                                @Param("limitNumber") long limitNumber);
+
+    @Modifying
+    @Query(value =
+            "DELETE " +
+                    "from deck_cards , card " +
+                    "using deck_cards , card " +
+                    "where deck_cards.card_id= :card_id and card.card_id= :card_id", nativeQuery = true)
+    void deleteCardById(@Param("card_id") Long card_id);
 
     List <Card> findAllByQuestion(String question);
 }

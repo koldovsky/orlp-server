@@ -11,6 +11,8 @@ import com.softserve.academy.spaced.repetition.exceptions.NoSuchFileException;
 import com.softserve.academy.spaced.repetition.exceptions.WrongFormatException;
 import com.softserve.academy.spaced.repetition.service.CardService;
 import com.softserve.academy.spaced.repetition.service.cardLoaders.CardLoadService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Link;
 import org.springframework.http.HttpStatus;
@@ -28,6 +30,8 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
 @RestController
 public class CardController {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(CardController.class);
 
     @Autowired
     private CardService cardService;
@@ -72,11 +76,12 @@ public class CardController {
     }
 
     @Auditable(action = AuditingAction.CREATE_CARD_VIA_CATEGORY_AND_DECK)
-    @PostMapping(value = "/api/category/{category_id}/decks/{deck_id}/cards")
-    @PreAuthorize(value = "@accessToUrlService.hasAccessToDeckFromCategory(#category_id, #deck_id)")
-    public ResponseEntity<CardPublicDTO> addCardByCategoryAndDeck(@RequestBody Card card, @PathVariable Long category_id, @PathVariable Long deck_id) {
-        cardService.addCard(card, deck_id);
-        Link selfLink = linkTo(methodOn(CardController.class).getCardByCategoryAndDeck(category_id, deck_id, card.getId())).withSelfRel();
+    @PostMapping(value = "/api/category/{categoryId}/decks/{deckId}/cards")
+    @PreAuthorize(value = "@accessToUrlService.hasAccessToDeckFromCategory(#categoryId, #deckId)")
+    public ResponseEntity<CardPublicDTO> addCardByCategoryAndDeck(@RequestBody Card card, @PathVariable Long categoryId, @PathVariable Long deckId) {
+        LOGGER.debug("Add card to categoryId: {}, deckId: {}", categoryId, deckId);
+        cardService.addCard(card, deckId);
+        Link selfLink = linkTo(methodOn(CardController.class).getCardByCategoryAndDeck(categoryId, deckId, card.getId())).withSelfRel();
         CardPublicDTO cardPublicDTO = DTOBuilder.buildDtoForEntity(card, CardPublicDTO.class, selfLink);
         return new ResponseEntity<>(cardPublicDTO, HttpStatus.CREATED);
     }
@@ -104,8 +109,8 @@ public class CardController {
 
     @Auditable(action = AuditingAction.DELETE_CARD)
     @DeleteMapping(value = {"/api/category/{categoryId}/decks/{deckId}/cards/{cardId}", "/api/courses/{courseId}/decks/{deckId}/cards/{cardId}"})
-    public void deleteCard(@PathVariable Long deckId ,@PathVariable Long cardId) {
-        cardService.deleteCard(deckId, cardId);
+    public void deleteCard(@PathVariable Long cardId) {
+        cardService.deleteCard(cardId);
     }
 
     @GetMapping("/api/category/{category_id}/decks/{deck_id}/learn/cards")
