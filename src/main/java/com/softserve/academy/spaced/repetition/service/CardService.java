@@ -32,11 +32,13 @@ public class CardService {
 
     public void addCard(Card card, Long deckId) {
         Deck deck = deckRepository.findOne(deckId);
+        card.setDeck(deck);
         deck.getCards().add(cardRepository.save(card));
     }
 
     public void updateCard(Long id, Card card) {
         card.setId(id);
+        card.setDeck(cardRepository.findOne(id).getDeck());
         cardRepository.save(card);
     }
 

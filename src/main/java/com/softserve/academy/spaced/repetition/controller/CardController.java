@@ -129,7 +129,7 @@ public class CardController {
     }
 
     @Auditable(action = AuditingAction.DELETE_CARD)
-    @DeleteMapping(value = {"/api/category/{categoryId}/decks/{deckId}/cards/{cardId}", "/api/courses/{courseId}/decks/{deckId}/cards/{cardId}"})
+    @DeleteMapping(value = {"/api/category/{categoryId}/decks/{deckId}/cards/{cardId}", "/api/decks/{deckId}/cards/{cardId}", "/api/courses/{courseId}/decks/{deckId}/cards/{cardId}"})
     public void deleteCard(@PathVariable Long cardId) {
         cardService.deleteCard(cardId);
     }
