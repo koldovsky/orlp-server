@@ -79,12 +79,12 @@ public class DeckService {
     }
 
     @Transactional
-    public void updateDeckAdmin(Deck updatedDeck, Long deckId) {
+    public Deck  updateDeckAdmin(Deck updatedDeck, Long deckId) {
         Deck deck = deckRepository.findOne(deckId);
         deck.setName(updatedDeck.getName());
         deck.setDescription(updatedDeck.getDescription());
         deck.setCategory(categoryRepository.findById(updatedDeck.getCategory().getId()));
-        deckRepository.save(deck);
+        return deckRepository.save(deck);
     }
 
     @Transactional
@@ -114,7 +114,7 @@ public class DeckService {
         deck.setDeckOwner(user);
         Deck savedDeck = deckRepository.save(deck);
         deck.setId(savedDeck.getId());
-        return deck;
+        return savedDeck;
     }
 
     @Transactional
