@@ -169,7 +169,7 @@ public class DeckController {
     public ResponseEntity<DeckOfUserManagedByAdminDTO> addDeckForAdmin(@RequestBody Deck deck) throws NotAuthorisedUserException {
         Deck deckNew = deckService.createNewDeckAdmin(deck);
         folderService.addDeck(deckNew.getId());
-        Link selfLink = linkTo(methodOn(DeckController.class).addDeckForAdmin(deckNew)).withSelfRel();
+        Link selfLink = linkTo(methodOn(DeckController.class).getOneDeckForAdmin(deckNew.getId())).withSelfRel();
         DeckOfUserManagedByAdminDTO deckOfUserManagedByAdminDTO = DTOBuilder.buildDtoForEntity(deckNew, DeckOfUserManagedByAdminDTO.class, selfLink);
         return new ResponseEntity<>(deckOfUserManagedByAdminDTO, HttpStatus.CREATED);
     }
@@ -177,8 +177,10 @@ public class DeckController {
     @Auditable(action = AuditingAction.EDIT_DECK_ADMIN)
     @PutMapping(value = "/api/admin/decks/{deckId}")
     public ResponseEntity updateDeckForAdmin(@RequestBody Deck deck, @PathVariable Long deckId) {
-        deckService.updateDeckAdmin(deck, deckId);
-        return new ResponseEntity<>(HttpStatus.OK);
+        Deck updatedDeck=deckService.updateDeckAdmin(deck, deckId);
+        Link selfLink = linkTo(methodOn(DeckController.class).getOneDeckForAdmin(updatedDeck.getId())).withSelfRel();
+        DeckOfUserManagedByAdminDTO deckOfUserManagedByAdminDTO = DTOBuilder.buildDtoForEntity(updatedDeck, DeckOfUserManagedByAdminDTO.class, selfLink);
+        return new ResponseEntity<>(deckOfUserManagedByAdminDTO, HttpStatus.OK);
     }
 
     @Auditable(action = AuditingAction.DELETE_DECK_ADMIN)
