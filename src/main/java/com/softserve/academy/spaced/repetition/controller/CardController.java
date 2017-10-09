@@ -65,6 +65,16 @@ public class CardController {
         return new ResponseEntity<>(cardPublicDTO, HttpStatus.OK);
     }
 
+    @GetMapping(value = "/api/decks/{deck_id}/cards/{card_id}")
+    @PreAuthorize(value = "@accessToUrlService.hasAccessToCard(#deck_id, #card_id)")
+    public ResponseEntity<CardPublicDTO> getCardByDeck(@PathVariable Long deck_id, @PathVariable Long card_id) {
+        Card card = cardService.getCard(card_id);
+        Link selfLink = linkTo(methodOn(CardController.class).getCardByDeck(deck_id, card_id)).withSelfRel();
+        CardPublicDTO cardPublicDTO = DTOBuilder.buildDtoForEntity(card, CardPublicDTO.class, selfLink);
+        return new ResponseEntity<>(cardPublicDTO, HttpStatus.OK);
+    }
+
+
     @Auditable(action = AuditingAction.CREATE_CARD_VIA_COURSE_AND_DECK)
     @PostMapping(value = "/api/category/{category_id}/courses/{course_id}/decks/{deck_id}/cards")
     @PreAuthorize(value = "@accessToUrlService.hasAccessToDeck(#category_id, #course_id, #deck_id)")
@@ -107,8 +117,19 @@ public class CardController {
         return new ResponseEntity<>(cardPublicDTO, HttpStatus.OK);
     }
 
+    @Auditable(action = AuditingAction.EDIT_CARD_VIA_CATEGORY_AND_DECK)
+    @PutMapping(value =  "/api/decks/{deckId}/cards/{cardId}")
+    @PreAuthorize(value = "@accessToUrlService.hasAccessToCard(#deckId, #cardId)")
+    public ResponseEntity<CardPublicDTO> updateCardByDeck(@PathVariable Long deckId, @PathVariable Long cardId, @RequestBody Card card) {
+        LOGGER.debug("Updating card with id: {}  in deck with id: {}", cardId, deckId);
+        cardService.updateCard(cardId, card);
+        Link selfLink = linkTo(methodOn(CardController.class).getCardByDeck(deckId, cardId)).withSelfRel();
+        CardPublicDTO cardPublicDTO = DTOBuilder.buildDtoForEntity(card, CardPublicDTO.class, selfLink);
+        return new ResponseEntity<>(cardPublicDTO, HttpStatus.OK);
+    }
+
     @Auditable(action = AuditingAction.DELETE_CARD)
-    @DeleteMapping(value = {"/api/category/{categoryId}/decks/{deckId}/cards/{cardId}", "/api/courses/{courseId}/decks/{deckId}/cards/{cardId}"})
+    @DeleteMapping(value = {"/api/category/{categoryId}/decks/{deckId}/cards/{cardId}", "/api/decks/{deckId}/cards/{cardId}", "/api/courses/{courseId}/decks/{deckId}/cards/{cardId}"})
     public void deleteCard(@PathVariable Long cardId) {
         cardService.deleteCard(cardId);
     }

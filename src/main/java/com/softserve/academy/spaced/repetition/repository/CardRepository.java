@@ -39,13 +39,7 @@ public interface CardRepository extends JpaRepository<Card, Long> {
     List<Card> cardsQueueForLearningWithStatus(@Param("accountEmail") String accountEmail, @Param("deckId") long deckId,
                                                @Param("limitNumber") long limitNumber);
 
-    @Modifying
-    @Query(value =
-            "DELETE " +
-                    "from deck_cards , card " +
-                    "using deck_cards , card " +
-                    "where deck_cards.card_id= :card_id and card.card_id= :card_id", nativeQuery = true)
-    void deleteCardById(@Param("card_id") Long card_id);
-
     List <Card> findAllByQuestion(String question);
+
+    void deleteCardById(Long cardId);
 }
