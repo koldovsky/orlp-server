@@ -5,7 +5,6 @@ import com.softserve.academy.spaced.repetition.DTO.EntityInterface;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
-import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -38,6 +37,10 @@ public class Account implements EntityInterface {
             @JoinColumn(name = "account_id")},
             inverseJoinColumns = {@JoinColumn(name = "authority_id")})
     private Set<Authority> authorities;
+
+    @NotNull
+    @Column(name = "learning_regime", columnDefinition = "int default 1")
+    private Integer learningRegime;
 
     public Account() {
     }
@@ -112,5 +115,13 @@ public class Account implements EntityInterface {
 
     public void setStatus(AccountStatus status) {
         this.status = status;
+    }
+
+    public Integer getLearningRegime() {
+        return learningRegime;
+    }
+
+    public void setLearningRegime(Integer learningRegime) {
+        this.learningRegime = learningRegime;
     }
 }

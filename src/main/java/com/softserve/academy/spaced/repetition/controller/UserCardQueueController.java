@@ -10,28 +10,31 @@ import org.springframework.hateoas.Link;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
-@Controller
+@RestController
 public class UserCardQueueController {
+    private final UserCardQueueService userCardQueueService;
 
     @Autowired
-    private UserCardQueueService userCardQueueService;
+    public UserCardQueueController(UserCardQueueService userCardQueueService) {
+        this.userCardQueueService = userCardQueueService;
+    }
 
-    @PostMapping("/api/user/deck/{deck_id}/card/{card_id}/queue")
-    @PreAuthorize(value = "@accessToUrlService.hasAccessToCard(#deck_id, #card_id)")
-    public ResponseEntity<UserCardQueuePublicDTO> addUserCardQueue(@RequestBody UserCardQueue userCardQueue, @PathVariable long card_id, @PathVariable long deck_id) throws NotAuthorisedUserException {
-        userCardQueueService.addUserCardQueue(userCardQueue, card_id, deck_id);
-        Link selfLink = linkTo(methodOn(UserCardQueueController.class).getUserCardQueueById(userCardQueue.getId())).withSelfRel();
-        UserCardQueuePublicDTO userCardQueuePublicDTO = DTOBuilder.buildDtoForEntity(userCardQueue, UserCardQueuePublicDTO.class, selfLink);
-        return new ResponseEntity<>(userCardQueuePublicDTO, HttpStatus.CREATED);
+    @PutMapping("/api/private/decks/{deckId}/cards/{cardId}/queue")
+    @PreAuthorize(value = "@accessToUrlService.hasAccessToCard(#deckId, #cardId)")
+    public ResponseEntity<UserCardQueuePublicDTO> updateUserCardQueue(
+            @PathVariable Long deckId, @PathVariable Long cardId, @RequestBody UserCardQueue userCardQueue)
+            throws NotAuthorisedUserException {
+        userCardQueue = userCardQueueService.updateUserCardQueue(deckId, cardId, userCardQueue);
+        Link selfLink = linkTo(methodOn(UserCardQueueController.class).getUserCardQueueById(userCardQueue.getId()))
+                .withSelfRel();
+        UserCardQueuePublicDTO userCardQueuePublicDTO = DTOBuilder.buildDtoForEntity(userCardQueue,
+                UserCardQueuePublicDTO.class, selfLink);
+        return new ResponseEntity<>(userCardQueuePublicDTO, HttpStatus.OK);
     }
 
     @GetMapping("api/user/card/queue/{user_card_queue_id}")

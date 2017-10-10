@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -17,14 +19,37 @@ public class CardService {
 
     private final static int CARDS_NUMBER = 10;
 
-    @Autowired
-    private CardRepository cardRepository;
+    private final CardRepository cardRepository;
+
+    private final DeckRepository deckRepository;
+
+    private final UserService userService;
 
     @Autowired
-    private DeckRepository deckRepository;
+    public CardService(CardRepository cardRepository, DeckRepository deckRepository, UserService userService) {
+        this.cardRepository = cardRepository;
+        this.deckRepository = deckRepository;
+        this.userService = userService;
+    }
 
-    @Autowired
-    private UserService userService;
+    public List<Card> getLearningCards(Long deckId) throws NotAuthorisedUserException {
+        User user = userService.getAuthorizedUser();
+        String email = user.getAccount().getEmail();
+        List<Card> learningCards = new ArrayList<>();
+        if (user.getAccount().getLearningRegime() == 1) {
+            learningCards = cardRepository.cardsForLearningWithOutStatus(email, deckId, CARDS_NUMBER);
+            if (learningCards.size() < CARDS_NUMBER) {
+                learningCards.addAll(cardRepository.cardsQueueForLearningWithStatus(email, deckId,
+                        CARDS_NUMBER - learningCards.size()));
+            }
+        } else if (user.getAccount().getLearningRegime() == 2) {
+            learningCards = cardRepository.getCardsThatNeedRepeating(deckId, new Date(), email, CARDS_NUMBER);
+            if (learningCards.size() < CARDS_NUMBER) {
+                learningCards.addAll(cardRepository.getNewCards(deckId, email, CARDS_NUMBER - learningCards.size()));
+            }
+        }
+        return learningCards;
+    }
 
     public Card getCard(Long id) {
         return cardRepository.findOne(id);
