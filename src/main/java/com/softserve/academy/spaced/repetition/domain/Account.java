@@ -39,9 +39,9 @@ public class Account implements EntityInterface {
     private Set<Authority> authorities;
 
     @NotNull
-    @Column(name = "learning_regime", columnDefinition = "int default 1")
-    @Enumerated
-    private Integer learningRegime;
+    @Column(name = "learning_regime", columnDefinition = "varchar(45) default 'CARDS_POSTPONING_LEARNING'")
+    @Enumerated(value = EnumType.STRING)
+    private LearningRegime learningRegime;
 
     public Account() {
     }
@@ -118,11 +118,11 @@ public class Account implements EntityInterface {
         this.status = status;
     }
 
-    public Integer getLearningRegime() {
+    public LearningRegime getLearningRegime() {
         return learningRegime;
     }
 
-    public void setLearningRegime(Integer learningRegime) {
+    public void setLearningRegime(LearningRegime learningRegime) {
         this.learningRegime = learningRegime;
     }
 }

@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Link;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
@@ -25,7 +24,7 @@ public class UserCardQueueController {
     }
 
     @PutMapping("/api/private/decks/{deckId}/cards/{cardId}/queue")
-    @PreAuthorize(value = "@accessToUrlService.hasAccessToCard(#deckId, #cardId)")
+//    @PreAuthorize(value = "@accessToUrlService.hasAccessToCard(#deckId, #cardId)")
     public ResponseEntity<UserCardQueuePublicDTO> updateUserCardQueue(
             @PathVariable Long deckId, @PathVariable Long cardId, @RequestBody UserCardQueue userCardQueue)
             throws NotAuthorisedUserException {

@@ -42,22 +42,22 @@ public class UserCardQueueService {
         userCardQueue.setAccountEmail(email);
         userCardQueue.setCardDate(new Date());
 
-        if (user.getAccount().getLearningRegime() == LearningRegime.CARDS_POSTPONING_LEARNING.ordinal()) {
+        if (user.getAccount().getLearningRegime().equals(LearningRegime.CARDS_POSTPONING_LEARNING)) {
             applyCardsPostponingLearningRegime(userCardQueue, rememberingLevel);
         }
         return userCardQueueRepository.save(userCardQueue);
     }
 
     private void applyCardsPostponingLearningRegime(UserCardQueue userCardQueue, RememberingLevel rememberingLevel) {
-        userCardQueue.setStatus(null);
         if (userCardQueue.getStatus().equals(UserCardQueueStatus.BAD) && rememberingLevel.getId() > 1) {
             userCardQueue.setRememberingLevel(rememberingLevelRepository.findOne(rememberingLevel.getId() - 1));
         } else if (userCardQueue.getStatus().equals(UserCardQueueStatus.GOOD) &&
                 rememberingLevel.getId() < rememberingLevelRepository.count()) {
             userCardQueue.setRememberingLevel(rememberingLevelRepository.findOne(rememberingLevel.getId() + 1));
         }
+        userCardQueue.setStatus(null);
         userCardQueue.setDateToRepeat(new Date(userCardQueue.getCardDate().getTime() +
-                rememberingLevel.getNumberOfPostponedDays() * DAY_IN_MILLISECONDS));
+                userCardQueue.getRememberingLevel().getNumberOfPostponedDays() * DAY_IN_MILLISECONDS));
     }
 
     public UserCardQueue getUserCardQueueById(long id) {
