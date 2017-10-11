@@ -26,7 +26,7 @@ public class Card implements EntityInterface {
     @Column(name = "rating")
     private double rating;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "deck_id")
     private Deck deck;
 
