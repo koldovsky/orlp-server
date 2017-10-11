@@ -193,54 +193,53 @@ public class DeckController {
 
     @Auditable(action = AuditingAction.DELETE_DECK_USER)
     @DeleteMapping(value = "/api/private/deck/{deck_id}")
-    public ResponseEntity<List<DeckLinkByUserDTO>> deleteOwnDeckByUser(@PathVariable Long deck_id)
-            throws NotAuthorisedUserException, NoSuchDeckException, NotOwnerOperationException {
+    public ResponseEntity<List<DeckPrivateDTO>> deleteOwnDeckByUser(@PathVariable Long deck_id)
+            throws NoSuchDeckException, NotAuthorisedUserException, NotOwnerOperationException {
         deckService.deleteOwnDeck(deck_id);
         List<Deck> decksList = deckService.getAllDecksByUser();
-        Link collectionLink = linkTo(methodOn(DeckController.class).deleteOwnDeckByUser(deck_id)).withRel("user");
-        List<DeckLinkByUserDTO> decks = DTOBuilder.buildDtoListForCollection(decksList,
-                DeckLinkByUserDTO.class, collectionLink);
+        Link collectionLink = linkTo(methodOn(DeckController.class).getAllDecksForUser()).withSelfRel();
+        List<DeckPrivateDTO> decks = DTOBuilder.buildDtoListForCollection(decksList,
+                DeckPrivateDTO.class, collectionLink);
         return new ResponseEntity<>(decks, HttpStatus.OK);
     }
 
     @Auditable(action = AuditingAction.CREATE_DECK_USER)
     @PostMapping(value = "/api/private/category/{category_id}/decks")
-    public  ResponseEntity<DeckLinkByUserDTO> addDeckForUser(@RequestBody Deck deck, @PathVariable Long category_id) throws NotAuthorisedUserException, NoSuchDeckException, NotOwnerOperationException {
+    public ResponseEntity<DeckPrivateDTO> addDeckForUser(@RequestBody Deck deck, @PathVariable Long category_id) throws NotAuthorisedUserException, NoSuchDeckException, NotOwnerOperationException {
         deckService.createNewDeck(deck, category_id);
-        Deck deck2 = deckService.getDeckUser( deck.getId() );
-        Link selfLink = linkTo(methodOn(DeckController.class).addDeckForUser(deck, category_id)).withRel("user");
-        DeckLinkByUserDTO deckLinkByUserDTO = DTOBuilder.buildDtoForEntity(deck2, DeckLinkByUserDTO.class,selfLink);
-        return new ResponseEntity<>(deckLinkByUserDTO,HttpStatus.CREATED);
+        folderService.addDeck(deck.getId());
+        Link selfLink = linkTo(methodOn(DeckController.class).getOneDeckForUser(deck.getId())).withSelfRel();
+        DeckPrivateDTO deckDTO = DTOBuilder.buildDtoForEntity(deck, DeckPrivateDTO.class, selfLink);
+        return new ResponseEntity<>(deckDTO, HttpStatus.CREATED);
     }
 
     @Auditable(action = AuditingAction.EDIT_DECK_USER)
     @PutMapping(value = "/api/private/category/{category_id}/deck/{deck_id}")
-    public ResponseEntity updateDeckForUser(@RequestBody Deck deck, @PathVariable Long deck_id, @PathVariable Long category_id) throws NotAuthorisedUserException, NoSuchDeckException, NotOwnerOperationException {
-        deckService.updateOwnDeck(deck, deck_id, category_id);
-        Deck deck2 = deckService.getDeckUser( deck_id );
-        Link selfLink = linkTo(methodOn(DeckController.class).updateDeckForUser(deck,deck_id,category_id)).withRel("user");
-        DeckLinkByUserDTO deckLinkByUserDTO = DTOBuilder.buildDtoForEntity(deck2, DeckLinkByUserDTO.class,selfLink);
-        return new ResponseEntity<>(deckLinkByUserDTO,HttpStatus.OK);
+    public ResponseEntity<DeckPrivateDTO> updateDeckForUser(@RequestBody Deck deck, @PathVariable Long deck_id, @PathVariable Long category_id) throws NotAuthorisedUserException, NoSuchDeckException, NotOwnerOperationException {
+        Deck updatedDeck = deckService.updateOwnDeck(deck, deck_id, category_id);
+        Link selfLink = linkTo(methodOn(DeckController.class).getOneDeckForUser(updatedDeck.getId())).withSelfRel();
+        DeckPrivateDTO deckDTO = DTOBuilder.buildDtoForEntity(updatedDeck, DeckPrivateDTO.class, selfLink);
+        return new ResponseEntity<>(deckDTO, HttpStatus.OK);
     }
 
     @Auditable(action = AuditingAction.VIEW_DECKS_USER)
     @GetMapping(value = "/api/private/user/folder/decks/own")
-    public ResponseEntity<List<DeckLinkByUserDTO>> getAllDecksForUser() throws NotAuthorisedUserException {
+    public ResponseEntity<List<DeckPrivateDTO>> getAllDecksForUser() throws NotAuthorisedUserException {
         List<Deck> decksList = deckService.getAllDecksByUser();
-        Link collectionLink = linkTo(methodOn(DeckController.class).getAllDecksForUser()).withRel("user");
-        List<DeckLinkByUserDTO> decks = DTOBuilder.buildDtoListForCollection(decksList,
-                DeckLinkByUserDTO.class, collectionLink);
+        Link collectionLink = linkTo(methodOn(DeckController.class).getAllDecksForUser()).withSelfRel();
+        List<DeckPrivateDTO> decks = DTOBuilder.buildDtoListForCollection(decksList,
+                DeckPrivateDTO.class, collectionLink);
         return new ResponseEntity<>(decks, HttpStatus.OK);
     }
 
     @Auditable(action = AuditingAction.VIEW_ONE_DECK_USER)
     @GetMapping(value = "/api/private/user/folder/decks/own/{deck_id}")
-    public ResponseEntity<DeckLinkByUserDTO> getOneDeckForUser(@PathVariable Long deck_id)
+    public ResponseEntity<DeckPrivateDTO> getOneDeckForUser(@PathVariable Long deck_id)
             throws NotAuthorisedUserException, NoSuchDeckException, NotOwnerOperationException {
         Deck deck = deckService.getDeckUser(deck_id);
-        Link selfLink = linkTo(methodOn(DeckController.class).getOneDeckForUser(deck_id)).withRel("user");
-        DeckLinkByUserDTO deckLinkByUserDTO = DTOBuilder.buildDtoForEntity(deck, DeckLinkByUserDTO.class,selfLink);
-        return new ResponseEntity<>(deckLinkByUserDTO,HttpStatus.OK);
+        Link selfLink = linkTo(methodOn(DeckController.class).getOneDeckForUser(deck_id)).withSelfRel();
+        DeckPrivateDTO deckDTO = DTOBuilder.buildDtoForEntity(deck, DeckPrivateDTO.class, selfLink);
+        return new ResponseEntity<>(deckDTO, HttpStatus.OK);
     }
 
 }

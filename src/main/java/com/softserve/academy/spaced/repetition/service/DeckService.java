@@ -95,13 +95,9 @@ public class DeckService {
     @Transactional
     public void createNewDeck(Deck newDeck, Long category_id) throws NotAuthorisedUserException {
         User user = userService.getAuthorizedUser();
-        Deck deck = new Deck();
-        deck.setName(newDeck.getName());
-        deck.setDescription(newDeck.getDescription());
-        deck.setCategory(categoryRepository.findById(category_id));
-        deck.setDeckOwner(user);
-        Deck savedDeck = deckRepository.save(deck);
-        newDeck.setId(savedDeck.getId());
+        newDeck.setCategory(categoryRepository.findOne(category_id));
+        newDeck.setDeckOwner(user);
+        deckRepository.save(newDeck);
     }
 
     @Transactional
@@ -121,27 +117,33 @@ public class DeckService {
     public void deleteOwnDeck(Long deckId)
             throws NotAuthorisedUserException, NoSuchDeckException, NotOwnerOperationException {
         User user = userService.getAuthorizedUser();
-        Deck deck = deckRepository.getDeckById(deckId);
-        if(deck==null)  throw new NoSuchDeckException();
-        if(deck.getDeckOwner().getId().equals( user.getId() )) {
-            folderService.deleteDeckFromAllUsers(deckId);
-            deleteDeck(deckId);
+        Deck deck = deckRepository.findOne(deckId);
+        if (deck == null) {
+            throw new NoSuchDeckException();
         }
-        else throw new NotOwnerOperationException();
+        if (deck.getDeckOwner().getId().equals(user.getId())) {
+            deckRepository.delete(deck);
+        } else {
+            throw new NotOwnerOperationException();
+        }
     }
 
     @Transactional
-    public void updateOwnDeck(Deck updatedDeck, Long deckId, Long categoryId) throws NotAuthorisedUserException, NoSuchDeckException, NotOwnerOperationException {
+    public Deck updateOwnDeck(Deck updatedDeck, Long deckId, Long categoryId)
+            throws NotAuthorisedUserException, NoSuchDeckException, NotOwnerOperationException {
         User user = userService.getAuthorizedUser();
-        Deck deck = deckRepository.getDeckById(deckId);
-        if(deck==null)  throw new NoSuchDeckException();
-        if(deck.getDeckOwner().getId().equals( user.getId() )) {
+        Deck deck = deckRepository.findOne(deckId);
+        if (deck == null) {
+            throw new NoSuchDeckException();
+        }
+        if (deck.getDeckOwner().getId().equals(user.getId())) {
             deck.setName(updatedDeck.getName());
             deck.setDescription(updatedDeck.getDescription());
-            deck.setCategory(categoryRepository.findById(categoryId));
-            deckRepository.save(deck);
-         }
-        else throw new NotOwnerOperationException();
+            deck.setCategory(categoryRepository.findOne(categoryId));
+            return deckRepository.save(deck);
+        } else {
+            throw new NotOwnerOperationException();
+        }
     }
 
     public List<Deck> getAllDecksByUser() throws NotAuthorisedUserException {
@@ -151,10 +153,15 @@ public class DeckService {
 
     public Deck getDeckUser(Long deckId) throws NotAuthorisedUserException, NoSuchDeckException, NotOwnerOperationException {
         User user = userService.getAuthorizedUser();
-        Deck deck = deckRepository.getDeckById(deckId);
-        if(deck==null) throw new NoSuchDeckException();;
-        if(deck.getDeckOwner().getId().equals( user.getId() )) return deck;
-        else throw new NotOwnerOperationException();
+        Deck deck = deckRepository.findOne(deckId);
+        if (deck == null) {
+            throw new NoSuchDeckException();
+        }
+        if (deck.getDeckOwner().getId().equals(user.getId())) {
+            return deck;
+        } else {
+            throw new NotOwnerOperationException();
+        }
     }
 
 }
