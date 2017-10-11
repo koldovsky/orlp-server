@@ -37,13 +37,13 @@ public class CardService {
         User user = userService.getAuthorizedUser();
         String email = user.getAccount().getEmail();
         List<Card> learningCards = new ArrayList<>();
-        if (user.getAccount().getLearningRegime().equals(LearningRegime.STATUS)) {
+        if (user.getAccount().getLearningRegime().equals(LearningRegime.BAD_NORMAL_GOOD_STATUS_DEPENDING)) {
             learningCards = cardRepository.cardsForLearningWithOutStatus(email, deckId, CARDS_NUMBER);
             if (learningCards.size() < CARDS_NUMBER) {
                 learningCards.addAll(cardRepository.cardsQueueForLearningWithStatus(email, deckId,
                         CARDS_NUMBER - learningCards.size()));
             }
-        } else if (user.getAccount().getLearningRegime().equals(LearningRegime.CARDS_POSTPONING)) {
+        } else if (user.getAccount().getLearningRegime().equals(LearningRegime.CARDS_POSTPONING_USING_SPACED_REPETITION)) {
             learningCards = cardRepository.getCardsThatNeedRepeating(deckId, new Date(), email, CARDS_NUMBER);
             if (learningCards.size() < CARDS_NUMBER) {
                 learningCards.addAll(cardRepository.getNewCards(deckId, email, CARDS_NUMBER - learningCards.size()));
