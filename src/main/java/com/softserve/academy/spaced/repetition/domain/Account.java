@@ -39,7 +39,7 @@ public class Account implements EntityInterface {
     private Set<Authority> authorities;
 
     @NotNull
-    @Column(name = "learning_regime", columnDefinition = "varchar(45) default 'CARDS_POSTPONING_LEARNING'")
+    @Column(name = "learning_regime", columnDefinition = "varchar(45) default 'CARDS_POSTPONING'")
     @Enumerated(value = EnumType.STRING)
     private LearningRegime learningRegime;
 

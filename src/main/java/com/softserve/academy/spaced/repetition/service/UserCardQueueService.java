@@ -42,7 +42,7 @@ public class UserCardQueueService {
         userCardQueue.setAccountEmail(email);
         userCardQueue.setCardDate(new Date());
 
-        if (user.getAccount().getLearningRegime().equals(LearningRegime.CARDS_POSTPONING_LEARNING)) {
+        if (user.getAccount().getLearningRegime().equals(LearningRegime.CARDS_POSTPONING)) {
             applyCardsPostponingLearningRegime(userCardQueue, rememberingLevel);
         }
         return userCardQueueRepository.save(userCardQueue);
