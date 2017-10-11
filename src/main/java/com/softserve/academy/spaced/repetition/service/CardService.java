@@ -2,6 +2,7 @@ package com.softserve.academy.spaced.repetition.service;
 
 import com.softserve.academy.spaced.repetition.domain.Card;
 import com.softserve.academy.spaced.repetition.domain.Deck;
+import com.softserve.academy.spaced.repetition.domain.LearningRegime;
 import com.softserve.academy.spaced.repetition.domain.User;
 import com.softserve.academy.spaced.repetition.exceptions.NotAuthorisedUserException;
 import com.softserve.academy.spaced.repetition.repository.CardRepository;
@@ -36,13 +37,13 @@ public class CardService {
         User user = userService.getAuthorizedUser();
         String email = user.getAccount().getEmail();
         List<Card> learningCards = new ArrayList<>();
-        if (user.getAccount().getLearningRegime() == 1) {
+        if (user.getAccount().getLearningRegime() == LearningRegime.STATUS_LEARNING.ordinal()) {
             learningCards = cardRepository.cardsForLearningWithOutStatus(email, deckId, CARDS_NUMBER);
             if (learningCards.size() < CARDS_NUMBER) {
                 learningCards.addAll(cardRepository.cardsQueueForLearningWithStatus(email, deckId,
                         CARDS_NUMBER - learningCards.size()));
             }
-        } else if (user.getAccount().getLearningRegime() == 2) {
+        } else if (user.getAccount().getLearningRegime() == LearningRegime.CARDS_POSTPONING_LEARNING.ordinal()) {
             learningCards = cardRepository.getCardsThatNeedRepeating(deckId, new Date(), email, CARDS_NUMBER);
             if (learningCards.size() < CARDS_NUMBER) {
                 learningCards.addAll(cardRepository.getNewCards(deckId, email, CARDS_NUMBER - learningCards.size()));

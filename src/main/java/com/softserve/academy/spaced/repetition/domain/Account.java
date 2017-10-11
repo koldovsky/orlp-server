@@ -40,6 +40,7 @@ public class Account implements EntityInterface {
 
     @NotNull
     @Column(name = "learning_regime", columnDefinition = "int default 1")
+    @Enumerated
     private Integer learningRegime;
 
     public Account() {

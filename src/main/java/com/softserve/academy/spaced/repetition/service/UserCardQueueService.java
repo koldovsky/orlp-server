@@ -1,9 +1,6 @@
 package com.softserve.academy.spaced.repetition.service;
 
-import com.softserve.academy.spaced.repetition.domain.RememberingLevel;
-import com.softserve.academy.spaced.repetition.domain.User;
-import com.softserve.academy.spaced.repetition.domain.UserCardQueue;
-import com.softserve.academy.spaced.repetition.domain.UserCardQueueStatus;
+import com.softserve.academy.spaced.repetition.domain.*;
 import com.softserve.academy.spaced.repetition.exceptions.NotAuthorisedUserException;
 import com.softserve.academy.spaced.repetition.repository.RememberingLevelRepository;
 import com.softserve.academy.spaced.repetition.repository.UserCardQueueRepository;
@@ -45,7 +42,7 @@ public class UserCardQueueService {
         userCardQueue.setAccountEmail(email);
         userCardQueue.setCardDate(new Date());
 
-        if (user.getAccount().getLearningRegime() == 2) {
+        if (user.getAccount().getLearningRegime() == LearningRegime.CARDS_POSTPONING_LEARNING.ordinal()) {
             applyCardsPostponingLearningRegime(userCardQueue, rememberingLevel);
         }
         return userCardQueueRepository.save(userCardQueue);
