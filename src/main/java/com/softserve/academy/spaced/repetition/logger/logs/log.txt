@@ -1,7 +1,0 @@
-
-2017-10-11 19:54:55,294 [WARN ][    logger.Log4jImpl] - Exception in controller = com.softserve.academy.spaced.repetition.controller.DeckController@7228b872, method = ResponseEntity com.softserve.academy.spaced.repetition.controller.DeckController.deleteDeckANDRII(Long)
-2017-10-11 19:56:40,129 [WARN ][    logger.Log4jImpl] - Exception in controller = com.softserve.academy.spaced.repetition.controller.DeckController@33e4e8ec, method = ResponseEntity com.softserve.academy.spaced.repetition.controller.DeckController.deleteDeckANDRII(Long)
-2017-10-11 20:32:03,351 [WARN ][    logger.Log4jImpl] - Exception in service = com.softserve.academy.spaced.repetition.service.CardService@16efbfc7, method = List com.softserve.academy.spaced.repetition.service.CardService.getCardsQueue(long)
-2017-10-11 20:32:03,353 [WARN ][    logger.Log4jImpl] - Exception in controller = com.softserve.academy.spaced.repetition.controller.CardController@fe51e72, method = ResponseEntity com.softserve.academy.spaced.repetition.controller.CardController.getLearningCards(long)
-2017-10-11 21:45:22,106 [WARN ][    logger.Log4jImpl] - Exception in service = com.softserve.academy.spaced.repetition.service.DeckService@5eab9fd8, method = Deck com.softserve.academy.spaced.repetition.service.DeckService.getDeckUser(Long)
-2017-10-11 21:45:22,108 [WARN ][    logger.Log4jImpl] - Exception in controller = com.softserve.academy.spaced.repetition.controller.DeckController@6ead9ea2, method = ResponseEntity com.softserve.academy.spaced.repetition.controller.DeckController.getOneDeckForUser(Long)
