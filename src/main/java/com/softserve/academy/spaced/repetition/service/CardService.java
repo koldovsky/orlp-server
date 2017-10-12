@@ -62,7 +62,7 @@ public class CardService {
         deck.getCards().add(cardRepository.save(card));
     }
 
-    public void updateCard(Long id, Card card) {
+   public void updateCard(Long id, Card card) {
         card.setId(id);
         card.setDeck(cardRepository.findOne(id).getDeck());
         cardRepository.save(card);
