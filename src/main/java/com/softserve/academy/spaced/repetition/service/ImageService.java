@@ -54,21 +54,18 @@ public class ImageService {
         } else {
             String base64 = encodeToBase64(file);
             String imageType = file.getContentType();
-            if (imageType != null && !imageType.split("/")[0].equals("image"))
+            if (imageType == null || !imageType.split("/")[0].equals("image"))
             {
                 throw new FileIsNotAnImageException();
             }
-            else if(imageType == null){
-                throw new NullPointerException();
-            }
             else {
-                image = new Image(base64, imageType, user, fileSize);
-                imageRepository.save(image);
-                image = imageRepository.getImageWithoutContent(image.getId());
-            }
-        }
-        return image;
+        image = new Image(base64, imageType, user, fileSize);
+        imageRepository.save(image);
+        image = imageRepository.getImageWithoutContent(image.getId());
     }
+}
+        return image;
+                }
 
     /**
      * Gets decoded from Base64 image content by Image Id
