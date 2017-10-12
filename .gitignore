@@ -126,3 +126,4 @@ fabric.properties
 /target/
 /Spaced.Repetition.iml
 /orlp.log
+/src/main/java/com/softserve/academy/spaced/repetition/logger/logs/log.txt
