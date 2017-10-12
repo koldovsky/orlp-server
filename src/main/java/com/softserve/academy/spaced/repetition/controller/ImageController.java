@@ -10,7 +10,6 @@ import com.softserve.academy.spaced.repetition.exceptions.CanNotBeDeletedExcepti
 import com.softserve.academy.spaced.repetition.exceptions.ImageRepositorySizeQuotaExceededException;
 import com.softserve.academy.spaced.repetition.exceptions.NotAuthorisedUserException;
 import com.softserve.academy.spaced.repetition.exceptions.NotOwnerOperationException;
-import com.softserve.academy.spaced.repetition.exceptions.FileIsNotAnImageException;
 import com.softserve.academy.spaced.repetition.repository.ImageRepository;
 import com.softserve.academy.spaced.repetition.service.ImageService;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -7,16 +7,13 @@ import com.softserve.academy.spaced.repetition.exceptions.CanNotBeDeletedExcepti
 import com.softserve.academy.spaced.repetition.exceptions.ImageRepositorySizeQuotaExceededException;
 import com.softserve.academy.spaced.repetition.exceptions.NotAuthorisedUserException;
 import com.softserve.academy.spaced.repetition.exceptions.NotOwnerOperationException;
-import com.softserve.academy.spaced.repetition.exceptions.FileIsNotAnImageException;
 import com.softserve.academy.spaced.repetition.repository.ImageRepository;
-import com.softserve.academy.spaced.repetition.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartException;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.validation.constraints.Null;
 import java.io.IOException;
 import java.util.List;
 
