@@ -24,21 +24,20 @@ public class DeckRatingController {
     @Autowired
     private DeckRatingService deckRatingService;
 
-    @GetMapping("api/rate/deck/{id}")
-    public ResponseEntity<DeckRatingPublicDTO> getDeckRatingById(@PathVariable Long deckId) {
-        DeckRating deckRating = deckRatingService.getDeckRatingById(deckId);
-        Link selfLink = linkTo(methodOn(DeckRatingController.class).getDeckRatingById(deckRating.getId())).withRel("deckRating");
+    @GetMapping("api/deck/{deckId}/rating/{id}")
+    public ResponseEntity<DeckRatingPublicDTO> getDeckRatingById(@PathVariable Long deckId, @PathVariable Long id) {
+        DeckRating deckRating = deckRatingService.getDeckRatingById(id);
+        Link selfLink = linkTo(methodOn(DeckRatingController.class).getDeckRatingById(deckRating.getDeck().getId(), deckRating.getId())).withRel("deckRating");
         DeckRatingPublicDTO deckRatingDTO = DTOBuilder.buildDtoForEntity(deckRating, DeckRatingPublicDTO.class, selfLink);
         return new ResponseEntity<>(deckRatingDTO, HttpStatus.OK);
     }
 
     @PostMapping("/api/private/deck/{deckId}")
-    public ResponseEntity<DTO<DeckRating>> addDeckRating(@RequestBody DeckRating deckRating, @PathVariable Long deckId) throws RatingsBadValueException, NotAuthorisedUserException {
-        if ((deckRating.getRating() >= MIN_RATING) && (deckRating.getRating() <= MAX_RATING)) {
+    public ResponseEntity addDeckRating(@RequestBody String rating, @PathVariable Long deckId) throws RatingsBadValueException, NotAuthorisedUserException {
+        int deckRating = Integer.valueOf(rating);
+        if ((deckRating >= MIN_RATING) && (deckRating <= MAX_RATING)) {
             deckRatingService.addDeckRating(deckRating, deckId);
-            Link selfLink = linkTo(methodOn(DeckRatingController.class).getDeckRatingById(deckRating.getId())).withSelfRel();
-            DeckRatingPublicDTO deckRatingPublicDTO = DTOBuilder.buildDtoForEntity(deckRating, DeckRatingPublicDTO.class, selfLink);
-            return new ResponseEntity<>(deckRatingPublicDTO, HttpStatus.CREATED);
+            return new ResponseEntity(HttpStatus.CREATED);
         } else {
             throw new RatingsBadValueException();
         }

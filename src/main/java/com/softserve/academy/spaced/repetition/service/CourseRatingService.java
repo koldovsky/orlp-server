@@ -21,16 +21,17 @@ public class CourseRatingService {
     @Autowired
     private UserService userService;
 
-    public void addCourseRating(CourseRating courseRating, Long courseId) throws NotAuthorisedUserException {
+    public void addCourseRating(int rating, Long courseId) throws NotAuthorisedUserException {
         User user = userService.getAuthorizedUser();
         String email = user.getAccount().getEmail();
-        CourseRating courseRatingByAccountEmail = courseRatingRepository.findAllByAccountEmailAndCourse_Id(email, courseId);
-        if (courseRatingByAccountEmail != null) {
-            courseRating.setId(courseRatingByAccountEmail.getId());
+        CourseRating courseRating = courseRatingRepository.findAllByAccountEmailAndCourse_Id(email, courseId);
+        if (courseRating == null) {
+            courseRating = new CourseRating();
         }
         Course course = courseRepository.findOne(courseId);
         courseRating.setAccountEmail(email);
         courseRating.setCourse(course);
+        courseRating.setRating(rating);
         courseRatingRepository.save(courseRating);
         double courseAverageRating = courseRatingRepository.findRatingByCourse_Id(courseId);
         course.setRating(courseAverageRating);

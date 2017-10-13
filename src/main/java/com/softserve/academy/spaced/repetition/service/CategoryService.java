@@ -31,7 +31,7 @@ public class CategoryService {
     }
 
     public List<Category> getTopCategory() {
-        List<Category> categories = categoryRepository.findTop4ByOrderById();
+        List<Category> categories = categoryRepository.findTop8ByOrderById();
         return categories;
     }
 
