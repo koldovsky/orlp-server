@@ -23,6 +23,11 @@ public class Account implements EntityInterface {
     @Column(name = "email", unique = true, nullable = false)
     private String email;
 
+    @Column(name = "AUTHENTICATIONTYPE", length = 50)
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    private AuthenticationType authenticationType;
+
     @Column(name = "status")
     @NotNull
     @Enumerated(EnumType.STRING)
@@ -104,6 +109,14 @@ public class Account implements EntityInterface {
 
     public void setLastPasswordResetDate(Date lastPasswordResetDate) {
         this.lastPasswordResetDate = lastPasswordResetDate;
+    }
+
+    public AuthenticationType getAuthenticationType() {
+        return authenticationType;
+    }
+
+    public void setAuthenticationType(AuthenticationType authenticationType) {
+        this.authenticationType = authenticationType;
     }
 
     public AccountStatus getStatus() {

@@ -91,10 +91,12 @@ public class FacebookAuthUtil {
         account.setPassword("-1");
         account.setLastPasswordResetDate(new Date());
         account.setStatus(AccountStatus.ACTIVE);
+        account.setAuthenticationType(AuthenticationType.FACEBOOK);
         Authority authority = authorityRepository.findAuthorityByName(AuthorityName.ROLE_USER);
         account.setAuthorities(Collections.singleton(authority));
         person.setFirstName((String) fbProfileData.get("first_name"));
         person.setLastName((String) fbProfileData.get("last_name"));
+        person.setTypeImage(ImageType.NONE);
         user.setAccount(account);
         user.setFolder(folder);
         user.setPerson(person);

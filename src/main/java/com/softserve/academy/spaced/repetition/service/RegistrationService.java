@@ -55,6 +55,7 @@ public class RegistrationService {
         user.getAccount().setAuthorities(listOfAuthorities);
         user.getAccount().setEmail(user.getAccount().getEmail().toLowerCase());
         user.getAccount().setPassword(passwordEncoder.encode(user.getAccount().getPassword()));
+        user.getPerson().setTypeImage(ImageType.NONE);
         userService.addUser(user);
         return user;
     }

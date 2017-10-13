@@ -85,7 +85,7 @@ public class ImageService {
      * @param file - MultiPartFile
      * @return encoded file-content
      */
-    private String encodeToBase64(MultipartFile file) {
+    public String encodeToBase64(MultipartFile file) {
         String encodedFile = null;
         byte[] bytes = new byte[(int) file.getSize()];
         try {
@@ -103,7 +103,7 @@ public class ImageService {
      * @param encodedFileContent
      * @return decoded file-content
      */
-    private byte[] decodeFromBase64(String encodedFileContent) {
+    public byte[] decodeFromBase64(String encodedFileContent) {
 
         return Base64.decodeBase64(encodedFileContent);
     }
