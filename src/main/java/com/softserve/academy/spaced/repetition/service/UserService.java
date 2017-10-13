@@ -6,6 +6,9 @@ import com.softserve.academy.spaced.repetition.repository.DeckRepository;
 import com.softserve.academy.spaced.repetition.repository.UserRepository;
 import com.softserve.academy.spaced.repetition.security.JwtUser;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,6 +24,7 @@ public class UserService {
     private UserRepository userRepository;
     @Autowired
     private DeckRepository deckRepository;
+    public final static int QUANTITY_USER_IN_PAGE = 20;
 
     public void addUser(User user) {
         userRepository.save(user);
@@ -114,5 +118,15 @@ public class UserService {
         List<Deck> decks = new ArrayList<>();
         decks.addAll(usersFolder.getDecks());
         return decks;
+    }
+
+    public Page<User> getUsersByPage(int pageNumber, String sortBy, boolean ascending) {
+        PageRequest request;
+        if(ascending == true){
+            request = new PageRequest(pageNumber-1, QUANTITY_USER_IN_PAGE, Sort.Direction.ASC, sortBy);
+        }else {
+            request = new PageRequest(pageNumber-1, QUANTITY_USER_IN_PAGE, Sort.Direction.DESC, sortBy);
+        }
+        return userRepository.findAll(request);
     }
 }

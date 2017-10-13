@@ -5,16 +5,14 @@ import com.softserve.academy.spaced.repetition.DTO.impl.*;
 import com.softserve.academy.spaced.repetition.audit.Auditable;
 import com.softserve.academy.spaced.repetition.audit.AuditingAction;
 import com.softserve.academy.spaced.repetition.domain.Card;
-import com.softserve.academy.spaced.repetition.domain.Category;
 import com.softserve.academy.spaced.repetition.domain.Deck;
-import com.softserve.academy.spaced.repetition.domain.User;
 import com.softserve.academy.spaced.repetition.exceptions.NoSuchDeckException;
 import com.softserve.academy.spaced.repetition.exceptions.NotAuthorisedUserException;
 import com.softserve.academy.spaced.repetition.exceptions.NotOwnerOperationException;
 import com.softserve.academy.spaced.repetition.service.DeckService;
 import com.softserve.academy.spaced.repetition.service.FolderService;
-import com.softserve.academy.spaced.repetition.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.hateoas.Link;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -37,12 +35,12 @@ public class DeckController {
     @Auditable(action = AuditingAction.VIEW_DECKS_VIA_CATEGORY)
     @GetMapping(value = "/api/category/{category_id}/decks")
     @PreAuthorize(value = "@accessToUrlService.hasAccessToDeck(#category_id)")
-    public ResponseEntity<List<DeckLinkByCategoryDTO>> getAllDecksByCategoryId(@PathVariable Long category_id) {
-        List<Deck> decksList = deckService.getAllDecksByCategory(category_id);
-        Link collectionLink = linkTo(methodOn(DeckController.class).getAllDecksByCategoryId(category_id)).withRel("deck");
-        List<DeckLinkByCategoryDTO> decks = DTOBuilder.buildDtoListForCollection(decksList,
-                DeckLinkByCategoryDTO.class, collectionLink);
-        return new ResponseEntity<>(decks, HttpStatus.OK);
+    public ResponseEntity<Page<DeckLinkByCategoryDTO>> getAllDecksByCategoryId(@PathVariable Long category_id,@RequestParam(name = "p", defaultValue = "1") int pageNumber, @RequestParam(name = "sortBy") String sortBy, @RequestParam(name = "asc") boolean ascending) {
+        Page<DeckLinkByCategoryDTO> deckByCategoryDTOS = deckService.getPageWithDecksByCategory(category_id,pageNumber, sortBy, ascending).map((deck) -> {
+            Link selfLink = linkTo(methodOn(DeckController.class).getAllDecksByCategoryId(category_id,pageNumber,sortBy,ascending)).withRel("deck");
+            return DTOBuilder.buildDtoForEntity(deck, DeckLinkByCategoryDTO.class, selfLink);
+        });
+        return new ResponseEntity<>(deckByCategoryDTOS, HttpStatus.OK);
     }
 
     @GetMapping(value = "/api/decks/ordered")
@@ -146,17 +144,17 @@ public class DeckController {
 
     @Auditable(action = AuditingAction.VIEW_DECKS_ADMIN)
     @GetMapping(value = "/api/admin/decks")
-    public ResponseEntity<List<DeckOfUserManagedByAdminDTO>> getAllDecksForAdmin() {
-        List<Deck> decksList = deckService.getAllOrderedDecks();
-        Link collectionLink = linkTo(methodOn(DeckController.class).getAllDecksForAdmin()).withSelfRel();
-        List<DeckOfUserManagedByAdminDTO> decks = DTOBuilder.buildDtoListForCollection(decksList,
-                DeckOfUserManagedByAdminDTO.class, collectionLink);
-        return new ResponseEntity<>(decks, HttpStatus.OK);
+    public ResponseEntity<Page<DeckOfUserManagedByAdminDTO>> getAllDecksForAdmin(@RequestParam(name = "p", defaultValue = "1") int pageNumber, @RequestParam(name = "sortBy") String sortBy, @RequestParam(name = "asc") boolean ascending) {
+        Page<DeckOfUserManagedByAdminDTO> deckOfUserManagedByAdminDTO = deckService.getPageWithAllAdminDecks(pageNumber, sortBy, ascending).map((deck) -> {
+            Link selfLink = linkTo(methodOn(DeckController.class).getOneDeckForAdmin(deck.getId())).withSelfRel();
+            return DTOBuilder.buildDtoForEntity(deck, DeckOfUserManagedByAdminDTO.class, selfLink);
+        });
+        return new ResponseEntity<>(deckOfUserManagedByAdminDTO, HttpStatus.OK);
     }
 
     @Auditable(action = AuditingAction.VIEW_ONE_DECK_ADMIN)
     @GetMapping(value = "/api/admin/decks/{deckId}")
-    public ResponseEntity<DeckOfUserManagedByAdminDTO> getOneDeckForAdmin( @PathVariable Long deckId){
+    public ResponseEntity<DeckOfUserManagedByAdminDTO> getOneDeckForAdmin(@PathVariable Long deckId){
         Deck deck = deckService.getDeck(deckId);
         Link selfLink = linkTo(methodOn(DeckController.class).getOneDeckForAdmin(deckId)).withSelfRel();
         DeckOfUserManagedByAdminDTO deckOfUserManagedByAdminDTO = DTOBuilder.buildDtoForEntity(deck,
@@ -169,7 +167,7 @@ public class DeckController {
     public ResponseEntity<DeckOfUserManagedByAdminDTO> addDeckForAdmin(@RequestBody Deck deck) throws NotAuthorisedUserException {
         Deck deckNew = deckService.createNewDeckAdmin(deck);
         folderService.addDeck(deckNew.getId());
-        Link selfLink = linkTo(methodOn(DeckController.class).addDeckForAdmin(deckNew)).withSelfRel();
+        Link selfLink = linkTo(methodOn(DeckController.class).getOneDeckForAdmin(deckNew.getId())).withSelfRel();
         DeckOfUserManagedByAdminDTO deckOfUserManagedByAdminDTO = DTOBuilder.buildDtoForEntity(deckNew, DeckOfUserManagedByAdminDTO.class, selfLink);
         return new ResponseEntity<>(deckOfUserManagedByAdminDTO, HttpStatus.CREATED);
     }
@@ -177,8 +175,10 @@ public class DeckController {
     @Auditable(action = AuditingAction.EDIT_DECK_ADMIN)
     @PutMapping(value = "/api/admin/decks/{deckId}")
     public ResponseEntity updateDeckForAdmin(@RequestBody Deck deck, @PathVariable Long deckId) {
-        deckService.updateDeckAdmin(deck, deckId);
-        return new ResponseEntity<>(HttpStatus.OK);
+        Deck updatedDeck=deckService.updateDeckAdmin(deck, deckId);
+        Link selfLink = linkTo(methodOn(DeckController.class).getOneDeckForAdmin(updatedDeck.getId())).withSelfRel();
+        DeckOfUserManagedByAdminDTO deckOfUserManagedByAdminDTO = DTOBuilder.buildDtoForEntity(updatedDeck, DeckOfUserManagedByAdminDTO.class, selfLink);
+        return new ResponseEntity<>(deckOfUserManagedByAdminDTO, HttpStatus.OK);
     }
 
     @Auditable(action = AuditingAction.DELETE_DECK_ADMIN)

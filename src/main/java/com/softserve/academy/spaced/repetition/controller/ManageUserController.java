@@ -9,6 +9,7 @@ import com.softserve.academy.spaced.repetition.domain.Deck;
 import com.softserve.academy.spaced.repetition.domain.User;
 import com.softserve.academy.spaced.repetition.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.hateoas.Link;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,12 +33,12 @@ public class ManageUserController {
      */
     @Auditable(action = AuditingAction.VIEW_ALL_USERS_ADMIN)
     @GetMapping("/api/admin/users")
-    public ResponseEntity<List<UserManagedByAdminDTO>> getAllUsers() {
-        List<User> userList = userService.getAllUsers();
-        Link link = linkTo(methodOn(ManageUserController.class).getAllUsers()).withSelfRel();
-        List<UserManagedByAdminDTO> usersDTOList = DTOBuilder.buildDtoListForCollection(userList,
-                UserManagedByAdminDTO.class, link);
-        return new ResponseEntity<>(usersDTOList, HttpStatus.OK);
+    public ResponseEntity<Page<UserManagedByAdminDTO>> getAllUsers(@RequestParam(name = "p", defaultValue = "1") int pageNumber, @RequestParam(name = "sortBy") String sortBy, @RequestParam(name = "asc") boolean ascending) {
+        Page<UserManagedByAdminDTO> userManagedByAdminDTOS = userService.getUsersByPage(pageNumber, sortBy, ascending).map((user) -> {
+            Link selfLink = linkTo(methodOn(ManageUserController.class).getUserById(user.getId())).withSelfRel();
+            return DTOBuilder.buildDtoForEntity(user, UserManagedByAdminDTO.class, selfLink);
+        });
+        return new ResponseEntity<>(userManagedByAdminDTOS, HttpStatus.OK);
     }
 
     /**

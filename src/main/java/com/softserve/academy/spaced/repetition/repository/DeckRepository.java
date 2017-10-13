@@ -1,7 +1,8 @@
 package com.softserve.academy.spaced.repetition.repository;
 
-import com.softserve.academy.spaced.repetition.domain.Deck;
-import com.softserve.academy.spaced.repetition.domain.Course;
+import com.softserve.academy.spaced.repetition.domain.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -38,4 +39,8 @@ public interface DeckRepository extends JpaRepository<Deck, Long> {
     Deck getDeckByItsIdAndOwnerOfDeck(@Param("deck_id") Long deck_id, @Param("user_id") Long user_id);
 
     List<Deck> findAllByDeckOwner_IdEquals(Long user_id);
+
+    Page<Deck> findAllByCategoryEquals(Category category, Pageable pageable);
+
+    Page<Deck> findAllByOrderByRatingDesc(Pageable pageable);
 }
