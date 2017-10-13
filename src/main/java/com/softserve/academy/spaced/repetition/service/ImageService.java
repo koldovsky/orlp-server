@@ -3,12 +3,8 @@ package com.softserve.academy.spaced.repetition.service;
 import com.google.api.client.util.Base64;
 import com.softserve.academy.spaced.repetition.domain.Image;
 import com.softserve.academy.spaced.repetition.domain.User;
-import com.softserve.academy.spaced.repetition.exceptions.CanNotBeDeletedException;
-import com.softserve.academy.spaced.repetition.exceptions.ImageRepositorySizeQuotaExceededException;
-import com.softserve.academy.spaced.repetition.exceptions.NotAuthorisedUserException;
-import com.softserve.academy.spaced.repetition.exceptions.NotOwnerOperationException;
+import com.softserve.academy.spaced.repetition.exceptions.*;
 import com.softserve.academy.spaced.repetition.repository.ImageRepository;
-import com.softserve.academy.spaced.repetition.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -40,7 +36,7 @@ public class ImageService {
      * @throws ImageRepositorySizeQuotaExceededException - is dropping when user has exceeded the quote of disk-space for his own images
      * @throws NotAuthorisedUserException                - is dropping when the user which wants to add the image is not authorised
      */
-    public Image addImageToDB(MultipartFile file) throws ImageRepositorySizeQuotaExceededException, NotAuthorisedUserException {
+    public Image addImageToDB(MultipartFile file) throws ImageRepositorySizeQuotaExceededException, NotAuthorisedUserException, FileIsNotAnImageException {
         Image image = null;
         long fileSize = file.getSize();
         User user = userService.getAuthorizedUser();
@@ -52,12 +48,18 @@ public class ImageService {
         } else {
             String base64 = encodeToBase64(file);
             String imageType = file.getContentType();
-            image = new Image(base64, imageType, user, fileSize);
-            imageRepository.save(image);
-            image = imageRepository.getImageWithoutContent(image.getId());
-        }
-        return image;
+            if (imageType == null || !imageType.split("/")[0].equals("image"))
+            {
+                throw new FileIsNotAnImageException();
+            }
+            else {
+        image = new Image(base64, imageType, user, fileSize);
+        imageRepository.save(image);
+        image = imageRepository.getImageWithoutContent(image.getId());
     }
+}
+        return image;
+                }
 
     /**
      * Gets decoded from Base64 image content by Image Id

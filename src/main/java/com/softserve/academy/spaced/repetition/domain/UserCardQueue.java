@@ -19,20 +19,26 @@ public class UserCardQueue implements EntityInterface {
     private String accountEmail;
 
     @Column(name = "card_id", nullable = false)
-    private long cardId;
+    private Long cardId;
 
     @Column(name = "deck_id", nullable = false)
-    private long deckId;
+    private Long deckId;
 
     @Column(name = "status")
-    @NotNull
     @Enumerated(EnumType.STRING)
     private UserCardQueueStatus status;
 
-    @Column(name = "card_data")
+    @Column(name = "card_date")
     @Temporal(TemporalType.TIMESTAMP)
     @NotNull
     private Date cardDate;
+
+    @Column(name = "date_to_repeat")
+    private Date dateToRepeat;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "remembering_level_id")
+    private RememberingLevel rememberingLevel;
 
     public UserCardQueue() {
 
@@ -46,11 +52,11 @@ public class UserCardQueue implements EntityInterface {
         this.id = id;
     }
 
-    public long getDeckId() {
+    public Long getDeckId() {
         return deckId;
     }
 
-    public void setDeckId(long deckId) {
+    public void setDeckId(Long deckId) {
         this.deckId = deckId;
     }
 
@@ -62,11 +68,11 @@ public class UserCardQueue implements EntityInterface {
         this.accountEmail = accountEmail;
     }
 
-    public long getCardId() {
+    public Long getCardId() {
         return cardId;
     }
 
-    public void setCardId(long cardId) {
+    public void setCardId(Long cardId) {
         this.cardId = cardId;
     }
 
@@ -84,5 +90,21 @@ public class UserCardQueue implements EntityInterface {
 
     public void setCardDate(Date cardDate) {
         this.cardDate = cardDate;
+    }
+
+    public Date getDateToRepeat() {
+        return dateToRepeat;
+    }
+
+    public void setDateToRepeat(Date dateToRepeat) {
+        this.dateToRepeat = dateToRepeat;
+    }
+
+    public RememberingLevel getRememberingLevel() {
+        return rememberingLevel;
+    }
+
+    public void setRememberingLevel(RememberingLevel rememberingLevel) {
+        this.rememberingLevel = rememberingLevel;
     }
 }
