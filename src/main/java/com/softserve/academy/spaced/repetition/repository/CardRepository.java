@@ -2,16 +2,18 @@ package com.softserve.academy.spaced.repetition.repository;
 
 import com.softserve.academy.spaced.repetition.domain.Card;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.List;
 
 @Repository
 public interface CardRepository extends JpaRepository<Card, Long> {
+
+    @Query(value = "SELECT c FROM Card c WHERE c.id = :card_id")
+    List<Card> hasAccessToCard(@Param("card_id") Long cardId);
 
     @Query(value = "SELECT c FROM Deck d INNER JOIN d.cards AS c WHERE d.id = :deck_id and c.id = :card_id")
     List<Card> hasAccessToCard(@Param("deck_id") Long deck_id, @Param("card_id") Long card_id);
@@ -39,13 +41,19 @@ public interface CardRepository extends JpaRepository<Card, Long> {
     List<Card> cardsQueueForLearningWithStatus(@Param("accountEmail") String accountEmail, @Param("deckId") long deckId,
                                                @Param("limitNumber") long limitNumber);
 
-    @Modifying
-    @Query(value =
-            "DELETE " +
-                    "from deck_cards , card " +
-                    "using deck_cards , card " +
-                    "where deck_cards.card_id= :card_id and card.card_id= :card_id", nativeQuery = true)
-    void deleteCardById(@Param("card_id") Long card_id);
-
     List <Card> findAllByQuestion(String question);
+
+    void deleteCardById(Long cardId);
+
+    @Query(value = "SELECT * FROM card WHERE deck_id = :deckId AND card_id NOT IN " +
+            "(SELECT card_id FROM user_card_queue WHERE deck_id=:deckId AND account_email = :email) limit :limit",
+            nativeQuery = true)
+    List<Card> getNewCards(@Param("deckId") Long deckId, @Param("email") String email, @Param("limit") int limit);
+
+
+    @Query(value = "SELECT c.* FROM card c INNER JOIN user_card_queue u on c.card_id = u.card_id WHERE c.deck_id = " +
+            ":deckId AND u.account_email = :email AND date_to_repeat <= :dateToRepeat limit :limit",
+            nativeQuery = true)
+    List<Card> getCardsThatNeedRepeating(@Param("deckId") Long deckId, @Param("dateToRepeat") Date dateToRepeat,
+                                         @Param("email") String email, @Param("limit") int limit);
 }
