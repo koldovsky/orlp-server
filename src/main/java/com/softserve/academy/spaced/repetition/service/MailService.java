@@ -87,9 +87,7 @@ public class MailService {
             content.append(FreeMarkerTemplateUtils.processTemplateIntoString(
                     freemarkerConfiguration.getTemplate("registrationVerificationMailTemplate.txt"), model));
             return content.toString();
-        } catch (IOException e) {
-            logger.log(e.getClass().getName());
-        } catch (TemplateException e) {
+        } catch (IOException | TemplateException e) {
             logger.log(e.getClass().getName());
         }
         return "";
@@ -102,9 +100,7 @@ public class MailService {
             content.append(FreeMarkerTemplateUtils.processTemplateIntoString(
                     freemarkerConfiguration.getTemplate("changePasswordMailTemplate.txt"), model));
             return content.toString();
-        } catch (IOException e) {
-            logger.log(e.getClass().getName());
-        } catch (TemplateException e) {
+        } catch (IOException | TemplateException e) {
             logger.log(e.getClass().getName());
         }
         return "";
@@ -116,9 +112,7 @@ public class MailService {
             content.append(FreeMarkerTemplateUtils.processTemplateIntoString(
                     freemarkerConfiguration.getTemplate("deleteAccountMailTemplate.txt"), model));
             return content.toString();
-        } catch (IOException e) {
-            logger.log(e.getClass().getName());
-        } catch (TemplateException e) {
+        } catch (IOException | TemplateException e) {
             logger.log(e.getClass().getName());
         }
         return "";

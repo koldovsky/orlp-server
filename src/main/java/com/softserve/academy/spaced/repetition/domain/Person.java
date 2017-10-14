@@ -19,7 +19,7 @@ public class Person {
     private String lastName;
 
 
-    @Column(name = "IMAGETYPE", length = 50)
+    @Column(name = "IMAGETYPE", length = 6)
     @NotNull
     @Enumerated(EnumType.STRING)
     private ImageType typeImage;
@@ -27,6 +27,7 @@ public class Person {
     private String image;
 
     @Column(name = "imagebase64", columnDefinition = "LONGTEXT")
+    @Basic(fetch = FetchType.LAZY)
     private String imageBase64;
 
     public Person() {

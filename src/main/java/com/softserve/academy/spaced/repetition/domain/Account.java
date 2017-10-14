@@ -23,7 +23,7 @@ public class Account implements EntityInterface {
     @Column(name = "email", unique = true, nullable = false)
     private String email;
 
-    @Column(name = "AUTHENTICATIONTYPE", length = 50)
+    @Column(name = "AUTHENTICATIONTYPE", length = 8)
     @NotNull
     @Enumerated(EnumType.STRING)
     private AuthenticationType authenticationType;
