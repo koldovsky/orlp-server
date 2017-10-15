@@ -1,7 +1,7 @@
 package com.softserve.academy.spaced.repetition.controller;
 
-import com.softserve.academy.spaced.repetition.DTO.DTO;
 import com.softserve.academy.spaced.repetition.DTO.DTOBuilder;
+import com.softserve.academy.spaced.repetition.DTO.RatingDTO;
 import com.softserve.academy.spaced.repetition.DTO.impl.CourseRatingPublicDTO;
 import com.softserve.academy.spaced.repetition.domain.CourseRating;
 import com.softserve.academy.spaced.repetition.exceptions.NotAuthorisedUserException;
@@ -34,10 +34,9 @@ public class CourseRatingController {
     }
 
     @PostMapping("/api/private/course/{courseId}")
-    public ResponseEntity addCourseRating(@RequestBody String rating, @PathVariable Long courseId) throws RatingsBadValueException, NotAuthorisedUserException {
-        int courseRating = Integer.valueOf(rating);
-        if ((courseRating >= MIN_RATING) && (courseRating <= MAX_RATING)) {
-            courseRatingService.addCourseRating(courseRating, courseId);
+    public ResponseEntity addCourseRating(@RequestBody RatingDTO ratingDTO, @PathVariable Long courseId) throws RatingsBadValueException, NotAuthorisedUserException {
+        if ((ratingDTO.getRating() >= MIN_RATING) && (ratingDTO.getRating() <= MAX_RATING)) {
+            courseRatingService.addCourseRating(ratingDTO.getRating(), courseId);
            return new ResponseEntity(HttpStatus.CREATED);
         } else {
             throw new RatingsBadValueException();

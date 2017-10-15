@@ -38,7 +38,7 @@ public class CourseRatingService {
         courseRepository.save(course);
     }
 
-    public CourseRating getCourseRatingById(Long courseId) {
-        return courseRatingRepository.findOne(courseId);
+    public CourseRating getCourseRatingById(Long id) {
+        return courseRatingRepository.findOne(id);
     }
 }

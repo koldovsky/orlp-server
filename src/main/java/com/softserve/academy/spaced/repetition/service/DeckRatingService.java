@@ -40,7 +40,7 @@ public class DeckRatingService {
         deckRepository.save(deck);
     }
 
-    public DeckRating getDeckRatingById(Long deckId) {
-        return deckRatingRepository.findOne(deckId);
+    public DeckRating getDeckRatingById(Long id) {
+        return deckRatingRepository.findOne(id);
     }
 }
