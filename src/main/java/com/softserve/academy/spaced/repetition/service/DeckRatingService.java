@@ -21,24 +21,25 @@ public class DeckRatingService {
     private UserService userService;
 
     @Transactional
-    public void addDeckRating(DeckRating deckRating, Long deckId) throws NotAuthorisedUserException {
+    public void addDeckRating(int rating, Long deckId) throws NotAuthorisedUserException {
         User user = userService.getAuthorizedUser();
         String email = user.getAccount().getEmail();
-        DeckRating deckRatingByAccountEmail = deckRatingRepository.findAllByAccountEmailAndDeck_Id(email, deckId);
-        if (deckRatingByAccountEmail != null) {
-            deckRating.setId(deckRatingByAccountEmail.getId());
+        DeckRating deckRating = deckRatingRepository.findAllByAccountEmailAndDeck_Id(email, deckId);
+        if (deckRating == null) {
+            deckRating = new DeckRating();
         }
         Deck deck = deckRepository.findOne(deckId);
         deckRating.setAccountEmail(email);
         deckRating.setDeck(deck);
+        deckRating.setRating(rating);
         deckRatingRepository.save(deckRating);
         double deckAverageRating = deckRatingRepository.findRatingByDeckId(deckId);
         deck.setRating(deckAverageRating);
         deckRepository.save(deck);
     }
 
-    public DeckRating getDeckRatingById(Long deckId) {
-        return deckRatingRepository.findOne(deckId);
+    public DeckRating getDeckRatingById(Long id) {
+        return deckRatingRepository.findOne(id);
     }
 
     @Autowired
