@@ -80,6 +80,7 @@ public class GoogleAuthUtil {
         account.setPassword("-1");
         account.setLastPasswordResetDate(new Date());
         account.setStatus(AccountStatus.ACTIVE);
+        account.setLearningRegime(LearningRegime.CARDS_POSTPONING_USING_SPACED_REPETITION);
         Authority authority = authorityRepository.findAuthorityByName(AuthorityName.ROLE_USER);
         account.setAuthorities(Collections.singleton(authority));
         person.setFirstName((String) payload.get(FIRST_NAME));

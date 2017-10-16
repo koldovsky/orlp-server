@@ -53,6 +53,7 @@ public class RegistrationService {
         user.setFolder(new Folder());
         user.getAccount().setStatus(AccountStatus.INACTIVE);
         user.getAccount().setAuthorities(listOfAuthorities);
+        user.getAccount().setLearningRegime(LearningRegime.CARDS_POSTPONING_USING_SPACED_REPETITION);
         user.getAccount().setEmail(user.getAccount().getEmail().toLowerCase());
         user.getAccount().setPassword(passwordEncoder.encode(user.getAccount().getPassword()));
         userService.addUser(user);
