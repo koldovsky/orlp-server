@@ -37,7 +37,17 @@ public class ImageService {
      * @throws NotAuthorisedUserException                - is dropping when the user which wants to add the image is not authorised
      */
     public Image addImageToDB(MultipartFile file) throws ImageRepositorySizeQuotaExceededException, NotAuthorisedUserException, FileIsNotAnImageException {
-        Image image = null;
+        checkImageExtention(file);
+        Image  image = new Image(encodeToBase64(file), file.getContentType(),
+                userService.getAuthorizedUser(),file.getSize());
+        imageRepository.save(image);
+        image = imageRepository.getImageWithoutContent(image.getId());
+        return image;
+    }
+
+
+     void checkImageExtention(MultipartFile file) throws ImageRepositorySizeQuotaExceededException,
+            NotAuthorisedUserException, FileIsNotAnImageException {
         long fileSize = file.getSize();
         User user = userService.getAuthorizedUser();
         if (fileSize > getUsersLimitInBytesForImagesLeft(user.getId())) {
@@ -46,20 +56,14 @@ public class ImageService {
         if (fileSize > maxFileSize) {
             throw new MultipartException("File upload error: file is too large.");
         } else {
-            String base64 = encodeToBase64(file);
             String imageType = file.getContentType();
             if (imageType == null || !imageType.split("/")[0].equals("image"))
             {
                 throw new FileIsNotAnImageException();
             }
-            else {
-        image = new Image(base64, imageType, user, fileSize);
-        imageRepository.save(image);
-        image = imageRepository.getImageWithoutContent(image.getId());
+        }
     }
-}
-        return image;
-                }
+
 
     /**
      * Gets decoded from Base64 image content by Image Id

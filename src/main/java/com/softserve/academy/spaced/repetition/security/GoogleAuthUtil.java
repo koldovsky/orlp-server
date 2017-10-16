@@ -87,6 +87,7 @@ public class GoogleAuthUtil {
         person.setLastName((String) payload.get(LAST_NAME));
         person.setImage((String) payload.get(IMAGE));
         person.setTypeImage(ImageType.LINK);
+        account.setLearningRegime(LearningRegime.CARDS_POSTPONING_USING_SPACED_REPETITION);
         user.setAccount(account);
         user.setFolder(folder);
         user.setPerson(person);

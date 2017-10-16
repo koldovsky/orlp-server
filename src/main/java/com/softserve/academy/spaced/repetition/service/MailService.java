@@ -1,10 +1,11 @@
 package com.softserve.academy.spaced.repetition.service;
 
 import com.softserve.academy.spaced.repetition.domain.User;
-import com.softserve.academy.spaced.repetition.logger.Logger;
 import com.softserve.academy.spaced.repetition.security.JwtTokenForMail;
 import freemarker.template.Configuration;
 import freemarker.template.TemplateException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -31,8 +32,8 @@ public class MailService {
     @Autowired
     @Qualifier("freemarkerConf")
     private Configuration freemarkerConfiguration;
-    @Autowired
-    private Logger logger;
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(MailService.class);
 
     public void sendConfirmationMail(User user) throws MailException {
         MimeMessagePreparator preparator = mimeMessage -> {
@@ -88,7 +89,7 @@ public class MailService {
                     freemarkerConfiguration.getTemplate("registrationVerificationMailTemplate.txt"), model));
             return content.toString();
         } catch (IOException | TemplateException e) {
-            logger.log(e.getClass().getName());
+            LOGGER.error("Couldn't generate email content.", e);
         }
         return "";
     }
@@ -101,7 +102,7 @@ public class MailService {
                     freemarkerConfiguration.getTemplate("changePasswordMailTemplate.txt"), model));
             return content.toString();
         } catch (IOException | TemplateException e) {
-            logger.log(e.getClass().getName());
+            LOGGER.error("Couldn't generate email content.", e);
         }
         return "";
     }
@@ -113,7 +114,7 @@ public class MailService {
                     freemarkerConfiguration.getTemplate("deleteAccountMailTemplate.txt"), model));
             return content.toString();
         } catch (IOException | TemplateException e) {
-            logger.log(e.getClass().getName());
+            LOGGER.error("Couldn't generate email content.", e);
         }
         return "";
     }

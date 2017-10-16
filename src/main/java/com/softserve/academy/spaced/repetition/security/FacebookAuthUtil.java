@@ -97,6 +97,7 @@ public class FacebookAuthUtil {
         person.setFirstName((String) fbProfileData.get("first_name"));
         person.setLastName((String) fbProfileData.get("last_name"));
         person.setTypeImage(ImageType.NONE);
+        account.setLearningRegime(LearningRegime.CARDS_POSTPONING_USING_SPACED_REPETITION);
         user.setAccount(account);
         user.setFolder(folder);
         user.setPerson(person);

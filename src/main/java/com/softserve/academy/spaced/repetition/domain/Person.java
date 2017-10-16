@@ -85,4 +85,19 @@ public class Person {
     public void setImageBase64(String imageBase64) {
         this.imageBase64 = imageBase64;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Person)) return false;
+
+        Person person = (Person) o;
+        if (firstName != null && lastName != null && firstName.equals(person.firstName) && lastName.equals(person.lastName)){ return true;}
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return firstName.hashCode() + lastName.hashCode();
+    }
 }

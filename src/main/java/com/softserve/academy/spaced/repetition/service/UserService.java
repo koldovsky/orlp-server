@@ -2,9 +2,7 @@ package com.softserve.academy.spaced.repetition.service;
 
 import com.softserve.academy.spaced.repetition.DTO.impl.PasswordDTO;
 import com.softserve.academy.spaced.repetition.domain.*;
-import com.softserve.academy.spaced.repetition.exceptions.DataFieldException;
-import com.softserve.academy.spaced.repetition.exceptions.NotAuthorisedUserException;
-import com.softserve.academy.spaced.repetition.exceptions.PasswordFieldException;
+import com.softserve.academy.spaced.repetition.exceptions.*;
 import com.softserve.academy.spaced.repetition.repository.DeckRepository;
 import com.softserve.academy.spaced.repetition.repository.UserRepository;
 import com.softserve.academy.spaced.repetition.security.JwtUser;
@@ -141,12 +139,12 @@ public class UserService {
     }
 
     @Transactional
-    public void editPersonalData(Person person) throws NotAuthorisedUserException, DataFieldException {
+    public User editPersonalData(Person person) throws NotAuthorisedUserException, DataFieldException {
         User user = getAuthorizedUser();
         dataFieldValidator.validate(person);
         user.getPerson().setFirstName(person.getFirstName());
         user.getPerson().setLastName(person.getLastName());
-        userRepository.save(user);
+        return userRepository.save(user);
     }
 
     @Transactional
@@ -159,7 +157,9 @@ public class UserService {
         mailService.sendPasswordNotificationMail(user);
     }
 
-    public User uploadImage(MultipartFile file) throws NotAuthorisedUserException{
+    public User uploadImage(MultipartFile file) throws ImageRepositorySizeQuotaExceededException,
+            NotAuthorisedUserException, FileIsNotAnImageException {
+        imageService.checkImageExtention(file);
         User user = getAuthorizedUser();
         user.getPerson().setImageBase64( imageService.encodeToBase64(file));
         user.getPerson().setTypeImage(ImageType.BASE64);
@@ -167,12 +167,9 @@ public class UserService {
     }
 
     public byte[] getDecodedImageContent() throws NotAuthorisedUserException{
-        byte[] imageContent = null;
-        //imageNotFoundException
         User user = getAuthorizedUser();
         String encodedFileContent = user.getPerson().getImageBase64();
-        imageContent = imageService.decodeFromBase64(encodedFileContent);
-        return imageContent;
+        return imageService.decodeFromBase64(encodedFileContent);
     }
 
 
