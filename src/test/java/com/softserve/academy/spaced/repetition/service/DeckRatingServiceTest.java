@@ -61,11 +61,11 @@ public class DeckRatingServiceTest {
 
         User mockedUser1 = new User(new Account("email1@email.com"), new Person("first1", "last1"), new Folder());
         when(mockedUserService.getAuthorizedUser()).thenReturn(mockedUser1);
-        deckRatingServiceUnderTest.addDeckRating(new DeckRating(null, null, 2), DECK_ID);
+        deckRatingServiceUnderTest.addDeckRating(2, DECK_ID);
 
         User mockedUser2 = new User(new Account("email2@email.com"), new Person("first2", "last2"), new Folder());
         when(mockedUserService.getAuthorizedUser()).thenReturn(mockedUser2);
-        deckRatingServiceUnderTest.addDeckRating(new DeckRating(null, null, 4), DECK_ID);
+        deckRatingServiceUnderTest.addDeckRating(4, DECK_ID);
 
         Deck deck = deckRepository.getDeckById(DECK_ID);
 
