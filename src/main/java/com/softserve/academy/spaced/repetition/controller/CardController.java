@@ -39,10 +39,10 @@ public class CardController {
     @Autowired
     private CardLoadService cardLoadService;
 
-    @GetMapping("/api/category/decks/{deck_id}/learn/cards")
-    public ResponseEntity<List<CardPublicDTO>> getLearningCards(@PathVariable long deck_id) throws NotAuthorisedUserException {
-        List<Card> learningCards = cardService.getCardsQueue(deck_id);
-        Link collectionLink = linkTo(methodOn(DeckController.class).getCardsByDeck(deck_id)).withSelfRel();
+    @GetMapping("/api/private/decks/{deckId}/learn")
+    public ResponseEntity<List<CardPublicDTO>> getLearningCards(@PathVariable Long deckId) throws NotAuthorisedUserException {
+        List<Card> learningCards = cardService.getLearningCards(deckId);
+        Link collectionLink = linkTo(methodOn(DeckController.class).getCardsByDeck(deckId)).withSelfRel();
         List<CardPublicDTO> cards = DTOBuilder.buildDtoListForCollection(learningCards, CardPublicDTO.class, collectionLink);
         return new ResponseEntity<>(cards, HttpStatus.OK);
     }
@@ -164,5 +164,14 @@ public class CardController {
             throw new FileConnectionException();
         }
         return new ResponseEntity <>(HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/api/card/{cardId}")
+    @PreAuthorize(value = "@accessToUrlService.hasAccessToCard(#cardId)")
+    public ResponseEntity<CardPublicDTO> getCardById(Long cardId) {
+        Card card = cardService.getCard(cardId);
+        Link selfLink = linkTo(methodOn(CardController.class).getCardById(cardId)).withSelfRel();
+        CardPublicDTO cardPublicDTO = DTOBuilder.buildDtoForEntity(card, CardPublicDTO.class, selfLink);
+        return new ResponseEntity<>(cardPublicDTO, HttpStatus.OK);
     }
 }

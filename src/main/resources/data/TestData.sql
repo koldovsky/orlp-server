@@ -819,3 +819,10 @@ insert into course_decks (course_id, deck_id) values (3, 8);
 insert into course_decks (course_id, deck_id) values (4, 9);
 insert into course_decks (course_id, deck_id) values (4, 10);
 insert into course_decks (course_id, deck_id) values (5, 11);
+
+INSERT INTO remembering_level (id, number_of_postponed_days) VALUES (1, 1);
+INSERT INTO remembering_level (id, number_of_postponed_days) VALUES (2, 3);
+INSERT INTO remembering_level (id, number_of_postponed_days) VALUES (3, 7);
+INSERT INTO remembering_level (id, number_of_postponed_days) VALUES (4, 14);
+INSERT INTO remembering_level (id, number_of_postponed_days) VALUES (5, 30);
+INSERT INTO remembering_level (id, number_of_postponed_days) VALUES (6, 60);

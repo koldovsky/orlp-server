@@ -4,6 +4,7 @@ import com.softserve.academy.spaced.repetition.DTO.EntityInterface;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "Deck")
@@ -42,6 +43,12 @@ public class Deck implements EntityInterface {
 
     @OneToMany(mappedBy = "deck", cascade = CascadeType.ALL)
     private List<DeckRating> deckRatings;
+
+    @ManyToMany
+    @JoinTable(name = "folder_decks", joinColumns = {
+            @JoinColumn(name = "deck_id")},
+            inverseJoinColumns = {@JoinColumn(name = "folder_id")})
+    private Set<Folder> folders;
 
     public Deck() {
     }
@@ -108,6 +115,14 @@ public class Deck implements EntityInterface {
 
     public void setDeckRatings(List<DeckRating> deckRatings) {
         this.deckRatings = deckRatings;
+    }
+
+    public Set<Folder> getFolders() {
+        return folders;
+    }
+
+    public void setFolders(Set<Folder> folders) {
+        this.folders = folders;
     }
 
     @Override
