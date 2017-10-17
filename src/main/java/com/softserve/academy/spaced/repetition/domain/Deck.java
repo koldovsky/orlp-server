@@ -50,6 +50,9 @@ public class Deck implements EntityInterface {
             inverseJoinColumns = {@JoinColumn(name = "folder_id")})
     private Set<Folder> folders;
 
+    @OneToMany(mappedBy = "deck", cascade = CascadeType.ALL)
+    private List<DeckComment> deckComments;
+
     public Deck() {
     }
 
@@ -123,6 +126,14 @@ public class Deck implements EntityInterface {
 
     public void setFolders(Set<Folder> folders) {
         this.folders = folders;
+    }
+
+    public List<DeckComment> getDeckComments() {
+        return deckComments;
+    }
+
+    public void setDeckComments(List<DeckComment> deckComments) {
+        this.deckComments = deckComments;
     }
 
     @Override
