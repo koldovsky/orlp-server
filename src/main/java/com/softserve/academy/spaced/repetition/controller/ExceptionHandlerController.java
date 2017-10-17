@@ -119,4 +119,15 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
     ResponseEntity <MessageDTO> handleFileIsNotAnImageException() {
         return new ResponseEntity <MessageDTO>(new MessageDTO("File upload error: file is not an image"), HttpStatus.FORBIDDEN);
     }
+
+    @ExceptionHandler(DataFieldException.class)
+    ResponseEntity <MessageDTO> handleDataFieldException() {
+        return new ResponseEntity <MessageDTO>(new MessageDTO("First name or last name can not be empty"), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(PasswordFieldException.class)
+    ResponseEntity <MessageDTO> handlePasswordFieldException() {
+        return new ResponseEntity<MessageDTO>(new MessageDTO("Current password must match and fields of password can not be empty"), HttpStatus.BAD_REQUEST);
+    }
+
 }

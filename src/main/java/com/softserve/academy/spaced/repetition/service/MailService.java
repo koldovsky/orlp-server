@@ -1,10 +1,11 @@
 package com.softserve.academy.spaced.repetition.service;
 
 import com.softserve.academy.spaced.repetition.domain.User;
-import com.softserve.academy.spaced.repetition.logger.Logger;
 import com.softserve.academy.spaced.repetition.security.JwtTokenForMail;
 import freemarker.template.Configuration;
 import freemarker.template.TemplateException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -31,8 +32,8 @@ public class MailService {
     @Autowired
     @Qualifier("freemarkerConf")
     private Configuration freemarkerConfiguration;
-    @Autowired
-    private Logger logger;
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(MailService.class);
 
     public void sendConfirmationMail(User user) throws MailException {
         MimeMessagePreparator preparator = mimeMessage -> {
@@ -50,17 +51,72 @@ public class MailService {
         mailSender.send(preparator);
     }
 
+    public void sendPasswordNotificationMail(User user) throws MailException {
+        MimeMessagePreparator preparator = mimeMessage -> {
+            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
+            helper.setSubject("Change password notification");
+            helper.setTo(user.getAccount().getEmail());
+            Map <String, Object> model = new HashMap <String, Object>();
+            model.put("person", user.getPerson());
+            model.put("datachange", user.getAccount().getLastPasswordResetDate().toString());
+            model.put("url", URL);
+            String text = getChangePasswordTemplateContent(model);
+            helper.setText(text, true);
+        };
+        mailSender.send(preparator);
+    }
+
+    public void sendAccountNotificationMail(User user) throws MailException {
+        MimeMessagePreparator preparator = mimeMessage -> {
+            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
+            helper.setSubject("Your account was deleted.");
+            helper.setTo(user.getAccount().getEmail());
+            Map <String, Object> model = new HashMap <String, Object>();
+            String token = jwtTokenForMail.generateTokenForMail(user);
+            model.put("person", user.getPerson());
+            model.put("token", token);
+            model.put("url", URL);
+            String text = getDeleteAccountTemplateContent(model);
+            helper.setText(text, true);
+        };
+        mailSender.send(preparator);
+    }
+
     private String getFreeMarkerTemplateContent(Map <String, Object> model) {
         StringBuilder content = new StringBuilder();
         try {
             content.append(FreeMarkerTemplateUtils.processTemplateIntoString(
                     freemarkerConfiguration.getTemplate("registrationVerificationMailTemplate.txt"), model));
             return content.toString();
-        } catch (IOException e) {
-            logger.log(e.getClass().getName());
-        } catch (TemplateException e) {
-            logger.log(e.getClass().getName());
+        } catch (IOException | TemplateException e) {
+            LOGGER.error("Couldn't generate email content.", e);
         }
         return "";
     }
+
+
+    private String getChangePasswordTemplateContent(Map <String, Object> model) {
+        StringBuilder content = new StringBuilder();
+        try {
+            content.append(FreeMarkerTemplateUtils.processTemplateIntoString(
+                    freemarkerConfiguration.getTemplate("changePasswordMailTemplate.txt"), model));
+            return content.toString();
+        } catch (IOException | TemplateException e) {
+            LOGGER.error("Couldn't generate email content.", e);
+        }
+        return "";
+    }
+
+    private String getDeleteAccountTemplateContent(Map <String, Object> model) {
+        StringBuilder content = new StringBuilder();
+        try {
+            content.append(FreeMarkerTemplateUtils.processTemplateIntoString(
+                    freemarkerConfiguration.getTemplate("deleteAccountMailTemplate.txt"), model));
+            return content.toString();
+        } catch (IOException | TemplateException e) {
+            LOGGER.error("Couldn't generate email content.", e);
+        }
+        return "";
+    }
+
 }

@@ -35,7 +35,7 @@ public class FacebookAuthUtil {
         String graph = null;
 
         try {
-            String g = "https://graph.facebook.com/me?fields=id,first_name,last_name,email&access_token=" + accessToken;
+            String g = "https://graph.facebook.com/me?fields=id,first_name,last_name,email,picture&access_token=" + accessToken;
 
             URL url = new URL(g);
 
@@ -68,6 +68,7 @@ public class FacebookAuthUtil {
             fbProfile.put("first_name", json.getString("first_name"));
             fbProfile.put("email", json.getString("email"));
             fbProfile.put("last_name", json.getString("last_name"));
+            fbProfile.put("picture", json.getJSONObject("picture").getJSONObject("data").getString("url"));
         } catch (JSONException e) {
             e.printStackTrace();
             throw new RuntimeException("ERROR in parsing FB graph data. " + e);
@@ -95,6 +96,9 @@ public class FacebookAuthUtil {
         account.setAuthorities(Collections.singleton(authority));
         person.setFirstName((String) fbProfileData.get("first_name"));
         person.setLastName((String) fbProfileData.get("last_name"));
+        person.setTypeImage(ImageType.NONE);
+        account.setLearningRegime(LearningRegime.CARDS_POSTPONING_USING_SPACED_REPETITION);
+        person.setImage((String) fbProfileData.get("picture"));
         user.setAccount(account);
         user.setFolder(folder);
         user.setPerson(person);

@@ -20,8 +20,8 @@ public interface CardRepository extends JpaRepository<Card, Long> {
 
     @Query(value =
             "select c.card_id, c.title, c.question, c.answer, c.rating " +
-            "from card c inner join deck_cards d on c.card_id=d.card_id " +
-            "where deck_id = :deckId and (c.card_id, c.title, c.question, c.answer, c.rating) not in(" +
+            "from card c " +
+            "where c.deck_id = :deckId and (c.card_id, c.title, c.question, c.answer, c.rating) not in(" +
             "select c.card_id, c.title, c.question, c.answer, c.rating " +
             "from card c left join user_card_queue u " +
             "on c.card_id=u.card_id " +

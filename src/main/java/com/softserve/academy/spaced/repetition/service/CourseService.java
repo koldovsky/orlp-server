@@ -73,8 +73,7 @@ public class CourseService {
     }
 
     public List<Course> getTopCourse() {
-        List<Course> courses = courseRepository.findCourseByOrderByRatingDesc();
-        courses = courses.subList(0, TOP_COURSES);
+        List<Course> courses = courseRepository.findTop8ByOrderByRating();
         return courses;
     }
 

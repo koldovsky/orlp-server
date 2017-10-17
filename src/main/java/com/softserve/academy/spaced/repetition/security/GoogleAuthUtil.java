@@ -80,11 +80,14 @@ public class GoogleAuthUtil {
         account.setPassword("-1");
         account.setLastPasswordResetDate(new Date());
         account.setStatus(AccountStatus.ACTIVE);
+        account.setAuthenticationType(AuthenticationType.GOOGLE);
         Authority authority = authorityRepository.findAuthorityByName(AuthorityName.ROLE_USER);
         account.setAuthorities(Collections.singleton(authority));
         person.setFirstName((String) payload.get(FIRST_NAME));
         person.setLastName((String) payload.get(LAST_NAME));
         person.setImage((String) payload.get(IMAGE));
+        person.setTypeImage(ImageType.LINK);
+        account.setLearningRegime(LearningRegime.CARDS_POSTPONING_USING_SPACED_REPETITION);
         user.setAccount(account);
         user.setFolder(folder);
         user.setPerson(person);
