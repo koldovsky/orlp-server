@@ -54,11 +54,13 @@ public class RegistrationService {
         user.getAccount().setLastPasswordResetDate(Calendar.getInstance().getTime());
         user.setFolder(new Folder());
         user.getAccount().setStatus(AccountStatus.INACTIVE);
+        user.getAccount().setAuthenticationType(AuthenticationType.LOCAL);
         Authority authority = authorityRepository.findAuthorityByName(AuthorityName.ROLE_USER);
         user.getAccount().setAuthorities(Collections.singleton(authority));
         user.getAccount().setLearningRegime(LearningRegime.CARDS_POSTPONING_USING_SPACED_REPETITION);
         user.getAccount().setEmail(user.getAccount().getEmail().toLowerCase());
         user.getAccount().setPassword(passwordEncoder.encode(user.getAccount().getPassword()));
+        user.getPerson().setTypeImage(ImageType.NONE);
         userService.addUser(user);
         return user;
     }

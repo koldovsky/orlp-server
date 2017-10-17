@@ -92,11 +92,12 @@ public class FacebookAuthUtil {
         account.setPassword("-1");
         account.setLastPasswordResetDate(new Date());
         account.setStatus(AccountStatus.ACTIVE);
-        account.setLearningRegime(LearningRegime.CARDS_POSTPONING_USING_SPACED_REPETITION);
         Authority authority = authorityRepository.findAuthorityByName(AuthorityName.ROLE_USER);
         account.setAuthorities(Collections.singleton(authority));
         person.setFirstName((String) fbProfileData.get("first_name"));
         person.setLastName((String) fbProfileData.get("last_name"));
+        person.setTypeImage(ImageType.NONE);
+        account.setLearningRegime(LearningRegime.CARDS_POSTPONING_USING_SPACED_REPETITION);
         person.setImage((String) fbProfileData.get("picture"));
         user.setAccount(account);
         user.setFolder(folder);
