@@ -1,42 +1,34 @@
 package com.softserve.academy.spaced.repetition.security.service;
 
-import com.softserve.academy.spaced.repetition.domain.Account;
-import com.softserve.academy.spaced.repetition.domain.Authority;
-import com.softserve.academy.spaced.repetition.domain.AuthorityName;
-import com.softserve.academy.spaced.repetition.security.DTO.ReCaptchaResponseDto;
-import com.softserve.academy.spaced.repetition.security.GoogleAuthUtil;
-import com.softserve.academy.spaced.repetition.security.JwtTokenUtil;
-import com.softserve.academy.spaced.repetition.security.JwtUser;
-import com.softserve.academy.spaced.repetition.security.JwtUserFactory;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.when;
+
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpHeaders;
-import org.springframework.mobile.device.Device;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.test.annotation.Rollback;
-import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
-
-import static org.junit.Assert.*;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.when;
+import com.softserve.academy.spaced.repetition.domain.Account;
+import com.softserve.academy.spaced.repetition.domain.Authority;
+import com.softserve.academy.spaced.repetition.domain.AuthorityName;
+import com.softserve.academy.spaced.repetition.security.DTO.ReCaptchaResponseDto;
+import com.softserve.academy.spaced.repetition.security.JwtTokenUtil;
+import com.softserve.academy.spaced.repetition.security.JwtUser;
+import com.softserve.academy.spaced.repetition.security.JwtUserFactory;
 
 @RunWith(MockitoJUnitRunner.class)
 @PrepareForTest(AuthenticationRestService.class)
@@ -89,5 +81,4 @@ public class AuthenticationRestServiceTest {
     @Test
     public void getHeadersForRefreshToken() throws Exception {
     }
-
 }

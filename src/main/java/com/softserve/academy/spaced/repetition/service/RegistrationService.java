@@ -5,6 +5,7 @@ import com.softserve.academy.spaced.repetition.domain.*;
 import com.softserve.academy.spaced.repetition.exceptions.BlankFieldException;
 import com.softserve.academy.spaced.repetition.exceptions.EmailUniquesException;
 import com.softserve.academy.spaced.repetition.exceptions.ObjectHasNullFieldsException;
+import com.softserve.academy.spaced.repetition.repository.AuthorityRepository;
 import com.softserve.academy.spaced.repetition.service.validators.AbstractValidator;
 import com.softserve.academy.spaced.repetition.service.validators.BlankFieldValidator;
 import com.softserve.academy.spaced.repetition.service.validators.EmailUniquesValidator;
@@ -15,12 +16,15 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
 @Service
 public class RegistrationService {
 
+    @Autowired
+    private AuthorityRepository authorityRepository;
     @Autowired
     private UserService userService;
     @Autowired
@@ -47,16 +51,15 @@ public class RegistrationService {
     }
 
     public User createNewUser(User user) {
-        Set <Authority> listOfAuthorities = new HashSet <>();
-        listOfAuthorities.add(new Authority(AuthorityName.ROLE_USER));
         user.getAccount().setLastPasswordResetDate(Calendar.getInstance().getTime());
         user.setFolder(new Folder());
         user.getAccount().setStatus(AccountStatus.INACTIVE);
         user.getAccount().setAuthenticationType(AuthenticationType.LOCAL);
-        user.getAccount().setAuthorities(listOfAuthorities);
+        Authority authority = authorityRepository.findAuthorityByName(AuthorityName.ROLE_USER);
+        user.getAccount().setAuthorities(Collections.singleton(authority));
+        user.getAccount().setLearningRegime(LearningRegime.CARDS_POSTPONING_USING_SPACED_REPETITION);
         user.getAccount().setEmail(user.getAccount().getEmail().toLowerCase());
         user.getAccount().setPassword(passwordEncoder.encode(user.getAccount().getPassword()));
-        user.getAccount().setLearningRegime(LearningRegime.CARDS_POSTPONING_USING_SPACED_REPETITION);
         user.getPerson().setTypeImage(ImageType.NONE);
         userService.addUser(user);
         return user;
