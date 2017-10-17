@@ -39,10 +39,10 @@ public class DeckCommentService {
 
     @Transactional
     public DeckComment updateCommentById(Long commentId, String commentText) {
-        DeckComment updatedDeckComment = commentRepository.findOne(commentId);
-        updatedDeckComment.setCommentDate(new Date());
-        updatedDeckComment.setCommentText(commentText);
-        return updatedDeckComment;
+        DeckComment updatedComment = commentRepository.findOne(commentId);
+        updatedComment.setCommentDate(new Date());
+        updatedComment.setCommentText(commentText);
+        return updatedComment;
     }
 
     public void deleteCommentById(Long commentId) {

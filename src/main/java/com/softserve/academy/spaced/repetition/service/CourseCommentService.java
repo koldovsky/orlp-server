@@ -39,10 +39,10 @@ public class CourseCommentService {
 
     @Transactional
     public CourseComment updateCommentById(Long commentId, String commentText){
-        CourseComment updatedCourseComment = commentRepository.findOne(commentId);
-        updatedCourseComment.setCommentDate(new Date());
-        updatedCourseComment.setCommentText(commentText);
-        return updatedCourseComment;
+        CourseComment updatedComment = commentRepository.findOne(commentId);
+        updatedComment.setCommentDate(new Date());
+        updatedComment.setCommentText(commentText);
+        return updatedComment;
     }
 
     public void deleteCommentById(Long commentId){

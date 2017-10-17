@@ -62,7 +62,7 @@ public class CourseCommentController {
 
     @Auditable(action = AuditingAction.EDIT_COMMENT_FOR_COURSE)
     @PutMapping(value = "/api/course/{courseId}/comment/{courseCommentId}")
-    public ResponseEntity<CourseCommentDTO> updateCardByDeck(@RequestBody String courseContentComment, @PathVariable Long courseId, @PathVariable Long courseCommentId) {
+    public ResponseEntity<CourseCommentDTO> updateComment(@RequestBody String courseContentComment, @PathVariable Long courseId, @PathVariable Long courseCommentId) {
         LOGGER.debug("Updated courseComment with id: {}", courseCommentId);
         CourseComment courseComment=courseCommentService.updateCommentById(courseCommentId, courseContentComment);
         Link selfLink = linkTo(methodOn(CourseCommentController.class).getCommentByCourse(courseId, courseCommentId)).withSelfRel();
@@ -72,7 +72,7 @@ public class CourseCommentController {
 
     @Auditable(action = AuditingAction.DELETE_COMMENT_FOR_COURSE)
     @DeleteMapping(value = "/api/course/{courseId}/comment/{courseCommentId}")
-    public void deleteCourseComment(@PathVariable Long courseCommentId,@PathVariable Long courseId) {
+    public void deleteComment(@PathVariable Long courseCommentId,@PathVariable Long courseId) {
         LOGGER.debug("Deleted comment witj id:{} for course with id: {}", courseCommentId, courseId);
         courseCommentService.deleteCommentById(courseCommentId);
     }
