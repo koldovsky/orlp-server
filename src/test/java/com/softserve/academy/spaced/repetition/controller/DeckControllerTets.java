@@ -109,7 +109,7 @@ public class DeckControllerTets {
                         "      \"owner\": \"admin@gmail.com\"," +
                         "      \"description\": \"Part 1\"," +
                         "      \"deckId\": 1," +
-                        "      \"rating\": 4," +
+                        "      \"rating\": 0," +
                         "      \"category\": \"Java\"," +
                         "      \"categoryId\": 1," +
                         "      \"links\":[{\"rel\":\"self\",\"href\":\"http://localhost/api/admin/decks/1\"}]" +
@@ -237,7 +237,7 @@ public class DeckControllerTets {
         deck.setDeckOwner(user);
         deck.setDescription("Part 1");
         deck.setId(1L);
-        deck.setRating(4);
+        deck.setRating(0);
         Category category = new Category();
         category.setName("Java");
         category.setId(1L);
