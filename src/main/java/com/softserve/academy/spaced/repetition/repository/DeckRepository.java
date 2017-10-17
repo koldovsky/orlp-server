@@ -41,6 +41,4 @@ public interface DeckRepository extends JpaRepository<Deck, Long> {
     List<Deck> findAllByDeckOwner_IdEquals(Long user_id);
 
     Page<Deck> findAllByCategoryEquals(Category category, Pageable pageable);
-
-    Page<Deck> findAllByOrderByRatingDesc(Pageable pageable);
 }
