@@ -2,10 +2,10 @@ package com.softserve.academy.spaced.repetition.controller;
 
 import com.softserve.academy.spaced.repetition.DTO.DTOBuilder;
 import com.softserve.academy.spaced.repetition.DTO.impl.CourseCommentDTO;
-import com.softserve.academy.spaced.repetition.DTO.impl.CourseCommentLinkDTO;
 import com.softserve.academy.spaced.repetition.audit.Auditable;
 import com.softserve.academy.spaced.repetition.audit.AuditingAction;
 import com.softserve.academy.spaced.repetition.domain.CourseComment;
+import com.softserve.academy.spaced.repetition.exceptions.EmptyCommentTextException;
 import com.softserve.academy.spaced.repetition.exceptions.NotAuthorisedUserException;
 import com.softserve.academy.spaced.repetition.service.CourseCommentService;
 import org.slf4j.Logger;
@@ -32,16 +32,16 @@ public class CourseCommentController {
 
     @Auditable(action = AuditingAction.VIEW_ALL_COMMENTS_FOR_COURSE)
     @GetMapping(value = "/api/category/{categoryId}/course/{courseId}/comments")
-    public ResponseEntity<List<CourseCommentLinkDTO>> getAllCommentsByCourse(@PathVariable Long categoryId, @PathVariable Long courseId) {
+    public ResponseEntity<List<CourseCommentDTO>> getAllCommentsByCourse(@PathVariable Long categoryId, @PathVariable Long courseId) {
         LOGGER.debug("View all comments for course with id: {}", courseId);
         List<CourseComment> courseCommentsList = courseCommentService.getAllCommentsForCourse(courseId);
         Link collectionLink = linkTo(methodOn(CourseCommentController.class).getAllCommentsByCourse(categoryId, courseId)).withSelfRel();
-        List<CourseCommentLinkDTO> comments = DTOBuilder.buildDtoListForCollection(courseCommentsList, CourseCommentLinkDTO.class, collectionLink);
+        List<CourseCommentDTO> comments = DTOBuilder.buildDtoListForCollection(courseCommentsList, CourseCommentDTO.class, collectionLink);
         return new ResponseEntity<>(comments, HttpStatus.OK);
     }
 
     @Auditable(action = AuditingAction.VIEW_COMMENT_FOR_COURSE)
-    @GetMapping(value = "/api/course/{courseId}/comment/{courseCommentId}")
+    @GetMapping(value = "/api/category/{categoryId}/course/{courseId}/comments/{courseCommentId}")
     public ResponseEntity<CourseCommentDTO> getCommentByCourse(@PathVariable Long courseId, @PathVariable Long courseCommentId) {
         CourseComment courseComment = courseCommentService.getCommentById(courseCommentId);
         Link selfLink = linkTo(methodOn(CourseCommentController.class).getCommentByCourse(courseId, courseCommentId)).withSelfRel();
@@ -52,7 +52,7 @@ public class CourseCommentController {
     @Auditable(action = AuditingAction.CREATE_COMMENT_FOR_COURSE)
     @PostMapping(value = "/api/category/{categoryId}/course/{courseId}/comment")
     @PreAuthorize(value = "@accessToUrlService.hasAccessToCourse(#categoryId, #courseId)")
-    public ResponseEntity<CourseCommentDTO> addCommentByCourse(@RequestBody String courseContentComment, @PathVariable Long categoryId, @PathVariable Long courseId) throws NotAuthorisedUserException {
+    public ResponseEntity<CourseCommentDTO> addCommentByCourse(@RequestBody String courseContentComment, @PathVariable Long categoryId, @PathVariable Long courseId) throws NotAuthorisedUserException, EmptyCommentTextException {
         LOGGER.debug("Added comment to course with id: {}", courseId);
         CourseComment courseComment=courseCommentService.addCommentForCourse(courseContentComment, courseId);
         Link selfLink = linkTo(methodOn(CourseCommentController.class).getCommentByCourse(categoryId, courseId)).withSelfRel();
@@ -62,7 +62,8 @@ public class CourseCommentController {
 
     @Auditable(action = AuditingAction.EDIT_COMMENT_FOR_COURSE)
     @PutMapping(value = "/api/course/{courseId}/comment/{courseCommentId}")
-    public ResponseEntity<CourseCommentDTO> updateComment(@RequestBody String courseContentComment, @PathVariable Long courseId, @PathVariable Long courseCommentId) {
+    @PreAuthorize(value = "@accessToUrlService.hasAccessToUpdateCommentForCourse(#courseCommentId)")
+    public ResponseEntity<CourseCommentDTO> updateComment(@RequestBody String courseContentComment, @PathVariable Long courseId, @PathVariable Long courseCommentId) throws EmptyCommentTextException {
         LOGGER.debug("Updated courseComment with id: {}", courseCommentId);
         CourseComment courseComment=courseCommentService.updateCommentById(courseCommentId, courseContentComment);
         Link selfLink = linkTo(methodOn(CourseCommentController.class).getCommentByCourse(courseId, courseCommentId)).withSelfRel();
@@ -72,6 +73,7 @@ public class CourseCommentController {
 
     @Auditable(action = AuditingAction.DELETE_COMMENT_FOR_COURSE)
     @DeleteMapping(value = "/api/course/{courseId}/comment/{courseCommentId}")
+    @PreAuthorize(value = "@accessToUrlService.hasAccessToDeleteCommentForCourse(#courseCommentId)")
     public void deleteComment(@PathVariable Long courseCommentId,@PathVariable Long courseId) {
         LOGGER.debug("Deleted comment witj id:{} for course with id: {}", courseCommentId, courseId);
         courseCommentService.deleteCommentById(courseCommentId);

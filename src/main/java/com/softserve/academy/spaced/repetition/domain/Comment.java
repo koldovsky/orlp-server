@@ -3,6 +3,7 @@ package com.softserve.academy.spaced.repetition.domain;
 import com.softserve.academy.spaced.repetition.DTO.EntityInterface;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 @Entity
@@ -14,6 +15,7 @@ public abstract class Comment implements EntityInterface{
     @Column(name = "comment_id", nullable = false)
     private Long id;
 
+    @NotNull
     @Column(name = "commentText", nullable = false, columnDefinition = "LONGTEXT")
     private String commentText;
 

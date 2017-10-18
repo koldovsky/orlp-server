@@ -7,7 +7,7 @@ import java.util.Date;
 @Table(name = "DeckComment")
 public class DeckComment extends Comment {
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "deck_id")
     private Deck deck;
 

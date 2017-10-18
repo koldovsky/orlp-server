@@ -130,4 +130,9 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
         return new ResponseEntity<MessageDTO>(new MessageDTO("Current password must match and fields of password can not be empty"), HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(EmptyCommentTextException.class)
+    ResponseEntity <MessageDTO> handleEmptyCommentTextException() {
+        return new ResponseEntity<MessageDTO>(new MessageDTO("Current comment can not be empty"), HttpStatus.BAD_REQUEST);
+    }
+
 }

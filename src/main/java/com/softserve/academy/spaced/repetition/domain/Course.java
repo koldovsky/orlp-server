@@ -50,7 +50,7 @@ public class Course implements EntityInterface {
     @OneToMany(mappedBy = "course", cascade = CascadeType.ALL)
     private List<CourseRating> courseRatings;
 
-    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "course", cascade = CascadeType.ALL)
     private List<CourseComment> courseComments;
 
     public Course() {
