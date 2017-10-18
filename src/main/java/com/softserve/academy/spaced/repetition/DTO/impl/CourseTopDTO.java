@@ -15,6 +15,10 @@ public class CourseTopDTO extends DTO<Course> {
         add(linkTo(methodOn(DeckController.class).getAllDecksByCourseId(getEntity().getCategory().getId(), getEntity().getId())).withRel("decks"));
     }
 
+    public Long getCourseId(){return getEntity().getId();}
+
+    public double getRating(){return getEntity().getRating();}
+
     public String getName() {
         return getEntity().getName();
     }
