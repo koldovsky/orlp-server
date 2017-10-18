@@ -12,8 +12,10 @@ import com.softserve.academy.spaced.repetition.repository.CourseRepository;
 import com.softserve.academy.spaced.repetition.repository.DeckRepository;
 import com.softserve.academy.spaced.repetition.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +24,8 @@ import java.util.Set;
 @Service
 public class CourseService {
     public static final int TOP_COURSES = 4;
+
+    private final static int QUANTITY_COURSES_IN_PAGE = 12;
 
     @Autowired
     private CourseRepository courseRepository;
@@ -130,7 +134,6 @@ public class CourseService {
         course.setPublished(false);
         course.setOwner(user);
         courseRepository.save(course);
-
         user.getCourses().add(course);
         userRepository.save(user);
     }
@@ -161,5 +164,26 @@ public class CourseService {
         }
         course.getDecks().add(deckRepository.getDeckById(deckId));
         courseRepository.save(course);
+    }
+
+
+    public Page<Course> getPageWithCourses(int pageNumber, String sortBy, boolean ascending) {
+        PageRequest request;
+        if(ascending == true){
+            request = new PageRequest(pageNumber-1, QUANTITY_COURSES_IN_PAGE, Sort.Direction.ASC, sortBy);
+        }else {
+            request = new PageRequest(pageNumber-1, QUANTITY_COURSES_IN_PAGE, Sort.Direction.DESC, sortBy);
+        }
+        return courseRepository.findAll(request);
+    }
+
+    public Page<Course> getPageWithCoursesByCategory(long categoryId, int pageNumber, String sortBy, boolean ascending) {
+        PageRequest request;
+        if(ascending == true){
+            request = new PageRequest(pageNumber-1, QUANTITY_COURSES_IN_PAGE , Sort.Direction.ASC, sortBy);
+        }else {
+            request = new PageRequest(pageNumber-1, QUANTITY_COURSES_IN_PAGE , Sort.Direction.DESC, sortBy);
+        }
+        return courseRepository.findAllByCategoryEquals(categoryRepository.findOne(categoryId), request);
     }
 }

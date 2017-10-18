@@ -9,6 +9,9 @@ import com.softserve.academy.spaced.repetition.security.JwtUser;
 import com.softserve.academy.spaced.repetition.service.validators.DataFieldValidator;
 import com.softserve.academy.spaced.repetition.service.validators.PasswordFieldValidator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.mail.MailException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -30,6 +33,7 @@ public class UserService {
     private UserRepository userRepository;
     @Autowired
     private DeckRepository deckRepository;
+    public final static int QUANTITY_USER_IN_PAGE = 20;
     @Autowired
     private PasswordEncoder passwordEncoder;
     @Autowired
@@ -41,7 +45,6 @@ public class UserService {
     private DataFieldValidator dataFieldValidator;
     @Autowired
     private PasswordFieldValidator passwordFieldValidator;
-
 
 
     public void addUser(User user) {
@@ -138,6 +141,15 @@ public class UserService {
         return decks;
     }
 
+    public Page<User> getUsersByPage(int pageNumber, String sortBy, boolean ascending) {
+        PageRequest request;
+        if(ascending == true){
+            request = new PageRequest(pageNumber-1, QUANTITY_USER_IN_PAGE, Sort.Direction.ASC, sortBy);
+        }else {
+            request = new PageRequest(pageNumber-1, QUANTITY_USER_IN_PAGE, Sort.Direction.DESC, sortBy);
+        }
+        return userRepository.findAll(request);
+    }
     @Transactional
     public User editPersonalData(Person person) throws NotAuthorisedUserException, DataFieldException {
         User user = getAuthorizedUser();
@@ -179,5 +191,4 @@ public class UserService {
         userRepository.save(user);
         mailService.sendAccountNotificationMail(user);
     }
-
 }

@@ -11,6 +11,7 @@ import com.softserve.academy.spaced.repetition.exceptions.NotAuthorisedUserExcep
 import com.softserve.academy.spaced.repetition.exceptions.SameDeckInCourseException;
 import com.softserve.academy.spaced.repetition.service.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.hateoas.Link;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,24 +33,22 @@ public class CourseController {
     @Auditable(action = AuditingAction.VIEW_COURSES_VIA_CATEGORY)
     @GetMapping(value = "/api/category/{category_id}/courses")
     @PreAuthorize(value = "@accessToUrlService.hasAccessToCategory(#category_id)")
-    public ResponseEntity<List<CourseLinkDTO>> getAllCoursesByCategoryId(@PathVariable Long category_id) {
-        List<Course> courseList = courseService.getAllCoursesByCategoryId(category_id);
-        Link collectionLink = linkTo(methodOn(CourseController.class).getAllCoursesByCategoryId(category_id)).withSelfRel();
-        List<CourseLinkDTO> courses = DTOBuilder.buildDtoListForCollection(courseList, CourseLinkDTO.class, collectionLink);
-        return new ResponseEntity<>(courses, HttpStatus.OK);
+    public ResponseEntity<Page<CourseLinkDTO>> getAllCoursesByCategoryId(@PathVariable Long category_id, @RequestParam(name = "p", defaultValue = "1") int pageNumber, @RequestParam(name = "sortBy") String sortBy, @RequestParam(name = "asc") boolean ascending) {
+        Page<CourseLinkDTO> courseLinkDTOS = courseService.getPageWithCoursesByCategory(category_id, pageNumber, sortBy, ascending).map((course) -> {
+            Link selfLink = linkTo(methodOn(CourseController.class).getAllCoursesByCategoryId(category_id, pageNumber, sortBy, ascending)).withSelfRel();
+            return DTOBuilder.buildDtoForEntity(course, CourseLinkDTO.class, selfLink);
+        });
+        return new ResponseEntity<>(courseLinkDTOS, HttpStatus.OK);
     }
 
     @Auditable(action = AuditingAction.VIEW_COURSES)
     @GetMapping(value = "/api/courses")
-    public ResponseEntity<List<CourseLinkDTO>> getAllCourses() {
-        List<Course> courseList = courseService.getAllCourses();
-        List<CourseLinkDTO> courses = new ArrayList<>();
-        for (Course course : courseList) {
-            Link selfLink = linkTo(methodOn(CourseController.class).getCourseById(course.getCategory().getId(),
-                    course.getId())).withSelfRel();
-            courses.add(DTOBuilder.buildDtoForEntity(course, CourseLinkDTO.class, selfLink));
-        }
-        return new ResponseEntity<>(courses, HttpStatus.OK);
+    public ResponseEntity<Page<CourseLinkDTO>> getAllCourses(@RequestParam(name = "p", defaultValue = "1") int pageNumber, @RequestParam(name = "sortBy") String sortBy, @RequestParam(name = "asc") boolean ascending) {
+        Page<CourseLinkDTO> courseLinkDTOS = courseService.getPageWithCourses(pageNumber, sortBy, ascending).map((course) -> {
+            Link selfLink = linkTo(methodOn(CourseController.class).getCourseById(course.getCategory().getId(), course.getId())).withSelfRel();
+            return DTOBuilder.buildDtoForEntity(course, CourseLinkDTO.class, selfLink);
+        });
+        return new ResponseEntity<>(courseLinkDTOS, HttpStatus.OK);
     }
 
     @GetMapping(value = "/api/courses/ordered")

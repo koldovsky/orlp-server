@@ -5,10 +5,11 @@ import com.softserve.academy.spaced.repetition.domain.*;
 import com.softserve.academy.spaced.repetition.exceptions.NoSuchDeckException;
 import com.softserve.academy.spaced.repetition.exceptions.NotAuthorisedUserException;
 import com.softserve.academy.spaced.repetition.exceptions.NotOwnerOperationException;
-import com.softserve.academy.spaced.repetition.repository.CategoryRepository;
-import com.softserve.academy.spaced.repetition.repository.CourseRepository;
-import com.softserve.academy.spaced.repetition.repository.DeckRepository;
+import com.softserve.academy.spaced.repetition.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,11 +17,16 @@ import java.util.List;
 
 @Service
 public class DeckService {
+    private final static int QUANTITY_ADMIN_DECKS_IN_PAGE = 20;
+    private final static int QUANTITY_DECKS_IN_PAGE = 12;
     @Autowired
     private DeckRepository deckRepository;
 
     @Autowired
     private CategoryRepository categoryRepository;
+
+    @Autowired
+    private CardRepository cardRepository;
 
     @Autowired
     private CourseRepository courseRepository;
@@ -40,7 +46,6 @@ public class DeckService {
         Category category = categoryRepository.findOne(categoryId);
         return category.getDecks();
     }
-
 
     public List<Deck> getAllOrderedDecks() {
         return deckRepository.findAllByOrderByRatingDesc();
@@ -164,4 +169,23 @@ public class DeckService {
         }
     }
 
+    public Page<Deck> getPageWithDecksByCategory(long categoryId, int pageNumber, String sortBy, boolean ascending) {
+        PageRequest request;
+        if(ascending == true){
+            request = new PageRequest(pageNumber-1, QUANTITY_DECKS_IN_PAGE, Sort.Direction.ASC, sortBy);
+        }else {
+            request = new PageRequest(pageNumber-1, QUANTITY_DECKS_IN_PAGE, Sort.Direction.DESC, sortBy);
+        }
+        return deckRepository.findAllByCategoryEquals(categoryRepository.findOne(categoryId), request);
+    }
+
+    public Page<Deck> getPageWithAllAdminDecks(int pageNumber, String sortBy, boolean ascending) {
+        PageRequest request;
+        if(ascending == true){
+            request = new PageRequest(pageNumber-1, QUANTITY_ADMIN_DECKS_IN_PAGE, Sort.Direction.ASC, sortBy);
+        }else {
+            request = new PageRequest(pageNumber-1, QUANTITY_ADMIN_DECKS_IN_PAGE, Sort.Direction.DESC, sortBy);
+        }
+        return deckRepository.findAll(request);
+    }
 }

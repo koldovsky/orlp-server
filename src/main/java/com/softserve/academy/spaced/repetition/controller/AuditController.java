@@ -5,10 +5,12 @@ import com.softserve.academy.spaced.repetition.DTO.impl.AuditPublicDTO;
 import com.softserve.academy.spaced.repetition.domain.Audit;
 import com.softserve.academy.spaced.repetition.service.AuditService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.hateoas.Link;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -28,11 +30,12 @@ public class AuditController {
      * @return - list of audit
      */
     @GetMapping("api/admin/audit")
-    public ResponseEntity<List<AuditPublicDTO>> getFullAuditList() {
-        List<Audit> auditList = auditService.getFullAuditList();
-        Link link = linkTo(methodOn(AuditController.class).getFullAuditList()).withSelfRel();
-        List<AuditPublicDTO> auditDTOList = DTOBuilder.buildDtoListForCollection(auditList, AuditPublicDTO.class, link);
-        return new ResponseEntity<>(auditDTOList, HttpStatus.OK);
+    public ResponseEntity<Page<AuditPublicDTO>> getFullAuditList(@RequestParam(name = "p", defaultValue = "1") int pageNumber, @RequestParam(name = "sortBy") String sortBy, @RequestParam(name = "asc") boolean ascending) {
+        Page<AuditPublicDTO> auditPublicDTOS = auditService.getAuditByPage(pageNumber, sortBy, ascending).map((audit) -> {
+            Link selfLink = linkTo(methodOn(AuditController.class).getFullAuditList(pageNumber, sortBy, ascending)).withSelfRel();
+            return DTOBuilder.buildDtoForEntity(audit, AuditPublicDTO.class, selfLink);
+        });
+        return new ResponseEntity<>(auditPublicDTOS, HttpStatus.OK);
     }
 
     /**
