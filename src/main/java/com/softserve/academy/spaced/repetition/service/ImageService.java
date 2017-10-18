@@ -3,20 +3,14 @@ package com.softserve.academy.spaced.repetition.service;
 import com.google.api.client.util.Base64;
 import com.softserve.academy.spaced.repetition.domain.Image;
 import com.softserve.academy.spaced.repetition.domain.User;
-import com.softserve.academy.spaced.repetition.exceptions.CanNotBeDeletedException;
-import com.softserve.academy.spaced.repetition.exceptions.ImageRepositorySizeQuotaExceededException;
-import com.softserve.academy.spaced.repetition.exceptions.NotAuthorisedUserException;
-import com.softserve.academy.spaced.repetition.exceptions.NotOwnerOperationException;
-import com.softserve.academy.spaced.repetition.exceptions.FileIsNotAnImageException;
+import com.softserve.academy.spaced.repetition.exceptions.*;
 import com.softserve.academy.spaced.repetition.repository.ImageRepository;
-import com.softserve.academy.spaced.repetition.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartException;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.validation.constraints.Null;
 import java.io.IOException;
 import java.util.List;
 
@@ -43,7 +37,17 @@ public class ImageService {
      * @throws NotAuthorisedUserException                - is dropping when the user which wants to add the image is not authorised
      */
     public Image addImageToDB(MultipartFile file) throws ImageRepositorySizeQuotaExceededException, NotAuthorisedUserException, FileIsNotAnImageException {
-        Image image = null;
+        checkImageExtention(file);
+        Image  image = new Image(encodeToBase64(file), file.getContentType(),
+                userService.getAuthorizedUser(),file.getSize());
+        imageRepository.save(image);
+        image = imageRepository.getImageWithoutContent(image.getId());
+        return image;
+    }
+
+
+     void checkImageExtention(MultipartFile file) throws ImageRepositorySizeQuotaExceededException,
+            NotAuthorisedUserException, FileIsNotAnImageException {
         long fileSize = file.getSize();
         User user = userService.getAuthorizedUser();
         if (fileSize > getUsersLimitInBytesForImagesLeft(user.getId())) {
@@ -52,20 +56,14 @@ public class ImageService {
         if (fileSize > maxFileSize) {
             throw new MultipartException("File upload error: file is too large.");
         } else {
-            String base64 = encodeToBase64(file);
             String imageType = file.getContentType();
             if (imageType == null || !imageType.split("/")[0].equals("image"))
             {
                 throw new FileIsNotAnImageException();
             }
-            else {
-        image = new Image(base64, imageType, user, fileSize);
-        imageRepository.save(image);
-        image = imageRepository.getImageWithoutContent(image.getId());
+        }
     }
-}
-        return image;
-                }
+
 
     /**
      * Gets decoded from Base64 image content by Image Id
@@ -93,7 +91,7 @@ public class ImageService {
      * @param file - MultiPartFile
      * @return encoded file-content
      */
-    private String encodeToBase64(MultipartFile file) {
+    String encodeToBase64(MultipartFile file) {
         String encodedFile = null;
         byte[] bytes = new byte[(int) file.getSize()];
         try {
@@ -111,7 +109,7 @@ public class ImageService {
      * @param encodedFileContent
      * @return decoded file-content
      */
-    private byte[] decodeFromBase64(String encodedFileContent) {
+    byte[] decodeFromBase64(String encodedFileContent) {
 
         return Base64.decodeBase64(encodedFileContent);
     }

@@ -11,12 +11,14 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
 public class CategoryLinkDTO extends DTO<Category> {
-
+    private static final int PAGE_NUMBER = 1;
+    private static final String SORT_BY = "id";
+    private static final boolean ASCENDING = true;
 
     public CategoryLinkDTO(Category category, Link parentLink) {
         super(category, parentLink);
-        add(linkTo(methodOn(CourseController.class).getAllCoursesByCategoryId(getEntity().getId())).withRel("courses"));
-        add(linkTo(methodOn(DeckController.class).getAllDecksByCategoryId(getEntity().getId())).withRel("decks"));
+        add(linkTo(methodOn(CourseController.class).getAllCoursesByCategoryId(getEntity().getId(), PAGE_NUMBER, SORT_BY, ASCENDING)).withRel("courses"));
+        add(linkTo(methodOn(DeckController.class).getAllDecksByCategoryId(getEntity().getId(),PAGE_NUMBER,SORT_BY,ASCENDING)).withRel("decks"));
     }
 
     public Long getCategoryId() {
