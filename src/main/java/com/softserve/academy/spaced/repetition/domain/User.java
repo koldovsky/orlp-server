@@ -83,4 +83,20 @@ public class User implements EntityInterface {
         this.courses = courses;
     }
 
+    @Override
+    public boolean equals(Object o) {
+
+        if (this == o) return true;
+        if (!(o instanceof User)) return false;
+        User user = (User)o;
+        return this.getPerson().equals(user.getPerson());
+    }
+
+    @Override
+    public int hashCode() {
+        return (int)id;
+        //return this.getPerson().getFirstName().hashCode() + this.getPerson().getLastName().hashCode();
+    }
+
+
 }
