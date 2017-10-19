@@ -42,10 +42,10 @@ public class DeckCommentController {
 
     @Auditable(action = AuditingAction.VIEW_COMMENT_FOR_DECK)
     @GetMapping(value = "/api/category/{categoryId}/deck/{deckId}/comments/{commentId}")
-    public ResponseEntity<CommentDTO> getCommentById(@PathVariable Long deckId, @PathVariable Long commentId) {
+    public ResponseEntity<CommentDTO> getCommentById(@PathVariable Long categoryId,@PathVariable Long deckId, @PathVariable Long commentId) {
         LOGGER.debug("View comment with id {} for deck with id: {}", commentId, deckId);
         DeckComment comment = commentService.getCommentById(commentId);
-        Link selfLink = linkTo(methodOn(DeckCommentController.class).getCommentById(deckId, commentId)).withSelfRel();
+        Link selfLink = linkTo(methodOn(DeckCommentController.class).getCommentById(categoryId, deckId, commentId)).withSelfRel();
         CommentDTO commentDTO = DTOBuilder.buildDtoForEntity(comment, CommentDTO.class, selfLink);
         return new ResponseEntity<>(commentDTO, HttpStatus.OK);
     }
@@ -56,24 +56,24 @@ public class DeckCommentController {
     public ResponseEntity<CommentDTO> addCommentForDeck(@RequestBody String commentText, @PathVariable Long categoryId, @PathVariable Long deckId) throws NotAuthorisedUserException, EmptyCommentTextException {
         LOGGER.debug("Added comment to deck with id: {}", deckId);
         DeckComment comment = commentService.addCommentForDeck(commentText, deckId);
-        Link selfLink = linkTo(methodOn(DeckCommentController.class).getCommentById(categoryId, deckId)).withSelfRel();
+        Link selfLink = linkTo(methodOn(DeckCommentController.class).getCommentById(categoryId, deckId, comment.getId())).withSelfRel();
         CommentDTO commentDTO = DTOBuilder.buildDtoForEntity(comment, CommentDTO.class, selfLink);
         return new ResponseEntity<>(commentDTO, HttpStatus.CREATED);
     }
 
     @Auditable(action = AuditingAction.EDIT_COMMENT_FOR_DECK)
-    @PutMapping(value = "/api/deck/{deckId}/comment/{commentId}")
+    @PutMapping(value = "/api/category/{categoryId}/deck/{deckId}/comment/{commentId}")
     @PreAuthorize(value = "@accessToUrlService.hasAccessToUpdateCommentForDeck(#commentId)")
-    public ResponseEntity<CommentDTO> updateComment(@RequestBody String commentText, @PathVariable Long deckId, @PathVariable Long commentId) throws EmptyCommentTextException {
+    public ResponseEntity<CommentDTO> updateComment(@RequestBody String commentText, @PathVariable Long categoryId, @PathVariable Long deckId, @PathVariable Long commentId) throws EmptyCommentTextException {
         LOGGER.debug("Updated comment with id: {}", commentId);
         DeckComment comment = commentService.updateCommentById(commentId, commentText);
-        Link selfLink = linkTo(methodOn(DeckCommentController.class).getCommentById(deckId, commentId)).withSelfRel();
+        Link selfLink = linkTo(methodOn(DeckCommentController.class).getCommentById(categoryId, deckId, commentId)).withSelfRel();
         CommentDTO commentDTO = DTOBuilder.buildDtoForEntity(comment, CommentDTO.class, selfLink);
         return new ResponseEntity<>(commentDTO, HttpStatus.OK);
     }
 
     @Auditable(action = AuditingAction.DELETE_COMMENT_FOR_DECK)
-    @DeleteMapping(value = "/api/deck/{deckId}/comment/{commentId}")
+    @DeleteMapping(value = "/api/category/{categoryId}/deck/{deckId}/comment/{commentId}")
     @PreAuthorize(value = "@accessToUrlService.hasAccessToDeleteCommentForDeck(#commentId)")
     public void deleteComment(@PathVariable Long commentId, @PathVariable Long deckId) {
         LOGGER.debug("Deleted comment with id:{} for deck with id: {}", commentId, deckId);
