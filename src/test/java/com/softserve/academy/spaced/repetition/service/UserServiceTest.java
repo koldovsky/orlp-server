@@ -2,11 +2,9 @@ package com.softserve.academy.spaced.repetition.service;
 
 import com.softserve.academy.spaced.repetition.DTO.impl.PasswordDTO;
 import com.softserve.academy.spaced.repetition.config.TestDatabaseConfig;
-import com.softserve.academy.spaced.repetition.domain.Account;
-import com.softserve.academy.spaced.repetition.domain.Folder;
-import com.softserve.academy.spaced.repetition.domain.Person;
-import com.softserve.academy.spaced.repetition.domain.User;
+import com.softserve.academy.spaced.repetition.domain.*;
 import com.softserve.academy.spaced.repetition.exceptions.DataFieldException;
+import com.softserve.academy.spaced.repetition.exceptions.FileIsNotAnImageException;
 import com.softserve.academy.spaced.repetition.exceptions.NotAuthorisedUserException;
 import com.softserve.academy.spaced.repetition.exceptions.PasswordFieldException;
 import com.softserve.academy.spaced.repetition.repository.DeckRepository;
@@ -30,6 +28,8 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Resource;
+
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
@@ -51,8 +51,8 @@ public class UserServiceTest {
     private DeckRepository deckRepository;
     @Mock
     private PasswordEncoder mockedPasswordEncoder;
-    @Spy
-    private ImageService mockedImageService = new ImageService();
+
+    private ImageService mockedImageService;
     @Mock
     private MailService mockedMailService;
     @Mock
@@ -66,6 +66,7 @@ public class UserServiceTest {
         userServiceUnderTest.setUserRepository(userRepository);
         userServiceUnderTest.setDeckRepository(deckRepository);
         userServiceUnderTest.setPasswordEncoder(mockedPasswordEncoder);
+        mockedImageService = PowerMockito.spy(new ImageService());
         userServiceUnderTest.setImageService(mockedImageService);
         userServiceUnderTest.setMailService(mockedMailService);
         userServiceUnderTest.setDataFieldValidator(mockedDataFieldValidator);
@@ -79,19 +80,16 @@ public class UserServiceTest {
 
     @Test
     public void testEditPersonalData() throws Exception {
-
         Person newPerson = new Person("newFirstName", "newLastName");
         User newUser = new User(new Account("email1@email.com"), newPerson, new Folder());
         doAnswer((Answer<Void>) invocation -> {
             person = invocation.getArgumentAt(0, Person.class);
             return null;
         }).when(mockedDataFieldValidator).validate(any());
-
         PowerMockito.doReturn(mockedUser).when(userServiceUnderTest, "getAuthorizedUser");
         User editedUser = userServiceUnderTest.editPersonalData(newPerson);
-
-        assertEquals(newPerson, person);
-        assertEquals("Change personal data", newUser, editedUser);
+        assertEquals("DataFieldValidator invoked", newPerson, person);
+        assertEquals("Change personal data", mockedUser, editedUser);
     }
 
     @Test(expected = DataFieldException.class)
@@ -118,27 +116,23 @@ public class UserServiceTest {
     @Test
     public void testChangePassword() throws Exception {
         PasswordDTO passwordDTO = new PasswordDTO("11111111", "22222222");
-
         doAnswer((Answer<Void>) invocation -> {
             password = invocation.getArgumentAt(0, PasswordDTO.class);
             return null;
         }).when(mockedPasswordFieldValidator).validate(any());
-
         doAnswer((Answer<Void>) invocation -> {
             newPassword = invocation.getArgumentAt(0, String.class);
             return null;
         }).when(mockedPasswordEncoder).encode(any());
-
         doAnswer((Answer<Void>) invocation -> {
             user = invocation.getArgumentAt(0, User.class);
             return null;
         }).when(mockedMailService).sendPasswordNotificationMail(any());
-
         PowerMockito.doReturn(mockedUser).when(userServiceUnderTest, "getAuthorizedUser");
         userServiceUnderTest.changePassword(passwordDTO);
-        assertEquals(passwordDTO, password);
-        assertEquals(passwordDTO.getNewPassword(), newPassword);
-        assertEquals(mockedUser, user);
+        assertEquals("PasswordFieldValidator invoked", passwordDTO, password);
+        assertEquals("PasswordEncoder invoked", passwordDTO.getNewPassword(), newPassword);
+        assertEquals("NotificationMail is sent", mockedUser, user);
     }
 
     @Test(expected = PasswordFieldException.class)
@@ -156,52 +150,45 @@ public class UserServiceTest {
         userServiceUnderTest.changePassword(passwordDTO);
     }
 
-//    public User uploadImage(MultipartFile file) throws ImageRepositorySizeQuotaExceededException,
-//            NotAuthorisedUserException, FileIsNotAnImageException {
-//        imageService.checkImageExtention(file);
-//        User user = getAuthorizedUser();
-//        user.getPerson().setImageBase64( imageService.encodeToBase64(file));
-//        user.getPerson().setTypeImage(ImageType.BASE64);
-//        return userRepository.save(user);
-//    }
     MockMultipartFile newImage;
-    MockMultipartFile base64Image;
+
     @Test
-    public void uploadImage() throws Exception {
+    public void testUploadImage() throws Exception {
         MockMultipartFile image = new MockMultipartFile("image",
                 "", "application/json", "{\"image\": \"F:\\photo.jpg\"}".getBytes());
-        System.out.println(image.getBytes());
-
         PasswordDTO passwordDTO = new PasswordDTO("11111111", "22222222");
-        //imageService.checkImageExtention(file);
         doAnswer((Answer<Void>) invocation -> {
             newImage = invocation.getArgumentAt(0, MockMultipartFile.class);
             return null;
         }).when(mockedImageService).checkImageExtention(any());
-//imageService.encodeToBase64(file)
-
-//        PowerMockito.doCallRealMethod().when(mockedImageService, "encodeToBase64", any());
         String base64String = mockedImageService.encodeToBase64(image);
-        System.out.println(base64String);
-
-        doAnswer((Answer<Void>) invocation -> {
-            base64Image = invocation.getArgumentAt(0, MockMultipartFile.class);
-            return null;
-        }).when(mockedImageService).encodeToBase64(any());
-
         PowerMockito.doReturn(mockedUser).when(userServiceUnderTest, "getAuthorizedUser");
-        //userServiceUnderTest.changePassword(passwordDTO);
-       // assertEquals(passwordDTO, password);
-       // assertEquals(passwordDTO.getNewPassword(), newPassword);
         User userWithUploadImage = userServiceUnderTest.uploadImage(image);
-        assertEquals(image, newImage);
-        assertEquals(image, base64Image);
-        System.out.println(userWithUploadImage.getPerson().getImageBase64());
-        assertEquals(base64String, userWithUploadImage.getPerson().getImageBase64());
-
-
+        assertEquals("checkImageExtention invoked", image, newImage);
+        assertEquals("Image is uploaded", base64String, userWithUploadImage.getPerson().getImageBase64());
     }
 
+    @Test(expected = FileIsNotAnImageException.class)
+    public void testUploadImageException() throws Exception {
+        MockMultipartFile image = new MockMultipartFile("image", "", "", "".getBytes());
+        doThrow(FileIsNotAnImageException.class).when(mockedImageService).checkImageExtention(eq(image));
+        userServiceUnderTest.uploadImage(image);
+    }
 
+    @Test
+    public void testDeleteAccount() throws Exception {
+        doAnswer((Answer<Void>) invocation -> {
+            user = invocation.getArgumentAt(0, User.class);
+            return null;
+        }).when(mockedMailService).sendAccountNotificationMail(any());
+        PowerMockito.doReturn(mockedUser).when(userServiceUnderTest, "getAuthorizedUser");
+        userServiceUnderTest.deleteAccount();
+        assertEquals("NotificationMail is sent", mockedUser, user);
+    }
 
+    @Test(expected = NotAuthorisedUserException.class)
+    public void testNotAuthorizedDeleteAccount() throws Exception {
+        doThrow(NotAuthorisedUserException.class).when(userServiceUnderTest).getAuthorizedUser();
+        userServiceUnderTest.deleteAccount();
+    }
 }
