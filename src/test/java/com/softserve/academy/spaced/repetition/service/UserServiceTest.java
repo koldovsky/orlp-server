@@ -17,6 +17,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.stubbing.Answer;
 import org.powermock.api.mockito.PowerMockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,8 +51,8 @@ public class UserServiceTest {
     private DeckRepository deckRepository;
     @Mock
     private PasswordEncoder mockedPasswordEncoder;
-    @Mock
-    private ImageService mockedImageService;
+    @Spy
+    private ImageService mockedImageService = new ImageService();
     @Mock
     private MailService mockedMailService;
     @Mock
@@ -169,6 +170,7 @@ public class UserServiceTest {
     public void uploadImage() throws Exception {
         MockMultipartFile image = new MockMultipartFile("image",
                 "", "application/json", "{\"image\": \"F:\\photo.jpg\"}".getBytes());
+        System.out.println(image.getBytes());
 
         PasswordDTO passwordDTO = new PasswordDTO("11111111", "22222222");
         //imageService.checkImageExtention(file);
@@ -177,6 +179,11 @@ public class UserServiceTest {
             return null;
         }).when(mockedImageService).checkImageExtention(any());
 //imageService.encodeToBase64(file)
+
+//        PowerMockito.doCallRealMethod().when(mockedImageService, "encodeToBase64", any());
+        String base64String = mockedImageService.encodeToBase64(image);
+        System.out.println(base64String);
+
         doAnswer((Answer<Void>) invocation -> {
             base64Image = invocation.getArgumentAt(0, MockMultipartFile.class);
             return null;
@@ -189,7 +196,8 @@ public class UserServiceTest {
         User userWithUploadImage = userServiceUnderTest.uploadImage(image);
         assertEquals(image, newImage);
         assertEquals(image, base64Image);
-        assertEquals(image., userWithUploadImage.getPerson().getImageBase64());
+        System.out.println(userWithUploadImage.getPerson().getImageBase64());
+        assertEquals(base64String, userWithUploadImage.getPerson().getImageBase64());
 
 
     }
