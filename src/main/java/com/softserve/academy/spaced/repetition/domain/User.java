@@ -85,8 +85,12 @@ public class User implements EntityInterface {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof User)) return false;
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof User)) {
+            return false;
+        }
         User user = (User)o;
         if(this.id==user.id && this.getPerson().equals(user.getPerson())
                 && this.getAccount().equals(user.getAccount())) {
