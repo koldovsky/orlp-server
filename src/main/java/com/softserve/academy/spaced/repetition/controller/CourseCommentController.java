@@ -43,10 +43,10 @@ public class CourseCommentController {
 
     @Auditable(action = AuditingAction.VIEW_COMMENT_FOR_COURSE)
     @GetMapping(value = "/api/category/{categoryId}/course/{courseId}/comments/{courseCommentId}")
-    public ResponseEntity<CommentDTO> getCommentByCourse(@PathVariable Long courseId, @PathVariable Long courseCommentId) {
+    public ResponseEntity<CommentDTO> getCommentByCourse(@PathVariable Long categoryId, @PathVariable Long courseId, @PathVariable Long courseCommentId) {
         LOGGER.debug("View comment with id {} for course with id: {}", courseCommentId, courseId);
         CourseComment courseComment = courseCommentService.getCommentById(courseCommentId);
-        Link selfLink = linkTo(methodOn(CourseCommentController.class).getCommentByCourse(courseId, courseCommentId)).withSelfRel();
+        Link selfLink = linkTo(methodOn(CourseCommentController.class).getCommentByCourse(categoryId, courseId, courseCommentId)).withSelfRel();
         CommentDTO courseCommentDTO = DTOBuilder.buildDtoForEntity(courseComment, CommentDTO.class, selfLink);
         return new ResponseEntity<>(courseCommentDTO, HttpStatus.OK);
     }
@@ -57,26 +57,26 @@ public class CourseCommentController {
     public ResponseEntity<CommentDTO> addCommentByCourse(@RequestBody String courseContentComment, @PathVariable Long categoryId, @PathVariable Long courseId) throws NotAuthorisedUserException, EmptyCommentTextException {
         LOGGER.debug("Added comment to course with id: {}", courseId);
         CourseComment courseComment=courseCommentService.addCommentForCourse(courseContentComment, courseId);
-        Link selfLink = linkTo(methodOn(CourseCommentController.class).getCommentByCourse(categoryId, courseId)).withSelfRel();
+        Link selfLink = linkTo(methodOn(CourseCommentController.class).getCommentByCourse(categoryId, courseId, courseComment.getId())).withSelfRel();
         CommentDTO courseCommentDTO = DTOBuilder.buildDtoForEntity(courseComment, CommentDTO.class, selfLink);
         return new ResponseEntity<>(courseCommentDTO, HttpStatus.CREATED);
     }
 
     @Auditable(action = AuditingAction.EDIT_COMMENT_FOR_COURSE)
-    @PutMapping(value = "/api/course/{courseId}/comment/{courseCommentId}")
+    @PutMapping(value = "/api/category/{categoryId}/course/{courseId}/comment/{courseCommentId}")
     @PreAuthorize(value = "@accessToUrlService.hasAccessToUpdateCommentForCourse(#courseCommentId)")
-    public ResponseEntity<CommentDTO> updateComment(@RequestBody String courseContentComment, @PathVariable Long courseId, @PathVariable Long courseCommentId) throws EmptyCommentTextException {
+    public ResponseEntity<CommentDTO> updateComment(@RequestBody String courseContentComment, @PathVariable Long categoryId, @PathVariable Long courseId, @PathVariable Long courseCommentId) throws EmptyCommentTextException {
         LOGGER.debug("Updated courseComment with id: {}", courseCommentId);
         CourseComment courseComment=courseCommentService.updateCommentById(courseCommentId, courseContentComment);
-        Link selfLink = linkTo(methodOn(CourseCommentController.class).getCommentByCourse(courseId, courseCommentId)).withSelfRel();
+        Link selfLink = linkTo(methodOn(CourseCommentController.class).getCommentByCourse(categoryId, courseId, courseCommentId)).withSelfRel();
         CommentDTO courseCommentDTO = DTOBuilder.buildDtoForEntity(courseComment, CommentDTO.class, selfLink);
         return new ResponseEntity<>(courseCommentDTO, HttpStatus.OK);
     }
 
     @Auditable(action = AuditingAction.DELETE_COMMENT_FOR_COURSE)
-    @DeleteMapping(value = "/api/course/{courseId}/comment/{courseCommentId}")
+    @DeleteMapping(value = "/api/category/{categoryId}/course/{courseId}/comment/{courseCommentId}")
     @PreAuthorize(value = "@accessToUrlService.hasAccessToDeleteCommentForCourse(#courseCommentId)")
-    public void deleteComment(@PathVariable Long courseCommentId,@PathVariable Long courseId) {
+    public void deleteComment(@PathVariable Long courseCommentId,@PathVariable Long courseId, @PathVariable Long categoryId) {
         LOGGER.debug("Deleted comment witj id:{} for course with id: {}", courseCommentId, courseId);
         courseCommentService.deleteCommentById(courseCommentId);
     }
