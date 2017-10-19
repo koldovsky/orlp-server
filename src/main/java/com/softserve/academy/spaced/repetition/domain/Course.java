@@ -50,6 +50,9 @@ public class Course implements EntityInterface {
     @OneToMany(mappedBy = "course", cascade = CascadeType.ALL)
     private List<CourseRating> courseRatings;
 
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "course", cascade = CascadeType.ALL)
+    private List<CourseComment> courseComments;
+
     public Course() {
     }
 
@@ -133,19 +136,33 @@ public class Course implements EntityInterface {
         this.courseRatings = courseRatings;
     }
 
+    public List<CourseComment> getCourseComments() {
+        return courseComments;
+    }
+
+    public void setCourseComments(List<CourseComment> courseComments) {
+        this.courseComments = courseComments;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Course)) return false;
+        if (o == null || getClass() != o.getClass()) return false;
 
         Course course = (Course) o;
 
         if (Double.compare(course.rating, rating) != 0) return false;
+        if (published != course.published) return false;
         if (id != null ? !id.equals(course.id) : course.id != null) return false;
         if (name != null ? !name.equals(course.name) : course.name != null) return false;
         if (description != null ? !description.equals(course.description) : course.description != null) return false;
         if (image != null ? !image.equals(course.image) : course.image != null) return false;
-        return category != null ? category.equals(course.category) : course.category == null;
+        if (owner != null ? !owner.equals(course.owner) : course.owner != null) return false;
+        if (category != null ? !category.equals(course.category) : course.category != null) return false;
+        if (decks != null ? !decks.equals(course.decks) : course.decks != null) return false;
+        if (courseRatings != null ? !courseRatings.equals(course.courseRatings) : course.courseRatings != null)
+            return false;
+        return courseComments != null ? courseComments.equals(course.courseComments) : course.courseComments == null;
     }
 
     @Override
@@ -158,7 +175,12 @@ public class Course implements EntityInterface {
         result = 31 * result + (image != null ? image.hashCode() : 0);
         temp = Double.doubleToLongBits(rating);
         result = 31 * result + (int) (temp ^ (temp >>> 32));
+        result = 31 * result + (published ? 1 : 0);
+        result = 31 * result + (owner != null ? owner.hashCode() : 0);
         result = 31 * result + (category != null ? category.hashCode() : 0);
+        result = 31 * result + (decks != null ? decks.hashCode() : 0);
+        result = 31 * result + (courseRatings != null ? courseRatings.hashCode() : 0);
+        result = 31 * result + (courseComments != null ? courseComments.hashCode() : 0);
         return result;
     }
 }
