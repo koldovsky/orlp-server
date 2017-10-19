@@ -29,23 +29,50 @@ import org.springframework.web.multipart.MultipartFile;
 @Service
 public class UserService {
 
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private DeckRepository deckRepository;
     public final static int QUANTITY_USER_IN_PAGE = 20;
-    @Autowired
+
+    private UserRepository userRepository;
+
+    private DeckRepository deckRepository;
+
     private PasswordEncoder passwordEncoder;
-    @Autowired
+
     private ImageService imageService;
-    @Autowired
+
     private MailService mailService;
 
-    @Autowired
     private DataFieldValidator dataFieldValidator;
-    @Autowired
+
     private PasswordFieldValidator passwordFieldValidator;
 
+    @Autowired
+    public void setUserRepository(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+    @Autowired
+    public void setDeckRepository(DeckRepository deckRepository) {
+        this.deckRepository = deckRepository;
+    }
+    @Autowired
+    public void setPasswordEncoder(PasswordEncoder passwordEncoder) {
+        this.passwordEncoder = passwordEncoder;
+    }
+    @Autowired
+    public void setImageService(ImageService imageService) {
+        this.imageService = imageService;
+    }
+    @Autowired
+    public void setMailService(MailService mailService) {
+        this.mailService = mailService;
+    }
+    @Autowired
+    public void setDataFieldValidator(DataFieldValidator dataFieldValidator) {
+        this.dataFieldValidator = dataFieldValidator;
+    }
+    @Autowired
+    public void setPasswordFieldValidator(PasswordFieldValidator passwordFieldValidator) {
+        this.passwordFieldValidator = passwordFieldValidator;
+    }
 
     public void addUser(User user) {
         userRepository.save(user);
