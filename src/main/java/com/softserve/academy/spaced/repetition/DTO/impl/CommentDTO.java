@@ -1,22 +1,28 @@
 package com.softserve.academy.spaced.repetition.DTO.impl;
 
 import com.softserve.academy.spaced.repetition.DTO.DTO;
+import com.softserve.academy.spaced.repetition.domain.Comment;
+import com.softserve.academy.spaced.repetition.domain.CourseComment;
 import com.softserve.academy.spaced.repetition.domain.DeckComment;
 import org.springframework.hateoas.Link;
 
 import java.util.Date;
 
-public class DeckCommentDTO extends DTO<DeckComment> {
+public class CommentDTO extends DTO<Comment> {
 
-    public DeckCommentDTO(DeckComment commentForDeck, Link link) {
-        super(commentForDeck, link);
+    public CommentDTO(DeckComment comment, Link link) {
+        super(comment, link);
     }
 
-    public Long getCommentId(){return getEntity().getId();}
+    public CommentDTO(CourseComment comment, Link link) {
+        super(comment, link);
+    }
+
+    public Long getCourseCommentId(){return getEntity().getId();}
 
     public String getCommentText() {return getEntity().getCommentText();}
 
-    public Date getCommentCreateDate() {return getEntity().getCommentDate();}
+    public Date getCommentDate() {return getEntity().getCommentDate();}
 
     public String getPersonFirstName(){return getEntity().getPerson().getFirstName();}
 

@@ -1,5 +1,6 @@
 package com.softserve.academy.spaced.repetition.service;
 
+import com.softserve.academy.spaced.repetition.domain.Comment;
 import com.softserve.academy.spaced.repetition.domain.DeckComment;
 import com.softserve.academy.spaced.repetition.exceptions.EmptyCommentTextException;
 import com.softserve.academy.spaced.repetition.exceptions.NotAuthorisedUserException;
@@ -40,7 +41,7 @@ public class DeckCommentService {
         return commentRepository.findOne(commentId);
     }
 
-    public List<DeckComment> getAllCommentsForDeck(Long deckId) {
+    public List<Comment> getAllCommentsForDeck(Long deckId) {
         return commentRepository.findDeckCommentsByDeckId(deckId);
     }
 
