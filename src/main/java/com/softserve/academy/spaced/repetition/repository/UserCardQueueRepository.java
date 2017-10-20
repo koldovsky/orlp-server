@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface UserCardQueueRepository extends JpaRepository<UserCardQueue, Long> {
-    UserCardQueue findUserCardQueueByAccountEmailAndCardId(String accountEmail, long cardId);
+    UserCardQueue findUserCardQueueByAccountEmailAndCardId(String accountEmail, Long cardId);
 }
