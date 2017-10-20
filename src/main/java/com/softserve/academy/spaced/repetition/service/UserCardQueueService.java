@@ -30,9 +30,7 @@ public class UserCardQueueService {
         User user = userService.getAuthorizedUser();
         String email = user.getAccount().getEmail();
         UserCardQueue userCardQueue = userCardQueueRepository.findUserCardQueueByAccountEmailAndCardId(email, cardId);
-        if (userCardQueue != null) {
-            userCardQueue.setId(userCardQueue.getId());
-        } else {
+        if (userCardQueue == null) {
             userCardQueue = new UserCardQueue();
             userCardQueue.setCardId(cardId);
             userCardQueue.setDeckId(deckId);
