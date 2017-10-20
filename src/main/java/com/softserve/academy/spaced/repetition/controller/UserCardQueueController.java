@@ -28,10 +28,15 @@ public class UserCardQueueController {
     @PutMapping("/api/private/decks/{deckId}/cards/{cardId}/queue")
     @PreAuthorize(value = "@accessToUrlService.hasAccessToCard(#deckId, #cardId)")
     public ResponseEntity updateUserCardQueue(
-            @PathVariable Long deckId, @PathVariable Long cardId, @RequestBody UserCardQueueStatus userCardQueueStatus)
+            @PathVariable Long deckId, @PathVariable Long cardId, @RequestBody String status)
             throws NotAuthorisedUserException {
-        userCardQueueService.updateUserCardQueue(deckId, cardId, userCardQueueStatus);
-        return new ResponseEntity(HttpStatus.OK);
+        for (UserCardQueueStatus userCardQueueStatus : UserCardQueueStatus.values()) {
+            if (userCardQueueStatus.status.equals(status)) {
+                userCardQueueService.updateUserCardQueue(deckId, cardId, userCardQueueStatus);
+                return new ResponseEntity(HttpStatus.OK);
+            }
+        }
+        return new ResponseEntity(HttpStatus.BAD_REQUEST);
     }
 
     @GetMapping("api/user/card/queue/{user_card_queue_id}")
