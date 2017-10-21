@@ -7,6 +7,10 @@ import com.softserve.academy.spaced.repetition.DTO.impl.UserLinksDTO;
 import com.softserve.academy.spaced.repetition.domain.Course;
 import com.softserve.academy.spaced.repetition.domain.User;
 import com.softserve.academy.spaced.repetition.exceptions.NotAuthorisedUserException;
+import com.softserve.academy.spaced.repetition.exceptions.UserIsBlockedException;
+import com.softserve.academy.spaced.repetition.exceptions.UserIsDeletedException;
+import com.softserve.academy.spaced.repetition.exceptions.UserIsInactiveException;
+import com.softserve.academy.spaced.repetition.service.MailService;
 import com.softserve.academy.spaced.repetition.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Link;
@@ -28,6 +32,8 @@ public class UserController {
 
     @Autowired
     UserService userService;
+    @Autowired
+    MailService mailService;
 
     @GetMapping("api/private/user/details")
     public ResponseEntity<UserDTO> getAuthorizedUserPublicInfo() throws NotAuthorisedUserException {
@@ -61,4 +67,17 @@ public class UserController {
         List<CourseLinkDTO> courses = DTOBuilder.buildDtoListForCollection(courseList, CourseLinkDTO.class, collectionLink);
         return new ResponseEntity<>(courses, HttpStatus.OK);
     }
+
+    @GetMapping("api/status")
+    public ResponseEntity getUserStatus() throws UserIsDeletedException, UserIsBlockedException, UserIsInactiveException {
+        userService.getUserStatus();
+        return new ResponseEntity(HttpStatus.OK);
+    }
+
+    @GetMapping("api/confirmation-mail")
+    public ResponseEntity sendConfirmationMail() throws NotAuthorisedUserException {
+        mailService.sendConfirmationMail(userService.getAuthorizedUser());
+        return new ResponseEntity(HttpStatus.OK);
+    }
+
 }
