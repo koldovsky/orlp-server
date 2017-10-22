@@ -67,4 +67,10 @@ public class UserCardQueueService {
     public UserCardQueue getUserCardQueueById(long id) {
         return userCardQueueRepository.findOne(id);
     }
+
+    @Transactional
+    public long countCardsThatNeedRepeating(Long deckId) throws NotAuthorisedUserException {
+        return userCardQueueRepository.countAllByAccountEmailEqualsAndDeckIdEqualsAndDateToRepeatBefore(
+                userService.getAuthorizedUser().getAccount().getEmail(), deckId, new Date());
+    }
 }

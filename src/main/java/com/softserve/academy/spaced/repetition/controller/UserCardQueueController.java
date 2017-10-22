@@ -39,6 +39,12 @@ public class UserCardQueueController {
         return new ResponseEntity(HttpStatus.BAD_REQUEST);
     }
 
+    @GetMapping("/api/private/decks/{deckId}/cards-that-need-repeating/count")
+    public ResponseEntity<Long> countCardsThatNeedRepeating(@PathVariable Long deckId) throws
+            NotAuthorisedUserException {
+        return new ResponseEntity<>(userCardQueueService.countCardsThatNeedRepeating(deckId), HttpStatus.OK);
+    }
+
     @GetMapping("api/user/card/queue/{user_card_queue_id}")
     public ResponseEntity<UserCardQueuePublicDTO> getUserCardQueueById(@PathVariable long user_card_queue_id) {
         UserCardQueue userCardQueue = userCardQueueService.getUserCardQueueById(user_card_queue_id);

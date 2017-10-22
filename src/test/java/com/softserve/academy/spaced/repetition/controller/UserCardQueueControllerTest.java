@@ -15,10 +15,11 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -69,6 +70,38 @@ public class UserCardQueueControllerTest {
                 eq(CARD_ID), any(UserCardQueueStatus.class));
         mockMvc.perform(put("/api/private/decks/{deckId}/cards/{cardId}/queue", DECK_ID, CARD_ID)
                 .content("GOOD")
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    public void testCountCardsThatNeedRepeatingWhenThereAreNone() throws Exception {
+        mockMvc.perform(get("/api/private/decks/{deckId}/cards-that-need-repeating/count", DECK_ID)
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+        .andExpect(content().json("0"));
+
+        verify(userCardQueueService).countCardsThatNeedRepeating(DECK_ID);
+    }
+
+    @Test
+    public void testCountCardsThatNeedRepeatingWhenThereAreSome() throws Exception {
+        when(userCardQueueService.countCardsThatNeedRepeating(eq(DECK_ID))).thenReturn(5L);
+        mockMvc.perform(get("/api/private/decks/{deckId}/cards-that-need-repeating/count", DECK_ID)
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().json("5"));
+
+        verify(userCardQueueService).countCardsThatNeedRepeating(DECK_ID);
+    }
+
+    @Test
+    public void testCountCardsThatNeedRepeatingNotAuthorizedUserException() throws Exception {
+        doThrow(NotAuthorisedUserException.class).when(userCardQueueService).countCardsThatNeedRepeating(eq(DECK_ID));
+        mockMvc.perform(get("/api/private/decks/{deckId}/cards-that-need-repeating/count", DECK_ID)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isUnauthorized());

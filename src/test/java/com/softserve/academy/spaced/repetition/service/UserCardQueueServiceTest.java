@@ -355,4 +355,16 @@ public class UserCardQueueServiceTest {
         assertEquals("rememberingLevel", rememberingLevel, actualUserCardQueue.getRememberingLevel());
         assertEquals("dateToRepeat", dateToRepeat, actualUserCardQueue.getDateToRepeat());
     }
+
+    @Test
+    public void testCountCardsThatNeedRepeating() throws NotAuthorisedUserException {
+        User mockedUser = createMockedUser(LearningRegime.CARDS_POSTPONING_USING_SPACED_REPETITION);
+        when(mockedUserService.getAuthorizedUser()).thenReturn(mockedUser);
+
+        long actualNumberOfCards = userCardQueueService.countCardsThatNeedRepeating(DECK_ID);
+
+        long expectedNumberOfCards = userCardQueueRepository
+                .countAllByAccountEmailEqualsAndDeckIdEqualsAndDateToRepeatBefore(ACCOUNT_EMAIL, DECK_ID, new Date());
+        assertEquals(actualNumberOfCards, expectedNumberOfCards);
+    }
 }
