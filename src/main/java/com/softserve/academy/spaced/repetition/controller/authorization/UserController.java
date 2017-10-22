@@ -7,9 +7,7 @@ import com.softserve.academy.spaced.repetition.DTO.impl.UserLinksDTO;
 import com.softserve.academy.spaced.repetition.domain.Course;
 import com.softserve.academy.spaced.repetition.domain.User;
 import com.softserve.academy.spaced.repetition.exceptions.NotAuthorisedUserException;
-import com.softserve.academy.spaced.repetition.exceptions.UserIsBlockedException;
-import com.softserve.academy.spaced.repetition.exceptions.UserIsDeletedException;
-import com.softserve.academy.spaced.repetition.exceptions.UserIsInactiveException;
+import com.softserve.academy.spaced.repetition.exceptions.UserStatusException;
 import com.softserve.academy.spaced.repetition.service.MailService;
 import com.softserve.academy.spaced.repetition.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,7 +67,7 @@ public class UserController {
     }
 
     @GetMapping("api/status")
-    public ResponseEntity getUserStatus() throws UserIsDeletedException, UserIsBlockedException, UserIsInactiveException {
+    public ResponseEntity getUserStatus() throws UserStatusException {
         userService.getUserStatus();
         return new ResponseEntity(HttpStatus.OK);
     }

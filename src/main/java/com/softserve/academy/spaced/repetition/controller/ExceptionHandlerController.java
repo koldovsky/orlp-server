@@ -130,18 +130,13 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
         return new ResponseEntity<MessageDTO>(new MessageDTO("Current password must match and fields of password can not be empty"), HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(UserIsDeletedException.class)
-    ResponseEntity<MessageDTO> handleUserIsDeletedException() {
-        return new ResponseEntity<MessageDTO>(new MessageDTO("Account with this email is deleted"), HttpStatus.LOCKED);
-    }
-
-    @ExceptionHandler(UserIsBlockedException.class)
-    ResponseEntity<MessageDTO> UserIsBlockedException() {
-        return new ResponseEntity<MessageDTO>(new MessageDTO("Account with this email is blocked"), HttpStatus.FORBIDDEN);
-    }
-
-    @ExceptionHandler(UserIsInactiveException.class)
-    ResponseEntity<MessageDTO> UserIsInactiveException() {
+    @ExceptionHandler(UserStatusException.class)
+    ResponseEntity<MessageDTO> handleUserStatusException(UserStatusException userStatusException) {
+        if (userStatusException.getAccountStatus().isDeleted()) {
+            return new ResponseEntity<MessageDTO>(new MessageDTO("Account with this email is deleted"), HttpStatus.LOCKED);
+        } else if (userStatusException.getAccountStatus().isBlocked()) {
+            return new ResponseEntity<MessageDTO>(new MessageDTO("Account with this email is blocked"), HttpStatus.FORBIDDEN);
+        }
         return new ResponseEntity<MessageDTO>(new MessageDTO("Account with this email is inactive"), HttpStatus.METHOD_NOT_ALLOWED);
     }
 }

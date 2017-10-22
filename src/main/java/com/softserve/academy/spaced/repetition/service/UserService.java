@@ -225,16 +225,11 @@ public class UserService {
         mailService.sendAccountNotificationMail(user);
     }
 
-    public void getUserStatus() throws UserIsDeletedException, UserIsBlockedException, UserIsInactiveException {
+    public void getUserStatus() throws UserStatusException {
         JwtUser jwtUser = (JwtUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User user = userRepository.findUserByAccountEmail(jwtUser.getUsername());
-        if (user.getAccount().getStatus().equals(AccountStatus.DELETED)) {
-            throw new UserIsDeletedException();
-        } else if (user.getAccount().getStatus().equals(AccountStatus.BLOCKED)) {
-            throw new UserIsBlockedException();
-        } else if (user.getAccount().getStatus().equals(AccountStatus.INACTIVE)) {
-            throw new UserIsInactiveException();
+        if (user.getAccount().getStatus().isNotActive()) {
+            throw new UserStatusException(user.getAccount().getStatus());
         }
     }
-
 }
