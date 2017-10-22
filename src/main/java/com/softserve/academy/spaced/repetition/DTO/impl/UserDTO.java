@@ -41,4 +41,5 @@ public class UserDTO extends DTO<User> {
         return names;
     }
 
+    public AccountStatus getAccountStatus() { return getEntity().getAccount().getStatus();}
 }
