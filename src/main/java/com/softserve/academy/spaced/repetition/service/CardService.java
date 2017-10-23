@@ -56,13 +56,13 @@ public class CardService {
         return cardRepository.findOne(id);
     }
 
-       public void addCard(Card card, Long deckId) {
+    public void addCard(Card card, Long deckId) {
         Deck deck = deckRepository.findOne(deckId);
         card.setDeck(deck);
         deck.getCards().add(cardRepository.save(card));
     }
 
-   public void updateCard(Long id, Card card) {
+    public void updateCard(Long id, Card card) {
         card.setId(id);
         card.setDeck(cardRepository.findOne(id).getDeck());
         cardRepository.save(card);

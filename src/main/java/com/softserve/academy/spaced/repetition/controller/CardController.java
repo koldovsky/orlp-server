@@ -167,7 +167,7 @@ public class CardController {
     }
 
     @GetMapping(value = "/api/card/{cardId}")
-    //@PreAuthorize(value = "@accessToUrlService.hasAccessToCard(#cardId)")
+    @PreAuthorize(value = "@accessToUrlService.hasAccessToCard(#cardId)")
     public ResponseEntity<CardPublicDTO> getCardById(@PathVariable Long cardId) {
         Card card = cardService.getCard(cardId);
         Link selfLink = linkTo(methodOn(CardController.class).getCardById(cardId)).withSelfRel();
