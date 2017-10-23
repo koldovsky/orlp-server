@@ -50,4 +50,23 @@ public class RememberingLevel implements EntityInterface {
     public void setNumberOfPostponedDays(Integer numberOfPostponedDays) {
         this.numberOfPostponedDays = numberOfPostponedDays;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        RememberingLevel that = (RememberingLevel) o;
+
+        return id.equals(that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return id.hashCode();
+    }
 }
