@@ -56,7 +56,7 @@ public class CardService {
         return cardRepository.findOne(id);
     }
 
-    public void addCard(Card card, Long deckId) {
+       public void addCard(Card card, Long deckId) {
         Deck deck = deckRepository.findOne(deckId);
         card.setDeck(deck);
         deck.getCards().add(cardRepository.save(card));
