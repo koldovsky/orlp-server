@@ -4,6 +4,7 @@ import com.softserve.academy.spaced.repetition.domain.Card;
 import com.softserve.academy.spaced.repetition.domain.Deck;
 import com.softserve.academy.spaced.repetition.domain.LearningRegime;
 import com.softserve.academy.spaced.repetition.domain.User;
+import com.softserve.academy.spaced.repetition.exceptions.CardContainsEmptyFieldsException;
 import com.softserve.academy.spaced.repetition.exceptions.NotAuthorisedUserException;
 import com.softserve.academy.spaced.repetition.repository.CardRepository;
 import com.softserve.academy.spaced.repetition.repository.DeckRepository;
@@ -56,13 +57,19 @@ public class CardService {
         return cardRepository.findOne(id);
     }
 
-    public void addCard(Card card, Long deckId) {
+    public void addCard(Card card, Long deckId) throws CardContainsEmptyFieldsException {
+        if (card.getTitle().trim().isEmpty() || card.getAnswer().trim().isEmpty() || card.getQuestion().trim().isEmpty()) {
+            throw new CardContainsEmptyFieldsException();
+        }
         Deck deck = deckRepository.findOne(deckId);
         card.setDeck(deck);
         deck.getCards().add(cardRepository.save(card));
     }
 
-   public void updateCard(Long id, Card card) {
+    public void updateCard(Long id, Card card) throws CardContainsEmptyFieldsException {
+        if (card.getTitle().trim().isEmpty() || card.getAnswer().trim().isEmpty() || card.getQuestion().trim().isEmpty()) {
+            throw new CardContainsEmptyFieldsException();
+        }
         card.setId(id);
         card.setDeck(cardRepository.findOne(id).getDeck());
         cardRepository.save(card);
