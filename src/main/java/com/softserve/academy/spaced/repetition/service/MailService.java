@@ -38,7 +38,7 @@ public class MailService {
     public void sendConfirmationMail(User user) throws MailException {
         MimeMessagePreparator preparator = mimeMessage -> {
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
-            helper.setSubject("Successful registration");
+            helper.setSubject("Confirmation registration");
             helper.setTo(user.getAccount().getEmail());
             Map <String, Object> model = new HashMap <String, Object>();
             String token = jwtTokenForMail.generateTokenForMail(user);

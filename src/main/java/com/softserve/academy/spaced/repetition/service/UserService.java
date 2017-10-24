@@ -49,26 +49,32 @@ public class UserService {
     public void setUserRepository(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
+
     @Autowired
     public void setDeckRepository(DeckRepository deckRepository) {
         this.deckRepository = deckRepository;
     }
+
     @Autowired
     public void setPasswordEncoder(PasswordEncoder passwordEncoder) {
         this.passwordEncoder = passwordEncoder;
     }
+
     @Autowired
     public void setImageService(ImageService imageService) {
         this.imageService = imageService;
     }
+
     @Autowired
     public void setMailService(MailService mailService) {
         this.mailService = mailService;
     }
+
     @Autowired
     public void setDataFieldValidator(DataFieldValidator dataFieldValidator) {
         this.dataFieldValidator = dataFieldValidator;
     }
+
     @Autowired
     public void setPasswordFieldValidator(PasswordFieldValidator passwordFieldValidator) {
         this.passwordFieldValidator = passwordFieldValidator;
@@ -170,13 +176,14 @@ public class UserService {
 
     public Page<User> getUsersByPage(int pageNumber, String sortBy, boolean ascending) {
         PageRequest request;
-        if(ascending == true){
-            request = new PageRequest(pageNumber-1, QUANTITY_USER_IN_PAGE, Sort.Direction.ASC, sortBy);
-        }else {
-            request = new PageRequest(pageNumber-1, QUANTITY_USER_IN_PAGE, Sort.Direction.DESC, sortBy);
+        if (ascending == true) {
+            request = new PageRequest(pageNumber - 1, QUANTITY_USER_IN_PAGE, Sort.Direction.ASC, sortBy);
+        } else {
+            request = new PageRequest(pageNumber - 1, QUANTITY_USER_IN_PAGE, Sort.Direction.DESC, sortBy);
         }
         return userRepository.findAll(request);
     }
+
     @Transactional
     public User editPersonalData(Person person) throws NotAuthorisedUserException, DataFieldException {
         User user = getAuthorizedUser();
@@ -200,22 +207,29 @@ public class UserService {
             NotAuthorisedUserException, FileIsNotAnImageException {
         imageService.checkImageExtention(file);
         User user = getAuthorizedUser();
-        user.getPerson().setImageBase64( imageService.encodeToBase64(file));
+        user.getPerson().setImageBase64(imageService.encodeToBase64(file));
         user.getPerson().setTypeImage(ImageType.BASE64);
         return userRepository.save(user);
     }
 
-    public byte[] getDecodedImageContent() throws NotAuthorisedUserException{
+    public byte[] getDecodedImageContent() throws NotAuthorisedUserException {
         User user = getAuthorizedUser();
         String encodedFileContent = user.getPerson().getImageBase64();
         return imageService.decodeFromBase64(encodedFileContent);
     }
 
-
-    public void deleteAccount() throws NotAuthorisedUserException{
+    public void deleteAccount() throws NotAuthorisedUserException {
         User user = getAuthorizedUser();
         user.getAccount().setStatus(AccountStatus.INACTIVE);
         userRepository.save(user);
         mailService.sendAccountNotificationMail(user);
+    }
+
+    public void getUserStatus() throws UserStatusException {
+        JwtUser jwtUser = (JwtUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = userRepository.findUserByAccountEmail(jwtUser.getUsername());
+        if (user.getAccount().getStatus().isNotActive()) {
+            throw new UserStatusException(user.getAccount().getStatus());
+        }
     }
 }
