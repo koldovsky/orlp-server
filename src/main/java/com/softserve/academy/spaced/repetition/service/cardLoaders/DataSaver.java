@@ -1,6 +1,7 @@
 package com.softserve.academy.spaced.repetition.service.cardLoaders;
 
 import com.softserve.academy.spaced.repetition.domain.Card;
+import com.softserve.academy.spaced.repetition.exceptions.CardContainsEmptyFieldsException;
 import com.softserve.academy.spaced.repetition.repository.CardRepository;
 import com.softserve.academy.spaced.repetition.service.CardService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +18,7 @@ public class DataSaver {
     @Autowired
     private CardRepository cardRepository;
 
-    public void save(Map <String, String> map, Long deckId) {
+    public void save(Map <String, String> map, Long deckId) throws CardContainsEmptyFieldsException {
         Iterator <Map.Entry <String, String>> iterator = map.entrySet().iterator();
         while (iterator.hasNext()) {
             Map.Entry <String, String> elem = iterator.next();

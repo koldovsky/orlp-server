@@ -104,6 +104,25 @@ public class UserCardQueue implements EntityInterface {
         return rememberingLevel;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        UserCardQueue that = (UserCardQueue) o;
+
+        return id.equals(that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return id.hashCode();
+    }
+
     public void setRememberingLevel(RememberingLevel rememberingLevel) {
         this.rememberingLevel = rememberingLevel;
     }

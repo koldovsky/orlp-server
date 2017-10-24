@@ -1,14 +1,10 @@
 package com.softserve.academy.spaced.repetition.service;
 
-import com.softserve.academy.spaced.repetition.domain.Folder;
+import com.softserve.academy.spaced.repetition.domain.AuthorityName;
 import com.softserve.academy.spaced.repetition.exceptions.NotAuthorisedUserException;
 import com.softserve.academy.spaced.repetition.repository.*;
-import org.apache.http.HttpException;
-import org.apache.http.HttpStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
-import sun.security.provider.certpath.OCSPResponse;
 
 import java.util.Objects;
 
@@ -22,15 +18,19 @@ public class AccessToUrlService {
     private final FolderRepository folderRepository;
     private final DeckRepository deckRepository;
     private final CardRepository cardRepository;
+    private final DeckCommentRepository deckCommentRepository;
+    private final CourseCommentRepository courseCommentRepository;
 
     @Autowired
-    public AccessToUrlService(CategoryRepository categoryRepository, UserService userService, CourseRepository courseRepository, FolderRepository folderRepository, DeckRepository deckRepository, CardRepository cardRepository) {
+    public AccessToUrlService(CategoryRepository categoryRepository, UserService userService, CourseRepository courseRepository, FolderRepository folderRepository, DeckRepository deckRepository, CardRepository cardRepository, DeckCommentRepository deckCommentRepository, CourseCommentRepository courseCommentRepository) {
         this.categoryRepository = categoryRepository;
         this.userService = userService;
         this.courseRepository = courseRepository;
         this.folderRepository = folderRepository;
         this.deckRepository = deckRepository;
         this.cardRepository = cardRepository;
+        this.deckCommentRepository = deckCommentRepository;
+        this.courseCommentRepository = courseCommentRepository;
     }
 
     public boolean hasAccessToCategory(Long category_id) {
@@ -60,8 +60,9 @@ public class AccessToUrlService {
     public boolean hasAccessToDeck(Long category_id) {
         return deckRepository.hasAccessToDeckFromCategory(category_id).size() > 0;
     }
-    public boolean hasAccessToCard(Long deck_id,Long card_id){
-        return (cardRepository.hasAccessToCard(deck_id,card_id).size()>0);
+
+    public boolean hasAccessToCard(Long deck_id, Long card_id) {
+        return (cardRepository.hasAccessToCard(deck_id, card_id).size() > 0);
     }
 
     public boolean hasAccessToCard(Long category_id, Long deck_id, Long card_id) {
@@ -75,6 +76,32 @@ public class AccessToUrlService {
     public boolean hasAccessToFolder(Long folder_id) throws NotAuthorisedUserException {
         Long authorizedUserFolderId = userService.getAuthorizedUser().getFolder().getId();
 
-        return  Objects.equals(authorizedUserFolderId, folder_id);
+        return Objects.equals(authorizedUserFolderId, folder_id);
     }
+
+    public boolean hasAccessToDeleteCommentForCourse(Long commentId) throws NotAuthorisedUserException {
+        boolean hasRoleAdmin = userService.getAuthorizedUser().getAccount().getAuthorities().stream()
+                .anyMatch(authority -> authority.getName().equals(AuthorityName.ROLE_ADMIN));
+        return hasAccessToUpdateCommentForCourse(commentId) || hasRoleAdmin;
+    }
+
+    public boolean hasAccessToDeleteCommentForDeck(Long commentId) throws NotAuthorisedUserException {
+        boolean hasRoleAdmin = userService.getAuthorizedUser().getAccount().getAuthorities().stream()
+                .anyMatch(authority -> authority.getName().equals(AuthorityName.ROLE_ADMIN));
+        return hasAccessToUpdateCommentForDeck(commentId) || hasRoleAdmin;
+    }
+
+    public boolean hasAccessToUpdateCommentForDeck(Long commentId) throws NotAuthorisedUserException {
+        Long authorizedPersonId = userService.getAuthorizedUser().getPerson().getId();
+        Long createdCommentPersonId = deckCommentRepository.findOne(commentId).getPerson().getId();
+        return authorizedPersonId.equals(createdCommentPersonId);
+    }
+
+    public boolean hasAccessToUpdateCommentForCourse(Long commentId) throws NotAuthorisedUserException {
+        Long authorizedPersonId = userService.getAuthorizedUser().getPerson().getId();
+        Long createdCommentPersonId = courseCommentRepository.findOne(commentId).getPerson().getId();
+        return authorizedPersonId.equals(createdCommentPersonId);
+    }
+
+
 }
