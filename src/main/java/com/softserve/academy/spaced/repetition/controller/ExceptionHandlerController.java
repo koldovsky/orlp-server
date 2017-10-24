@@ -1,6 +1,7 @@
 package com.softserve.academy.spaced.repetition.controller;
 
 import com.softserve.academy.spaced.repetition.DTO.impl.MessageDTO;
+import com.softserve.academy.spaced.repetition.domain.AccountStatus;
 import com.softserve.academy.spaced.repetition.exceptions.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,9 +15,18 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 import javax.servlet.http.HttpServletRequest;
 import java.net.UnknownHostException;
+import java.util.*;
 
 @ControllerAdvice
 public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
+
+    private static final EnumMap<AccountStatus, ResponseEntity<MessageDTO>> MAP = new EnumMap<AccountStatus, ResponseEntity<MessageDTO>>(AccountStatus.class);
+
+    static{
+        MAP.put(AccountStatus.DELETED, new ResponseEntity<MessageDTO>(new MessageDTO("Account with this email is deleted"), HttpStatus.LOCKED));
+        MAP.put(AccountStatus.BLOCKED, new ResponseEntity<MessageDTO>(new MessageDTO("Account with this email is blocked"), HttpStatus.FORBIDDEN));
+        MAP.put(AccountStatus.INACTIVE, new ResponseEntity<MessageDTO>(new MessageDTO("Account with this email is inactive"), HttpStatus.METHOD_NOT_ALLOWED));
+    }
 
     @ExceptionHandler(MultipartException.class)
     ResponseEntity<MessageDTO> handleLargeFileException() {
@@ -132,11 +142,6 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(UserStatusException.class)
     ResponseEntity<MessageDTO> handleUserStatusException(UserStatusException userStatusException) {
-        if (userStatusException.getAccountStatus().isDeleted()) {
-            return new ResponseEntity<MessageDTO>(new MessageDTO("Account with this email is deleted"), HttpStatus.LOCKED);
-        } else if (userStatusException.getAccountStatus().isBlocked()) {
-            return new ResponseEntity<MessageDTO>(new MessageDTO("Account with this email is blocked"), HttpStatus.FORBIDDEN);
-        }
-        return new ResponseEntity<MessageDTO>(new MessageDTO("Account with this email is inactive"), HttpStatus.METHOD_NOT_ALLOWED);
+        return MAP.get(userStatusException.getAccountStatus());
     }
 }

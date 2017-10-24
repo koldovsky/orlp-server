@@ -9,11 +9,10 @@ public class DataFieldValidator  {
     public DataFieldValidator() {
     }
 
-    public String validate(Person person) throws DataFieldException {
+    public void validate(Person person) throws DataFieldException {
         if (person.getFirstName().isEmpty()
                 || person.getLastName().isEmpty()) {
             throw new DataFieldException();
         }
-        return "kjh";
     }
 }

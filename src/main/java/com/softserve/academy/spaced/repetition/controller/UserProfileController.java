@@ -43,12 +43,10 @@ public class UserProfileController {
 
     @Auditable(action = AuditingAction.UPLOAD_IMAGE_PROFILE)
     @PostMapping("/api/private/user/image")
-    public ResponseEntity<UserDTO> uploadImageProfile(@RequestParam("file")MultipartFile file) throws ImageRepositorySizeQuotaExceededException,
+    public ResponseEntity uploadImageProfile(@RequestParam("file")MultipartFile file) throws ImageRepositorySizeQuotaExceededException,
             NotAuthorisedUserException, FileIsNotAnImageException{
         User user=userService.uploadImage(file);
-        Link link = linkTo(methodOn(UserController.class).getAuthorizedUserWithLinks()).withSelfRel();
-        UserDTO userDTO = DTOBuilder.buildDtoForEntity(user, UserDTO.class, link);
-        return new ResponseEntity<>(userDTO, HttpStatus.OK);
+        return new ResponseEntity( HttpStatus.OK);
     }
 
     @GetMapping(value = "/api/private/user/image", produces = {MediaType.IMAGE_JPEG_VALUE})
