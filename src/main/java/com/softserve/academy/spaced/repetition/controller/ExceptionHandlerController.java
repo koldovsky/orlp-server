@@ -135,4 +135,11 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
         return new ResponseEntity<MessageDTO>(new MessageDTO("Current comment can not be empty"), HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(CardContainsEmptyFieldsException.class)
+    ResponseEntity <MessageDTO> handleCardContainsEmptyFieldsException() {
+        return new ResponseEntity<MessageDTO>(new MessageDTO("All of card fields must be filled"), HttpStatus.FORBIDDEN);
+    }
+
+
+
 }
