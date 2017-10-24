@@ -32,7 +32,7 @@ public interface CardRepository extends JpaRepository<Card, Long> {
     @Query(value =
             "select c.card_id, c.title, c.question, c.answer, c.rating " +
             "from card c inner join user_card_queue u on c.card_id=u.card_id " +
-            "where deck_id = :deckId and u.account_email = :accountEmail " +
+            "where u.deck_id = :deckId and u.account_email = :accountEmail " +
             "order by case u.status " +
             "when 'BAD' then 1 " +
             "when 'NORMAL' then 2 " +
