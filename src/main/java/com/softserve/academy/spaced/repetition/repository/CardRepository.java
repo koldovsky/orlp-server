@@ -56,4 +56,6 @@ public interface CardRepository extends JpaRepository<Card, Long> {
             nativeQuery = true)
     List<Card> getCardsThatNeedRepeating(@Param("deckId") Long deckId, @Param("dateToRepeat") Date dateToRepeat,
                                          @Param("email") String email, @Param("limit") int limit);
+
+    List<Card> getAllByDeck_Id(Long deckId);
 }

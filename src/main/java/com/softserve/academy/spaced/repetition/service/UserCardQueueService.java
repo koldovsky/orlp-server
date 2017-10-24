@@ -4,6 +4,8 @@ import com.softserve.academy.spaced.repetition.domain.*;
 import com.softserve.academy.spaced.repetition.exceptions.NotAuthorisedUserException;
 import com.softserve.academy.spaced.repetition.repository.RememberingLevelRepository;
 import com.softserve.academy.spaced.repetition.repository.UserCardQueueRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,6 +18,7 @@ public class UserCardQueueService {
     private final UserCardQueueRepository userCardQueueRepository;
     private final UserService userService;
     private final RememberingLevelRepository rememberingLevelRepository;
+    private static final Logger LOGGER = LoggerFactory.getLogger(UserCardQueueService.class);
 
     @Autowired
     public UserCardQueueService(UserCardQueueRepository userCardQueueRepository, UserService userService, RememberingLevelRepository rememberingLevelRepository) {
@@ -27,23 +30,27 @@ public class UserCardQueueService {
     @Transactional
     public void updateUserCardQueue(Long deckId, Long cardId, UserCardQueueStatus userCardQueueStatus)
             throws NotAuthorisedUserException {
-        User user = userService.getAuthorizedUser();
-        String email = user.getAccount().getEmail();
-        UserCardQueue userCardQueue = userCardQueueRepository.findUserCardQueueByAccountEmailAndCardId(email, cardId);
-        if (userCardQueue == null) {
-            userCardQueue = new UserCardQueue();
-            userCardQueue.setCardId(cardId);
-            userCardQueue.setDeckId(deckId);
-            userCardQueue.setAccountEmail(email);
-        }
-        userCardQueue.setCardDate(new Date());
+        try {
+            User user = userService.getAuthorizedUser();
+            String email = user.getAccount().getEmail();
+            UserCardQueue userCardQueue = userCardQueueRepository.findUserCardQueueByAccountEmailAndCardId(email, cardId);
+            if (userCardQueue == null) {
+                userCardQueue = new UserCardQueue();
+                userCardQueue.setCardId(cardId);
+                userCardQueue.setDeckId(deckId);
+                userCardQueue.setAccountEmail(email);
+            }
+            userCardQueue.setCardDate(new Date());
 
-        if (user.getAccount().getLearningRegime() == LearningRegime.BAD_NORMAL_GOOD_STATUS_DEPENDING) {
-            userCardQueue.setStatus(userCardQueueStatus);
-        } else if (user.getAccount().getLearningRegime() == LearningRegime.CARDS_POSTPONING_USING_SPACED_REPETITION) {
-            applyCardsPostponingLearningRegime(userCardQueue, userCardQueueStatus);
+            if (user.getAccount().getLearningRegime() == LearningRegime.BAD_NORMAL_GOOD_STATUS_DEPENDING) {
+                userCardQueue.setStatus(userCardQueueStatus);
+            } else if (user.getAccount().getLearningRegime() == LearningRegime.CARDS_POSTPONING_USING_SPACED_REPETITION) {
+                applyCardsPostponingLearningRegime(userCardQueue, userCardQueueStatus);
+            }
+            userCardQueueRepository.save(userCardQueue);
+        } catch (NotAuthorisedUserException e) {
+            LOGGER.warn("Progress is not saved for unauthorized user.");
         }
-        userCardQueueRepository.save(userCardQueue);
     }
 
     private void applyCardsPostponingLearningRegime(UserCardQueue userCardQueue, UserCardQueueStatus status) {
