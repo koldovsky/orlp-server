@@ -25,7 +25,7 @@ public class UserCardQueueController {
         this.userCardQueueService = userCardQueueService;
     }
 
-    @PutMapping("/api/decks/{deckId}/cards/{cardId}/queue")
+    @PutMapping("/api/private/decks/{deckId}/cards/{cardId}/queue")
     @PreAuthorize(value = "@accessToUrlService.hasAccessToCard(#deckId, #cardId)")
     public ResponseEntity updateUserCardQueue(
             @PathVariable Long deckId, @PathVariable Long cardId, @RequestBody String status)
