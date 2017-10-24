@@ -46,7 +46,7 @@ public class UserCardQueueControllerTest {
 
     @Test
     public void testSetStatusGood() throws Exception {
-        mockMvc.perform(put("/api/private/decks/{deckId}/cards/{cardId}/queue", DECK_ID, CARD_ID)
+        mockMvc.perform(put("/api/decks/{deckId}/cards/{cardId}/queue", DECK_ID, CARD_ID)
                 .content("GOOD")
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON))
@@ -57,7 +57,7 @@ public class UserCardQueueControllerTest {
 
     @Test
     public void testSetStatusIncorrect() throws Exception {
-        mockMvc.perform(put("/api/private/decks/{deckId}/cards/{cardId}/queue", DECK_ID, CARD_ID)
+        mockMvc.perform(put("/api/decks/{deckId}/cards/{cardId}/queue", DECK_ID, CARD_ID)
                 .content("Incorrect")
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON))
@@ -68,7 +68,7 @@ public class UserCardQueueControllerTest {
     public void testUpdateUserCardQueueNotAuthorizedUserException() throws Exception {
         doThrow(NotAuthorisedUserException.class).when(userCardQueueService).updateUserCardQueue(eq(DECK_ID),
                 eq(CARD_ID), any(UserCardQueueStatus.class));
-        mockMvc.perform(put("/api/private/decks/{deckId}/cards/{cardId}/queue", DECK_ID, CARD_ID)
+        mockMvc.perform(put("/api/decks/{deckId}/cards/{cardId}/queue", DECK_ID, CARD_ID)
                 .content("GOOD")
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON))
