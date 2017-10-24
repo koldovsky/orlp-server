@@ -58,7 +58,7 @@ public class CardService {
     }
 
     public void addCard(Card card, Long deckId) throws CardContainsEmptyFieldsException {
-        if (card.getTitle().isEmpty() || card.getAnswer().isEmpty() || card.getQuestion().isEmpty()) {
+        if (card.getTitle().trim().isEmpty() || card.getAnswer().trim().isEmpty() || card.getQuestion().trim().isEmpty()) {
             throw new CardContainsEmptyFieldsException();
         }
         Deck deck = deckRepository.findOne(deckId);
@@ -67,7 +67,7 @@ public class CardService {
     }
 
     public void updateCard(Long id, Card card) throws CardContainsEmptyFieldsException {
-        if (card.getTitle().isEmpty() || card.getAnswer().isEmpty() || card.getQuestion().isEmpty()) {
+        if (card.getTitle().trim().isEmpty() || card.getAnswer().trim().isEmpty() || card.getQuestion().trim().isEmpty()) {
             throw new CardContainsEmptyFieldsException();
         }
         card.setId(id);
