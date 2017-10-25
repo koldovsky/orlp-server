@@ -107,13 +107,13 @@ public class CardController {
     @Auditable(action = AuditingAction.EDIT_CARD_VIA_CATEGORY_AND_DECK)
     @PutMapping(value = "/api/category/{category_id}/decks/{deck_id}/cards/{card_id}")
     @PreAuthorize(value = "@accessToUrlService.hasAccessToCard(#category_id, #deck_id, #card_id)")
+
     public ResponseEntity<CardPublicDTO> updateCardByCategoryAndDeck(@PathVariable Long category_id, @PathVariable Long deck_id, @PathVariable Long card_id, @RequestBody Card card) throws CardContainsEmptyFieldsException {
         cardService.updateCard(card_id, card);
         Link selfLink = linkTo(methodOn(CardController.class).getCardByCategoryAndDeck(category_id, deck_id, card.getId())).withSelfRel();
         CardPublicDTO cardPublicDTO = DTOBuilder.buildDtoForEntity(card, CardPublicDTO.class, selfLink);
         return new ResponseEntity<>(cardPublicDTO, HttpStatus.OK);
     }
-
     @Auditable(action = AuditingAction.EDIT_CARD_VIA_CATEGORY_AND_DECK)
     @PutMapping(value =  "/api/decks/{deckId}/cards/{cardId}")
     @PreAuthorize(value = "@accessToUrlService.hasAccessToCard(#deckId, #cardId)")
