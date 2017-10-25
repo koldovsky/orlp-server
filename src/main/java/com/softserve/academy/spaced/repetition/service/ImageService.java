@@ -57,7 +57,7 @@ public class ImageService {
             throw new MultipartException("File upload error: file is too large.");
         } else {
             String imageType = file.getContentType();
-            if (imageType == null || !imageType.split("/")[0].equals("image"))
+            if (imageType == null || !imageType.split("/")[0].equalsIgnoreCase("image"))
             {
                 throw new FileIsNotAnImageException();
             }
