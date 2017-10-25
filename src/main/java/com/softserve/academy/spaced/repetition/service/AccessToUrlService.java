@@ -1,6 +1,7 @@
 package com.softserve.academy.spaced.repetition.service;
 
 import com.softserve.academy.spaced.repetition.domain.AuthorityName;
+import com.softserve.academy.spaced.repetition.domain.Person;
 import com.softserve.academy.spaced.repetition.exceptions.NotAuthorisedUserException;
 import com.softserve.academy.spaced.repetition.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -92,14 +93,14 @@ public class AccessToUrlService {
     }
 
     public boolean hasAccessToUpdateCommentForDeck(Long commentId) throws NotAuthorisedUserException {
-        Long authorizedPersonId = userService.getAuthorizedUser().getPerson().getId();
-        Long createdCommentPersonId = deckCommentRepository.findOne(commentId).getPerson().getId();
+        Person authorizedPersonId = userService.getAuthorizedUser().getPerson();
+        Person createdCommentPersonId = deckCommentRepository.findOne(commentId).getPerson();
         return authorizedPersonId.equals(createdCommentPersonId);
     }
 
     public boolean hasAccessToUpdateCommentForCourse(Long commentId) throws NotAuthorisedUserException {
-        Long authorizedPersonId = userService.getAuthorizedUser().getPerson().getId();
-        Long createdCommentPersonId = courseCommentRepository.findOne(commentId).getPerson().getId();
+        Person authorizedPersonId = userService.getAuthorizedUser().getPerson();
+        Person createdCommentPersonId = courseCommentRepository.findOne(commentId).getPerson();
         return authorizedPersonId.equals(createdCommentPersonId);
     }
 

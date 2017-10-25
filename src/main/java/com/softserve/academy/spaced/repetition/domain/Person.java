@@ -2,6 +2,7 @@ package com.softserve.academy.spaced.repetition.domain;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.Objects;
 
 @Entity
 @Table(name = "Person")
@@ -10,7 +11,7 @@ public class Person {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "person_id")
-    private long id;
+    private Long id;
 
     @Column(name = "first_name")
     private String firstName;
@@ -89,15 +90,15 @@ public class Person {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Person)) return false;
-
+        if (o == null || getClass() != o.getClass()) return false;
         Person person = (Person) o;
-        if (firstName != null && lastName != null && firstName.equals(person.firstName) && lastName.equals(person.lastName)){ return true;}
-        return false;
+        return Objects.equals(this.id, person.id);
     }
 
     @Override
     public int hashCode() {
-        return firstName.hashCode() + lastName.hashCode();
+        int hash = 0;
+        hash += (id != null ? id.hashCode() : 0);
+        return hash;
     }
 }
