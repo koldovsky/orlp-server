@@ -84,7 +84,7 @@ public class CardControllerTest {
         User mockedUser1 = new User(new Account("email1@email.com"), new Person("first1", "last1"), new Folder());
         when(mockedUserService.getAuthorizedUser()).thenReturn(mockedUser1);
         when(cardService.getLearningCards(deckId)).thenReturn(createLearningCards());
-        mockMvc.perform(get("/api/private/decks/{deckId}/learn", 1L)
+        mockMvc.perform(get("/api/decks/{deckId}/learn", 1L)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -227,7 +227,15 @@ public class CardControllerTest {
     }
 
     private Card createCard() {
+        Deck deck = new Deck();
+        deck.setId(DECK_ID);
         Card card = new Card();
+        card.setId(1L);
+        card.setTitle("Card 1");
+        card.setAnswer("There are 4 access modifiers in Java: public, protected, default and private");
+        card.setQuestion("How many access modifiers do you know in Java?");
+        card.setDeck(deck);
+        card.setRating(RATING);
         return card;
     }
 
