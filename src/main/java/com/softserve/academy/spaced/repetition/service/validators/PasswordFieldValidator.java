@@ -26,8 +26,6 @@ public class PasswordFieldValidator {
     }
 
     public void validate(PasswordDTO passwordDTO) throws PasswordFieldException, NotAuthorisedUserException {
-        System.out.println(passwordDTO.getCurrentPassword()
-                + " " + passwordDTO.getNewPassword());
         if(passwordDTO.getCurrentPassword().isEmpty()
                 || passwordDTO.getNewPassword().isEmpty()
                 || !passwordEncoder.matches(passwordDTO.getCurrentPassword(),

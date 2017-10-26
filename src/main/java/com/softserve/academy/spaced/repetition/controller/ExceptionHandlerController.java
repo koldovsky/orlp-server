@@ -20,12 +20,12 @@ import java.util.*;
 @ControllerAdvice
 public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
 
-    private static final EnumMap<AccountStatus, ResponseEntity<MessageDTO>> MAP = new EnumMap<AccountStatus, ResponseEntity<MessageDTO>>(AccountStatus.class);
+    private static final EnumMap<AccountStatus, ResponseEntity<MessageDTO>> STATUS = new EnumMap<>(AccountStatus.class);
 
     static{
-        MAP.put(AccountStatus.DELETED, new ResponseEntity<MessageDTO>(new MessageDTO("Account with this email is deleted"), HttpStatus.LOCKED));
-        MAP.put(AccountStatus.BLOCKED, new ResponseEntity<MessageDTO>(new MessageDTO("Account with this email is blocked"), HttpStatus.FORBIDDEN));
-        MAP.put(AccountStatus.INACTIVE, new ResponseEntity<MessageDTO>(new MessageDTO("Account with this email is inactive"), HttpStatus.METHOD_NOT_ALLOWED));
+        STATUS.put(AccountStatus.DELETED, new ResponseEntity<MessageDTO>(new MessageDTO("Account with this email is deleted"), HttpStatus.LOCKED));
+        STATUS.put(AccountStatus.BLOCKED, new ResponseEntity<MessageDTO>(new MessageDTO("Account with this email is blocked"), HttpStatus.FORBIDDEN));
+        STATUS.put(AccountStatus.INACTIVE, new ResponseEntity<MessageDTO>(new MessageDTO("Account with this email is inactive"), HttpStatus.METHOD_NOT_ALLOWED));
     }
 
     @ExceptionHandler(MultipartException.class)
@@ -142,7 +142,7 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(UserStatusException.class)
     ResponseEntity<MessageDTO> handleUserStatusException(UserStatusException userStatusException) {
-        return MAP.get(userStatusException.getAccountStatus());
+        return STATUS.get(userStatusException.getAccountStatus());
     }
     @ExceptionHandler(EmptyCommentTextException.class)
     ResponseEntity <MessageDTO> handleEmptyCommentTextException() {

@@ -198,7 +198,7 @@ public class UserService {
         User user = getAuthorizedUser();
         passwordFieldValidator.validate(passwordDTO);
         user.getAccount().setPassword(passwordEncoder.encode(passwordDTO.getNewPassword()));
-        user.getAccount().setLastPasswordResetDate(Calendar.getInstance().getTime());
+      //  user.getAccount().setLastPasswordResetDate(Calendar.getInstance().getTime());
         userRepository.save(user);
         mailService.sendPasswordNotificationMail(user);
     }
@@ -218,11 +218,17 @@ public class UserService {
         return imageService.decodeFromBase64(encodedFileContent);
     }
 
+    public void activateAccount() throws NotAuthorisedUserException {
+        User user = getAuthorizedUser();
+        user.getAccount().setStatus(AccountStatus.ACTIVE);
+        mailService.sendConfirmationMail(user);
+        userRepository.save(user);
+    }
+
     public void deleteAccount() throws NotAuthorisedUserException {
         User user = getAuthorizedUser();
         user.getAccount().setStatus(AccountStatus.INACTIVE);
         userRepository.save(user);
-        mailService.sendAccountNotificationMail(user);
     }
 
     public void getUserStatus() throws UserStatusException {

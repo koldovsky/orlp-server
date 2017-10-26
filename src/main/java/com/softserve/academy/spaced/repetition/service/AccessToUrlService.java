@@ -85,6 +85,12 @@ public class AccessToUrlService {
         return hasAccessToUpdateCommentForCourse(commentId) || hasRoleAdmin;
     }
 
+    public boolean hasAccessToUpdateCommentForCourse(Long commentId) throws NotAuthorisedUserException {
+        Long authorizedPersonId = userService.getAuthorizedUser().getPerson().getId();
+        Long createdCommentPersonId = courseCommentRepository.findOne(commentId).getPerson().getId();
+        return authorizedPersonId.equals(createdCommentPersonId);
+    }
+
     public boolean hasAccessToDeleteCommentForDeck(Long commentId) throws NotAuthorisedUserException {
         boolean hasRoleAdmin = userService.getAuthorizedUser().getAccount().getAuthorities().stream()
                 .anyMatch(authority -> authority.getName().equals(AuthorityName.ROLE_ADMIN));
@@ -96,12 +102,5 @@ public class AccessToUrlService {
         Long createdCommentPersonId = deckCommentRepository.findOne(commentId).getPerson().getId();
         return authorizedPersonId.equals(createdCommentPersonId);
     }
-
-    public boolean hasAccessToUpdateCommentForCourse(Long commentId) throws NotAuthorisedUserException {
-        Long authorizedPersonId = userService.getAuthorizedUser().getPerson().getId();
-        Long createdCommentPersonId = courseCommentRepository.findOne(commentId).getPerson().getId();
-        return authorizedPersonId.equals(createdCommentPersonId);
-    }
-
 
 }

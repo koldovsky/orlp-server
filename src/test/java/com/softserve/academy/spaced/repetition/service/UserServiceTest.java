@@ -177,10 +177,6 @@ public class UserServiceTest {
 
     @Test
     public void testDeleteAccount() throws Exception {
-        doAnswer((Answer<Void>) invocation -> {
-            user = invocation.getArgumentAt(0, User.class);
-            return null;
-        }).when(mockedMailService).sendAccountNotificationMail(any());
         PowerMockito.doReturn(mockedUser).when(userServiceUnderTest, "getAuthorizedUser");
         userServiceUnderTest.deleteAccount();
         assertEquals("NotificationMail is sent", mockedUser, user);
