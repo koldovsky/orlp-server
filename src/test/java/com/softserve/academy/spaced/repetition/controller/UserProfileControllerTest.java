@@ -3,9 +3,7 @@ package com.softserve.academy.spaced.repetition.controller;
 import com.softserve.academy.spaced.repetition.DTO.impl.PasswordDTO;
 import com.softserve.academy.spaced.repetition.domain.Person;
 import com.softserve.academy.spaced.repetition.domain.User;
-import com.softserve.academy.spaced.repetition.exceptions.DataFieldException;
 import com.softserve.academy.spaced.repetition.exceptions.NotAuthorisedUserException;
-import com.softserve.academy.spaced.repetition.exceptions.PasswordFieldException;
 import com.softserve.academy.spaced.repetition.service.UserService;
 import org.junit.Before;
 import org.junit.Test;
@@ -94,7 +92,7 @@ public class UserProfileControllerTest {
 
     @Test
     public void testDataFieldExceptionEditPersonalData() throws Exception {
-        doThrow(DataFieldException.class).when(userService).editPersonalData(eq(newPersonException()));
+        doThrow(IllegalArgumentException.class).when(userService).editPersonalData(eq(newPersonException()));
         mockMvc.perform(put("/api/private/user/data")
                 .content("{ \"firstName\": \"\", \"lastName\": \"\" }")
                 .accept(MediaType.APPLICATION_JSON)
@@ -124,7 +122,7 @@ public class UserProfileControllerTest {
 
     @Test
     public void testPasswordFieldExceptionChangePassword() throws Exception {
-        doThrow(PasswordFieldException.class).when(userService).changePassword(eq( new PasswordDTO("", "")));
+        doThrow(IllegalArgumentException.class).when(userService).changePassword(eq( new PasswordDTO("", "")));
         mockMvc.perform(put("/api/private/user/password-change")
                 .content("{\"currentPassword\":\"\",\"newPassword\": \"\"}")
                 .accept(MediaType.APPLICATION_JSON)

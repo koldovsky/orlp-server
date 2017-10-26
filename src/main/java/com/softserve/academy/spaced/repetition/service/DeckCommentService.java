@@ -2,7 +2,6 @@ package com.softserve.academy.spaced.repetition.service;
 
 import com.softserve.academy.spaced.repetition.domain.Comment;
 import com.softserve.academy.spaced.repetition.domain.DeckComment;
-import com.softserve.academy.spaced.repetition.exceptions.EmptyCommentTextException;
 import com.softserve.academy.spaced.repetition.exceptions.NotAuthorisedUserException;
 import com.softserve.academy.spaced.repetition.repository.DeckCommentRepository;
 import com.softserve.academy.spaced.repetition.repository.DeckRepository;
@@ -29,7 +28,7 @@ public class DeckCommentService {
     @Autowired
     private CommentFieldsValidator commentFieldsValidator;
 
-    public DeckComment addCommentForDeck(String commentText, Long deckId) throws NotAuthorisedUserException, EmptyCommentTextException {
+    public DeckComment addCommentForDeck(String commentText, Long deckId) throws NotAuthorisedUserException {
         commentFieldsValidator.validate(commentText);
         DeckComment comment = new DeckComment(commentText, new Date());
         comment.setPerson(userService.getAuthorizedUser().getPerson());
@@ -46,7 +45,7 @@ public class DeckCommentService {
     }
 
     @Transactional
-    public DeckComment updateCommentById(Long commentId, String commentText) throws EmptyCommentTextException {
+    public DeckComment updateCommentById(Long commentId, String commentText) {
         commentFieldsValidator.validate(commentText);
         DeckComment updatedComment = commentRepository.findOne(commentId);
         updatedComment.setCommentDate(new Date());

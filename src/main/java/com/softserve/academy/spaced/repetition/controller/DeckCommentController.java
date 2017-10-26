@@ -6,7 +6,6 @@ import com.softserve.academy.spaced.repetition.audit.Auditable;
 import com.softserve.academy.spaced.repetition.audit.AuditingAction;
 import com.softserve.academy.spaced.repetition.domain.Comment;
 import com.softserve.academy.spaced.repetition.domain.DeckComment;
-import com.softserve.academy.spaced.repetition.exceptions.EmptyCommentTextException;
 import com.softserve.academy.spaced.repetition.exceptions.NotAuthorisedUserException;
 import com.softserve.academy.spaced.repetition.service.DeckCommentService;
 import org.slf4j.Logger;
@@ -53,7 +52,7 @@ public class DeckCommentController {
     @Auditable(action = AuditingAction.CREATE_COMMENT_FOR_DECK)
     @PostMapping(value = "/api/category/{categoryId}/deck/{deckId}/comment")
     @PreAuthorize(value = "@accessToUrlService.hasAccessToDeck(#categoryId)")
-    public ResponseEntity<CommentDTO> addCommentForDeck(@RequestBody String commentText, @PathVariable Long categoryId, @PathVariable Long deckId) throws NotAuthorisedUserException, EmptyCommentTextException {
+    public ResponseEntity<CommentDTO> addCommentForDeck(@RequestBody String commentText, @PathVariable Long categoryId, @PathVariable Long deckId) throws NotAuthorisedUserException {
         LOGGER.debug("Added comment to deck with id: {}", deckId);
         DeckComment comment = commentService.addCommentForDeck(commentText, deckId);
         Link selfLink = linkTo(methodOn(DeckCommentController.class).getCommentById(categoryId, deckId, comment.getId())).withSelfRel();
@@ -64,7 +63,7 @@ public class DeckCommentController {
     @Auditable(action = AuditingAction.EDIT_COMMENT_FOR_DECK)
     @PutMapping(value = "/api/category/{categoryId}/deck/{deckId}/comment/{commentId}")
     @PreAuthorize(value = "@accessToUrlService.hasAccessToUpdateCommentForDeck(#commentId)")
-    public ResponseEntity<CommentDTO> updateComment(@RequestBody String commentText, @PathVariable Long categoryId, @PathVariable Long deckId, @PathVariable Long commentId) throws EmptyCommentTextException {
+    public ResponseEntity<CommentDTO> updateComment(@RequestBody String commentText, @PathVariable Long categoryId, @PathVariable Long deckId, @PathVariable Long commentId) {
         LOGGER.debug("Updated comment with id: {}", commentId);
         DeckComment comment = commentService.updateCommentById(commentId, commentText);
         Link selfLink = linkTo(methodOn(DeckCommentController.class).getCommentById(categoryId, deckId, commentId)).withSelfRel();
