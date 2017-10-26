@@ -91,16 +91,17 @@ public class AccessToUrlService {
         return authorizedPersonId.equals(createdCommentPersonId);
     }
 
+    public boolean hasAccessToUpdateCommentForDeck(Long commentId) throws NotAuthorisedUserException {
+        Long authorizedPersonId = userService.getAuthorizedUser().getPerson().getId();
+        Long createdCommentPersonId = deckCommentRepository.findOne(commentId).getPerson().getId();
+        return authorizedPersonId.equals(createdCommentPersonId);
+    }
+
     public boolean hasAccessToDeleteCommentForDeck(Long commentId) throws NotAuthorisedUserException {
         boolean hasRoleAdmin = userService.getAuthorizedUser().getAccount().getAuthorities().stream()
                 .anyMatch(authority -> authority.getName().equals(AuthorityName.ROLE_ADMIN));
         return hasAccessToUpdateCommentForDeck(commentId) || hasRoleAdmin;
     }
 
-    public boolean hasAccessToUpdateCommentForDeck(Long commentId) throws NotAuthorisedUserException {
-        Long authorizedPersonId = userService.getAuthorizedUser().getPerson().getId();
-        Long createdCommentPersonId = deckCommentRepository.findOne(commentId).getPerson().getId();
-        return authorizedPersonId.equals(createdCommentPersonId);
-    }
 
 }
