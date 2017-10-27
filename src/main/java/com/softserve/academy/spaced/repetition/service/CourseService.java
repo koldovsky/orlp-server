@@ -26,25 +26,18 @@ public class CourseService {
 
     private final static int QUANTITY_COURSES_IN_PAGE = 12;
 
-    @Autowired
     private CourseRepository courseRepository;
 
-    @Autowired
     private UserService userService;
 
-    @Autowired
     private UserRepository userRepository;
 
-    @Autowired
     private ImageService imageService;
 
-    @Autowired
     private ImageRepository imageRepository;
 
-    @Autowired
     private CategoryRepository categoryRepository;
 
-    @Autowired
     private DeckRepository deckRepository;
 
     public List<Course> getAllCourses() {
@@ -184,5 +177,40 @@ public class CourseService {
             request = new PageRequest(pageNumber-1, QUANTITY_COURSES_IN_PAGE , Sort.Direction.DESC, sortBy);
         }
         return courseRepository.findAllByCategoryEquals(categoryRepository.findOne(categoryId), request);
+    }
+
+    @Autowired
+    public void setCourseRepository(CourseRepository courseRepository) {
+        this.courseRepository = courseRepository;
+    }
+
+    @Autowired
+    public void setUserService(UserService userService) {
+        this.userService = userService;
+    }
+
+    @Autowired
+    public void setUserRepository(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
+    @Autowired
+    public void setImageService(ImageService imageService) {
+        this.imageService = imageService;
+    }
+
+    @Autowired
+    public void setImageRepository(ImageRepository imageRepository) {
+        this.imageRepository = imageRepository;
+    }
+
+    @Autowired
+    public void setCategoryRepository(CategoryRepository categoryRepository) {
+        this.categoryRepository = categoryRepository;
+    }
+
+    @Autowired
+    public void setDeckRepository(DeckRepository deckRepository) {
+        this.deckRepository = deckRepository;
     }
 }

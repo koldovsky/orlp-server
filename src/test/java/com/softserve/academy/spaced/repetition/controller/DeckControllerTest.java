@@ -38,7 +38,7 @@ import java.util.List;
 import java.util.TimeZone;
 
 @RunWith(MockitoJUnitRunner.class)
-public class DeckControllerTets {
+public class DeckControllerTest {
     private MockMvc mockMvc;
 
     @InjectMocks
@@ -225,131 +225,61 @@ public class DeckControllerTets {
                         "}"));
     }
 
+    private Deck createDeck(long idDeck, String nameDeck, String descriptionDeck,
+                            String accountEmail, double rating, long idCategory,
+                            String nameCategory){
+        Deck deck = new Deck();
+        deck.setName(nameDeck);
+        User user = new User();
+        Account account = new Account();
+        account.setEmail(accountEmail);
+        user.setAccount(account);
+        deck.setDeckOwner(user);
+        deck.setDescription(descriptionDeck);
+        deck.setId(idDeck);
+        deck.setRating(rating);
+        Category category = new Category();
+        category.setName(nameCategory);
+        category.setId(idCategory);
+        deck.setCategory(category);
+        return deck;
+    }
+
     private Page<Deck> createDecks() throws ParseException {
         List<Deck> deckList = new ArrayList<>();
 
-        Deck deck = new Deck();
-        deck.setName("Java interview #1");
-        User user = new User();
-        Account account = new Account();
-        account.setEmail("admin@gmail.com");
-        user.setAccount(account);
-        deck.setDeckOwner(user);
-        deck.setDescription("Part 1");
-        deck.setId(1L);
-        deck.setRating(0);
-        Category category = new Category();
-        category.setName("Java");
-        category.setId(1L);
-        deck.setCategory(category);
+        Deck deck = createDeck(1L, "Java interview #1", "Part 1",
+                "admin@gmail.com",0,1L,"Java");
 
-        Deck deck2 = new Deck();
-        deck2.setName("Java interview #2");
-        deck2.setDeckOwner(user);
-        deck2.setDescription("Part 2");
-        deck2.setId(2L);
-        deck2.setRating(0);
-        deck2.setCategory(category);
+        Deck deck2 = createDeck(2L, "Java interview #2", "Part 2",
+                "admin@gmail.com",0,1L,"Java");
 
-        Deck deck3 = new Deck();
-        deck3.setName("Java interview #3");
-        deck3.setDeckOwner(user);
-        deck3.setDescription("Part 3");
-        deck3.setId(3L);
-        deck3.setRating(0);
-        deck3.setCategory(category);
+        Deck deck3 = createDeck(3L, "Java interview #3", "Part 3",
+                "admin@gmail.com",0,1L,"Java");
 
-        Deck deck4 = new Deck();
-        deck4.setName("Java interview #4");
-        deck4.setDeckOwner(user);
-        deck4.setDescription("Part 4");
-        deck4.setId(4L);
-        deck4.setRating(0);
-        deck4.setCategory(category);
+        Deck deck4 = createDeck(4L, "Java interview #4", "Part 4",
+                "admin@gmail.com",0,1L,"Java");
 
-        Deck deck5 = new Deck();
-        deck5.setName("C++ interview #1");
-        User user2 = new User();
-        Account account2 = new Account();
-        account2.setEmail("sgofforth1@tmall.com");
-        user2.setAccount(account2);
-        deck5.setDeckOwner(user2);
-        deck5.setDescription("Part 1");
-        deck5.setId(5L);
-        deck5.setRating(0);
-        Category category2 = new Category();
-        category2.setName("C++");
-        category2.setId(2L);
-        deck5.setCategory(category2);
+        Deck deck5 = createDeck(5L, "C++ interview #1", "Part 1",
+                "sgofforth1@tmall.com",0,2L,"C++");
 
-        Deck deck6 = new Deck();
-        deck6.setName("C++ interview #2");
-        deck6.setDeckOwner(user2);
-        deck6.setDescription("Part 2");
-        deck6.setId(6L);
-        deck6.setRating(0);
-        deck6.setCategory(category2);
+        Deck deck6 = createDeck(6L, "C++ interview #2", "Part 2",
+                "sgofforth1@tmall.com",0,2L,"C++");
 
-        Deck deck7 = new Deck();
-        deck7.setName("C++ interview #3");
-        deck7.setDeckOwner(user2);
-        deck7.setDescription("Part 3");
-        deck7.setId(7L);
-        deck7.setRating(0);
-        deck7.setCategory(category2);
+        Deck deck7 = createDeck(7L, "C++ interview #3", "Part 3",
+                "sgofforth1@tmall.com",0,2L,"C++");
 
-        Deck deck8 = new Deck();
-        deck8.setName("C# interview");
-        User user3 = new User();
-        Account account3 = new Account();
-        account3.setEmail("kewins2@gizmodo.com");
-        user3.setAccount(account3);
-        deck8.setDeckOwner(user3);
-        deck8.setDescription("Interview materials");
-        deck8.setId(8L);
-        deck8.setRating(0);
-        Category category3 = new Category();
-        category3.setName("C#");
-        category3.setId(3L);
-        deck8.setCategory(category3);
+        Deck deck8 = createDeck(8L, "C# interview", "Interview materials",
+                "kewins2@gizmodo.com",0,3L,"C#");
 
-        Deck deck9 = new Deck();
-        deck9.setName("PHP interview #1");
-        User user4 = new User();
-        Account account4 = new Account();
-        account4.setEmail("wlouys3@sitemeter.com");
-        user4.setAccount(account4);
-        deck9.setDeckOwner(user4);
-        deck9.setDescription("Part 1");
-        deck9.setId(9L);
-        deck9.setRating(0);
-        Category category4 = new Category();
-        category4.setName("PHP");
-        category4.setId(4L);
-        deck9.setCategory(category4);
+        Deck deck9 = createDeck(9L, "PHP interview #1", "Part 1",
+                "wlouys3@sitemeter.com",0,4L,"PHP");
 
-        Deck deck10 = new Deck();
-        deck10.setName("PHP interview #2");
-        deck10.setDeckOwner(user4);
-        deck10.setDescription("Part 2");
-        deck10.setId(10L);
-        deck10.setRating(0);
-        deck10.setCategory(category4);
+        Deck deck10 = createDeck(10L, "PHP interview #2", "Part 2",
+                "wlouys3@sitemeter.com",0,4L,"PHP");
 
-        Deck deck11 = new Deck();
-        deck11.setName("JavaScript");
-        User user5 = new User();
-        Account account5 = new Account();
-        account5.setEmail("ndadson4@mapy.cz");
-        user5.setAccount(account5);
-        deck11.setDeckOwner(user5);
-        deck11.setDescription("Interview materials");
-        deck11.setId(11L);
-        deck11.setRating(0);
-        Category category5 = new Category();
-        category5.setName("JavaScript");
-        category5.setId(10L);
-        deck11.setCategory(category5);
+        Deck deck11 = createDeck(11L, "JavaScript", "Interview materials",
+                "ndadson4@mapy.cz",0,10L,"JavaScript");
 
         deckList.add(deck);
         deckList.add(deck2);
@@ -385,28 +315,28 @@ public class DeckControllerTets {
                         "      \"description\": \"Part 4\"," +
                         "      \"rating\": 0," +
                         "      \"deckId\": 4," +
-                        "      \"links\":[{\"rel\":\"self\",\"href\":\"http://localhost/api/category/1/decks?pageNumber=1&sortBy=name&ascending=false\"},{\"rel\":\"cards\",\"href\":\"http://localhost/api/category/1/decks?pageNumber=1&sortBy=name&ascending=false/learn\"}]" +
+                        "      \"links\":[{\"rel\":\"self\",\"href\":\"http://localhost/api/category/1/decks?pageNumber=1&sortBy=name&ascending=false\"},{\"rel\":\"cards\",\"href\":\"http://localhost/api/decks/4/learn\"}]" +
                         "    }," +
                         "    {" +
                         "      \"name\": \"Java interview #3\"," +
                         "      \"description\": \"Part 3\"," +
                         "      \"rating\": 0," +
                         "      \"deckId\": 3," +
-                        "      \"links\":[{\"rel\":\"self\",\"href\":\"http://localhost/api/category/1/decks?pageNumber=1&sortBy=name&ascending=false\"},{\"rel\":\"cards\",\"href\":\"http://localhost/api/category/1/decks?pageNumber=1&sortBy=name&ascending=false/learn\"}]" +
+                        "      \"links\":[{\"rel\":\"self\",\"href\":\"http://localhost/api/category/1/decks?pageNumber=1&sortBy=name&ascending=false\"},{\"rel\":\"cards\",\"href\":\"http://localhost/api/decks/3/learn\"}]" +
                         "    }," +
                         "    {" +
                         "      \"name\": \"Java interview #2\"," +
                         "      \"description\": \"Part 2\"," +
                         "      \"rating\": 0," +
                         "      \"deckId\": 2," +
-                        "      \"links\":[{\"rel\":\"self\",\"href\":\"http://localhost/api/category/1/decks?pageNumber=1&sortBy=name&ascending=false\"},{\"rel\":\"cards\",\"href\":\"http://localhost/api/category/1/decks?pageNumber=1&sortBy=name&ascending=false/learn\"}]" +
+                        "      \"links\":[{\"rel\":\"self\",\"href\":\"http://localhost/api/category/1/decks?pageNumber=1&sortBy=name&ascending=false\"},{\"rel\":\"cards\",\"href\":\"http://localhost/api/decks/2/learn\"}]" +
                         "    }," +
                         "    {" +
                         "      \"name\": \"Java interview #1\"," +
                         "      \"description\": \"Part 1\"," +
-                        "      \"rating\": 4," +
+                        "      \"rating\": 0," +
                         "      \"deckId\": 1," +
-                        "      \"links\":[{\"rel\":\"self\",\"href\":\"http://localhost/api/category/1/decks?pageNumber=1&sortBy=name&ascending=false\"},{\"rel\":\"cards\",\"href\":\"http://localhost/api/category/1/decks?pageNumber=1&sortBy=name&ascending=false/learn\"}]" +
+                        "      \"links\":[{\"rel\":\"self\",\"href\":\"http://localhost/api/category/1/decks?pageNumber=1&sortBy=name&ascending=false\"},{\"rel\":\"cards\",\"href\":\"http://localhost/api/decks/1/learn\"}]" +
                         "    }" +
                         "  ]," +
                         "  \"totalPages\": 1," +
@@ -423,44 +353,21 @@ public class DeckControllerTets {
     private Page<Deck> createDecksBySelectedCategory() throws ParseException {
         List<Deck> deckList = new ArrayList<>();
 
-        Deck deck = new Deck();
-        deck.setName("Java interview #1");
-        User user = new User();
-        Account account = new Account();
-        account.setEmail("admin@gmail.com");
-        user.setAccount(account);
-        deck.setDeckOwner(user);
-        deck.setDescription("Part 1");
-        deck.setId(1L);
-        deck.setRating(4);
-        Category category = new Category();
-        category.setName("Java");
-        category.setId(1L);
-        deck.setCategory(category);
+        Deck deck = createDeck(1L, "Java interview #1",
+                "Part 1", "admin@gmail.com",
+                0, 1L,"Java");
 
-        Deck deck2 = new Deck();
-        deck2.setName("Java interview #2");
-        deck2.setDeckOwner(user);
-        deck2.setDescription("Part 2");
-        deck2.setId(2L);
-        deck2.setRating(0);
-        deck2.setCategory(category);
+        Deck deck2 = createDeck(2L, "Java interview #2",
+                "Part 2", "admin@gmail.com",
+                0, 1L,"Java");
 
-        Deck deck3 = new Deck();
-        deck3.setName("Java interview #3");
-        deck3.setDeckOwner(user);
-        deck3.setDescription("Part 3");
-        deck3.setId(3L);
-        deck3.setRating(0);
-        deck3.setCategory(category);
+        Deck deck3 = createDeck(3L, "Java interview #3",
+                "Part 3", "admin@gmail.com",
+                0, 1L,"Java");
 
-        Deck deck4 = new Deck();
-        deck4.setName("Java interview #4");
-        deck4.setDeckOwner(user);
-        deck4.setDescription("Part 4");
-        deck4.setId(4L);
-        deck4.setRating(0);
-        deck4.setCategory(category);
+        Deck deck4 = createDeck(4L, "Java interview #4",
+                "Part 4", "admin@gmail.com",
+                0, 1L,"Java");
 
         deckList.add(deck4);
         deckList.add(deck3);

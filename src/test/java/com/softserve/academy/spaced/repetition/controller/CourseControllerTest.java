@@ -65,22 +65,8 @@ public class CourseControllerTest {
     }
 
     private Course createCourse() {
-        Course course = new Course();
-        course.setId(1L);
-        course.setName("Java interview course");
-        course.setDescription("4 parts of java questions & answers");
-        course.setRating(0);
-        course.setPublished(true);
-        User user = new User();
-        Account account = new Account();
-        account.setId(1L);
-        user.setId(1L);
-        user.setAccount(account);
-        course.setOwner(user);
-        Category category = new Category();
-        category.setId(1L);
-        course.setCategory(category);
-        course.setImage(new Image(14L));
+        Course course = createCourse(1L, "Java interview course","4 parts of java questions & answers",
+                0,14L, true, 1L,1L, 1L);
         return course;
     }
 
@@ -163,74 +149,45 @@ public class CourseControllerTest {
                         "}"));
     }
 
-    private Page<Course> createCourses() throws ParseException {
-        List<Course> courseList = new ArrayList<>();
-
+    public Course createCourse(long idCourse, String nameCourse, String descriptionCourse, double rating,
+                               long imageId, boolean isPublished, long accountId, long userId,
+                               long categoryId){
         Course course = new Course();
-        course.setId(3L);
-        course.setName("C# interview course");
-        course.setDescription("questions & answers");
-        course.setRating(0);
-        course.setImage(new Image(16L));
-        course.setPublished(true);
+        course.setId(idCourse);
+        course.setName(nameCourse);
+        course.setDescription(descriptionCourse);
+        course.setRating(rating);
+        course.setImage(new Image(imageId));
+        course.setPublished(isPublished);
         User user = new User();
         Account account = new Account();
-        account.setId(1L);
-        user.setId(1L);
+        account.setId(accountId);
+        user.setId(userId);
         user.setAccount(account);
         course.setOwner(user);
         Category category = new Category();
-        category.setId(3L);
+        category.setId(categoryId);
         course.setCategory(category);
+        return course;
+    }
 
-        Course course2 = new Course();
-        course2.setId(2L);
-        course2.setName("C++ interview course");
-        course2.setDescription("3 parts of java questions & answers");
-        course2.setRating(0);
-        course2.setImage(new Image(15L));
-        course2.setPublished(true);
-        course2.setOwner(user);
-        Category category2 = new Category();
-        category2.setId(2L);
-        course2.setCategory(category2);
+    private Page<Course> createCourses() throws ParseException {
+        List<Course> courseList = new ArrayList<>();
 
-        Course course3 = new Course();
-        course3.setId(1L);
-        course3.setName("Java interview course");
-        course3.setDescription("4 parts of java questions & answers");
-        course3.setRating(0);
-        course3.setImage(new Image(14L));
-        course3.setPublished(true);
-        course3.setOwner(user);
-        Category category3 = new Category();
-        category3.setId(1L);
-        course3.setCategory(category3);
+        Course course = createCourse(3L,"C# interview course", "questions & answers",
+                0,16L,true,1L,1L,3L);
 
-        Course course4 = new Course();
-        course4.setId(5L);
-        course4.setName("JavaScript interview course");
-        course4.setDescription("questions & answers");
-        course4.setRating(0);
-        course4.setImage(new Image(18L));
-        course4.setPublished(true);
-        course4.setOwner(user);
-        Category category4 = new Category();
-        category4.setId(10L);
-        course4.setCategory(category4);
+        Course course2 = createCourse(2L,"C++ interview course", "3 parts of java questions & answers",
+                0,15L,true,1L,1L,2L);
 
-        Course course5 = new Course();
-        course5.setId(4L);
-        course5.setName("PHP interview course");
-        course5.setDescription("2 parts of java questions & answers");
-        course5.setRating(0);
-        course5.setImage(new Image(17L));
-        course5.setPublished(true);
-        course5.setOwner(user);
-        Category category5 = new Category();
-        category5.setId(4L);
-        course5.setCategory(category5);
+        Course course3 = createCourse(1L,"Java interview course", "4 parts of java questions & answers",
+                0,14L,true,1L,1L,1L);
 
+        Course course4 = createCourse(5L,"JavaScript interview course", "questions & answers",
+                0,18L,true,1L,1L,10L);
+
+        Course course5 = createCourse(4L,"PHP interview course", "2 parts of java questions & answers",
+                0,17L,true,1L,1L,4L);
 
         courseList.add(course);
         courseList.add(course2);
@@ -253,31 +210,15 @@ public class CourseControllerTest {
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(content().json("{\"content\":[{\"name\":\"C++ interview course\",\"description\":\"3 parts of java questions & answers\",\"published\":false,\"image\":\"http://localhost/api/service/image/15\",\"rating\":0.0,\"courseId\":2,\"categoryId\":2,\"ownerId\":1,\"links\":[{\"rel\":\"self\",\"href\":\"http://localhost/api/category/2/courses?pageNumber=1&sortBy=name&ascending=true\"},{\"rel\":\"decks\",\"href\":\"http://localhost/api/category/2/courses/2/decks\"}]}],\"last\":true,\"totalElements\":1,\"totalPages\":1,\"size\":0,\"number\":0,\"sort\":null,\"first\":true,\"numberOfElements\":1}"));
+                .andExpect(content().json("{\"content\":[{\"name\":\"C++ interview course\",\"description\":\"3 parts of java questions & answers\",\"published\":true,\"image\":\"http://localhost/api/service/image/15\",\"rating\":0.0,\"courseId\":2,\"categoryId\":2,\"ownerId\":1,\"links\":[{\"rel\":\"self\",\"href\":\"http://localhost/api/category/2/courses?pageNumber=1&sortBy=name&ascending=true\"},{\"rel\":\"decks\",\"href\":\"http://localhost/api/category/2/courses/2/decks\"}]}],\"last\":true,\"totalElements\":1,\"totalPages\":1,\"size\":0,\"number\":0,\"sort\":null,\"first\":true,\"numberOfElements\":1}"));
     }
 
     private Page<Course> createCoursesBySelectedCategory() throws ParseException {
         List<Course> courseList = new ArrayList<>();
 
-        Course course = new Course();
-        course.setName("C++ interview course");
-        course.setDescription("3 parts of java questions & answers");
-        course.setId(2L);
-        course.setRating(0);
-        course.setImage(new Image(15L));
-
-        User user = new User();
-        Account account = new Account();
-        account.setId(1L);
-        account.setEmail("admin@gmail.com");
-        user.setId(1L);
-        user.setAccount(account);
-        course.setOwner(user);
-
-        Category category = new Category();
-        category.setId(2L);
-        course.setCategory(category);
-
+        Course course = createCourse(2L,"C++ interview course",
+                "3 parts of java questions & answers", 0,15L,true,
+                1L,1L, 2L);
         courseList.add(course);
 
         Page<Course> coursePage = new PageImpl<>(courseList);
