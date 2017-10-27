@@ -95,4 +95,10 @@ public class CardService {
     public void deleteCard(Long cardId) {
         cardRepository.deleteCardById(cardId);
     }
+
+    public List<Card> getAdditionalLearningCards(Long deckId) throws NotAuthorisedUserException {
+        User user = userService.getAuthorizedUser();
+        String email = user.getAccount().getEmail();
+        return cardRepository.getPostponedCards(deckId, new Date(), email, CARDS_NUMBER);
+    }
 }
