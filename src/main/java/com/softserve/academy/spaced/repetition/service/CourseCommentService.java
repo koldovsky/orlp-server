@@ -2,7 +2,6 @@ package com.softserve.academy.spaced.repetition.service;
 
 import com.softserve.academy.spaced.repetition.domain.Comment;
 import com.softserve.academy.spaced.repetition.domain.CourseComment;
-import com.softserve.academy.spaced.repetition.exceptions.EmptyCommentTextException;
 import com.softserve.academy.spaced.repetition.exceptions.NotAuthorisedUserException;
 import com.softserve.academy.spaced.repetition.repository.CourseCommentRepository;
 import com.softserve.academy.spaced.repetition.repository.CourseRepository;
@@ -30,7 +29,7 @@ public class CourseCommentService {
     private CommentFieldsValidator commentFieldsValidator;
 
 
-    public CourseComment addCommentForCourse(String commentText, Long courseId) throws NotAuthorisedUserException, EmptyCommentTextException {
+    public CourseComment addCommentForCourse(String commentText, Long courseId) throws NotAuthorisedUserException {
         commentFieldsValidator.validate(commentText);
         CourseComment comment = new CourseComment(commentText, new Date());
         comment.setPerson(userService.getAuthorizedUser().getPerson());
@@ -47,7 +46,7 @@ public class CourseCommentService {
     }
 
     @Transactional
-    public CourseComment updateCommentById(Long commentId, String commentText) throws EmptyCommentTextException {
+    public CourseComment updateCommentById(Long commentId, String commentText) {
         commentFieldsValidator.validate(commentText);
         CourseComment updatedComment = commentRepository.findOne(commentId);
         updatedComment.setCommentDate(new Date());

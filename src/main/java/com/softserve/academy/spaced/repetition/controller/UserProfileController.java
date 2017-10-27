@@ -29,14 +29,14 @@ public class UserProfileController {
 
     @Auditable(action = AuditingAction.EDIT_PERSONAL_DATA)
     @PutMapping(value = "/api/private/user/data")
-    public ResponseEntity editPersonalData(@RequestBody Person person)throws NotAuthorisedUserException, DataFieldException {
+    public ResponseEntity editPersonalData(@RequestBody Person person)throws NotAuthorisedUserException {
         userService.editPersonalData(person);
         return new ResponseEntity(HttpStatus.OK);
     }
 
     @Auditable(action =  AuditingAction.CHANGE_PASSWORD)
     @PutMapping(value = "/api/private/user/password-change")
-    public ResponseEntity changePassword (@RequestBody PasswordDTO passwordDTO) throws NotAuthorisedUserException, PasswordFieldException {
+    public ResponseEntity changePassword (@RequestBody PasswordDTO passwordDTO) throws NotAuthorisedUserException {
         userService.changePassword(passwordDTO);
         return new ResponseEntity(HttpStatus.OK);
     }

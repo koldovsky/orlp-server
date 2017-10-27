@@ -70,11 +70,6 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
         return new ResponseEntity <MessageDTO>(new MessageDTO("The IP address of a host could not be determined"), HttpStatus.CONFLICT);
     }
 
-    @ExceptionHandler(BlankFieldException.class)
-    ResponseEntity <MessageDTO> handleBlanckFieldException() {
-        return new ResponseEntity <MessageDTO>(new MessageDTO("Blank fields is not required"), HttpStatus.BAD_REQUEST);
-    }
-
     @ExceptionHandler(EmailUniquesException.class)
     ResponseEntity <MessageDTO> handleEmailUniquesException() {
         return new ResponseEntity <MessageDTO>(new MessageDTO("Email exists"), HttpStatus.NOT_FOUND);
@@ -95,11 +90,6 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
         return new ResponseEntity <MessageDTO>(new MessageDTO("Email not exists"), HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler(ObjectHasNullFieldsException.class)
-    ResponseEntity <MessageDTO> handleObjectHasNullFieldsException() {
-        return new ResponseEntity <MessageDTO>(new MessageDTO("Blank fields is not required"), HttpStatus.BAD_REQUEST);
-    }
-
     @ExceptionHandler(FileConnectionException.class)
     ResponseEntity <MessageDTO> handleFileConnectionException() {
         return new ResponseEntity <MessageDTO>(new MessageDTO("Can't read data from uploaded file"), HttpStatus.NOT_FOUND);
@@ -115,11 +105,6 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
         return new ResponseEntity <MessageDTO>(new MessageDTO("Such file not found"), HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler(SameDeckInCourseException.class)
-    ResponseEntity <MessageDTO> sameDeckInCourse() {
-        return new ResponseEntity <MessageDTO>(new MessageDTO("Such deck already exists"), HttpStatus.BAD_REQUEST);
-    }
-
     @ExceptionHandler(NoSuchDeckException.class)
     ResponseEntity <MessageDTO> handleNoSuchDeckException() {
         return new ResponseEntity <MessageDTO>(new MessageDTO("Such deck not found"), HttpStatus.NOT_FOUND);
@@ -130,23 +115,9 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
         return new ResponseEntity <MessageDTO>(new MessageDTO("File upload error: file is not an image"), HttpStatus.FORBIDDEN);
     }
 
-    @ExceptionHandler(DataFieldException.class)
-    ResponseEntity <MessageDTO> handleDataFieldException() {
-        return new ResponseEntity <MessageDTO>(new MessageDTO("First name or last name can not be empty"), HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler(PasswordFieldException.class)
-    ResponseEntity <MessageDTO> handlePasswordFieldException() {
-        return new ResponseEntity<MessageDTO>(new MessageDTO("Current password must match and fields of password can not be empty"), HttpStatus.BAD_REQUEST);
-    }
-
     @ExceptionHandler(UserStatusException.class)
     ResponseEntity<MessageDTO> handleUserStatusException(UserStatusException userStatusException) {
         return MAP.get(userStatusException.getAccountStatus());
-    }
-    @ExceptionHandler(EmptyCommentTextException.class)
-    ResponseEntity <MessageDTO> handleEmptyCommentTextException() {
-        return new ResponseEntity<MessageDTO>(new MessageDTO("Current comment can not be empty"), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(CardContainsEmptyFieldsException.class)
@@ -154,6 +125,9 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
         return new ResponseEntity<MessageDTO>(new MessageDTO("All of card fields must be filled"), HttpStatus.FORBIDDEN);
     }
 
-
+    @ExceptionHandler(IllegalArgumentException.class)
+    ResponseEntity <MessageDTO> handleIllegalArgumentException(IllegalArgumentException illegalArgumentException) {
+       return  ResponseEntity.badRequest().body(new MessageDTO(illegalArgumentException.getMessage()));
+    }
 
 }

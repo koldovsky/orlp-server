@@ -1,8 +1,6 @@
 package com.softserve.academy.spaced.repetition.service.validators;
 
-import com.softserve.academy.spaced.repetition.exceptions.BlankFieldException;
 import com.softserve.academy.spaced.repetition.exceptions.EmailUniquesException;
-import com.softserve.academy.spaced.repetition.exceptions.ObjectHasNullFieldsException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -14,7 +12,7 @@ public abstract class AbstractValidator<T> {
     }
 
     public void doValidate(T obj)
-            throws BlankFieldException, EmailUniquesException, ObjectHasNullFieldsException {
+            throws EmailUniquesException{
         validate(obj);
         if (nextValidator != null) {
             nextValidator.doValidate(obj);
@@ -22,5 +20,5 @@ public abstract class AbstractValidator<T> {
     }
 
     protected abstract void validate(T obj)
-            throws BlankFieldException, EmailUniquesException, ObjectHasNullFieldsException;
+            throws EmailUniquesException;
 }

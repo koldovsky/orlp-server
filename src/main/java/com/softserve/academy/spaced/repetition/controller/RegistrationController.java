@@ -28,7 +28,7 @@ public class RegistrationController {
 
     @Auditable(action = AuditingAction.SIGN_UP)
     @RequestMapping(value = "/registration", method = RequestMethod.POST)
-    public ResponseEntity <Person> addUser(@RequestBody User userFromClient) throws BlankFieldException, MailException, EmailUniquesException, ObjectHasNullFieldsException {
+    public ResponseEntity <Person> addUser(@RequestBody User userFromClient) throws MailException, EmailUniquesException {
         User user = registrationService.registerNewUser(userFromClient);
         registrationService.sendConfirmationEmailMessage(user);
         return new ResponseEntity <>(user.getPerson(), HttpStatus.CREATED);
