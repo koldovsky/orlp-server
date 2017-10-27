@@ -5,6 +5,7 @@ import com.softserve.academy.spaced.repetition.DTO.EntityInterface;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -142,12 +143,16 @@ public class Account implements EntityInterface {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
         Account account = (Account) o;
 
-        return id == account.id;
+        return Objects.equals(this.id, account.id);
     }
 
     @Override
