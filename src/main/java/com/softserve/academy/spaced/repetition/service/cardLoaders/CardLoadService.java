@@ -20,7 +20,7 @@ public class CardLoadService {
     @Qualifier("cardUploader")
     private CardUploader cardUploader;
 
-    public Map <String, String> loadCard(MultipartFile multipartFile, Long deckId) throws IOException, SQLException, ClassNotFoundException, CardContainsEmptyFieldsException {
+    public Map <String, String> loadCard(MultipartFile multipartFile, Long deckId) throws IOException, SQLException, ClassNotFoundException {
         String relativePath = cardUploader.uploadFile(multipartFile);
         Map <String, String> map = cardDataExtractor.extractData(relativePath);
         dataSaver.save(map, deckId);

@@ -77,7 +77,7 @@ public class CardServiceTest {
 
 
     @Test
-    public void testCardUpdate() throws CardContainsEmptyFieldsException {
+    public void testCardUpdate() {
         cardServiceUnderTest.updateCard(1L, newCard);
         assertEquals("Update Card", newCard, getCardForTest(1L));
     }

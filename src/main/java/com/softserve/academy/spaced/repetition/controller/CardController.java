@@ -21,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
@@ -75,7 +76,7 @@ public class CardController {
     @Auditable(action = AuditingAction.CREATE_CARD_VIA_COURSE_AND_DECK)
     @PostMapping(value = "/api/category/{category_id}/courses/{course_id}/decks/{deck_id}/cards")
     @PreAuthorize(value = "@accessToUrlService.hasAccessToDeck(#category_id, #course_id, #deck_id)")
-    public ResponseEntity<CardPublicDTO> addCardByCourseAndDeck(@RequestBody Card card, @PathVariable Long category_id, @PathVariable Long course_id, @PathVariable Long deck_id) throws CardContainsEmptyFieldsException {
+    public ResponseEntity<CardPublicDTO> addCardByCourseAndDeck(@RequestBody Card card, @PathVariable Long category_id, @PathVariable Long course_id, @PathVariable Long deck_id) {
         cardService.addCard(card, deck_id);
         Link selfLink = linkTo(methodOn(CardController.class).getCardByCourseAndDeck(category_id, course_id, deck_id, card.getId())).withSelfRel();
         CardPublicDTO cardPublicDTO = DTOBuilder.buildDtoForEntity(card, CardPublicDTO.class, selfLink);
@@ -85,7 +86,7 @@ public class CardController {
     @Auditable(action = AuditingAction.CREATE_CARD_VIA_CATEGORY_AND_DECK)
     @PostMapping(value = "/api/category/{categoryId}/decks/{deckId}/cards")
     @PreAuthorize(value = "@accessToUrlService.hasAccessToDeckFromCategory(#categoryId, #deckId)")
-    public ResponseEntity<CardPublicDTO> addCardByCategoryAndDeck(@RequestBody Card card, @PathVariable Long categoryId, @PathVariable Long deckId) throws CardContainsEmptyFieldsException {
+    public ResponseEntity<CardPublicDTO> addCardByCategoryAndDeck(@RequestBody Card card, @PathVariable Long categoryId, @PathVariable Long deckId) {
         LOGGER.debug("Add card to categoryId: {}, deckId: {}", categoryId, deckId);
         cardService.addCard(card, deckId);
         Link selfLink = linkTo(methodOn(CardController.class).getCardByCategoryAndDeck(categoryId, deckId, card.getId())).withSelfRel();
@@ -97,7 +98,7 @@ public class CardController {
     @PutMapping(value = "/api/category/{category_id}/courses/{course_id}/decks/{deck_id}/cards/{card_id}")
     @PreAuthorize(value = "@accessToUrlService.hasAccessToCard(#category_id, #course_id, #deck_id, #card_id)")
     public ResponseEntity<CardPublicDTO> updateCardByCourseAndDeck(@PathVariable Long category_id, @PathVariable Long course_id,
-                                                                   @PathVariable Long deck_id, @PathVariable Long card_id, @RequestBody Card card) throws CardContainsEmptyFieldsException {
+                                                                   @PathVariable Long deck_id, @PathVariable Long card_id, @RequestBody Card card) {
         cardService.updateCard(card_id, card);
         Link selfLink = linkTo(methodOn(CardController.class).getCardByCourseAndDeck(category_id, course_id, deck_id, card.getId())).withSelfRel();
         CardPublicDTO cardPublicDTO = DTOBuilder.buildDtoForEntity(card, CardPublicDTO.class, selfLink);
@@ -107,7 +108,7 @@ public class CardController {
     @Auditable(action = AuditingAction.EDIT_CARD_VIA_CATEGORY_AND_DECK)
     @PutMapping(value = "/api/category/{category_id}/decks/{deck_id}/cards/{card_id}")
     @PreAuthorize(value = "@accessToUrlService.hasAccessToCard(#category_id, #deck_id, #card_id)")
-    public ResponseEntity<CardPublicDTO> updateCardByCategoryAndDeck(@PathVariable Long category_id, @PathVariable Long deck_id, @PathVariable Long card_id, @RequestBody Card card) throws CardContainsEmptyFieldsException {
+    public ResponseEntity<CardPublicDTO> updateCardByCategoryAndDeck(@PathVariable Long category_id, @PathVariable Long deck_id, @PathVariable Long card_id, @RequestBody Card card) {
         cardService.updateCard(card_id, card);
         Link selfLink = linkTo(methodOn(CardController.class).getCardByCategoryAndDeck(category_id, deck_id, card.getId())).withSelfRel();
         CardPublicDTO cardPublicDTO = DTOBuilder.buildDtoForEntity(card, CardPublicDTO.class, selfLink);
@@ -116,7 +117,7 @@ public class CardController {
     @Auditable(action = AuditingAction.EDIT_CARD_VIA_CATEGORY_AND_DECK)
     @PutMapping(value =  "/api/decks/{deckId}/cards/{cardId}")
     @PreAuthorize(value = "@accessToUrlService.hasAccessToCard(#deckId, #cardId)")
-    public ResponseEntity<CardPublicDTO> updateCardByDeck(@PathVariable Long deckId, @PathVariable Long cardId, @RequestBody Card card) throws CardContainsEmptyFieldsException {
+    public ResponseEntity<CardPublicDTO> updateCardByDeck(@PathVariable Long deckId, @PathVariable Long cardId, @RequestBody Card card) {
         LOGGER.debug("Updating card with id: {}  in deck with id: {}", cardId, deckId);
         cardService.updateCard(cardId, card);
         Link selfLink = linkTo(methodOn(CardController.class).getCardByDeck(deckId, cardId)).withSelfRel();
@@ -143,21 +144,21 @@ public class CardController {
      *
      * @param file - card-file
      * @return - HttpStatus.Ok
-     * @throws FileConnectionException - is dropping when classloader failed in loading Driver to uploading file.
+     * @throws NoSuchElementException - is dropping when classloader failed in loading Driver to uploading file.
      * @throws WrongFormatException    - is dropping when uploading file has wrong format.
-     * @throws NoSuchFileException     - is dropping when file is not found.
+     * @throws NoSuchElementException     - is dropping when file is not found.
      */
     @PostMapping("/api/cardsUpload")
     public ResponseEntity uploadCard(@RequestParam("file") MultipartFile file, Long deckId)
-            throws FileConnectionException, WrongFormatException, NoSuchFileException, CardContainsEmptyFieldsException {
+            throws WrongFormatException{
         try {
             cardLoadService.loadCard(file, deckId);
         } catch (IOException e) {
-            throw new NoSuchFileException();
+            throw new NoSuchElementException("Such file not found");
         } catch (SQLException e) {
             throw new WrongFormatException();
         } catch (ClassNotFoundException e) {
-            throw new FileConnectionException();
+            throw new NoSuchElementException("Can't read data from uploaded file");
         }
         return new ResponseEntity <>(HttpStatus.OK);
     }

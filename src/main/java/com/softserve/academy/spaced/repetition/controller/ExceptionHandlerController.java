@@ -1,21 +1,21 @@
 package com.softserve.academy.spaced.repetition.controller;
 
-import com.softserve.academy.spaced.repetition.DTO.impl.MessageDTO;
-import com.softserve.academy.spaced.repetition.domain.AccountStatus;
-import com.softserve.academy.spaced.repetition.exceptions.*;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.mail.MailException;
-import org.springframework.web.bind.annotation.ControllerAdvice;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.multipart.MultipartException;
-import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+        import com.softserve.academy.spaced.repetition.DTO.impl.MessageDTO;
+        import com.softserve.academy.spaced.repetition.domain.AccountStatus;
+        import com.softserve.academy.spaced.repetition.exceptions.*;
+        import org.springframework.http.HttpStatus;
+        import org.springframework.http.ResponseEntity;
+        import org.springframework.mail.MailException;
+        import org.springframework.web.bind.annotation.ControllerAdvice;
+        import org.springframework.web.bind.annotation.ExceptionHandler;
+        import org.springframework.web.bind.annotation.ResponseBody;
+        import org.springframework.web.bind.annotation.ResponseStatus;
+        import org.springframework.web.multipart.MultipartException;
+        import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import javax.servlet.http.HttpServletRequest;
-import java.net.UnknownHostException;
-import java.util.*;
+        import javax.servlet.http.HttpServletRequest;
+        import java.net.UnknownHostException;
+        import java.util.*;
 
 @ControllerAdvice
 public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
@@ -70,29 +70,9 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
         return new ResponseEntity <MessageDTO>(new MessageDTO("The IP address of a host could not be determined"), HttpStatus.CONFLICT);
     }
 
-    @ExceptionHandler(EmailUniquesException.class)
-    ResponseEntity <MessageDTO> handleEmailUniquesException() {
-        return new ResponseEntity <MessageDTO>(new MessageDTO("Email exists"), HttpStatus.NOT_FOUND);
-    }
-
     @ExceptionHandler(MailException.class)
     ResponseEntity <MessageDTO> handleMailException() {
         return new ResponseEntity <MessageDTO>(new MessageDTO("Mail not sent"), HttpStatus.SERVICE_UNAVAILABLE);
-    }
-
-    @ExceptionHandler(ExpiredTokenForVerificationException.class)
-    ResponseEntity <MessageDTO> handlExpiredTokenForVerificationException() {
-        return new ResponseEntity <MessageDTO>(new MessageDTO("No token found"), HttpStatus.NOT_FOUND);
-    }
-
-    @ExceptionHandler(EmailDoesntExistException.class)
-    ResponseEntity <MessageDTO> handleEmailDoesntExistException() {
-        return new ResponseEntity <MessageDTO>(new MessageDTO("Email not exists"), HttpStatus.NOT_FOUND);
-    }
-
-    @ExceptionHandler(FileConnectionException.class)
-    ResponseEntity <MessageDTO> handleFileConnectionException() {
-        return new ResponseEntity <MessageDTO>(new MessageDTO("Can't read data from uploaded file"), HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(WrongFormatException.class)
@@ -100,34 +80,19 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
         return new ResponseEntity <MessageDTO>(new MessageDTO("Not valid file format"), HttpStatus.NOT_ACCEPTABLE);
     }
 
-    @ExceptionHandler(NoSuchFileException.class)
-    ResponseEntity <MessageDTO> handleNoSuchFileException() {
-        return new ResponseEntity <MessageDTO>(new MessageDTO("Such file not found"), HttpStatus.NOT_FOUND);
-    }
-
-    @ExceptionHandler(NoSuchDeckException.class)
-    ResponseEntity <MessageDTO> handleNoSuchDeckException() {
-        return new ResponseEntity <MessageDTO>(new MessageDTO("Such deck not found"), HttpStatus.NOT_FOUND);
-    }
-
-    @ExceptionHandler(FileIsNotAnImageException.class)
-    ResponseEntity <MessageDTO> handleFileIsNotAnImageException() {
-        return new ResponseEntity <MessageDTO>(new MessageDTO("File upload error: file is not an image"), HttpStatus.FORBIDDEN);
-    }
-
     @ExceptionHandler(UserStatusException.class)
     ResponseEntity<MessageDTO> handleUserStatusException(UserStatusException userStatusException) {
         return MAP.get(userStatusException.getAccountStatus());
     }
 
-    @ExceptionHandler(CardContainsEmptyFieldsException.class)
-    ResponseEntity <MessageDTO> handleCardContainsEmptyFieldsException() {
-        return new ResponseEntity<MessageDTO>(new MessageDTO("All of card fields must be filled"), HttpStatus.FORBIDDEN);
-    }
-
     @ExceptionHandler(IllegalArgumentException.class)
     ResponseEntity <MessageDTO> handleIllegalArgumentException(IllegalArgumentException illegalArgumentException) {
-       return  ResponseEntity.badRequest().body(new MessageDTO(illegalArgumentException.getMessage()));
+        return  ResponseEntity.badRequest().body(new MessageDTO(illegalArgumentException.getMessage()));
+    }
+
+    @ExceptionHandler(NoSuchElementException.class)
+    ResponseEntity <MessageDTO> handleNoSuchElementException(NoSuchElementException noSuchElementException) {
+        return new ResponseEntity <MessageDTO>(new MessageDTO(noSuchElementException.getMessage()), HttpStatus.NOT_FOUND);
     }
 
 }
