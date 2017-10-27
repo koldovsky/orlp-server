@@ -1,8 +1,13 @@
 package com.softserve.academy.spaced.repetition.security;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.anyObject;
+
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -14,13 +19,9 @@ import org.powermock.reflect.Whitebox;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.anyObject;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(JwtTokenUtil.class)
@@ -90,6 +91,7 @@ public class JwtTokenUtilTest {
         PowerMockito.doCallRealMethod().when(jwtTokenUtil, "generateToken", anyObject());
         PowerMockito.doCallRealMethod().when(jwtTokenUtil, "generateExpirationDate");
         Whitebox.setInternalState(jwtTokenUtil, "secret", "mySecret");
+        Whitebox.setInternalState(jwtTokenUtil, "expiration", 1000L);
         String token = jwtTokenUtil.generateToken(new UserDetails() {
             @Override
             public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -128,7 +130,7 @@ public class JwtTokenUtilTest {
         }, null);
         System.out.println(token);
         PowerMockito.verifyPrivate(jwtTokenUtil).invoke("generateAudience", anyObject());
-        PowerMockito.verifyPrivate(jwtTokenUtil).invoke("generateExpirationDate", anyObject());
+        PowerMockito.verifyPrivate(jwtTokenUtil).invoke("generateExpirationDate");
 
     }
 
