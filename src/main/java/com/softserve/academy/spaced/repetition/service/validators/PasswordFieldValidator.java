@@ -2,7 +2,6 @@ package com.softserve.academy.spaced.repetition.service.validators;
 
 import com.softserve.academy.spaced.repetition.DTO.impl.PasswordDTO;
 import com.softserve.academy.spaced.repetition.exceptions.NotAuthorisedUserException;
-import com.softserve.academy.spaced.repetition.exceptions.PasswordFieldException;
 import com.softserve.academy.spaced.repetition.repository.UserRepository;
 import com.softserve.academy.spaced.repetition.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,12 +24,12 @@ public class PasswordFieldValidator {
     public PasswordFieldValidator() {
     }
 
-    public void validate(PasswordDTO passwordDTO) throws PasswordFieldException, NotAuthorisedUserException {
+    public void validate(PasswordDTO passwordDTO) throws NotAuthorisedUserException {
         if(passwordDTO.getCurrentPassword().isEmpty()
                 || passwordDTO.getNewPassword().isEmpty()
                 || !passwordEncoder.matches(passwordDTO.getCurrentPassword(),
                         userService.getAuthorizedUser().getAccount().getPassword())) {
-            throw new PasswordFieldException();
+            throw new IllegalArgumentException("Current password must match and fields of password can not be empty");
         }
     }
 }

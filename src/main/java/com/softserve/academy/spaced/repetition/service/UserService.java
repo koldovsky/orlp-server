@@ -185,7 +185,7 @@ public class UserService {
     }
 
     @Transactional
-    public User editPersonalData(Person person) throws NotAuthorisedUserException, DataFieldException {
+    public User editPersonalData(Person person) throws NotAuthorisedUserException {
         User user = getAuthorizedUser();
         dataFieldValidator.validate(person);
         user.getPerson().setFirstName(person.getFirstName());
@@ -194,7 +194,7 @@ public class UserService {
     }
 
     @Transactional
-    public void changePassword(PasswordDTO passwordDTO) throws NotAuthorisedUserException, PasswordFieldException {
+    public void changePassword(PasswordDTO passwordDTO) throws NotAuthorisedUserException {
         User user = getAuthorizedUser();
         passwordFieldValidator.validate(passwordDTO);
         user.getAccount().setPassword(passwordEncoder.encode(passwordDTO.getNewPassword()));

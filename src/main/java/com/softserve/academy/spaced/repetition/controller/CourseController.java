@@ -8,7 +8,6 @@ import com.softserve.academy.spaced.repetition.audit.Auditable;
 import com.softserve.academy.spaced.repetition.audit.AuditingAction;
 import com.softserve.academy.spaced.repetition.domain.Course;
 import com.softserve.academy.spaced.repetition.exceptions.NotAuthorisedUserException;
-import com.softserve.academy.spaced.repetition.exceptions.SameDeckInCourseException;
 import com.softserve.academy.spaced.repetition.service.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -125,7 +124,7 @@ public class CourseController {
 
     @Auditable(action = AuditingAction.ADD_COURSE)
     @PutMapping("/api/category/courses/{course_id}/decks/{deck_id}")
-    public ResponseEntity addDeckToCourse(@PathVariable Long course_id, @PathVariable Long deck_id, @RequestBody Course course) throws SameDeckInCourseException{
+    public ResponseEntity addDeckToCourse(@PathVariable Long course_id, @PathVariable Long deck_id, @RequestBody Course course) {
         courseService.addDeckToCourse(course_id, deck_id);
         return new ResponseEntity(HttpStatus.OK);
     }

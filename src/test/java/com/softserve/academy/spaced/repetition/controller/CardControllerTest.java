@@ -229,13 +229,12 @@ public class CardControllerTest {
     private Card createCard() {
         Deck deck = new Deck();
         deck.setId(DECK_ID);
-
         Card card = new Card();
-        card.setDeck(deck);
-        card.setAnswer("There are 4 access modifiers in Java: public, protected, default and private");
-        card.setQuestion("How many access modifiers do you know in Java?");
         card.setId(1L);
         card.setTitle("Card 1");
+        card.setAnswer("There are 4 access modifiers in Java: public, protected, default and private");
+        card.setQuestion("How many access modifiers do you know in Java?");
+        card.setDeck(deck);
         card.setRating(RATING);
         return card;
     }

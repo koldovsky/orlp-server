@@ -1,6 +1,7 @@
 package com.softserve.academy.spaced.repetition.service;
 
 import com.softserve.academy.spaced.repetition.domain.AuthorityName;
+import com.softserve.academy.spaced.repetition.domain.Person;
 import com.softserve.academy.spaced.repetition.exceptions.NotAuthorisedUserException;
 import com.softserve.academy.spaced.repetition.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -85,10 +86,10 @@ public class AccessToUrlService {
         return hasAccessToUpdateCommentForCourse(commentId) || hasRoleAdmin;
     }
 
-    public boolean hasAccessToUpdateCommentForCourse(Long commentId) throws NotAuthorisedUserException {
-        Long authorizedPersonId = userService.getAuthorizedUser().getPerson().getId();
-        Long createdCommentPersonId = courseCommentRepository.findOne(commentId).getPerson().getId();
-        return authorizedPersonId.equals(createdCommentPersonId);
+    public boolean hasAccessToDeleteCommentForDeck(Long commentId) throws NotAuthorisedUserException {
+        boolean hasRoleAdmin = userService.getAuthorizedUser().getAccount().getAuthorities().stream()
+                .anyMatch(authority -> authority.getName().equals(AuthorityName.ROLE_ADMIN));
+        return hasAccessToUpdateCommentForDeck(commentId) || hasRoleAdmin;
     }
 
     public boolean hasAccessToUpdateCommentForDeck(Long commentId) throws NotAuthorisedUserException {
@@ -97,10 +98,10 @@ public class AccessToUrlService {
         return authorizedPersonId.equals(createdCommentPersonId);
     }
 
-    public boolean hasAccessToDeleteCommentForDeck(Long commentId) throws NotAuthorisedUserException {
-        boolean hasRoleAdmin = userService.getAuthorizedUser().getAccount().getAuthorities().stream()
-                .anyMatch(authority -> authority.getName().equals(AuthorityName.ROLE_ADMIN));
-        return hasAccessToUpdateCommentForDeck(commentId) || hasRoleAdmin;
+    public boolean hasAccessToUpdateCommentForCourse(Long commentId) throws NotAuthorisedUserException {
+        Long authorizedPersonId = userService.getAuthorizedUser().getPerson().getId();
+        Long createdCommentPersonId = courseCommentRepository.findOne(commentId).getPerson().getId();
+        return authorizedPersonId.equals(createdCommentPersonId);
     }
 
 
