@@ -16,17 +16,21 @@ import java.util.List;
 @Service
 public class CourseCommentService {
 
-    @Autowired
-    private CourseCommentRepository commentRepository;
+    private final CourseCommentRepository commentRepository;
+
+    private final CourseRepository courseRepository;
+
+    private final UserService userService;
+
+    private final CommentFieldsValidator commentFieldsValidator;
 
     @Autowired
-    private CourseRepository courseRepository;
-
-    @Autowired
-    private UserService userService;
-
-    @Autowired
-    private CommentFieldsValidator commentFieldsValidator;
+    public CourseCommentService(CourseCommentRepository commentRepository, CourseRepository courseRepository, UserService userService, CommentFieldsValidator commentFieldsValidator) {
+        this.commentRepository = commentRepository;
+        this.courseRepository = courseRepository;
+        this.userService = userService;
+        this.commentFieldsValidator = commentFieldsValidator;
+    }
 
 
     public CourseComment addCommentForCourse(String commentText, Long courseId) throws NotAuthorisedUserException {
