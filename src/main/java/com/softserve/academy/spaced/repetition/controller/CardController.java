@@ -41,7 +41,16 @@ public class CardController {
         List<Card> learningCards = cardService.getLearningCards(deckId);
         Link collectionLink = linkTo(methodOn(DeckController.class).getCardsByDeck(deckId)).withSelfRel();
         List<CardPublicDTO> cards = DTOBuilder.buildDtoListForCollection(learningCards, CardPublicDTO.class, collectionLink);
-        return new ResponseEntity<>(cards, HttpStatus.OK);
+        return ResponseEntity.ok(cards);
+    }
+
+    @GetMapping("/api/decks/{deckId}/learn/additional")
+    public ResponseEntity<List<CardPublicDTO>> getAdditionalLearningCards(@PathVariable Long deckId)
+            throws NotAuthorisedUserException {
+        List<Card> learningCards = cardService.getAdditionalLearningCards(deckId);
+        Link collectionLink = linkTo(methodOn(DeckController.class).getCardsByDeck(deckId)).withSelfRel();
+        List<CardPublicDTO> cards = DTOBuilder.buildDtoListForCollection(learningCards, CardPublicDTO.class, collectionLink);
+        return ResponseEntity.ok(cards);
     }
 
     @GetMapping(value = "/api/category/{category_id}/courses/{course_id}/decks/{deck_id}/cards/{card_id}")
