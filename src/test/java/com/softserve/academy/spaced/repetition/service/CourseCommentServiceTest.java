@@ -89,7 +89,7 @@ public class CourseCommentServiceTest {
         when(mockedUserService.getAuthorizedUser()).thenReturn(createMockedUser());
         CourseComment savedComment = courseCommentServiceUnderTest.addCommentForCourse("Very interesting", COURSE_ID);
         courseCommentServiceUnderTest.deleteCommentById(savedComment.getId());
-        CourseComment deletedComment = courseCommentServiceUnderTest.getCommentById(savedComment.getId());
+        CourseComment deletedComment = courseCommentRepository.findOne(savedComment.getId());
         assertNull("Trying to find comment.", deletedComment);
     }
 
