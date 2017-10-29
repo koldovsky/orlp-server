@@ -157,6 +157,9 @@ public class Account implements EntityInterface {
 
     @Override
     public int hashCode() {
-        return (int) (id ^ (id >>> 32));
+        int hash = 0;
+        Long idAccount = id;
+        hash += (idAccount != null ? idAccount.hashCode() : 0);
+        return hash;
     }
 }

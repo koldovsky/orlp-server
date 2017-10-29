@@ -162,6 +162,8 @@ public class Course implements EntityInterface {
 
     @Override
     public int hashCode() {
-        return id.hashCode();
+        int hash = 0;
+        hash += (id != null ? id.hashCode() : 0);
+        return hash;
     }
 }

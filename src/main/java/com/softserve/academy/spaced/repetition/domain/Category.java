@@ -4,6 +4,7 @@ import com.softserve.academy.spaced.repetition.DTO.EntityInterface;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "Category")
@@ -106,16 +107,22 @@ public class Category implements EntityInterface {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
         Category category = (Category) o;
 
-        return id != null ? id.equals(category.id) : category.id == null;
+        return Objects.equals(this.id, category.id);
     }
 
     @Override
     public int hashCode() {
-        return id != null ? id.hashCode() : 0;
+        int hash = 0;
+        hash += (id != null ? id.hashCode() : 0);
+        return hash;
     }
 }

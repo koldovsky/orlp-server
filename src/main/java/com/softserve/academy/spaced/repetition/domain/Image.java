@@ -131,6 +131,9 @@ public class Image implements EntityInterface {
 
     @Override
     public int hashCode() {
-        return (int) (id ^ (id >>> 32));
+        int hash = 0;
+        Long idImage = id;
+        hash += (idImage != null ? idImage.hashCode() : 0);
+        return hash;
     }
 }
