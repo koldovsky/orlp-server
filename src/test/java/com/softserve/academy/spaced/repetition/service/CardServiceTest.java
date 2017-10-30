@@ -1,9 +1,8 @@
 package com.softserve.academy.spaced.repetition.service;
 
 import com.softserve.academy.spaced.repetition.config.TestDatabaseConfig;
-import com.softserve.academy.spaced.repetition.domain.*;
+import com.softserve.academy.spaced.repetition.domain.Card;
 import com.softserve.academy.spaced.repetition.exceptions.CardContainsEmptyFieldsException;
-import com.softserve.academy.spaced.repetition.exceptions.NotAuthorisedUserException;
 import com.softserve.academy.spaced.repetition.repository.CardRepository;
 import com.softserve.academy.spaced.repetition.repository.DeckRepository;
 import org.junit.Before;
@@ -13,17 +12,12 @@ import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
-import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityNotFoundException;
-
-import static org.junit.Assert.*;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.when;
+import static org.junit.Assert.assertEquals;
 
 @RunWith(SpringRunner.class)
 @ActiveProfiles("testdatabase")
@@ -49,6 +43,9 @@ public class CardServiceTest {
     @Mock
     private UserService mockedUserService;
 
+    @Mock
+    private AccountService mockedAccountService;
+
     Card newCard = new Card(CARD_ID, CARD_QUESTION, CARD_ANSWER, CARD_TITLE);
 
     public Card getCardForTest(Long id) {
@@ -62,7 +59,7 @@ public class CardServiceTest {
 
     @Before
     public void setUp() throws Exception {
-        cardServiceUnderTest = new CardService(cardRepository, deckRepository, mockedUserService);
+        cardServiceUnderTest = new CardService(cardRepository, deckRepository, mockedAccountService, mockedUserService);
     }
 
     @Test

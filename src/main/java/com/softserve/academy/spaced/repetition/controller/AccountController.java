@@ -31,9 +31,20 @@ public class AccountController {
         for (LearningRegime regime : LearningRegime.values()) {
             if (regime.regime.equals(learningRegime)) {
                 accountService.updateLearningRegime(regime);
-                return new ResponseEntity(HttpStatus.OK);
+                return ResponseEntity.ok().build();
             }
         }
-        return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        return ResponseEntity.badRequest().build();
+    }
+
+    @GetMapping("/api/private/account/cards-number")
+    public ResponseEntity<Integer> getCardsNumber() throws NotAuthorisedUserException {
+        return ResponseEntity.ok(accountService.getCardsNumber());
+    }
+
+    @PutMapping("/api/private/account/cards-number")
+    public ResponseEntity updateCardsNumber(@RequestBody Integer cardsNumber) throws NotAuthorisedUserException {
+        accountService.updateCardsNumber(cardsNumber);
+        return ResponseEntity.ok().build();
     }
 }

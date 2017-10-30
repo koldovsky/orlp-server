@@ -49,6 +49,10 @@ public class Account implements EntityInterface {
     @Enumerated(value = EnumType.STRING)
     private LearningRegime learningRegime;
 
+    @Column(name = "cards_number", columnDefinition = "int default 10")
+    @NotNull
+    private Integer cardsNumber;
+
     public Account() {
     }
 
@@ -138,5 +142,13 @@ public class Account implements EntityInterface {
 
     public void setLearningRegime(LearningRegime learningRegime) {
         this.learningRegime = learningRegime;
+    }
+
+    public Integer getCardsNumber() {
+        return cardsNumber;
+    }
+
+    public void setCardsNumber(Integer cardsNumber) {
+        this.cardsNumber = cardsNumber;
     }
 }
