@@ -40,17 +40,18 @@ public class CardService {
         try {
             User user = userService.getAuthorizedUser();
             String email = user.getAccount().getEmail();
+            final int cardsNumber = accountService.getCardsNumber();
             List<Card> learningCards = new ArrayList<>();
             if (user.getAccount().getLearningRegime().equals(LearningRegime.BAD_NORMAL_GOOD_STATUS_DEPENDING)) {
-                learningCards = cardRepository.cardsForLearningWithOutStatus(email, deckId, accountService.getCardsNumber());
-                if (learningCards.size() < accountService.getCardsNumber()) {
+                learningCards = cardRepository.cardsForLearningWithOutStatus(email, deckId, cardsNumber);
+                if (learningCards.size() < cardsNumber) {
                     learningCards.addAll(cardRepository.cardsQueueForLearningWithStatus(email, deckId,
-                            accountService.getCardsNumber() - learningCards.size()));
+                            cardsNumber - learningCards.size()));
                 }
             } else if (user.getAccount().getLearningRegime().equals(LearningRegime.CARDS_POSTPONING_USING_SPACED_REPETITION)) {
-                learningCards = cardRepository.getCardsThatNeedRepeating(deckId, new Date(), email, accountService.getCardsNumber());
-                if (learningCards.size() < accountService.getCardsNumber()) {
-                    learningCards.addAll(cardRepository.getNewCards(deckId, email, accountService.getCardsNumber() - learningCards.size()));
+                learningCards = cardRepository.getCardsThatNeedRepeating(deckId, new Date(), email, cardsNumber);
+                if (learningCards.size() < cardsNumber) {
+                    learningCards.addAll(cardRepository.getNewCards(deckId, email, cardsNumber - learningCards.size()));
                 }
             }
             return learningCards;
@@ -84,11 +85,12 @@ public class CardService {
     public List<Card> getCardsQueue(long deckId) throws NotAuthorisedUserException {
         User user = userService.getAuthorizedUser();
         String email = user.getAccount().getEmail();
-        List<Card> cardsQueue = cardRepository.cardsForLearningWithOutStatus(email, deckId, accountService.getCardsNumber());
+        final int cardsNumber = accountService.getCardsNumber();
+        List<Card> cardsQueue = cardRepository.cardsForLearningWithOutStatus(email, deckId, cardsNumber);
 
-        if (cardsQueue.size() < accountService.getCardsNumber()) {
-            cardsQueue.addAll(cardRepository.cardsQueueForLearningWithStatus(email, deckId, accountService.getCardsNumber()).subList(0,
-                    accountService.getCardsNumber() - cardsQueue.size()));
+        if (cardsQueue.size() < cardsNumber) {
+            cardsQueue.addAll(cardRepository.cardsQueueForLearningWithStatus(email, deckId, cardsNumber).subList(0,
+                    cardsNumber - cardsQueue.size()));
         }
         return cardsQueue;
     }

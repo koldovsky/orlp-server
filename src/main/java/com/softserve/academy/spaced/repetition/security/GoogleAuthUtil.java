@@ -19,10 +19,11 @@ import java.security.GeneralSecurityException;
 import java.util.Collections;
 import java.util.Date;
 
+import static com.softserve.academy.spaced.repetition.domain.Account.CARDS_NUMBER;
+
 @Component
 public class GoogleAuthUtil {
 
-    private static final Integer CARDS_NUMBER = 10;
     private final String FIRST_NAME = "given_name";
     private final String LAST_NAME = "family_name";
     private final String IMAGE = "picture";

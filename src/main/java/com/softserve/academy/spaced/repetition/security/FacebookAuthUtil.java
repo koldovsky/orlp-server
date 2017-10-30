@@ -21,10 +21,11 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.softserve.academy.spaced.repetition.domain.Account.CARDS_NUMBER;
+
 @Component
 public class FacebookAuthUtil {
 
-    private static final Integer CARDS_NUMBER = 10;
     @Autowired
     private AccountRepository accountRepository;
     @Autowired

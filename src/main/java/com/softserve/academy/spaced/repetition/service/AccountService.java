@@ -33,7 +33,7 @@ public class AccountService {
     }
 
     public int getCardsNumber() throws NotAuthorisedUserException {
-        return accountRepository.findOne(userService.getAuthorizedUser().getAccount().getId()).getCardsNumber();
+        return userService.getAuthorizedUser().getAccount().getCardsNumber();
     }
 
     public void updateCardsNumber(Integer cardsNumber) throws NotAuthorisedUserException {

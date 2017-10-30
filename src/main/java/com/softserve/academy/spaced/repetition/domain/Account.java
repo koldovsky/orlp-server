@@ -10,6 +10,7 @@ import java.util.Set;
 @Entity
 @Table(name = "account")
 public class Account implements EntityInterface {
+    public static final int CARDS_NUMBER = 10;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

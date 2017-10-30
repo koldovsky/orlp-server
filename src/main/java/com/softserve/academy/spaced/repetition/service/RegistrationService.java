@@ -16,10 +16,11 @@ import org.springframework.stereotype.Service;
 import java.util.Calendar;
 import java.util.Collections;
 
+import static com.softserve.academy.spaced.repetition.domain.Account.CARDS_NUMBER;
+
 @Service
 public class RegistrationService {
 
-    private static final Integer CARDS_NUMBER = 10;
     @Autowired
     private AuthorityRepository authorityRepository;
     @Autowired
