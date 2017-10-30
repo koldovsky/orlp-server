@@ -5,6 +5,7 @@ import com.softserve.academy.spaced.repetition.DTO.EntityInterface;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -138,5 +139,27 @@ public class Account implements EntityInterface {
 
     public void setLearningRegime(LearningRegime learningRegime) {
         this.learningRegime = learningRegime;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        Account account = (Account) o;
+
+        return Objects.equals(this.id, account.id);
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 0;
+        Long idAccount = id;
+        hash += (idAccount != null ? idAccount.hashCode() : 0);
+        return hash;
     }
 }

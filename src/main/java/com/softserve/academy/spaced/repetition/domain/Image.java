@@ -4,6 +4,7 @@ import com.softserve.academy.spaced.repetition.DTO.EntityInterface;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 @Table(name = "image")
@@ -112,5 +113,27 @@ public class Image implements EntityInterface {
 
     public void setUsed(boolean used) {
         isUsed = used;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        Image image = (Image) o;
+
+        return Objects.equals(this.id, image.id);
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 0;
+        Long idImage = id;
+        hash += (idImage != null ? idImage.hashCode() : 0);
+        return hash;
     }
 }

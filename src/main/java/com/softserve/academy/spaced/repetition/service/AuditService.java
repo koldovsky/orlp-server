@@ -14,7 +14,6 @@ import java.util.List;
 @Service
 public class AuditService {
 
-    @Autowired
     private AuditRepository auditRepository;
     public final static int QUANTITY_AUDIT_IN_PAGE = 10;
 
@@ -81,5 +80,10 @@ public class AuditService {
             request = new PageRequest(pageNumber-1, QUANTITY_AUDIT_IN_PAGE, Sort.Direction.DESC, sortBy);
         }
         return auditRepository.findAll(request);
+    }
+
+    @Autowired
+    public void setAuditRepository(AuditRepository auditRepository) {
+        this.auditRepository = auditRepository;
     }
 }

@@ -5,6 +5,7 @@ import com.softserve.academy.spaced.repetition.DTO.EntityInterface;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "Course")
@@ -146,41 +147,23 @@ public class Course implements EntityInterface {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
         Course course = (Course) o;
 
-        if (Double.compare(course.rating, rating) != 0) return false;
-        if (published != course.published) return false;
-        if (id != null ? !id.equals(course.id) : course.id != null) return false;
-        if (name != null ? !name.equals(course.name) : course.name != null) return false;
-        if (description != null ? !description.equals(course.description) : course.description != null) return false;
-        if (image != null ? !image.equals(course.image) : course.image != null) return false;
-        if (owner != null ? !owner.equals(course.owner) : course.owner != null) return false;
-        if (category != null ? !category.equals(course.category) : course.category != null) return false;
-        if (decks != null ? !decks.equals(course.decks) : course.decks != null) return false;
-        if (courseRatings != null ? !courseRatings.equals(course.courseRatings) : course.courseRatings != null)
-            return false;
-        return courseComments != null ? courseComments.equals(course.courseComments) : course.courseComments == null;
+        return Objects.equals(this.id, course.id);
+
     }
 
     @Override
     public int hashCode() {
-        int result;
-        long temp;
-        result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (name != null ? name.hashCode() : 0);
-        result = 31 * result + (description != null ? description.hashCode() : 0);
-        result = 31 * result + (image != null ? image.hashCode() : 0);
-        temp = Double.doubleToLongBits(rating);
-        result = 31 * result + (int) (temp ^ (temp >>> 32));
-        result = 31 * result + (published ? 1 : 0);
-        result = 31 * result + (owner != null ? owner.hashCode() : 0);
-        result = 31 * result + (category != null ? category.hashCode() : 0);
-        result = 31 * result + (decks != null ? decks.hashCode() : 0);
-        result = 31 * result + (courseRatings != null ? courseRatings.hashCode() : 0);
-        result = 31 * result + (courseComments != null ? courseComments.hashCode() : 0);
-        return result;
+        int hash = 0;
+        hash += (id != null ? id.hashCode() : 0);
+        return hash;
     }
 }
