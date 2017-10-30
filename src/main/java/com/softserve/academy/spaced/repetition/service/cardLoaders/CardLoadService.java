@@ -1,6 +1,5 @@
 package com.softserve.academy.spaced.repetition.service.cardLoaders;
 
-import com.softserve.academy.spaced.repetition.exceptions.CardContainsEmptyFieldsException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -20,7 +19,7 @@ public class CardLoadService {
     @Qualifier("cardUploader")
     private CardUploader cardUploader;
 
-    public Map <String, String> loadCard(MultipartFile multipartFile, Long deckId) throws IOException, SQLException, ClassNotFoundException, CardContainsEmptyFieldsException {
+    public Map <String, String> loadCard(MultipartFile multipartFile, Long deckId) throws IOException, SQLException, ClassNotFoundException {
         String relativePath = cardUploader.uploadFile(multipartFile);
         Map <String, String> map = cardDataExtractor.extractData(relativePath);
         dataSaver.save(map, deckId);

@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 
 import java.io.IOException;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -40,7 +41,7 @@ public class MailService {
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
             helper.setSubject("Confirmation registration");
             helper.setTo(user.getAccount().getEmail());
-            Map <String, Object> model = new HashMap <String, Object>();
+            Map <String, Object> model = new HashMap <>();
             String token = jwtTokenForMail.generateTokenForMail(user);
             model.put("person", user.getPerson());
             model.put("token", token);
@@ -56,27 +57,11 @@ public class MailService {
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
             helper.setSubject("Change password notification");
             helper.setTo(user.getAccount().getEmail());
-            Map <String, Object> model = new HashMap <String, Object>();
+            Map <String, Object> model = new HashMap <>();
             model.put("person", user.getPerson());
-            model.put("datachange", user.getAccount().getLastPasswordResetDate().toString());
+            model.put("datachange", Calendar.getInstance().getTime().toString());
             model.put("url", URL);
             String text = getChangePasswordTemplateContent(model);
-            helper.setText(text, true);
-        };
-        mailSender.send(preparator);
-    }
-
-    public void sendAccountNotificationMail(User user) throws MailException {
-        MimeMessagePreparator preparator = mimeMessage -> {
-            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
-            helper.setSubject("Your account was deleted.");
-            helper.setTo(user.getAccount().getEmail());
-            Map <String, Object> model = new HashMap <String, Object>();
-            String token = jwtTokenForMail.generateTokenForMail(user);
-            model.put("person", user.getPerson());
-            model.put("token", token);
-            model.put("url", URL);
-            String text = getDeleteAccountTemplateContent(model);
             helper.setText(text, true);
         };
         mailSender.send(preparator);
@@ -94,24 +79,11 @@ public class MailService {
         return "";
     }
 
-
     private String getChangePasswordTemplateContent(Map <String, Object> model) {
         StringBuilder content = new StringBuilder();
         try {
             content.append(FreeMarkerTemplateUtils.processTemplateIntoString(
                     freemarkerConfiguration.getTemplate("changePasswordMailTemplate.txt"), model));
-            return content.toString();
-        } catch (IOException | TemplateException e) {
-            LOGGER.error("Couldn't generate email content.", e);
-        }
-        return "";
-    }
-
-    private String getDeleteAccountTemplateContent(Map <String, Object> model) {
-        StringBuilder content = new StringBuilder();
-        try {
-            content.append(FreeMarkerTemplateUtils.processTemplateIntoString(
-                    freemarkerConfiguration.getTemplate("deleteAccountMailTemplate.txt"), model));
             return content.toString();
         } catch (IOException | TemplateException e) {
             LOGGER.error("Couldn't generate email content.", e);

@@ -2,7 +2,6 @@ package com.softserve.academy.spaced.repetition.service;
 
 
 import com.softserve.academy.spaced.repetition.domain.*;
-import com.softserve.academy.spaced.repetition.exceptions.EmailUniquesException;
 import com.softserve.academy.spaced.repetition.repository.AuthorityRepository;
 import com.softserve.academy.spaced.repetition.service.validators.AbstractValidator;
 import com.softserve.academy.spaced.repetition.service.validators.BlankFieldValidator;
@@ -36,7 +35,7 @@ public class RegistrationService {
     @Autowired
     private NullFieldsValidator nullFieldsValidator;
 
-    public User registerNewUser(User user) throws EmailUniquesException {
+    public User registerNewUser(User user) {
         AbstractValidator validator = getChainOfValidators();
         validator.doValidate(user);
         return createNewUser(user);

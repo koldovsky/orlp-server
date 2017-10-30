@@ -3,7 +3,6 @@ package com.softserve.academy.spaced.repetition.service;
 import com.softserve.academy.spaced.repetition.DTO.impl.PasswordDTO;
 import com.softserve.academy.spaced.repetition.config.TestDatabaseConfig;
 import com.softserve.academy.spaced.repetition.domain.*;
-import com.softserve.academy.spaced.repetition.exceptions.FileIsNotAnImageException;
 import com.softserve.academy.spaced.repetition.exceptions.NotAuthorisedUserException;
 import com.softserve.academy.spaced.repetition.repository.DeckRepository;
 import com.softserve.academy.spaced.repetition.repository.UserRepository;
@@ -166,19 +165,15 @@ public class UserServiceTest {
         assertEquals("Image is uploaded", base64String, userWithUploadImage.getPerson().getImageBase64());
     }
 
-    @Test(expected = FileIsNotAnImageException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testUploadImageException() throws Exception {
         MockMultipartFile image = new MockMultipartFile("image", "", "", "".getBytes());
-        doThrow(FileIsNotAnImageException.class).when(mockedImageService).checkImageExtention(eq(image));
+        doThrow(IllegalArgumentException.class).when(mockedImageService).checkImageExtention(eq(image));
         userServiceUnderTest.uploadImage(image);
     }
 
     @Test
     public void testDeleteAccount() throws Exception {
-        doAnswer((Answer<Void>) invocation -> {
-            user = invocation.getArgumentAt(0, User.class);
-            return null;
-        }).when(mockedMailService).sendAccountNotificationMail(any());
         PowerMockito.doReturn(mockedUser).when(userServiceUnderTest, "getAuthorizedUser");
         userServiceUnderTest.deleteAccount();
         assertEquals("NotificationMail is sent", mockedUser, user);

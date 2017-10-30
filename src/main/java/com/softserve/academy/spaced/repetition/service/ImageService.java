@@ -36,7 +36,7 @@ public class ImageService {
      * @throws ImageRepositorySizeQuotaExceededException - is dropping when user has exceeded the quote of disk-space for his own images
      * @throws NotAuthorisedUserException                - is dropping when the user which wants to add the image is not authorised
      */
-    public Image addImageToDB(MultipartFile file) throws ImageRepositorySizeQuotaExceededException, NotAuthorisedUserException, FileIsNotAnImageException {
+    public Image addImageToDB(MultipartFile file) throws ImageRepositorySizeQuotaExceededException, NotAuthorisedUserException {
         checkImageExtention(file);
         Image  image = new Image(encodeToBase64(file), file.getContentType(),
                 userService.getAuthorizedUser(),file.getSize());
@@ -47,7 +47,7 @@ public class ImageService {
 
 
      void checkImageExtention(MultipartFile file) throws ImageRepositorySizeQuotaExceededException,
-            NotAuthorisedUserException, FileIsNotAnImageException {
+            NotAuthorisedUserException {
         long fileSize = file.getSize();
         User user = userService.getAuthorizedUser();
         if (fileSize > getUsersLimitInBytesForImagesLeft(user.getId())) {
@@ -59,7 +59,7 @@ public class ImageService {
             String imageType = file.getContentType();
             if (imageType == null || !imageType.split("/")[0].equalsIgnoreCase("image"))
             {
-                throw new FileIsNotAnImageException();
+                throw new IllegalArgumentException("File upload error: file is not an image");
             }
         }
     }
