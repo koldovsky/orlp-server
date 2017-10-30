@@ -20,12 +20,12 @@ package com.softserve.academy.spaced.repetition.controller;
 @ControllerAdvice
 public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
 
-    private static final EnumMap<AccountStatus, ResponseEntity<MessageDTO>> MAP = new EnumMap<AccountStatus, ResponseEntity<MessageDTO>>(AccountStatus.class);
+    private static final EnumMap<AccountStatus, ResponseEntity<MessageDTO>> USER_STATUS_ERROR_RESPONSE = new EnumMap<>(AccountStatus.class);
 
     static{
-        MAP.put(AccountStatus.DELETED, new ResponseEntity<MessageDTO>(new MessageDTO("Account with this email is deleted"), HttpStatus.LOCKED));
-        MAP.put(AccountStatus.BLOCKED, new ResponseEntity<MessageDTO>(new MessageDTO("Account with this email is blocked"), HttpStatus.FORBIDDEN));
-        MAP.put(AccountStatus.INACTIVE, new ResponseEntity<MessageDTO>(new MessageDTO("Account with this email is inactive"), HttpStatus.METHOD_NOT_ALLOWED));
+        USER_STATUS_ERROR_RESPONSE.put(AccountStatus.DELETED, new ResponseEntity<MessageDTO>(new MessageDTO("Account with this email is deleted"), HttpStatus.LOCKED));
+        USER_STATUS_ERROR_RESPONSE.put(AccountStatus.BLOCKED, new ResponseEntity<MessageDTO>(new MessageDTO("Account with this email is blocked"), HttpStatus.FORBIDDEN));
+        USER_STATUS_ERROR_RESPONSE.put(AccountStatus.INACTIVE, new ResponseEntity<MessageDTO>(new MessageDTO("Account with this email is inactive"), HttpStatus.METHOD_NOT_ALLOWED));
     }
 
     @ExceptionHandler(MultipartException.class)
@@ -82,7 +82,7 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(UserStatusException.class)
     ResponseEntity<MessageDTO> handleUserStatusException(UserStatusException userStatusException) {
-        return MAP.get(userStatusException.getAccountStatus());
+        return USER_STATUS_ERROR_RESPONSE.get(userStatusException.getAccountStatus());
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
