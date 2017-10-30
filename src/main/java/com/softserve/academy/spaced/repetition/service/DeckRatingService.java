@@ -1,5 +1,6 @@
 package com.softserve.academy.spaced.repetition.service;
 
+import com.softserve.academy.spaced.repetition.exceptions.UserStatusException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,8 +22,11 @@ public class DeckRatingService {
     private UserService userService;
 
     @Transactional
-    public void addDeckRating(int rating, Long deckId) throws NotAuthorisedUserException {
+    public void addDeckRating(int rating, Long deckId) throws NotAuthorisedUserException, UserStatusException {
         User user = userService.getAuthorizedUser();
+        if(user.getAccount().getStatus().isNotActive()){
+            throw new UserStatusException(user.getAccount().getStatus());
+        }
         String email = user.getAccount().getEmail();
         DeckRating deckRating = deckRatingRepository.findAllByAccountEmailAndDeck_Id(email, deckId);
         if (deckRating == null) {
