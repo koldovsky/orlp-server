@@ -22,6 +22,7 @@ import java.util.Date;
 @Component
 public class GoogleAuthUtil {
 
+    private static final Integer CARDS_NUMBER = 10;
     private final String FIRST_NAME = "given_name";
     private final String LAST_NAME = "family_name";
     private final String IMAGE = "picture";
@@ -88,6 +89,7 @@ public class GoogleAuthUtil {
         person.setImage((String) payload.get(IMAGE));
         person.setTypeImage(ImageType.LINK);
         account.setLearningRegime(LearningRegime.CARDS_POSTPONING_USING_SPACED_REPETITION);
+        account.setCardsNumber(CARDS_NUMBER);
         user.setAccount(account);
         user.setFolder(folder);
         user.setPerson(person);

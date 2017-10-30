@@ -24,6 +24,7 @@ import java.util.Map;
 @Component
 public class FacebookAuthUtil {
 
+    private static final Integer CARDS_NUMBER = 10;
     @Autowired
     private AccountRepository accountRepository;
     @Autowired
@@ -99,6 +100,7 @@ public class FacebookAuthUtil {
         person.setLastName((String) fbProfileData.get("last_name"));
         person.setTypeImage(ImageType.LINK);
         account.setLearningRegime(LearningRegime.CARDS_POSTPONING_USING_SPACED_REPETITION);
+        account.setCardsNumber(CARDS_NUMBER);
         person.setImage((String) fbProfileData.get("picture"));
         user.setAccount(account);
         user.setFolder(folder);
