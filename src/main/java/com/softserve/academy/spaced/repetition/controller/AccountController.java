@@ -43,8 +43,8 @@ public class AccountController {
     }
 
     @PutMapping("/api/private/account/cards-number")
-    public ResponseEntity updateCardsNumber(@RequestBody Integer cardsNumber) throws NotAuthorisedUserException {
-        accountService.updateCardsNumber(cardsNumber);
+    public ResponseEntity updateCardsNumber(@RequestBody String cardsNumber) throws NotAuthorisedUserException {
+        accountService.updateCardsNumber(Integer.parseInt(cardsNumber));
         return ResponseEntity.ok().build();
     }
 }
