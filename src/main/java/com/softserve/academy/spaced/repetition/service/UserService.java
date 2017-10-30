@@ -204,7 +204,7 @@ public class UserService {
     }
 
     public User uploadImage(MultipartFile file) throws ImageRepositorySizeQuotaExceededException,
-            NotAuthorisedUserException, FileIsNotAnImageException {
+            NotAuthorisedUserException {
         imageService.checkImageExtention(file);
         User user = getAuthorizedUser();
         user.getPerson().setImageBase64(imageService.encodeToBase64(file));

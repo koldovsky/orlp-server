@@ -3,7 +3,6 @@ package com.softserve.academy.spaced.repetition.service;
 import com.softserve.academy.spaced.repetition.DTO.impl.PasswordDTO;
 import com.softserve.academy.spaced.repetition.config.TestDatabaseConfig;
 import com.softserve.academy.spaced.repetition.domain.*;
-import com.softserve.academy.spaced.repetition.exceptions.FileIsNotAnImageException;
 import com.softserve.academy.spaced.repetition.exceptions.NotAuthorisedUserException;
 import com.softserve.academy.spaced.repetition.repository.DeckRepository;
 import com.softserve.academy.spaced.repetition.repository.UserRepository;
@@ -166,10 +165,10 @@ public class UserServiceTest {
         assertEquals("Image is uploaded", base64String, userWithUploadImage.getPerson().getImageBase64());
     }
 
-    @Test(expected = FileIsNotAnImageException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testUploadImageException() throws Exception {
         MockMultipartFile image = new MockMultipartFile("image", "", "", "".getBytes());
-        doThrow(FileIsNotAnImageException.class).when(mockedImageService).checkImageExtention(eq(image));
+        doThrow(IllegalArgumentException.class).when(mockedImageService).checkImageExtention(eq(image));
         userServiceUnderTest.uploadImage(image);
     }
 

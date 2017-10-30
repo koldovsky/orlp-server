@@ -40,7 +40,7 @@ public class ImageController {
      */
     @Auditable(action = AuditingAction.UPLOAD_IMAGE)
     @PostMapping("/api/service/image")
-    public ResponseEntity<UploadingImageDTO> addImageToDB(@RequestParam("file") MultipartFile file) throws ImageRepositorySizeQuotaExceededException, NotAuthorisedUserException, FileIsNotAnImageException {
+    public ResponseEntity<UploadingImageDTO> addImageToDB(@RequestParam("file") MultipartFile file) throws ImageRepositorySizeQuotaExceededException, NotAuthorisedUserException {
         Image image = imageService.addImageToDB(file);
         Long imageId = image.getId();
         Link link = linkTo(methodOn(ImageController.class).getImageById(imageId)).withSelfRel();
