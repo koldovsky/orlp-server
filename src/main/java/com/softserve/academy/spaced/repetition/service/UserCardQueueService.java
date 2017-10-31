@@ -46,19 +46,25 @@ public class UserCardQueueService {
         userCardQueueRepository.save(userCardQueue);
     }
 
-    private void applyCardsPostponingLearningRegime(UserCardQueue userCardQueue, UserCardQueueStatus status) {
-        RememberingLevel rememberingLevel = rememberingLevelRepository.findOne(1L);
+    private void applyCardsPostponingLearningRegime(UserCardQueue userCardQueue, UserCardQueueStatus status)
+            throws NotAuthorisedUserException {
+        final Account account = userService.getAuthorizedUser().getAccount();
+        RememberingLevel rememberingLevel =
+                rememberingLevelRepository.findRememberingLevelByAccountEqualsAndOrderNumber(account, 1);
         if (userCardQueue.getRememberingLevel() != null) {
             rememberingLevel = userCardQueue.getRememberingLevel();
         }
 
-        if (status == UserCardQueueStatus.BAD && rememberingLevel.getId() > 1) {
-            userCardQueue.setRememberingLevel(rememberingLevelRepository.findOne(rememberingLevel.getId() - 1));
+        if (status == UserCardQueueStatus.BAD && rememberingLevel.getOrderNumber() > 1) {
+            userCardQueue.setRememberingLevel(rememberingLevelRepository
+                    .findRememberingLevelByAccountEqualsAndOrderNumber(account, rememberingLevel.getOrderNumber() - 1));
         } else if (status == UserCardQueueStatus.GOOD &&
-                rememberingLevel.getId() < rememberingLevelRepository.count()) {
-            userCardQueue.setRememberingLevel(rememberingLevelRepository.findOne(rememberingLevel.getId() + 1));
+                rememberingLevel.getOrderNumber() < rememberingLevelRepository.countAllByAccountEquals(account)) {
+            userCardQueue.setRememberingLevel(rememberingLevelRepository
+                    .findRememberingLevelByAccountEqualsAndOrderNumber(account, rememberingLevel.getOrderNumber() + 1));
         } else {
-            userCardQueue.setRememberingLevel(rememberingLevelRepository.findOne(rememberingLevel.getId()));
+            userCardQueue.setRememberingLevel(rememberingLevelRepository
+                    .findRememberingLevelByAccountEqualsAndOrderNumber(account, rememberingLevel.getOrderNumber()));
         }
         userCardQueue.setDateToRepeat(new Date(userCardQueue.getCardDate().getTime() +
                 userCardQueue.getRememberingLevel().getNumberOfPostponedDays() * DAY_IN_MILLISECONDS));

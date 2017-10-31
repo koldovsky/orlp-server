@@ -39,7 +39,7 @@ public interface CardRepository extends JpaRepository<Card, Long> {
             "when 'GOOD' then 3 " +
             "end, u.card_data limit :limitNumber", nativeQuery = true)
     List<Card> cardsQueueForLearningWithStatus(@Param("accountEmail") String accountEmail, @Param("deckId") long deckId,
-                                               @Param("limitNumber") long limitNumber);
+                                               @Param("limitNumber") int limitNumber);
 
     List <Card> findAllByQuestion(String question);
 
