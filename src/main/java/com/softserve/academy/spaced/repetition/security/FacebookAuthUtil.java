@@ -5,6 +5,7 @@ import com.softserve.academy.spaced.repetition.audit.AuditingAction;
 import com.softserve.academy.spaced.repetition.domain.*;
 import com.softserve.academy.spaced.repetition.repository.AccountRepository;
 import com.softserve.academy.spaced.repetition.repository.AuthorityRepository;
+import com.softserve.academy.spaced.repetition.repository.RememberingLevelRepository;
 import com.softserve.academy.spaced.repetition.repository.UserRepository;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -26,12 +27,20 @@ import static com.softserve.academy.spaced.repetition.domain.Account.CARDS_NUMBE
 @Component
 public class FacebookAuthUtil {
 
+    private final AccountRepository accountRepository;
+    private final UserRepository userRepository;
+    private final AuthorityRepository authorityRepository;
+    private final RememberingLevelRepository rememberingLevelRepository;
+
     @Autowired
-    private AccountRepository accountRepository;
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private AuthorityRepository authorityRepository;
+    public FacebookAuthUtil(AccountRepository accountRepository, UserRepository userRepository,
+                            AuthorityRepository authorityRepository,
+                            RememberingLevelRepository rememberingLevelRepository) {
+        this.accountRepository = accountRepository;
+        this.userRepository = userRepository;
+        this.authorityRepository = authorityRepository;
+        this.rememberingLevelRepository = rememberingLevelRepository;
+    }
 
     public String getFBGraph(String accessToken) {
         String graph = null;
@@ -102,6 +111,12 @@ public class FacebookAuthUtil {
         person.setTypeImage(ImageType.LINK);
         account.setLearningRegime(LearningRegime.CARDS_POSTPONING_USING_SPACED_REPETITION);
         account.setCardsNumber(CARDS_NUMBER);
+        rememberingLevelRepository.save(new RememberingLevel(1, "Teapot", 1, account));
+        rememberingLevelRepository.save(new RememberingLevel(2, "Monkey", 3, account));
+        rememberingLevelRepository.save(new RememberingLevel(3, "Beginner", 7, account));
+        rememberingLevelRepository.save(new RememberingLevel(4, "Student", 14, account));
+        rememberingLevelRepository.save(new RememberingLevel(5, "Expert", 30, account));
+        rememberingLevelRepository.save(new RememberingLevel(6, "Genius", 60, account));
         person.setImage((String) fbProfileData.get("picture"));
         user.setAccount(account);
         user.setFolder(folder);

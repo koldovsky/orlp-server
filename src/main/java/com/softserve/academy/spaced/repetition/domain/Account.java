@@ -5,6 +5,7 @@ import com.softserve.academy.spaced.repetition.DTO.EntityInterface;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -53,6 +54,9 @@ public class Account implements EntityInterface {
     @Column(name = "cards_number", columnDefinition = "int default 10")
     @NotNull
     private Integer cardsNumber;
+
+    @OneToMany(mappedBy = "account", fetch = FetchType.LAZY)
+    private List<RememberingLevel> rememberingLevels;
 
     public Account() {
     }
@@ -151,5 +155,13 @@ public class Account implements EntityInterface {
 
     public void setCardsNumber(Integer cardsNumber) {
         this.cardsNumber = cardsNumber;
+    }
+
+    public List<RememberingLevel> getRememberingLevels() {
+        return rememberingLevels;
+    }
+
+    public void setRememberingLevels(List<RememberingLevel> rememberingLevels) {
+        this.rememberingLevels = rememberingLevels;
     }
 }

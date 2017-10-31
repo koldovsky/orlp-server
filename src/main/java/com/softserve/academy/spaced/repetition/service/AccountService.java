@@ -2,19 +2,25 @@ package com.softserve.academy.spaced.repetition.service;
 
 import com.softserve.academy.spaced.repetition.domain.Account;
 import com.softserve.academy.spaced.repetition.domain.LearningRegime;
+import com.softserve.academy.spaced.repetition.domain.RememberingLevel;
 import com.softserve.academy.spaced.repetition.exceptions.NotAuthorisedUserException;
 import com.softserve.academy.spaced.repetition.repository.AccountRepository;
+import com.softserve.academy.spaced.repetition.repository.RememberingLevelRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class AccountService {
     private final AccountRepository accountRepository;
+    private final RememberingLevelRepository rememberingLevelRepository;
     private final UserService userService;
 
     @Autowired
-    public AccountService(AccountRepository accountRepository, UserService userService) {
+    public AccountService(AccountRepository accountRepository, RememberingLevelRepository rememberingLevelRepository, UserService userService) {
         this.accountRepository = accountRepository;
+        this.rememberingLevelRepository = rememberingLevelRepository;
         this.userService = userService;
     }
 
@@ -43,5 +49,15 @@ public class AccountService {
         }
         account.setCardsNumber(cardsNumber);
         accountRepository.save(account);
+    }
+
+    public List<RememberingLevel> getRememberingLevels() throws NotAuthorisedUserException {
+        return userService.getAuthorizedUser().getAccount().getRememberingLevels();
+    }
+
+    public void updateRememberingLevel(Long levelId, Integer numberOfPostponedDays) {
+        RememberingLevel rememberingLevel = rememberingLevelRepository.findOne(levelId);
+        rememberingLevel.setNumberOfPostponedDays(numberOfPostponedDays);
+        rememberingLevelRepository.save(rememberingLevel);
     }
 }

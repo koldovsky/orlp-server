@@ -81,7 +81,7 @@ public class UserCardQueueControllerTest {
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-        .andExpect(content().json("0"));
+                .andExpect(content().json("0"));
 
         verify(userCardQueueService).countCardsThatNeedRepeating(DECK_ID);
     }

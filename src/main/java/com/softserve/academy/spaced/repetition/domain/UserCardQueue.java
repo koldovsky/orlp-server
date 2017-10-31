@@ -36,7 +36,7 @@ public class UserCardQueue implements EntityInterface {
     @Column(name = "date_to_repeat")
     private Date dateToRepeat;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "remembering_level_id")
     private RememberingLevel rememberingLevel;
 
