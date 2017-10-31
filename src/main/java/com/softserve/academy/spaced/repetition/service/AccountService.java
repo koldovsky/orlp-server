@@ -37,7 +37,7 @@ public class AccountService {
     }
 
     public void updateCardsNumber(Integer cardsNumber) throws NotAuthorisedUserException {
-        Account account = accountRepository.findOne(userService.getAuthorizedUser().getAccount().getId());
+        Account account = userService.getAuthorizedUser().getAccount()git co;
         if (cardsNumber < 1) {
             throw new IllegalArgumentException("Number of cards should be greater than 0.");
         }
