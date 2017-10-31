@@ -44,7 +44,7 @@ public class UserProfileController {
     @Auditable(action = AuditingAction.UPLOAD_IMAGE_PROFILE)
     @PostMapping("/api/private/user/image")
     public ResponseEntity uploadImageProfile(@RequestParam("file")MultipartFile file) throws ImageRepositorySizeQuotaExceededException,
-            NotAuthorisedUserException, FileIsNotAnImageException{
+            NotAuthorisedUserException{
         User user=userService.uploadImage(file);
         return new ResponseEntity( HttpStatus.OK);
     }

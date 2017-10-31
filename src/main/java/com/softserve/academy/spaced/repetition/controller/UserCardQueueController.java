@@ -8,7 +8,6 @@ import com.softserve.academy.spaced.repetition.exceptions.NotAuthorisedUserExcep
 import com.softserve.academy.spaced.repetition.service.UserCardQueueService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Link;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -33,23 +32,28 @@ public class UserCardQueueController {
         for (UserCardQueueStatus userCardQueueStatus : UserCardQueueStatus.values()) {
             if (userCardQueueStatus.status.equals(status)) {
                 userCardQueueService.updateUserCardQueue(deckId, cardId, userCardQueueStatus);
-                return new ResponseEntity(HttpStatus.OK);
+                return ResponseEntity.ok().build();
             }
         }
-        return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        return ResponseEntity.badRequest().build();
     }
 
     @GetMapping("/api/private/decks/{deckId}/cards-that-need-repeating/count")
     public ResponseEntity<Long> countCardsThatNeedRepeating(@PathVariable Long deckId) throws
             NotAuthorisedUserException {
-        return new ResponseEntity<>(userCardQueueService.countCardsThatNeedRepeating(deckId), HttpStatus.OK);
+        return ResponseEntity.ok(userCardQueueService.countCardsThatNeedRepeating(deckId));
     }
 
-    @GetMapping("api/user/card/queue/{user_card_queue_id}")
-    public ResponseEntity<UserCardQueuePublicDTO> getUserCardQueueById(@PathVariable long user_card_queue_id) {
-        UserCardQueue userCardQueue = userCardQueueService.getUserCardQueueById(user_card_queue_id);
-        Link selfLink = linkTo(methodOn(UserCardQueueController.class).getUserCardQueueById(user_card_queue_id)).withSelfRel();
+    @GetMapping("api/user/card/queue/{userCardQueueId}")
+    public ResponseEntity<UserCardQueuePublicDTO> getUserCardQueueById(@PathVariable Long userCardQueueId) {
+        UserCardQueue userCardQueue = userCardQueueService.getUserCardQueueById(userCardQueueId);
+        Link selfLink = linkTo(methodOn(UserCardQueueController.class).getUserCardQueueById(userCardQueueId)).withSelfRel();
         UserCardQueuePublicDTO userCardQueuePublicDTO = DTOBuilder.buildDtoForEntity(userCardQueue, UserCardQueuePublicDTO.class, selfLink);
-        return new ResponseEntity<>(userCardQueuePublicDTO, HttpStatus.OK);
+        return ResponseEntity.ok(userCardQueuePublicDTO);
+    }
+
+    @GetMapping("api/private/decks/{deckId}/not-postponed")
+    public ResponseEntity<Boolean> areThereNotPostponedCardsAvailable(Long deckId) throws NotAuthorisedUserException {
+        return ResponseEntity.ok(userCardQueueService.areThereNotPostponedCardsAvailable(deckId));
     }
 }

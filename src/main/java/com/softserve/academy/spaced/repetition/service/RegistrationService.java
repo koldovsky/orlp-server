@@ -2,7 +2,6 @@ package com.softserve.academy.spaced.repetition.service;
 
 
 import com.softserve.academy.spaced.repetition.domain.*;
-import com.softserve.academy.spaced.repetition.exceptions.EmailUniquesException;
 import com.softserve.academy.spaced.repetition.repository.AuthorityRepository;
 import com.softserve.academy.spaced.repetition.service.validators.AbstractValidator;
 import com.softserve.academy.spaced.repetition.service.validators.BlankFieldValidator;
@@ -15,8 +14,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.Calendar;
 import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
+
+import static com.softserve.academy.spaced.repetition.domain.Account.CARDS_NUMBER;
 
 @Service
 public class RegistrationService {
@@ -36,7 +35,7 @@ public class RegistrationService {
     @Autowired
     private NullFieldsValidator nullFieldsValidator;
 
-    public User registerNewUser(User user) throws EmailUniquesException {
+    public User registerNewUser(User user) {
         AbstractValidator validator = getChainOfValidators();
         validator.doValidate(user);
         return createNewUser(user);
@@ -56,6 +55,7 @@ public class RegistrationService {
         Authority authority = authorityRepository.findAuthorityByName(AuthorityName.ROLE_USER);
         user.getAccount().setAuthorities(Collections.singleton(authority));
         user.getAccount().setLearningRegime(LearningRegime.CARDS_POSTPONING_USING_SPACED_REPETITION);
+        user.getAccount().setCardsNumber(CARDS_NUMBER);
         user.getAccount().setEmail(user.getAccount().getEmail().toLowerCase());
         user.getAccount().setPassword(passwordEncoder.encode(user.getAccount().getPassword()));
         user.getPerson().setTypeImage(ImageType.NONE);
@@ -67,5 +67,3 @@ public class RegistrationService {
         mailService.sendConfirmationMail(user);
     }
 }
-
-

@@ -19,6 +19,8 @@ import java.security.GeneralSecurityException;
 import java.util.Collections;
 import java.util.Date;
 
+import static com.softserve.academy.spaced.repetition.domain.Account.CARDS_NUMBER;
+
 @Component
 public class GoogleAuthUtil {
 
@@ -88,6 +90,7 @@ public class GoogleAuthUtil {
         person.setImage((String) payload.get(IMAGE));
         person.setTypeImage(ImageType.LINK);
         account.setLearningRegime(LearningRegime.CARDS_POSTPONING_USING_SPACED_REPETITION);
+        account.setCardsNumber(CARDS_NUMBER);
         user.setAccount(account);
         user.setFolder(folder);
         user.setPerson(person);

@@ -1,7 +1,6 @@
 package com.softserve.academy.spaced.repetition.security;
 
 import com.softserve.academy.spaced.repetition.domain.User;
-import com.softserve.academy.spaced.repetition.exceptions.ExpiredTokenForVerificationException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -11,6 +10,7 @@ import org.springframework.stereotype.Service;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.NoSuchElementException;
 
 @Service
 public class JwtTokenForMail extends JwtTokenUtil {
@@ -42,12 +42,12 @@ public class JwtTokenForMail extends JwtTokenUtil {
         return new Date(System.currentTimeMillis() + expiration);
     }
 
-    public String decryptToken(String token) throws ExpiredTokenForVerificationException {
+    public String decryptToken(String token) {
         final String email = getEmailFromToken(token);
         if (!isTokenExpired(token)) {
             return email;
         }
-        throw new ExpiredTokenForVerificationException();
+        throw new NoSuchElementException("No token found");
     }
 
     private Boolean isTokenExpired(String token) {

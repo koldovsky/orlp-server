@@ -58,4 +58,10 @@ public interface CardRepository extends JpaRepository<Card, Long> {
                                          @Param("email") String email, @Param("limit") int limit);
 
     List<Card> getAllByDeck_Id(Long deckId);
+
+    @Query(value = "SELECT c.* FROM card c INNER JOIN user_card_queue u on c.card_id = u.card_id WHERE c.deck_id = " +
+            ":deckId AND u.account_email = :email AND date_to_repeat > :dateToRepeat limit :limit",
+            nativeQuery = true)
+    List<Card> getPostponedCards(@Param("deckId") Long deckId, @Param("dateToRepeat") Date dateToRepeat,
+                                 @Param("email") String email, @Param("limit") int limit);
 }
