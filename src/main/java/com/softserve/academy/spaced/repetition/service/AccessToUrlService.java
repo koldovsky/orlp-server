@@ -93,15 +93,15 @@ public class AccessToUrlService {
     }
 
     public boolean hasAccessToUpdateCommentForDeck(Long commentId) throws NotAuthorisedUserException {
-        Person authorizedPerson = userService.getAuthorizedUser().getPerson();
-        Person createdCommentPerson = deckCommentRepository.findOne(commentId).getPerson();
-        return authorizedPerson.equals(createdCommentPerson);
+        Long authorizedPersonId = userService.getAuthorizedUser().getPerson().getId();
+        Long createdCommentPersonId = deckCommentRepository.findOne(commentId).getPerson().getId();
+        return authorizedPersonId.equals(createdCommentPersonId);
     }
 
     public boolean hasAccessToUpdateCommentForCourse(Long commentId) throws NotAuthorisedUserException {
-        Person authorizedPerson = userService.getAuthorizedUser().getPerson();
-        Person createdCommentPerson = courseCommentRepository.findOne(commentId).getPerson();
-        return authorizedPerson.equals(createdCommentPerson);
+        Long authorizedPersonId = userService.getAuthorizedUser().getPerson().getId();
+        Long createdCommentPersonId = courseCommentRepository.findOne(commentId).getPerson().getId();
+        return authorizedPersonId.equals(createdCommentPersonId);
     }
 
 

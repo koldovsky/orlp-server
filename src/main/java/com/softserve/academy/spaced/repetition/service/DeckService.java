@@ -2,7 +2,6 @@ package com.softserve.academy.spaced.repetition.service;
 
 import com.softserve.academy.spaced.repetition.domain.*;
 
-import com.softserve.academy.spaced.repetition.exceptions.NoSuchDeckException;
 import com.softserve.academy.spaced.repetition.exceptions.NotAuthorisedUserException;
 import com.softserve.academy.spaced.repetition.exceptions.NotOwnerOperationException;
 import com.softserve.academy.spaced.repetition.repository.*;
@@ -14,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 public class DeckService {
@@ -120,11 +120,11 @@ public class DeckService {
 
     @Transactional
     public void deleteOwnDeck(Long deckId)
-            throws NotAuthorisedUserException, NoSuchDeckException, NotOwnerOperationException {
+            throws NotAuthorisedUserException, NotOwnerOperationException {
         User user = userService.getAuthorizedUser();
         Deck deck = deckRepository.findOne(deckId);
         if (deck == null) {
-            throw new NoSuchDeckException();
+            throw new NoSuchElementException("Such deck not found");
         }
         if (deck.getDeckOwner().getId().equals(user.getId())) {
             deckRepository.delete(deck);
@@ -135,11 +135,11 @@ public class DeckService {
 
     @Transactional
     public Deck updateOwnDeck(Deck updatedDeck, Long deckId, Long categoryId)
-            throws NotAuthorisedUserException, NoSuchDeckException, NotOwnerOperationException {
+            throws NotAuthorisedUserException, NotOwnerOperationException {
         User user = userService.getAuthorizedUser();
         Deck deck = deckRepository.findOne(deckId);
         if (deck == null) {
-            throw new NoSuchDeckException();
+            throw new NoSuchElementException("Such deck not found");
         }
         if (deck.getDeckOwner().getId().equals(user.getId())) {
             deck.setName(updatedDeck.getName());
@@ -156,11 +156,11 @@ public class DeckService {
         return deckRepository.findAllByDeckOwner_IdEquals(user.getId());
     }
 
-    public Deck getDeckUser(Long deckId) throws NotAuthorisedUserException, NoSuchDeckException, NotOwnerOperationException {
+    public Deck getDeckUser(Long deckId) throws NotAuthorisedUserException, NotOwnerOperationException {
         User user = userService.getAuthorizedUser();
         Deck deck = deckRepository.findOne(deckId);
         if (deck == null) {
-            throw new NoSuchDeckException();
+            throw new NoSuchElementException("Such deck not found");
         }
         if (deck.getDeckOwner().getId().equals(user.getId())) {
             return deck;

@@ -28,7 +28,7 @@ public class RegistrationController {
 
     @Auditable(action = AuditingAction.SIGN_UP)
     @RequestMapping(value = "/registration", method = RequestMethod.POST)
-    public ResponseEntity <Person> addUser(@RequestBody User userFromClient) throws MailException, EmailUniquesException {
+    public ResponseEntity <Person> addUser(@RequestBody User userFromClient) throws MailException {
         User user = registrationService.registerNewUser(userFromClient);
         registrationService.sendConfirmationEmailMessage(user);
         return new ResponseEntity <>(user.getPerson(), HttpStatus.CREATED);
@@ -36,7 +36,7 @@ public class RegistrationController {
 
     @RequestMapping(value = "/registrationConfirm", method = RequestMethod.POST)
     public ResponseEntity confirmRegistration
-            (@RequestBody String token) throws EmailDoesntExistException, ExpiredTokenForVerificationException {
+            (@RequestBody String token) {
         verificationService.accountVerification(token);
         return new ResponseEntity(HttpStatus.OK);
     }

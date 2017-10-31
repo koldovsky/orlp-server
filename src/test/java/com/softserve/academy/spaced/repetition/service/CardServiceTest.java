@@ -2,7 +2,6 @@ package com.softserve.academy.spaced.repetition.service;
 
 import com.softserve.academy.spaced.repetition.config.TestDatabaseConfig;
 import com.softserve.academy.spaced.repetition.domain.Card;
-import com.softserve.academy.spaced.repetition.exceptions.CardContainsEmptyFieldsException;
 import com.softserve.academy.spaced.repetition.repository.CardRepository;
 import com.softserve.academy.spaced.repetition.repository.DeckRepository;
 import org.junit.Before;
@@ -27,7 +26,7 @@ import static org.junit.Assert.assertEquals;
 @Transactional
 public class CardServiceTest {
 
-    private static final long CARD_ID = 1l;
+    private static final long CARD_ID = 1L;
     private final String CARD_ANSWER = "Answer";
     private final String CARD_QUESTION = "Question";
     private final String CARD_TITLE = "Title";
@@ -74,7 +73,7 @@ public class CardServiceTest {
 
 
     @Test
-    public void testCardUpdate() throws CardContainsEmptyFieldsException {
+    public void testCardUpdate() {
         cardServiceUnderTest.updateCard(1L, newCard);
         assertEquals("Update Card", newCard, getCardForTest(1L));
     }

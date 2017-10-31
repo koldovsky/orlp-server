@@ -4,7 +4,6 @@ import com.softserve.academy.spaced.repetition.domain.Card;
 import com.softserve.academy.spaced.repetition.domain.Deck;
 import com.softserve.academy.spaced.repetition.domain.LearningRegime;
 import com.softserve.academy.spaced.repetition.domain.User;
-import com.softserve.academy.spaced.repetition.exceptions.CardContainsEmptyFieldsException;
 import com.softserve.academy.spaced.repetition.exceptions.NotAuthorisedUserException;
 import com.softserve.academy.spaced.repetition.repository.CardRepository;
 import com.softserve.academy.spaced.repetition.repository.DeckRepository;
@@ -64,18 +63,18 @@ public class CardService {
         return cardRepository.findOne(id);
     }
 
-    public void addCard(Card card, Long deckId) throws CardContainsEmptyFieldsException {
+    public void addCard(Card card, Long deckId) {
         if (card.getTitle().trim().isEmpty() || card.getAnswer().trim().isEmpty() || card.getQuestion().trim().isEmpty()) {
-            throw new CardContainsEmptyFieldsException();
+            throw new IllegalArgumentException("All of card fields must be filled");
         }
         Deck deck = deckRepository.findOne(deckId);
         card.setDeck(deck);
         deck.getCards().add(cardRepository.save(card));
     }
 
-    public void updateCard(Long id, Card card) throws CardContainsEmptyFieldsException {
+    public void updateCard(Long id, Card card) {
         if (card.getTitle().trim().isEmpty() || card.getAnswer().trim().isEmpty() || card.getQuestion().trim().isEmpty()) {
-            throw new CardContainsEmptyFieldsException();
+            throw new IllegalArgumentException("All of card fields must be filled");
         }
         card.setId(id);
         card.setDeck(cardRepository.findOne(id).getDeck());
