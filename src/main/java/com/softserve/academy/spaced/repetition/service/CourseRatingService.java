@@ -1,6 +1,5 @@
 package com.softserve.academy.spaced.repetition.service;
 
-import com.softserve.academy.spaced.repetition.checkUserStatus.CheckUserStatus;
 import com.softserve.academy.spaced.repetition.domain.Course;
 import com.softserve.academy.spaced.repetition.domain.CourseRating;
 import com.softserve.academy.spaced.repetition.domain.User;
@@ -25,9 +24,9 @@ public class CourseRatingService {
     private UserService userService;
 
     @Transactional
-    @CheckUserStatus
-    public void addCourseRating(int rating, Long courseId) throws NotAuthorisedUserException {
+    public void addCourseRating(int rating, Long courseId) throws NotAuthorisedUserException, UserStatusException {
         User user = userService.getAuthorizedUser();
+        userService.isUserStatusActive(user);
         String email = user.getAccount().getEmail();
         CourseRating courseRating = courseRatingRepository.findAllByAccountEmailAndCourse_Id(email, courseId);
         if (courseRating == null) {

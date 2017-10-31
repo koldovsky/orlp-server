@@ -238,4 +238,10 @@ public class UserService {
             throw new UserStatusException(user.getAccount().getStatus());
         }
     }
+
+    public void isUserStatusActive(User user) throws UserStatusException {
+        if (user.getAccount().getStatus().isNotActive()) {
+            throw new UserStatusException(user.getAccount().getStatus());
+        }
+    }
 }

@@ -1,6 +1,5 @@
 package com.softserve.academy.spaced.repetition.service;
 
-import com.softserve.academy.spaced.repetition.checkUserStatus.CheckUserStatus;
 import com.softserve.academy.spaced.repetition.exceptions.UserStatusException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -24,9 +23,9 @@ public class DeckRatingService {
     private UserService userService;
 
     @Transactional
-    @CheckUserStatus
-    public void addDeckRating(int rating, Long deckId) throws NotAuthorisedUserException {
+    public void addDeckRating(int rating, Long deckId) throws NotAuthorisedUserException, UserStatusException {
         User user = userService.getAuthorizedUser();
+        userService.isUserStatusActive(user);
         String email = user.getAccount().getEmail();
         DeckRating deckRating = deckRatingRepository.findAllByAccountEmailAndDeck_Id(email, deckId);
         if (deckRating == null) {
