@@ -21,6 +21,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.softserve.academy.spaced.repetition.domain.Account.CARDS_NUMBER;
+
 @Component
 public class FacebookAuthUtil {
 
@@ -99,6 +101,7 @@ public class FacebookAuthUtil {
         person.setLastName((String) fbProfileData.get("last_name"));
         person.setTypeImage(ImageType.LINK);
         account.setLearningRegime(LearningRegime.CARDS_POSTPONING_USING_SPACED_REPETITION);
+        account.setCardsNumber(CARDS_NUMBER);
         person.setImage((String) fbProfileData.get("picture"));
         user.setAccount(account);
         user.setFolder(folder);

@@ -14,8 +14,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.Calendar;
 import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
+
+import static com.softserve.academy.spaced.repetition.domain.Account.CARDS_NUMBER;
 
 @Service
 public class RegistrationService {
@@ -55,6 +55,7 @@ public class RegistrationService {
         Authority authority = authorityRepository.findAuthorityByName(AuthorityName.ROLE_USER);
         user.getAccount().setAuthorities(Collections.singleton(authority));
         user.getAccount().setLearningRegime(LearningRegime.CARDS_POSTPONING_USING_SPACED_REPETITION);
+        user.getAccount().setCardsNumber(CARDS_NUMBER);
         user.getAccount().setEmail(user.getAccount().getEmail().toLowerCase());
         user.getAccount().setPassword(passwordEncoder.encode(user.getAccount().getPassword()));
         user.getPerson().setTypeImage(ImageType.NONE);
@@ -66,5 +67,3 @@ public class RegistrationService {
         mailService.sendConfirmationMail(user);
     }
 }
-
-

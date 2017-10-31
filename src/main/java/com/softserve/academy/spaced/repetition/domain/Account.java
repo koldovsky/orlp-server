@@ -10,6 +10,7 @@ import java.util.Set;
 @Entity
 @Table(name = "account")
 public class Account implements EntityInterface {
+    public static final int CARDS_NUMBER = 10;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -48,6 +49,10 @@ public class Account implements EntityInterface {
             columnDefinition = "varchar(45) default 'CARDS_POSTPONING_USING_SPACED_REPETITION'")
     @Enumerated(value = EnumType.STRING)
     private LearningRegime learningRegime;
+
+    @Column(name = "cards_number", columnDefinition = "int default 10")
+    @NotNull
+    private Integer cardsNumber;
 
     public Account() {
     }
@@ -138,5 +143,13 @@ public class Account implements EntityInterface {
 
     public void setLearningRegime(LearningRegime learningRegime) {
         this.learningRegime = learningRegime;
+    }
+
+    public Integer getCardsNumber() {
+        return cardsNumber;
+    }
+
+    public void setCardsNumber(Integer cardsNumber) {
+        this.cardsNumber = cardsNumber;
     }
 }

@@ -31,4 +31,17 @@ public class AccountService {
         account.setLearningRegime(learningRegime);
         accountRepository.save(account);
     }
+
+    public int getCardsNumber() throws NotAuthorisedUserException {
+        return userService.getAuthorizedUser().getAccount().getCardsNumber();
+    }
+
+    public void updateCardsNumber(Integer cardsNumber) throws NotAuthorisedUserException {
+        Account account = userService.getAuthorizedUser().getAccount();
+        if (cardsNumber < 1) {
+            throw new IllegalArgumentException("Number of cards should be greater than 0.");
+        }
+        account.setCardsNumber(cardsNumber);
+        accountRepository.save(account);
+    }
 }

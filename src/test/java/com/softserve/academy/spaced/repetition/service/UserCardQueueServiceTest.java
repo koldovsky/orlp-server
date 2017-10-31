@@ -34,6 +34,7 @@ public class UserCardQueueServiceTest {
     private static final Long CARD_ID = 1L;
     private static final Long DECK_ID = 1L;
     private static final String ACCOUNT_EMAIL = "bohdan.dub@gmail.com";
+
     private UserCardQueueService userCardQueueService;
 
     @Autowired
