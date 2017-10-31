@@ -35,7 +35,7 @@ public class CourseRatingController {
     }
 
     @PostMapping("/api/private/course/{courseId}")
-    public ResponseEntity addCourseRating(@RequestBody RatingDTO ratingDTO, @PathVariable Long courseId) throws RatingsBadValueException, NotAuthorisedUserException, UserStatusException {
+    public ResponseEntity addCourseRating(@RequestBody RatingDTO ratingDTO, @PathVariable Long courseId) throws RatingsBadValueException, NotAuthorisedUserException {
         if ((ratingDTO.getRating() >= MIN_RATING) && (ratingDTO.getRating() <= MAX_RATING)) {
             courseRatingService.addCourseRating(ratingDTO.getRating(), courseId);
            return new ResponseEntity(HttpStatus.CREATED);

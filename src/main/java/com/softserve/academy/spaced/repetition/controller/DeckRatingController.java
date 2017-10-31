@@ -35,7 +35,7 @@ public class DeckRatingController {
     }
 
     @PostMapping("/api/private/deck/{deckId}")
-    public ResponseEntity addDeckRating(@RequestBody RatingDTO ratingDTO, @PathVariable Long deckId) throws RatingsBadValueException, NotAuthorisedUserException, UserStatusException {
+    public ResponseEntity addDeckRating(@RequestBody RatingDTO ratingDTO, @PathVariable Long deckId) throws RatingsBadValueException, NotAuthorisedUserException {
         if ((ratingDTO.getRating() >= MIN_RATING) && (ratingDTO.getRating() <= MAX_RATING)) {
             deckRatingService.addDeckRating(ratingDTO.getRating(), deckId);
             return new ResponseEntity(HttpStatus.CREATED);

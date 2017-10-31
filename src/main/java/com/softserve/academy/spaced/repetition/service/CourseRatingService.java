@@ -1,5 +1,6 @@
 package com.softserve.academy.spaced.repetition.service;
 
+import com.softserve.academy.spaced.repetition.checkUserStatus.CheckUserStatus;
 import com.softserve.academy.spaced.repetition.domain.Course;
 import com.softserve.academy.spaced.repetition.domain.CourseRating;
 import com.softserve.academy.spaced.repetition.domain.User;
@@ -9,6 +10,7 @@ import com.softserve.academy.spaced.repetition.repository.CourseRatingRepository
 import com.softserve.academy.spaced.repetition.repository.CourseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class CourseRatingService {
@@ -22,11 +24,10 @@ public class CourseRatingService {
     @Autowired
     private UserService userService;
 
-    public void addCourseRating(int rating, Long courseId) throws NotAuthorisedUserException, UserStatusException {
+    @Transactional
+    @CheckUserStatus
+    public void addCourseRating(int rating, Long courseId) throws NotAuthorisedUserException {
         User user = userService.getAuthorizedUser();
-        if(user.getAccount().getStatus().isNotActive()){
-            throw new UserStatusException(user.getAccount().getStatus());
-        }
         String email = user.getAccount().getEmail();
         CourseRating courseRating = courseRatingRepository.findAllByAccountEmailAndCourse_Id(email, courseId);
         if (courseRating == null) {
