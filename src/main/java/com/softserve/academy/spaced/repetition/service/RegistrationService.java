@@ -21,33 +21,14 @@ import static com.softserve.academy.spaced.repetition.domain.Account.CARDS_NUMBE
 @Service
 public class RegistrationService {
 
-    private final AuthorityRepository authorityRepository;
-    private final UserService userService;
-    private final PasswordEncoder passwordEncoder;
-    private final MailService mailService;
-    private final EmailUniquesValidator emailUniquesValidator;
-    private final BlankFieldValidator blankFieldValidator;
-    private final NullFieldsValidator nullFieldsValidator;
-    private final RememberingLevelRepository rememberingLevelRepository;
-
-    @Autowired
-    public RegistrationService(AuthorityRepository authorityRepository,
-                               UserService userService,
-                               PasswordEncoder passwordEncoder,
-                               MailService mailService,
-                               EmailUniquesValidator emailUniquesValidator,
-                               BlankFieldValidator blankFieldValidator,
-                               NullFieldsValidator nullFieldsValidator,
-                               RememberingLevelRepository rememberingLevelRepository) {
-        this.authorityRepository = authorityRepository;
-        this.userService = userService;
-        this.passwordEncoder = passwordEncoder;
-        this.mailService = mailService;
-        this.emailUniquesValidator = emailUniquesValidator;
-        this.blankFieldValidator = blankFieldValidator;
-        this.nullFieldsValidator = nullFieldsValidator;
-        this.rememberingLevelRepository = rememberingLevelRepository;
-    }
+    private AuthorityRepository authorityRepository;
+    private UserService userService;
+    private PasswordEncoder passwordEncoder;
+    private MailService mailService;
+    private EmailUniquesValidator emailUniquesValidator;
+    private BlankFieldValidator blankFieldValidator;
+    private NullFieldsValidator nullFieldsValidator;
+    private RememberingLevelRepository rememberingLevelRepository;
 
     public User registerNewUser(User user) {
         AbstractValidator validator = getChainOfValidators();
@@ -85,5 +66,45 @@ public class RegistrationService {
 
     public void sendConfirmationEmailMessage(User user) throws MailException {
         mailService.sendConfirmationMail(user);
+    }
+
+    @Autowired
+    public void setAuthorityRepository(AuthorityRepository authorityRepository) {
+        this.authorityRepository = authorityRepository;
+    }
+
+    @Autowired
+    public void setUserService(UserService userService) {
+        this.userService = userService;
+    }
+
+    @Autowired
+    public void setPasswordEncoder(PasswordEncoder passwordEncoder) {
+        this.passwordEncoder = passwordEncoder;
+    }
+
+    @Autowired
+    public void setMailService(MailService mailService) {
+        this.mailService = mailService;
+    }
+
+    @Autowired
+    public void setEmailUniquesValidator(EmailUniquesValidator emailUniquesValidator) {
+        this.emailUniquesValidator = emailUniquesValidator;
+    }
+
+    @Autowired
+    public void setBlankFieldValidator(BlankFieldValidator blankFieldValidator) {
+        this.blankFieldValidator = blankFieldValidator;
+    }
+
+    @Autowired
+    public void setNullFieldsValidator(NullFieldsValidator nullFieldsValidator) {
+        this.nullFieldsValidator = nullFieldsValidator;
+    }
+
+    @Autowired
+    public void setRememberingLevelRepository(RememberingLevelRepository rememberingLevelRepository) {
+        this.rememberingLevelRepository = rememberingLevelRepository;
     }
 }
