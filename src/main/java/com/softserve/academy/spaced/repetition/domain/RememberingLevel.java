@@ -13,7 +13,7 @@ public class RememberingLevel implements EntityInterface {
     private Long id;
 
     @NotNull
-    @Column(name = "orderNumber")
+    @Column(name = "order_number")
     private Integer orderNumber;
 
     private String name;
