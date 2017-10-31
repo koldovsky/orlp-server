@@ -6,6 +6,7 @@ import com.softserve.academy.spaced.repetition.DTO.impl.CourseRatingPublicDTO;
 import com.softserve.academy.spaced.repetition.domain.CourseRating;
 import com.softserve.academy.spaced.repetition.exceptions.NotAuthorisedUserException;
 import com.softserve.academy.spaced.repetition.exceptions.RatingsBadValueException;
+import com.softserve.academy.spaced.repetition.exceptions.UserStatusException;
 import com.softserve.academy.spaced.repetition.service.CourseRatingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Link;
@@ -34,7 +35,7 @@ public class CourseRatingController {
     }
 
     @PostMapping("/api/private/course/{courseId}")
-    public ResponseEntity addCourseRating(@RequestBody RatingDTO ratingDTO, @PathVariable Long courseId) throws RatingsBadValueException, NotAuthorisedUserException {
+    public ResponseEntity addCourseRating(@RequestBody RatingDTO ratingDTO, @PathVariable Long courseId) throws RatingsBadValueException, NotAuthorisedUserException, UserStatusException {
         if ((ratingDTO.getRating() >= MIN_RATING) && (ratingDTO.getRating() <= MAX_RATING)) {
             courseRatingService.addCourseRating(ratingDTO.getRating(), courseId);
            return new ResponseEntity(HttpStatus.CREATED);
