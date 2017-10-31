@@ -16,7 +16,7 @@ public interface CardRepository extends JpaRepository<Card, Long> {
     List<Card> hasAccessToCard(@Param("card_id") Long cardId);
 
     @Query(value = "SELECT c FROM Deck d INNER JOIN d.cards AS c WHERE d.id = :deck_id and c.id = :card_id")
-    List<Card> hasAccessToCard(@Param("deck_id") Long deck_id, @Param("card_id") Long card_id);
+    List<Card> hasAccessToCard(@Param("deck_id") Long deckId, @Param("card_id") Long cardId);
 
     @Query(value =
             "select c.card_id, c.title, c.question, c.answer, c.rating " +
@@ -27,7 +27,7 @@ public interface CardRepository extends JpaRepository<Card, Long> {
             "on c.card_id=u.card_id " +
             "where u.account_email = :accountEmail) limit :limitNumber", nativeQuery = true)
     List<Card> cardsForLearningWithOutStatus(@Param("accountEmail") String accountEmail, @Param("deckId") long deckId,
-                                             @Param("limitNumber") long limitNumber);
+                                             @Param("limitNumber") int limitNumber);
 
     @Query(value =
             "select c.card_id, c.title, c.question, c.answer, c.rating " +
@@ -39,7 +39,7 @@ public interface CardRepository extends JpaRepository<Card, Long> {
             "when 'GOOD' then 3 " +
             "end, u.card_data limit :limitNumber", nativeQuery = true)
     List<Card> cardsQueueForLearningWithStatus(@Param("accountEmail") String accountEmail, @Param("deckId") long deckId,
-                                               @Param("limitNumber") long limitNumber);
+                                               @Param("limitNumber") int limitNumber);
 
     List <Card> findAllByQuestion(String question);
 
@@ -57,7 +57,7 @@ public interface CardRepository extends JpaRepository<Card, Long> {
     List<Card> getCardsThatNeedRepeating(@Param("deckId") Long deckId, @Param("dateToRepeat") Date dateToRepeat,
                                          @Param("email") String email, @Param("limit") int limit);
 
-    List<Card> getAllByDeck_Id(Long deckId);
+    List<Card> findAllByDeckId(Long deckId);
 
     @Query(value = "SELECT c.* FROM card c INNER JOIN user_card_queue u on c.card_id = u.card_id WHERE c.deck_id = " +
             ":deckId AND u.account_email = :email AND date_to_repeat > :dateToRepeat limit :limit",
