@@ -12,16 +12,16 @@ import org.slf4j.Logger;
 @Component
 public class LogException {
 
-    private static final Logger logger = LoggerFactory.getLogger(Application.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(LogException.class);
 
     @AfterThrowing(value = "execution(* com.softserve.academy.spaced.repetition.controller.*.*(..))", throwing = "ex")
     public void loggingExceptionsFromControllers(JoinPoint joinPoint, Exception ex) {
-        logger.trace("Exception in controller = " + joinPoint.getThis() + ", method = " + joinPoint.getSignature());
+        LOGGER.trace("Exception in controller = " + joinPoint.getThis() + ", method = " + joinPoint.getSignature());
     }
 
     @AfterThrowing(value = "execution(* com.softserve.academy.spaced.repetition.service.*.*(..))", throwing = "ex")
     public void loggingExceptionsFromServices(JoinPoint joinPoint, Exception ex) {
-        logger.trace("Exception in service = " + joinPoint.getThis() + ", method = " + joinPoint.getSignature());
+        LOGGER.trace("Exception in service = " + joinPoint.getThis() + ", method = " + joinPoint.getSignature());
     }
 
 }

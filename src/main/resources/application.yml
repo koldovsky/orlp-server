@@ -43,5 +43,5 @@ app:
 logging:
   file: orlp.log
   level:
-    com.softserve.academy.spaced.repetition: ERROR
+    com.softserve.academy.spaced.repetition: INFO
     org.springframework: ERROR
