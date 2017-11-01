@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.when;
 
+import com.softserve.academy.spaced.repetition.exceptions.UserStatusException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -57,7 +58,7 @@ public class DeckRatingServiceTest {
     }
 
     @Test
-    public void testAverageDeckRating() throws NotAuthorisedUserException {
+    public void testAverageDeckRating() throws NotAuthorisedUserException, UserStatusException {
 
         User mockedUser1 = new User(new Account("email1@email.com"), new Person("first1", "last1"), new Folder());
         when(mockedUserService.getAuthorizedUser()).thenReturn(mockedUser1);
