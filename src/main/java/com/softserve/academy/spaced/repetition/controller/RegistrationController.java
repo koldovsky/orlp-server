@@ -5,14 +5,11 @@ import com.softserve.academy.spaced.repetition.audit.Auditable;
 import com.softserve.academy.spaced.repetition.audit.AuditingAction;
 import com.softserve.academy.spaced.repetition.domain.Person;
 import com.softserve.academy.spaced.repetition.domain.User;
-import com.softserve.academy.spaced.repetition.exceptions.*;
-import com.softserve.academy.spaced.repetition.repository.UserRepository;
 import com.softserve.academy.spaced.repetition.service.AccountVerificationByEmailService;
 import com.softserve.academy.spaced.repetition.service.RegistrationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.mail.MailException;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -28,7 +25,7 @@ public class RegistrationController {
 
     @Auditable(action = AuditingAction.SIGN_UP)
     @RequestMapping(value = "/registration", method = RequestMethod.POST)
-    public ResponseEntity <Person> addUser(@RequestBody User userFromClient) throws MailException {
+    public ResponseEntity <Person> addUser(@RequestBody User userFromClient) {
         User user = registrationService.registerNewUser(userFromClient);
         registrationService.sendConfirmationEmailMessage(user);
         return new ResponseEntity <>(user.getPerson(), HttpStatus.CREATED);
