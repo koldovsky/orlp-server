@@ -1,6 +1,5 @@
 package com.softserve.academy.spaced.repetition.logger;
 
-import com.softserve.academy.spaced.repetition.Application;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterThrowing;
 import org.aspectj.lang.annotation.Aspect;
@@ -10,18 +9,18 @@ import org.slf4j.Logger;
 
 @Aspect
 @Component
-public class LogException {
+public class LogExceptionAspect {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(LogException.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(LogExceptionAspect.class);
 
     @AfterThrowing(value = "execution(* com.softserve.academy.spaced.repetition.controller.*.*(..))", throwing = "ex")
     public void loggingExceptionsFromControllers(JoinPoint joinPoint, Exception ex) {
-        LOGGER.trace("Exception in controller = " + joinPoint.getThis() + ", method = " + joinPoint.getSignature());
+        LOGGER.error("Exception in controller = {} method = {}", joinPoint.getThis(), joinPoint.getSignature(), ex);
     }
 
     @AfterThrowing(value = "execution(* com.softserve.academy.spaced.repetition.service.*.*(..))", throwing = "ex")
     public void loggingExceptionsFromServices(JoinPoint joinPoint, Exception ex) {
-        LOGGER.trace("Exception in service = " + joinPoint.getThis() + ", method = " + joinPoint.getSignature());
+        LOGGER.error("Exception in controller = {} method = {}", joinPoint.getThis(), joinPoint.getSignature(), ex);
     }
 
 }
