@@ -19,7 +19,7 @@ import java.util.NoSuchElementException;
 public class DeckService {
     private final static int QUANTITY_ADMIN_DECKS_IN_PAGE = 20;
     private final static int QUANTITY_DECKS_IN_PAGE = 12;
-    private final static String DECK_AXCEPTION_MESSAGE = "Such deck not found";
+    private final static String DECK_EXCEPTION_MESSAGE = "Such deck not found";
     @Autowired
     private DeckRepository deckRepository;
 
@@ -124,7 +124,7 @@ public class DeckService {
         User user = userService.getAuthorizedUser();
         Deck deck = deckRepository.findOne(deckId);
         if (deck == null) {
-            throw new NoSuchElementException(DECK_AXCEPTION_MESSAGE);
+            throw new NoSuchElementException(DECK_EXCEPTION_MESSAGE);
         }
         if (deck.getDeckOwner().getId().equals(user.getId())) {
             deckRepository.delete(deck);
@@ -139,7 +139,7 @@ public class DeckService {
         User user = userService.getAuthorizedUser();
         Deck deck = deckRepository.findOne(deckId);
         if (deck == null) {
-            throw new NoSuchElementException(DECK_AXCEPTION_MESSAGE);
+            throw new NoSuchElementException(DECK_EXCEPTION_MESSAGE);
         }
         if (deck.getDeckOwner().getId().equals(user.getId())) {
             deck.setName(updatedDeck.getName());
@@ -160,7 +160,7 @@ public class DeckService {
         User user = userService.getAuthorizedUser();
         Deck deck = deckRepository.findOne(deckId);
         if (deck == null) {
-            throw new NoSuchElementException(DECK_AXCEPTION_MESSAGE);
+            throw new NoSuchElementException(DECK_EXCEPTION_MESSAGE);
         }
         if (deck.getDeckOwner().getId().equals(user.getId())) {
             return deck;
