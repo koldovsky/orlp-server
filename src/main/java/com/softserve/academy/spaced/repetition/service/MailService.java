@@ -36,7 +36,7 @@ public class MailService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MailService.class);
 
-    public void sendConfirmationMail(User user) throws MailException {
+    public void sendConfirmationMail(User user) {
         MimeMessagePreparator preparator = mimeMessage -> {
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
             helper.setSubject("Confirmation registration");
@@ -52,7 +52,7 @@ public class MailService {
         mailSender.send(preparator);
     }
 
-    public void sendPasswordNotificationMail(User user) throws MailException {
+    public void sendPasswordNotificationMail(User user) {
         MimeMessagePreparator preparator = mimeMessage -> {
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
             helper.setSubject("Change password notification");

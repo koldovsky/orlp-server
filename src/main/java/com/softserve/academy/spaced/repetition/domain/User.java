@@ -95,8 +95,9 @@ public class User implements EntityInterface {
         if(this.id==user.id && this.getPerson().equals(user.getPerson())
                 && this.getAccount().equals(user.getAccount())) {
             return true;
+        } else {
+            return false;
         }
-        return false;
     }
 
     @Override

@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import org.springframework.mail.MailException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -198,7 +197,6 @@ public class UserService {
         User user = getAuthorizedUser();
         passwordFieldValidator.validate(passwordDTO);
         user.getAccount().setPassword(passwordEncoder.encode(passwordDTO.getNewPassword()));
-      //  user.getAccount().setLastPasswordResetDate(Calendar.getInstance().getTime());
         userRepository.save(user);
         mailService.sendPasswordNotificationMail(user);
     }

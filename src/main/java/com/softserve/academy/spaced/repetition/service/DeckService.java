@@ -19,6 +19,7 @@ import java.util.NoSuchElementException;
 public class DeckService {
     private final static int QUANTITY_ADMIN_DECKS_IN_PAGE = 20;
     private final static int QUANTITY_DECKS_IN_PAGE = 12;
+    private final static String DECK_EXCEPTION_MESSAGE = "Such deck not found";
     @Autowired
     private DeckRepository deckRepository;
 
@@ -69,7 +70,6 @@ public class DeckService {
 
     @Transactional
     public void addDeckToCourse(Deck deck, Long categoryId, Long courseId) {
-        Category category = categoryRepository.findOne(categoryId);
         Course course = courseRepository.findOne(courseId);
         course.getDecks().add(deckRepository.save(deck));
     }
@@ -98,9 +98,9 @@ public class DeckService {
     }
 
     @Transactional
-    public void createNewDeck(Deck newDeck, Long category_id) throws NotAuthorisedUserException {
+    public void createNewDeck(Deck newDeck, Long categoryId) throws NotAuthorisedUserException {
         User user = userService.getAuthorizedUser();
-        newDeck.setCategory(categoryRepository.findOne(category_id));
+        newDeck.setCategory(categoryRepository.findOne(categoryId));
         newDeck.setDeckOwner(user);
         deckRepository.save(newDeck);
     }
@@ -124,7 +124,7 @@ public class DeckService {
         User user = userService.getAuthorizedUser();
         Deck deck = deckRepository.findOne(deckId);
         if (deck == null) {
-            throw new NoSuchElementException("Such deck not found");
+            throw new NoSuchElementException(DECK_EXCEPTION_MESSAGE);
         }
         if (deck.getDeckOwner().getId().equals(user.getId())) {
             deckRepository.delete(deck);
@@ -139,7 +139,7 @@ public class DeckService {
         User user = userService.getAuthorizedUser();
         Deck deck = deckRepository.findOne(deckId);
         if (deck == null) {
-            throw new NoSuchElementException("Such deck not found");
+            throw new NoSuchElementException(DECK_EXCEPTION_MESSAGE);
         }
         if (deck.getDeckOwner().getId().equals(user.getId())) {
             deck.setName(updatedDeck.getName());
@@ -160,7 +160,7 @@ public class DeckService {
         User user = userService.getAuthorizedUser();
         Deck deck = deckRepository.findOne(deckId);
         if (deck == null) {
-            throw new NoSuchElementException("Such deck not found");
+            throw new NoSuchElementException(DECK_EXCEPTION_MESSAGE);
         }
         if (deck.getDeckOwner().getId().equals(user.getId())) {
             return deck;

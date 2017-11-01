@@ -52,32 +52,32 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(CanNotBeDeletedException.class)
     ResponseEntity <MessageDTO> handleCanNotBeDeletedException() {
-        return new ResponseEntity <MessageDTO>(new MessageDTO("Current image is already in use!"), HttpStatus.FORBIDDEN);
+        return new ResponseEntity <>(new MessageDTO("Current image is already in use!"), HttpStatus.FORBIDDEN);
     }
 
     @ExceptionHandler(NotOwnerOperationException.class)
     ResponseEntity <MessageDTO> handleNotOwnerOperationException() {
-        return new ResponseEntity <MessageDTO>(new MessageDTO("Operation is not allowed for current user!"), HttpStatus.FORBIDDEN);
+        return new ResponseEntity <>(new MessageDTO("Operation is not allowed for current user!"), HttpStatus.FORBIDDEN);
     }
 
     @ExceptionHandler(NotAuthorisedUserException.class)
     ResponseEntity <MessageDTO> handleNotAuthorisedUserException() {
-        return new ResponseEntity <MessageDTO>(new MessageDTO("Operation is unavailable for unauthorized users!"), HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity <>(new MessageDTO("Operation is unavailable for unauthorized users!"), HttpStatus.UNAUTHORIZED);
     }
 
     @ExceptionHandler(UnknownHostException.class)
     ResponseEntity <MessageDTO> handleUnknownHostException() {
-        return new ResponseEntity <MessageDTO>(new MessageDTO("The IP address of a host could not be determined"), HttpStatus.CONFLICT);
+        return new ResponseEntity <>(new MessageDTO("The IP address of a host could not be determined"), HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler(MailException.class)
     ResponseEntity <MessageDTO> handleMailException() {
-        return new ResponseEntity <MessageDTO>(new MessageDTO("Mail not sent"), HttpStatus.SERVICE_UNAVAILABLE);
+        return new ResponseEntity <>(new MessageDTO("Mail not sent"), HttpStatus.SERVICE_UNAVAILABLE);
     }
 
     @ExceptionHandler(WrongFormatException.class)
     ResponseEntity <MessageDTO> handleWrongFormatException() {
-        return new ResponseEntity <MessageDTO>(new MessageDTO("Not valid file format"), HttpStatus.NOT_ACCEPTABLE);
+        return new ResponseEntity <>(new MessageDTO("Not valid file format"), HttpStatus.NOT_ACCEPTABLE);
     }
 
     @ExceptionHandler(UserStatusException.class)
@@ -92,7 +92,7 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(NoSuchElementException.class)
     ResponseEntity <MessageDTO> handleNoSuchElementException(NoSuchElementException noSuchElementException) {
-        return new ResponseEntity <MessageDTO>(new MessageDTO(noSuchElementException.getMessage()), HttpStatus.NOT_FOUND);
+        return new ResponseEntity <>(new MessageDTO(noSuchElementException.getMessage()), HttpStatus.NOT_FOUND);
     }
 
 }
