@@ -51,16 +51,16 @@ public class RegistrationService {
         user.getAccount().setAuthorities(Collections.singleton(authority));
         user.getAccount().setLearningRegime(LearningRegime.CARDS_POSTPONING_USING_SPACED_REPETITION);
         user.getAccount().setCardsNumber(CARDS_NUMBER);
+        user.getAccount().setEmail(user.getAccount().getEmail().toLowerCase());
+        user.getAccount().setPassword(passwordEncoder.encode(user.getAccount().getPassword()));
+        user.getPerson().setTypeImage(ImageType.NONE);
+        userService.addUser(user);
         rememberingLevelRepository.save(new RememberingLevel(1, "Teapot", 1, user.getAccount()));
         rememberingLevelRepository.save(new RememberingLevel(2, "Monkey", 3, user.getAccount()));
         rememberingLevelRepository.save(new RememberingLevel(3, "Beginner", 7, user.getAccount()));
         rememberingLevelRepository.save(new RememberingLevel(4, "Student", 14, user.getAccount()));
         rememberingLevelRepository.save(new RememberingLevel(5, "Expert", 30, user.getAccount()));
         rememberingLevelRepository.save(new RememberingLevel(6, "Genius", 60, user.getAccount()));
-        user.getAccount().setEmail(user.getAccount().getEmail().toLowerCase());
-        user.getAccount().setPassword(passwordEncoder.encode(user.getAccount().getPassword()));
-        user.getPerson().setTypeImage(ImageType.NONE);
-        userService.addUser(user);
         return user;
     }
 

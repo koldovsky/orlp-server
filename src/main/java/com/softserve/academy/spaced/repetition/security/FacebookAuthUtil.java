@@ -111,16 +111,16 @@ public class FacebookAuthUtil {
         person.setTypeImage(ImageType.LINK);
         account.setLearningRegime(LearningRegime.CARDS_POSTPONING_USING_SPACED_REPETITION);
         account.setCardsNumber(CARDS_NUMBER);
+        person.setImage((String) fbProfileData.get("picture"));
+        user.setAccount(account);
+        user.setFolder(folder);
+        user.setPerson(person);
+        userRepository.save(user);
         rememberingLevelRepository.save(new RememberingLevel(1, "Teapot", 1, account));
         rememberingLevelRepository.save(new RememberingLevel(2, "Monkey", 3, account));
         rememberingLevelRepository.save(new RememberingLevel(3, "Beginner", 7, account));
         rememberingLevelRepository.save(new RememberingLevel(4, "Student", 14, account));
         rememberingLevelRepository.save(new RememberingLevel(5, "Expert", 30, account));
         rememberingLevelRepository.save(new RememberingLevel(6, "Genius", 60, account));
-        person.setImage((String) fbProfileData.get("picture"));
-        user.setAccount(account);
-        user.setFolder(folder);
-        user.setPerson(person);
-        userRepository.save(user);
     }
 }
