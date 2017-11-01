@@ -38,7 +38,7 @@ public class TestDatabaseConfig {
 
         HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
         vendorAdapter.setDatabasePlatform("org.hibernate.dialect.H2Dialect");
-        vendorAdapter.setShowSql(true);
+        vendorAdapter.setShowSql(false);
         em.setJpaVendorAdapter(vendorAdapter);
 
         em.afterPropertiesSet();
