@@ -20,7 +20,7 @@ public class LogExceptionAspect {
 
     @AfterThrowing(value = "execution(* com.softserve.academy.spaced.repetition.service.*.*(..))", throwing = "ex")
     public void loggingExceptionsFromServices(JoinPoint joinPoint, Exception ex) {
-        LOGGER.error("Exception in controller = {} method = {}", joinPoint.getThis(), joinPoint.getSignature(), ex);
+        LOGGER.error("Exception in service = {} method = {}", joinPoint.getThis(), joinPoint.getSignature(), ex);
     }
 
 }
