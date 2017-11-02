@@ -42,7 +42,6 @@ public class UserProfileControllerTest {
     public void setUp() {
         mockMvc = MockMvcBuilders.standaloneSetup(userProfileController)
                 .setControllerAdvice(new ExceptionHandlerController())
-                .alwaysDo(print())
                 .build();
     }
 

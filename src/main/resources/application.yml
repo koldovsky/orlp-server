@@ -45,3 +45,5 @@ logging:
   level:
     com.softserve.academy.spaced.repetition: INFO
     org.springframework: ERROR
+    org.hibernate: ERROR
+    springfox.documentation: ERROR

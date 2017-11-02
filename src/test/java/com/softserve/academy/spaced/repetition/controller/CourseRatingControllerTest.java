@@ -41,7 +41,6 @@ public class CourseRatingControllerTest {
     public void setUp() {
         mockMvc = MockMvcBuilders.standaloneSetup(courseRatingController)
                 .setControllerAdvice(new ExceptionHandlerController())
-                .alwaysDo(print())
                 .build();
     }
 

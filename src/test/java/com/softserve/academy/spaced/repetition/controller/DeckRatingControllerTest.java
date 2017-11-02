@@ -40,7 +40,6 @@ public class DeckRatingControllerTest {
     public void setUp() {
         mockMvc = MockMvcBuilders.standaloneSetup(deckRatingController)
                 .setControllerAdvice(new ExceptionHandlerController())
-                .alwaysDo(print())
                 .build();
     }
 

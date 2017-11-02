@@ -38,7 +38,6 @@ public class AuditControllerTest {
     public void setUp() {
         mockMvc = MockMvcBuilders.standaloneSetup(auditController)
                 .setControllerAdvice(new ExceptionHandlerController())
-                .alwaysDo(print())
                 .build();
     }
 
