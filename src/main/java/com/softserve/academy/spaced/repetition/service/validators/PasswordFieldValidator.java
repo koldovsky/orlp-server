@@ -20,10 +20,6 @@ public class PasswordFieldValidator {
     @Autowired
     private UserService userService;
 
-
-    public PasswordFieldValidator() {
-    }
-
     public void validate(PasswordDTO passwordDTO) throws NotAuthorisedUserException {
         if(passwordDTO.getCurrentPassword().isEmpty()
                 || passwordDTO.getNewPassword().isEmpty()

@@ -123,9 +123,9 @@ public class CourseController {
     }
 
     @Auditable(action = AuditingAction.ADD_COURSE)
-    @PutMapping("/api/category/courses/{course_id}/decks/{deck_id}")
-    public ResponseEntity addDeckToCourse(@PathVariable Long course_id, @PathVariable Long deck_id, @RequestBody Course course) {
-        courseService.addDeckToCourse(course_id, deck_id);
+    @PutMapping("/api/category/courses/{courseId}/decks/{deckId}")
+    public ResponseEntity addDeckToCourse(@PathVariable Long courseId, @PathVariable Long deckId, @RequestBody Course course) {
+        courseService.addDeckToCourse(courseId, deckId);
         return new ResponseEntity(HttpStatus.OK);
     }
 
