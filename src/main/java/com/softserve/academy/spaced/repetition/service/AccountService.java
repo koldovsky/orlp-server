@@ -55,8 +55,11 @@ public class AccountService {
         return userService.getAuthorizedUser().getAccount().getRememberingLevels();
     }
 
-    public void updateRememberingLevel(Long levelId, Integer numberOfPostponedDays) {
+    public void updateRememberingLevel(Long levelId, int numberOfPostponedDays) {
         RememberingLevel rememberingLevel = rememberingLevelRepository.findOne(levelId);
+        if (numberOfPostponedDays < 1) {
+            throw new IllegalArgumentException("Number of postponed days should be greater that 0.");
+        }
         rememberingLevel.setNumberOfPostponedDays(numberOfPostponedDays);
         rememberingLevelRepository.save(rememberingLevel);
     }

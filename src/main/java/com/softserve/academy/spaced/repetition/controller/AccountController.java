@@ -2,6 +2,8 @@ package com.softserve.academy.spaced.repetition.controller;
 
 import com.softserve.academy.spaced.repetition.domain.LearningRegime;
 import com.softserve.academy.spaced.repetition.domain.RememberingLevel;
+import com.softserve.academy.spaced.repetition.DTO.DTOBuilder;
+import com.softserve.academy.spaced.repetition.DTO.impl.RememberingLevelDTO;
 import com.softserve.academy.spaced.repetition.exceptions.NotAuthorisedUserException;
 import com.softserve.academy.spaced.repetition.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,14 +51,15 @@ public class AccountController {
     }
 
     @GetMapping("api/private/account/remembering-levels")
-    public ResponseEntity<List<RememberingLevel>> getRememberingLevels() throws NotAuthorisedUserException {
-        return ResponseEntity.ok(accountService.getRememberingLevels());
+    public ResponseEntity<List<RememberingLevelDTO>> getRememberingLevels() throws NotAuthorisedUserException {
+        List<RememberingLevel> rememberingLevels = accountService.getRememberingLevels();
+        return ResponseEntity.ok(DTOBuilder.buildDtoListForCollection(rememberingLevels, RememberingLevelDTO.class));
     }
 
     @PutMapping("api/private/account/remembering-levels/{levelId}")
     public ResponseEntity updateRememberingLevel(@PathVariable Long levelId,
-                                                 @RequestBody Integer numberOfPostponedDays) {
-        accountService.updateRememberingLevel(levelId, numberOfPostponedDays);
+                                                 @RequestBody String numberOfPostponedDays) {
+        accountService.updateRememberingLevel(levelId, Integer.parseInt(numberOfPostponedDays));
         return ResponseEntity.ok().build();
     }
 }
