@@ -29,7 +29,7 @@ public class AccountController {
     @PutMapping("/api/private/account/learning-regime")
     public ResponseEntity updateLearningRegime(@RequestBody String learningRegime) throws NotAuthorisedUserException {
         for (LearningRegime regime : LearningRegime.values()) {
-            if (regime.regime.equals(learningRegime)) {
+            if (regime.getRegime().equals(learningRegime)) {
                 accountService.updateLearningRegime(regime);
                 return ResponseEntity.ok().build();
             }
