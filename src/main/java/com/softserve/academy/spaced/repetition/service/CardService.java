@@ -1,12 +1,10 @@
 package com.softserve.academy.spaced.repetition.service;
 
-import com.softserve.academy.spaced.repetition.domain.Card;
-import com.softserve.academy.spaced.repetition.domain.Deck;
-import com.softserve.academy.spaced.repetition.domain.LearningRegime;
-import com.softserve.academy.spaced.repetition.domain.User;
+import com.softserve.academy.spaced.repetition.domain.*;
 import com.softserve.academy.spaced.repetition.exceptions.NotAuthorisedUserException;
 import com.softserve.academy.spaced.repetition.repository.CardRepository;
 import com.softserve.academy.spaced.repetition.repository.DeckRepository;
+import com.softserve.academy.spaced.repetition.repository.UserCardQueueRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,15 +24,19 @@ public class CardService {
 
     private final AccountService accountService;
 
+    private final UserCardQueueService userCardQueueService;
+
     @Autowired
     public CardService(CardRepository cardRepository, DeckRepository deckRepository, AccountService accountService,
-                       UserService userService) {
+                       UserService userService, UserCardQueueService userCardQueueService) {
         this.cardRepository = cardRepository;
         this.deckRepository = deckRepository;
         this.userService = userService;
         this.accountService = accountService;
+        this.userCardQueueService = userCardQueueService;
     }
 
+    @Transactional
     public List<Card> getLearningCards(Long deckId) throws NotAuthorisedUserException {
         try {
             User user = userService.getAuthorizedUser();
@@ -100,9 +102,17 @@ public class CardService {
         cardRepository.deleteCardById(cardId);
     }
 
+    @Transactional
     public List<Card> getAdditionalLearningCards(Long deckId) throws NotAuthorisedUserException {
         User user = userService.getAuthorizedUser();
         String email = user.getAccount().getEmail();
         return cardRepository.getPostponedCards(deckId, new Date(), email, accountService.getCardsNumber());
+    }
+
+    @Transactional
+    public boolean areThereNotPostponedCardsAvailable(Long deckId) throws NotAuthorisedUserException {
+        Account account = userService.getAuthorizedUser().getAccount();
+        return userCardQueueService.countCardsThatNeedRepeating(deckId) > 0 ||
+                cardRepository.getNewCards(deckId, account.getEmail(), account.getCardsNumber()).size() > 0;
     }
 }
