@@ -2,7 +2,10 @@ package com.softserve.academy.spaced.repetition.service;
 
 import com.softserve.academy.spaced.repetition.DTO.impl.PasswordDTO;
 import com.softserve.academy.spaced.repetition.domain.*;
-import com.softserve.academy.spaced.repetition.exceptions.*;
+import com.softserve.academy.spaced.repetition.exceptions.ImageRepositorySizeQuotaExceededException;
+import com.softserve.academy.spaced.repetition.exceptions.NotAuthorisedUserException;
+import com.softserve.academy.spaced.repetition.exceptions.UserStatusException;
+import com.softserve.academy.spaced.repetition.repository.AuthorityRepository;
 import com.softserve.academy.spaced.repetition.repository.DeckRepository;
 import com.softserve.academy.spaced.repetition.repository.UserRepository;
 import com.softserve.academy.spaced.repetition.security.JwtUser;
@@ -12,19 +15,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import org.springframework.mail.MailException;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-import java.util.Set;
-
-
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.*;
 
 @Service
 public class UserService {
@@ -44,6 +41,13 @@ public class UserService {
     private DataFieldValidator dataFieldValidator;
 
     private PasswordFieldValidator passwordFieldValidator;
+
+    private AuthorityRepository authorityRepository;
+
+    @Autowired
+    public void setAuthorityRepository(AuthorityRepository authorityRepository) {
+        this.authorityRepository = authorityRepository;
+    }
 
     @Autowired
     public void setUserRepository(UserRepository userRepository) {
@@ -237,5 +241,21 @@ public class UserService {
         if (user.getAccount().getStatus().isNotActive()) {
             throw new UserStatusException(user.getAccount().getStatus());
         }
+    }
+
+    @Transactional
+    public void initializeNewUser(Account account, String email, AccountStatus accountStatus, AuthenticationType
+            authenticationType) {
+        account.setEmail(email);
+        if (account.getPassword() == null) {
+            account.setPassword("-1");
+        } else {
+            passwordEncoder.encode(account.getPassword());
+        }
+        account.setLastPasswordResetDate(new Date());
+        account.setStatus(accountStatus);
+        account.setAuthenticationType(authenticationType);
+        Authority authority = authorityRepository.findAuthorityByName(AuthorityName.ROLE_USER);
+        account.setAuthorities(Collections.singleton(authority));
     }
 }
