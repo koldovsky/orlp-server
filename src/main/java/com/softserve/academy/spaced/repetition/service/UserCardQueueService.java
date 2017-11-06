@@ -79,9 +79,4 @@ public class UserCardQueueService {
         return userCardQueueRepository.countAllByAccountEmailEqualsAndDeckIdEqualsAndDateToRepeatBefore(
                 userService.getAuthorizedUser().getAccount().getEmail(), deckId, new Date());
     }
-
-    @Transactional
-    public boolean areThereNotPostponedCardsAvailable(Long deckId) throws NotAuthorisedUserException {
-        return countCardsThatNeedRepeating(deckId) > 0;
-    }
 }
