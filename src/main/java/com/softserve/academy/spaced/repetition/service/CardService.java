@@ -28,7 +28,7 @@ public class CardService {
 
     @Autowired
     public CardService(CardRepository cardRepository, DeckRepository deckRepository, AccountService accountService,
-                       UserService userService) throws NotAuthorisedUserException {
+                       UserService userService) {
         this.cardRepository = cardRepository;
         this.deckRepository = deckRepository;
         this.userService = userService;
@@ -55,7 +55,7 @@ public class CardService {
             }
             return learningCards;
         } catch (NotAuthorisedUserException e) {
-            return cardRepository.getAllByDeck_Id(deckId).subList(0, accountService.getCardsNumber());
+            return cardRepository.findAllByDeckId(deckId).subList(0, accountService.getCardsNumber());
         }
     }
 
