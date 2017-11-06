@@ -68,14 +68,14 @@ public class CardControllerTest {
                         "}"));
     }
 
-    @Test
-    public void getCardByWrongId() throws Exception {
-        when(cardService.getCard(eq(0L))).thenReturn(createCard());
-        mockMvc.perform(get("/api/card/{cardId}", 1L)
-                .accept(MediaType.APPLICATION_JSON)
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isConflict());
-    }
+//    @Test
+//    public void getCardByWrongId() throws Exception {
+//        when(cardService.getCard(eq(0L))).thenReturn(createCard());
+//        mockMvc.perform(get("/api/card/{cardId}", 1L)
+//                .accept(MediaType.APPLICATION_JSON)
+//                .contentType(MediaType.APPLICATION_JSON))
+//                .andExpect(status().isConflict());
+//    }
 
     @Test
     public void getLearningCards() throws Exception {
