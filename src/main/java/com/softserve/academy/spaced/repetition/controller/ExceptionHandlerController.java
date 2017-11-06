@@ -29,10 +29,6 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
         return new ResponseEntity <>(new MessageDTO("File upload error: file is too large."), HttpStatus.FORBIDDEN);
     }
 
-    @ExceptionHandler(RatingsBadValueException.class)
-    ResponseEntity <MessageDTO> handleRatingsBadValueException() {
-        return new ResponseEntity <>(new MessageDTO("Rating can't be less than 1 and more than 5"), HttpStatus.CONFLICT);
-    }
 
     @ExceptionHandler(ImageRepositorySizeQuotaExceededException.class)
     ResponseEntity <MessageDTO> handleImageRepositorySizeQuotaExceededException() {
