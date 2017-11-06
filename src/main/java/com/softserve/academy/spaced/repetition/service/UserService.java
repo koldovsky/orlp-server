@@ -23,6 +23,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.*;
 
+import static com.softserve.academy.spaced.repetition.domain.Account.INITIAL_CARDS_NUMBER;
+
 @Service
 public class UserService {
 
@@ -256,6 +258,8 @@ public class UserService {
         account.setAuthenticationType(authenticationType);
         Authority authority = authorityRepository.findAuthorityByName(AuthorityName.ROLE_USER);
         account.setAuthorities(Collections.singleton(authority));
+        account.setLearningRegime(LearningRegime.CARDS_POSTPONING_USING_SPACED_REPETITION);
+        account.setCardsNumber(INITIAL_CARDS_NUMBER);
     }
 
     public void isUserStatusActive(User user) throws UserStatusException {
