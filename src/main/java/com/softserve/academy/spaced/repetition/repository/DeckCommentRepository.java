@@ -11,5 +11,7 @@ import java.util.List;
 public interface DeckCommentRepository extends JpaRepository<DeckComment, Long> {
 
     List<Comment> findDeckCommentsByDeckId(Long deckId);
+
+    List<Comment>  findDeckCommentsByParentCommentId(Long parentCommentId );
 }
 
