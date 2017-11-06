@@ -202,7 +202,6 @@ public class UserService {
         User user = getAuthorizedUser();
         passwordFieldValidator.validate(passwordDTO);
         user.getAccount().setPassword(passwordEncoder.encode(passwordDTO.getNewPassword()));
-      //  user.getAccount().setLastPasswordResetDate(Calendar.getInstance().getTime());
         userRepository.save(user);
         mailService.sendPasswordNotificationMail(user);
     }
@@ -257,5 +256,11 @@ public class UserService {
         account.setAuthenticationType(authenticationType);
         Authority authority = authorityRepository.findAuthorityByName(AuthorityName.ROLE_USER);
         account.setAuthorities(Collections.singleton(authority));
+    }
+
+    public void isUserStatusActive(User user) throws UserStatusException {
+        if (user.getAccount().getStatus().isNotActive()) {
+            throw new UserStatusException(user.getAccount().getStatus());
+        }
     }
 }

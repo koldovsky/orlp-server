@@ -30,7 +30,7 @@ public class UserCardQueueController {
             @PathVariable Long deckId, @PathVariable Long cardId, @RequestBody String status)
             throws NotAuthorisedUserException {
         for (UserCardQueueStatus userCardQueueStatus : UserCardQueueStatus.values()) {
-            if (userCardQueueStatus.status.equals(status)) {
+            if (userCardQueueStatus.getStatus().equals(status)) {
                 userCardQueueService.updateUserCardQueue(deckId, cardId, userCardQueueStatus);
                 return ResponseEntity.ok().build();
             }

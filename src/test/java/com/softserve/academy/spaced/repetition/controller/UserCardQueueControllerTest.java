@@ -40,7 +40,6 @@ public class UserCardQueueControllerTest {
     public void setUp() {
         mockMvc = MockMvcBuilders.standaloneSetup(userCardQueueController)
                 .setControllerAdvice(new ExceptionHandlerController())
-                .alwaysDo(print())
                 .build();
     }
 

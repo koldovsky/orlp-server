@@ -5,7 +5,7 @@ spring:
     password: 123456
     driver-class-name: com.mysql.jdbc.Driver
   jpa:
-    show-sql: true
+    show-sql: false
     hibernate:
       ddl-auto: validate
       naming-strategy: org.hibernate.cfg.ImprovedNamingStrategy
@@ -43,5 +43,7 @@ app:
 logging:
   file: orlp.log
   level:
-    com.softserve.academy.spaced.repetition: DEBUG
-    org.springframework: INFO
+    com.softserve.academy.spaced.repetition: INFO
+    org.springframework: ERROR
+    org.hibernate: ERROR
+    springfox.documentation: ERROR

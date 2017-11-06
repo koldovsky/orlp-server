@@ -45,7 +45,6 @@ public class CardControllerTest {
     public void setUp() {
         mockMvc = MockMvcBuilders.standaloneSetup(cardController)
                 .setControllerAdvice(new ExceptionHandlerController())
-                .alwaysDo(print())
                 .build();
     }
 

@@ -5,8 +5,6 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class DataFieldValidator  {
-    public DataFieldValidator() {
-    }
 
     public void validate(Person person)  {
         if (person.getFirstName().isEmpty()

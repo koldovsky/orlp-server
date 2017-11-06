@@ -6,6 +6,7 @@ import com.softserve.academy.spaced.repetition.DTO.impl.DeckRatingPublicDTO;
 import com.softserve.academy.spaced.repetition.domain.DeckRating;
 import com.softserve.academy.spaced.repetition.exceptions.NotAuthorisedUserException;
 import com.softserve.academy.spaced.repetition.exceptions.RatingsBadValueException;
+import com.softserve.academy.spaced.repetition.exceptions.UserStatusException;
 import com.softserve.academy.spaced.repetition.service.DeckRatingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Link;
@@ -34,7 +35,7 @@ public class DeckRatingController {
     }
 
     @PostMapping("/api/private/deck/{deckId}")
-    public ResponseEntity addDeckRating(@RequestBody RatingDTO ratingDTO, @PathVariable Long deckId) throws RatingsBadValueException, NotAuthorisedUserException {
+    public ResponseEntity addDeckRating(@RequestBody RatingDTO ratingDTO, @PathVariable Long deckId) throws RatingsBadValueException, NotAuthorisedUserException, UserStatusException {
         if ((ratingDTO.getRating() >= MIN_RATING) && (ratingDTO.getRating() <= MAX_RATING)) {
             deckRatingService.addDeckRating(ratingDTO.getRating(), deckId);
             return new ResponseEntity(HttpStatus.CREATED);

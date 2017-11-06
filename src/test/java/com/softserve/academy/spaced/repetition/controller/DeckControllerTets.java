@@ -51,7 +51,6 @@ public class DeckControllerTets {
     public void setUp() {
         mockMvc = MockMvcBuilders.standaloneSetup(deckController)
                 .setControllerAdvice(new ExceptionHandlerController())
-                .alwaysDo(print())
                 .build();
     }
 
