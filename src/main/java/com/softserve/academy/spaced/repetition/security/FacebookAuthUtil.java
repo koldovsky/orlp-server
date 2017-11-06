@@ -5,7 +5,10 @@ import com.softserve.academy.spaced.repetition.audit.AuditingAction;
 import com.softserve.academy.spaced.repetition.domain.*;
 import com.softserve.academy.spaced.repetition.repository.AccountRepository;
 import com.softserve.academy.spaced.repetition.repository.AuthorityRepository;
+import com.softserve.academy.spaced.repetition.repository.RememberingLevelRepository;
 import com.softserve.academy.spaced.repetition.repository.UserRepository;
+import com.softserve.academy.spaced.repetition.service.AccountService;
+import com.softserve.academy.spaced.repetition.service.UserService;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,22 +19,28 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.Collections;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-
-import static com.softserve.academy.spaced.repetition.domain.Account.CARDS_NUMBER;
 
 @Component
 public class FacebookAuthUtil {
 
+    private final AccountRepository accountRepository;
+    private final UserRepository userRepository;
+    private final AuthorityRepository authorityRepository;
+    private final AccountService accountService;
+    private final UserService userService;
+
     @Autowired
-    private AccountRepository accountRepository;
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private AuthorityRepository authorityRepository;
+    public FacebookAuthUtil(AccountRepository accountRepository, UserRepository userRepository,
+                            AuthorityRepository authorityRepository,
+                            RememberingLevelRepository rememberingLevelRepository, AccountService accountService, UserService userService) {
+        this.accountRepository = accountRepository;
+        this.userRepository = userRepository;
+        this.authorityRepository = authorityRepository;
+        this.accountService = accountService;
+        this.userService = userService;
+    }
 
     public String getFBGraph(String accessToken) {
         String graph = null;
@@ -86,26 +95,12 @@ public class FacebookAuthUtil {
 
     @Auditable(action = AuditingAction.SIGN_UP_FACEBOOK)
     public void saveNewFacebookUser(Map fbProfileData) {
-        User user = new User();
         Account account = new Account();
-        Folder folder = new Folder();
-        Person person = new Person();
-        account.setEmail((String) fbProfileData.get("email"));
-        account.setPassword("-1");
-        account.setLastPasswordResetDate(new Date());
-        account.setStatus(AccountStatus.ACTIVE);
-        account.setAuthenticationType(AuthenticationType.FACEBOOK);
-        Authority authority = authorityRepository.findAuthorityByName(AuthorityName.ROLE_USER);
-        account.setAuthorities(Collections.singleton(authority));
-        person.setFirstName((String) fbProfileData.get("first_name"));
-        person.setLastName((String) fbProfileData.get("last_name"));
-        person.setTypeImage(ImageType.LINK);
-        account.setLearningRegime(LearningRegime.CARDS_POSTPONING_USING_SPACED_REPETITION);
-        account.setCardsNumber(CARDS_NUMBER);
-        person.setImage((String) fbProfileData.get("picture"));
-        user.setAccount(account);
-        user.setFolder(folder);
-        user.setPerson(person);
-        userRepository.save(user);
+        userService.initializeNewUser(account,(String) fbProfileData.get("email"), AccountStatus.ACTIVE,
+                AuthenticationType.FACEBOOK);
+        Person person = new Person((String) fbProfileData.get("first_name"), (String) fbProfileData.get("last_name"),
+                ImageType.LINK, (String) fbProfileData.get("picture"));
+        userRepository.save(new User(account, person, new Folder()));
+        accountService.initializeLearningRegimeSettingsForAccount(account);
     }
 }

@@ -51,9 +51,4 @@ public class UserCardQueueController {
         UserCardQueuePublicDTO userCardQueuePublicDTO = DTOBuilder.buildDtoForEntity(userCardQueue, UserCardQueuePublicDTO.class, selfLink);
         return ResponseEntity.ok(userCardQueuePublicDTO);
     }
-
-    @GetMapping("api/private/decks/{deckId}/not-postponed")
-    public ResponseEntity<Boolean> areThereNotPostponedCardsAvailable(Long deckId) throws NotAuthorisedUserException {
-        return ResponseEntity.ok(userCardQueueService.areThereNotPostponedCardsAvailable(deckId));
-    }
 }

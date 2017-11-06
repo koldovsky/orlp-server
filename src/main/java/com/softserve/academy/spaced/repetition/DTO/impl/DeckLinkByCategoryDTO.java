@@ -2,7 +2,6 @@ package com.softserve.academy.spaced.repetition.DTO.impl;
 
 import com.softserve.academy.spaced.repetition.DTO.DTO;
 import com.softserve.academy.spaced.repetition.controller.CardController;
-import com.softserve.academy.spaced.repetition.controller.DeckController;
 import com.softserve.academy.spaced.repetition.domain.Deck;
 import com.softserve.academy.spaced.repetition.exceptions.NotAuthorisedUserException;
 import org.springframework.hateoas.Link;

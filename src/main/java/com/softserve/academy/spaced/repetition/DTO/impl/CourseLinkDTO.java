@@ -3,7 +3,6 @@ package com.softserve.academy.spaced.repetition.DTO.impl;
 import com.softserve.academy.spaced.repetition.DTO.DTO;
 import com.softserve.academy.spaced.repetition.controller.DeckController;
 import com.softserve.academy.spaced.repetition.controller.ImageController;
-import com.softserve.academy.spaced.repetition.controller.authorization.UserController;
 import com.softserve.academy.spaced.repetition.domain.Course;
 import org.springframework.hateoas.Link;
 

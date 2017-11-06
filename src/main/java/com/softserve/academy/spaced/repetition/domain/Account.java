@@ -5,17 +5,18 @@ import com.softserve.academy.spaced.repetition.DTO.EntityInterface;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 @Entity
 @Table(name = "account")
 public class Account implements EntityInterface {
-    public static final int CARDS_NUMBER = 10;
+    public static final int INITIAL_CARDS_NUMBER = 10;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "account_id", nullable = false)
-    private long id;
+    private Long id;
 
     @Column(name = "password", nullable = false)
     private String password;
@@ -54,6 +55,9 @@ public class Account implements EntityInterface {
     @NotNull
     private Integer cardsNumber;
 
+    @OneToMany(mappedBy = "account", fetch = FetchType.LAZY)
+    private List<RememberingLevel> rememberingLevels;
+
     public Account() {
     }
 
@@ -85,7 +89,7 @@ public class Account implements EntityInterface {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -151,5 +155,32 @@ public class Account implements EntityInterface {
 
     public void setCardsNumber(Integer cardsNumber) {
         this.cardsNumber = cardsNumber;
+    }
+
+    public List<RememberingLevel> getRememberingLevels() {
+        return rememberingLevels;
+    }
+
+    public void setRememberingLevels(List<RememberingLevel> rememberingLevels) {
+        this.rememberingLevels = rememberingLevels;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        Account account = (Account) o;
+
+        return id != null ? id.equals(account.id) : account.id == null;
+    }
+
+    @Override
+    public int hashCode() {
+        return id != null ? id.hashCode() : 0;
     }
 }
