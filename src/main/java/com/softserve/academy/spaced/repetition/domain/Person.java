@@ -39,6 +39,13 @@ public class Person {
         this.lastName = lastName;
     }
 
+    public Person(String firstName, String lastName, ImageType typeImage, String image) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.typeImage = typeImage;
+        this.image = image;
+    }
+
     public long getId() {
         return id;
     }

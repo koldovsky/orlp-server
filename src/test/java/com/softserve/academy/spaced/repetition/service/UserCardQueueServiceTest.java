@@ -31,9 +31,10 @@ import static org.mockito.Mockito.when;
 @Transactional
 public class UserCardQueueServiceTest {
     private static final int DAY_IN_MILLISECONDS = 24 * 60 * 60 * 1000;
+    private static final Long ACCOUNT_ID = 1L;
     private static final Long CARD_ID = 1L;
     private static final Long DECK_ID = 1L;
-    private static final String ACCOUNT_EMAIL = "bohdan.dub@gmail.com";
+    private static final String ACCOUNT_EMAIL = "admin@gmail.com";
 
     private UserCardQueueService userCardQueueService;
 
@@ -91,7 +92,8 @@ public class UserCardQueueServiceTest {
         UserCardQueueStatus expectedStatus = UserCardQueueStatus.GOOD;
         User mockedUser = createMockedUser(LearningRegime.BAD_NORMAL_GOOD_STATUS_DEPENDING);
         when(mockedUserService.getAuthorizedUser()).thenReturn(mockedUser);
-        RememberingLevel rememberingLevel = rememberingLevelRepository.findOne(1L);
+        RememberingLevel rememberingLevel = rememberingLevelRepository
+                .findRememberingLevelByAccountEqualsAndOrderNumber(mockedUser.getAccount(), 1);
         Date dateToRepeat = new Date();
         UserCardQueue actualUserCardQueue = buildUserCardQueueAndSave(startingStatus, rememberingLevel, dateToRepeat);
 
@@ -103,10 +105,11 @@ public class UserCardQueueServiceTest {
     @Test
     public void testUpdateNonExistentUserCardQueueUsingCardsPostponingWhenStatusIsGood()
             throws NotAuthorisedUserException {
-        UserCardQueueStatus status = UserCardQueueStatus.GOOD;
-        RememberingLevel expectedRememberingLevel = rememberingLevelRepository.findOne(2L);
         User mockedUser = createMockedUser(LearningRegime.CARDS_POSTPONING_USING_SPACED_REPETITION);
         when(mockedUserService.getAuthorizedUser()).thenReturn(mockedUser);
+        UserCardQueueStatus status = UserCardQueueStatus.GOOD;
+        RememberingLevel expectedRememberingLevel = rememberingLevelRepository
+                .findRememberingLevelByAccountEqualsAndOrderNumber(mockedUser.getAccount(), 2);
 
         UserCardQueue actualUserCardQueue = userCardQueueRepository.findUserCardQueueByAccountEmailAndCardId(
                 ACCOUNT_EMAIL, CARD_ID);
@@ -125,10 +128,11 @@ public class UserCardQueueServiceTest {
     @Test
     public void testUpdateNonExistentUserCardQueueUsingCardsPostponingWhenStatusIsNormal()
             throws NotAuthorisedUserException {
-        UserCardQueueStatus status = UserCardQueueStatus.NORMAL;
-        RememberingLevel expectedRememberingLevel = rememberingLevelRepository.findOne(1L);
         User mockedUser = createMockedUser(LearningRegime.CARDS_POSTPONING_USING_SPACED_REPETITION);
         when(mockedUserService.getAuthorizedUser()).thenReturn(mockedUser);
+        UserCardQueueStatus status = UserCardQueueStatus.NORMAL;
+        RememberingLevel expectedRememberingLevel = rememberingLevelRepository
+                .findRememberingLevelByAccountEqualsAndOrderNumber(mockedUser.getAccount(), 1);
 
         UserCardQueue actualUserCardQueue = userCardQueueRepository.findUserCardQueueByAccountEmailAndCardId(
                 ACCOUNT_EMAIL, CARD_ID);
@@ -147,10 +151,11 @@ public class UserCardQueueServiceTest {
     @Test
     public void testUpdateNonExistentUserCardQueueUsingCardsPostponingWhenStatusIsBad()
             throws NotAuthorisedUserException {
-        UserCardQueueStatus status = UserCardQueueStatus.BAD;
-        RememberingLevel expectedRememberingLevel = rememberingLevelRepository.findOne(1L);
         User mockedUser = createMockedUser(LearningRegime.CARDS_POSTPONING_USING_SPACED_REPETITION);
         when(mockedUserService.getAuthorizedUser()).thenReturn(mockedUser);
+        UserCardQueueStatus status = UserCardQueueStatus.BAD;
+        RememberingLevel expectedRememberingLevel = rememberingLevelRepository
+                .findRememberingLevelByAccountEqualsAndOrderNumber(mockedUser.getAccount(), 1);
 
         UserCardQueue actualUserCardQueue = userCardQueueRepository.findUserCardQueueByAccountEmailAndCardId(
                 ACCOUNT_EMAIL, CARD_ID);
@@ -169,12 +174,14 @@ public class UserCardQueueServiceTest {
     @Test
     public void testUpdateExistingUserCardQueueUsingCardsPostponingWithNullStatusWhenStatusIsGood()
             throws NotAuthorisedUserException {
-        UserCardQueueStatus status = UserCardQueueStatus.GOOD;
-        RememberingLevel startingRememberingLevel = rememberingLevelRepository.findOne(4L);
-        RememberingLevel expectedRememberingLevel = rememberingLevelRepository.findOne(5L);
-        Date startingDateToRepeat = new Date();
         User mockedUser = createMockedUser(LearningRegime.CARDS_POSTPONING_USING_SPACED_REPETITION);
         when(mockedUserService.getAuthorizedUser()).thenReturn(mockedUser);
+        UserCardQueueStatus status = UserCardQueueStatus.GOOD;
+        RememberingLevel startingRememberingLevel = rememberingLevelRepository
+                .findRememberingLevelByAccountEqualsAndOrderNumber(mockedUser.getAccount(), 4);
+        RememberingLevel expectedRememberingLevel = rememberingLevelRepository
+                .findRememberingLevelByAccountEqualsAndOrderNumber(mockedUser.getAccount(), 5);
+        Date startingDateToRepeat = new Date();
         UserCardQueue actualUserCardQueue = buildUserCardQueueAndSave(null, startingRememberingLevel,
                 startingDateToRepeat);
 
@@ -188,14 +195,17 @@ public class UserCardQueueServiceTest {
     @Test
     public void testUpdateExistingUserCardQueueUsingCardsPostponingWithNullStatusWhenStatusIsGoodAndRememberingLevelIsMaximal()
             throws NotAuthorisedUserException {
-        UserCardQueueStatus status = UserCardQueueStatus.GOOD;
-        RememberingLevel startingRememberingLevel =
-                rememberingLevelRepository.findOne(rememberingLevelRepository.count());
-        RememberingLevel expectedRememberingLevel =
-                rememberingLevelRepository.findOne(rememberingLevelRepository.count());
-        Date startingDateToRepeat = new Date();
         User mockedUser = createMockedUser(LearningRegime.CARDS_POSTPONING_USING_SPACED_REPETITION);
         when(mockedUserService.getAuthorizedUser()).thenReturn(mockedUser);
+        UserCardQueueStatus status = UserCardQueueStatus.GOOD;
+        RememberingLevel startingRememberingLevel =
+                rememberingLevelRepository
+                .findRememberingLevelByAccountEqualsAndOrderNumber(mockedUser.getAccount(),
+                        rememberingLevelRepository.countAllByAccountEquals(mockedUser.getAccount()));
+        RememberingLevel expectedRememberingLevel =
+                rememberingLevelRepository.findRememberingLevelByAccountEqualsAndOrderNumber(mockedUser.getAccount(),
+                        rememberingLevelRepository.countAllByAccountEquals(mockedUser.getAccount()));
+        Date startingDateToRepeat = new Date();
         UserCardQueue actualUserCardQueue = buildUserCardQueueAndSave(null, startingRememberingLevel,
                 startingDateToRepeat);
 
@@ -209,12 +219,14 @@ public class UserCardQueueServiceTest {
     @Test
     public void testUpdateExistingUserCardQueueUsingCardsPostponingWithNullStatusWhenStatusIsNormal()
             throws NotAuthorisedUserException {
-        UserCardQueueStatus status = UserCardQueueStatus.NORMAL;
-        RememberingLevel startingRememberingLevel = rememberingLevelRepository.findOne(4L);
-        RememberingLevel expectedRememberingLevel = rememberingLevelRepository.findOne(4L);
-        Date startingDateToRepeat = new Date();
         User mockedUser = createMockedUser(LearningRegime.CARDS_POSTPONING_USING_SPACED_REPETITION);
         when(mockedUserService.getAuthorizedUser()).thenReturn(mockedUser);
+        UserCardQueueStatus status = UserCardQueueStatus.NORMAL;
+        RememberingLevel startingRememberingLevel = rememberingLevelRepository
+                .findRememberingLevelByAccountEqualsAndOrderNumber(mockedUser.getAccount(), 4);
+        RememberingLevel expectedRememberingLevel = rememberingLevelRepository
+                .findRememberingLevelByAccountEqualsAndOrderNumber(mockedUser.getAccount(), 4);
+        Date startingDateToRepeat = new Date();
         UserCardQueue actualUserCardQueue = buildUserCardQueueAndSave(null, startingRememberingLevel,
                 startingDateToRepeat);
 
@@ -228,12 +240,14 @@ public class UserCardQueueServiceTest {
     @Test
     public void testUpdateExistingUserCardQueueUsingCardsPostponingWithNullStatusWhenStatusIsBad()
             throws NotAuthorisedUserException {
-        UserCardQueueStatus status = UserCardQueueStatus.BAD;
-        RememberingLevel startingRememberingLevel = rememberingLevelRepository.findOne(4L);
-        RememberingLevel expectedRememberingLevel = rememberingLevelRepository.findOne(3L);
-        Date startingDateToRepeat = new Date();
         User mockedUser = createMockedUser(LearningRegime.CARDS_POSTPONING_USING_SPACED_REPETITION);
         when(mockedUserService.getAuthorizedUser()).thenReturn(mockedUser);
+        UserCardQueueStatus status = UserCardQueueStatus.BAD;
+        RememberingLevel startingRememberingLevel = rememberingLevelRepository
+                .findRememberingLevelByAccountEqualsAndOrderNumber(mockedUser.getAccount(), 4);
+        RememberingLevel expectedRememberingLevel = rememberingLevelRepository
+                .findRememberingLevelByAccountEqualsAndOrderNumber(mockedUser.getAccount(), 3);
+        Date startingDateToRepeat = new Date();
         UserCardQueue actualUserCardQueue = buildUserCardQueueAndSave(null, startingRememberingLevel,
                 startingDateToRepeat);
 
@@ -247,12 +261,14 @@ public class UserCardQueueServiceTest {
     @Test
     public void testUpdateExistingUserCardQueueUsingCardsPostponingWithNullStatusWhenStatusIsBadAndRememberingLevelIsMinimal()
             throws NotAuthorisedUserException {
-        UserCardQueueStatus status = UserCardQueueStatus.BAD;
-        RememberingLevel startingRememberingLevel = rememberingLevelRepository.findOne(1L);
-        RememberingLevel expectedRememberingLevel = rememberingLevelRepository.findOne(1L);
-        Date startingDateToRepeat = new Date();
         User mockedUser = createMockedUser(LearningRegime.CARDS_POSTPONING_USING_SPACED_REPETITION);
         when(mockedUserService.getAuthorizedUser()).thenReturn(mockedUser);
+        UserCardQueueStatus status = UserCardQueueStatus.BAD;
+        RememberingLevel startingRememberingLevel = rememberingLevelRepository
+                .findRememberingLevelByAccountEqualsAndOrderNumber(mockedUser.getAccount(), 1);
+        RememberingLevel expectedRememberingLevel = rememberingLevelRepository
+                .findRememberingLevelByAccountEqualsAndOrderNumber(mockedUser.getAccount(), 1);
+        Date startingDateToRepeat = new Date();
         UserCardQueue actualUserCardQueue = buildUserCardQueueAndSave(null, startingRememberingLevel,
                 startingDateToRepeat);
 
@@ -266,13 +282,15 @@ public class UserCardQueueServiceTest {
     @Test
     public void testUpdateExistingUserCardQueueUsingCardsPostponingWithNotNullStatusWhenStatusIsGood()
             throws NotAuthorisedUserException {
-        UserCardQueueStatus startingStatus = UserCardQueueStatus.BAD;
-        UserCardQueueStatus status = UserCardQueueStatus.GOOD;
-        RememberingLevel startingRememberingLevel = rememberingLevelRepository.findOne(4L);
-        RememberingLevel expectedRememberingLevel = rememberingLevelRepository.findOne(5L);
-        Date startingDateToRepeat = new Date();
         User mockedUser = createMockedUser(LearningRegime.CARDS_POSTPONING_USING_SPACED_REPETITION);
         when(mockedUserService.getAuthorizedUser()).thenReturn(mockedUser);
+        UserCardQueueStatus startingStatus = UserCardQueueStatus.BAD;
+        UserCardQueueStatus status = UserCardQueueStatus.GOOD;
+        RememberingLevel startingRememberingLevel = rememberingLevelRepository
+                .findRememberingLevelByAccountEqualsAndOrderNumber(mockedUser.getAccount(), 4);
+        RememberingLevel expectedRememberingLevel = rememberingLevelRepository
+                .findRememberingLevelByAccountEqualsAndOrderNumber(mockedUser.getAccount(), 5);
+        Date startingDateToRepeat = new Date();
         UserCardQueue actualUserCardQueue = buildUserCardQueueAndSave(startingStatus, startingRememberingLevel,
                 startingDateToRepeat);
 
@@ -286,13 +304,15 @@ public class UserCardQueueServiceTest {
     @Test
     public void testUpdateExistingUserCardQueueUsingCardsPostponingWithNotNullStatusWhenStatusIsNormal()
             throws NotAuthorisedUserException {
-        UserCardQueueStatus startingStatus = UserCardQueueStatus.BAD;
-        UserCardQueueStatus status = UserCardQueueStatus.NORMAL;
-        RememberingLevel startingRememberingLevel = rememberingLevelRepository.findOne(4L);
-        RememberingLevel expectedRememberingLevel = rememberingLevelRepository.findOne(4L);
-        Date startingDateToRepeat = new Date();
         User mockedUser = createMockedUser(LearningRegime.CARDS_POSTPONING_USING_SPACED_REPETITION);
         when(mockedUserService.getAuthorizedUser()).thenReturn(mockedUser);
+        UserCardQueueStatus startingStatus = UserCardQueueStatus.BAD;
+        UserCardQueueStatus status = UserCardQueueStatus.NORMAL;
+        RememberingLevel startingRememberingLevel = rememberingLevelRepository
+                .findRememberingLevelByAccountEqualsAndOrderNumber(mockedUser.getAccount(), 4);
+        RememberingLevel expectedRememberingLevel = rememberingLevelRepository
+                .findRememberingLevelByAccountEqualsAndOrderNumber(mockedUser.getAccount(), 4);
+        Date startingDateToRepeat = new Date();
         UserCardQueue actualUserCardQueue = buildUserCardQueueAndSave(startingStatus, startingRememberingLevel,
                 startingDateToRepeat);
 
@@ -306,13 +326,15 @@ public class UserCardQueueServiceTest {
     @Test
     public void testUpdateExistingUserCardQueueUsingCardsPostponingWithNotNullStatusWhenStatusIsBad()
             throws NotAuthorisedUserException {
-        UserCardQueueStatus startingStatus = UserCardQueueStatus.NORMAL;
-        UserCardQueueStatus status = UserCardQueueStatus.BAD;
-        RememberingLevel startingRememberingLevel = rememberingLevelRepository.findOne(4L);
-        RememberingLevel expectedRememberingLevel = rememberingLevelRepository.findOne(3L);
-        Date startingDateToRepeat = new Date();
         User mockedUser = createMockedUser(LearningRegime.CARDS_POSTPONING_USING_SPACED_REPETITION);
         when(mockedUserService.getAuthorizedUser()).thenReturn(mockedUser);
+        UserCardQueueStatus startingStatus = UserCardQueueStatus.NORMAL;
+        UserCardQueueStatus status = UserCardQueueStatus.BAD;
+        RememberingLevel startingRememberingLevel = rememberingLevelRepository
+                .findRememberingLevelByAccountEqualsAndOrderNumber(mockedUser.getAccount(), 4);
+        RememberingLevel expectedRememberingLevel = rememberingLevelRepository
+                .findRememberingLevelByAccountEqualsAndOrderNumber(mockedUser.getAccount(), 3);
+        Date startingDateToRepeat = new Date();
         UserCardQueue actualUserCardQueue = buildUserCardQueueAndSave(startingStatus, startingRememberingLevel,
                 startingDateToRepeat);
 
@@ -338,6 +360,7 @@ public class UserCardQueueServiceTest {
 
     private User createMockedUser(LearningRegime learningRegime) {
         Account mockedAccount = new Account();
+        mockedAccount.setId(ACCOUNT_ID);
         mockedAccount.setEmail(ACCOUNT_EMAIL);
         mockedAccount.setLearningRegime(learningRegime);
         User mockedUser = new User();

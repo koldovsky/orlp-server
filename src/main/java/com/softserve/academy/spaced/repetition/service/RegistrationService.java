@@ -12,28 +12,18 @@ import org.springframework.mail.MailException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Calendar;
-import java.util.Collections;
-
-import static com.softserve.academy.spaced.repetition.domain.Account.CARDS_NUMBER;
-
 @Service
 public class RegistrationService {
 
-    @Autowired
     private AuthorityRepository authorityRepository;
-    @Autowired
     private UserService userService;
-    @Autowired
     private PasswordEncoder passwordEncoder;
-    @Autowired
     private MailService mailService;
-    @Autowired
     private EmailUniquesValidator emailUniquesValidator;
-    @Autowired
     private BlankFieldValidator blankFieldValidator;
-    @Autowired
     private NullFieldsValidator nullFieldsValidator;
+
+    private AccountService accountService;
 
     public User registerNewUser(User user) {
         AbstractValidator validator = getChainOfValidators();
@@ -48,22 +38,57 @@ public class RegistrationService {
     }
 
     public User createNewUser(User user) {
-        user.getAccount().setLastPasswordResetDate(Calendar.getInstance().getTime());
-        user.setFolder(new Folder());
-        user.getAccount().setStatus(AccountStatus.INACTIVE);
-        user.getAccount().setAuthenticationType(AuthenticationType.LOCAL);
-        Authority authority = authorityRepository.findAuthorityByName(AuthorityName.ROLE_USER);
-        user.getAccount().setAuthorities(Collections.singleton(authority));
-        user.getAccount().setLearningRegime(LearningRegime.CARDS_POSTPONING_USING_SPACED_REPETITION);
-        user.getAccount().setCardsNumber(CARDS_NUMBER);
-        user.getAccount().setEmail(user.getAccount().getEmail().toLowerCase());
-        user.getAccount().setPassword(passwordEncoder.encode(user.getAccount().getPassword()));
+        Account account = user.getAccount();
+        userService.initializeNewUser(account, account.getEmail().toLowerCase(), AccountStatus.INACTIVE,
+                AuthenticationType.LOCAL);
         user.getPerson().setTypeImage(ImageType.NONE);
+        user.setFolder(new Folder());
         userService.addUser(user);
+        accountService.initializeLearningRegimeSettingsForAccount(account);
         return user;
     }
 
     public void sendConfirmationEmailMessage(User user) throws MailException {
         mailService.sendConfirmationMail(user);
+    }
+
+    @Autowired
+    public void setAuthorityRepository(AuthorityRepository authorityRepository) {
+        this.authorityRepository = authorityRepository;
+    }
+
+    @Autowired
+    public void setUserService(UserService userService) {
+        this.userService = userService;
+    }
+
+    @Autowired
+    public void setPasswordEncoder(PasswordEncoder passwordEncoder) {
+        this.passwordEncoder = passwordEncoder;
+    }
+
+    @Autowired
+    public void setMailService(MailService mailService) {
+        this.mailService = mailService;
+    }
+
+    @Autowired
+    public void setEmailUniquesValidator(EmailUniquesValidator emailUniquesValidator) {
+        this.emailUniquesValidator = emailUniquesValidator;
+    }
+
+    @Autowired
+    public void setBlankFieldValidator(BlankFieldValidator blankFieldValidator) {
+        this.blankFieldValidator = blankFieldValidator;
+    }
+
+    @Autowired
+    public void setNullFieldsValidator(NullFieldsValidator nullFieldsValidator) {
+        this.nullFieldsValidator = nullFieldsValidator;
+    }
+
+    @Autowired
+    public void setAccountService(AccountService accountService) {
+        this.accountService = accountService;
     }
 }

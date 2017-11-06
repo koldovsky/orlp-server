@@ -14,6 +14,10 @@ public abstract class DTO<T extends EntityInterface> extends ResourceSupport {
     @JsonIgnore
     private Link selfLink;
 
+    public DTO(T entity) {
+        this.entity = entity;
+    }
+
     public DTO(T entity, Link link) {
         this.entity = entity;
         this.selfLink = link;

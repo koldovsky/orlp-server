@@ -1,7 +1,6 @@
 package com.softserve.academy.spaced.repetition.DTO.impl;
 
 import com.softserve.academy.spaced.repetition.DTO.DTO;
-import com.softserve.academy.spaced.repetition.controller.CourseController;
 import com.softserve.academy.spaced.repetition.controller.FolderController;
 import com.softserve.academy.spaced.repetition.controller.authorization.UserController;
 import com.softserve.academy.spaced.repetition.domain.User;

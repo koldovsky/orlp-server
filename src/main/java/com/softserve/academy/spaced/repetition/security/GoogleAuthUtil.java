@@ -9,7 +9,10 @@ import com.softserve.academy.spaced.repetition.audit.AuditingAction;
 import com.softserve.academy.spaced.repetition.domain.*;
 import com.softserve.academy.spaced.repetition.repository.AccountRepository;
 import com.softserve.academy.spaced.repetition.repository.AuthorityRepository;
+import com.softserve.academy.spaced.repetition.repository.RememberingLevelRepository;
 import com.softserve.academy.spaced.repetition.repository.UserRepository;
+import com.softserve.academy.spaced.repetition.service.AccountService;
+import com.softserve.academy.spaced.repetition.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -17,9 +20,6 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.util.Collections;
-import java.util.Date;
-
-import static com.softserve.academy.spaced.repetition.domain.Account.CARDS_NUMBER;
 
 @Component
 public class GoogleAuthUtil {
@@ -31,14 +31,26 @@ public class GoogleAuthUtil {
     @Value("${app.social.google.client-id}")
     private String clientId;
 
-    @Autowired
-    private AccountRepository accountRepository;
+    private final AccountRepository accountRepository;
+
+    private final UserRepository userRepository;
+
+    private final AuthorityRepository authorityRepository;
+
+    private final AccountService accountService;
+
+    private final UserService userService;
 
     @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private AuthorityRepository authorityRepository;
+    public GoogleAuthUtil(AccountRepository accountRepository, UserRepository userRepository,
+                          AuthorityRepository authorityRepository,
+                          RememberingLevelRepository rememberingLevelRepository, AccountService accountService, UserService userService) {
+        this.accountRepository = accountRepository;
+        this.userRepository = userRepository;
+        this.authorityRepository = authorityRepository;
+        this.accountService = accountService;
+        this.userService = userService;
+    }
 
     public GoogleIdToken getGoogleIdToken(String idToken) {
         GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(new NetHttpTransport(), new JacksonFactory())
@@ -74,26 +86,11 @@ public class GoogleAuthUtil {
     @Auditable(action = AuditingAction.SIGN_UP_GOOGLE)
     public void saveNewGoogleUser(GoogleIdToken googleIdToken) {
         GoogleIdToken.Payload payload = googleIdToken.getPayload();
-        User user = new User();
         Account account = new Account();
-        Folder folder = new Folder();
-        Person person = new Person();
-        account.setEmail(payload.getEmail());
-        account.setPassword("-1");
-        account.setLastPasswordResetDate(new Date());
-        account.setStatus(AccountStatus.ACTIVE);
-        account.setAuthenticationType(AuthenticationType.GOOGLE);
-        Authority authority = authorityRepository.findAuthorityByName(AuthorityName.ROLE_USER);
-        account.setAuthorities(Collections.singleton(authority));
-        person.setFirstName((String) payload.get(FIRST_NAME));
-        person.setLastName((String) payload.get(LAST_NAME));
-        person.setImage((String) payload.get(IMAGE));
-        person.setTypeImage(ImageType.LINK);
-        account.setLearningRegime(LearningRegime.CARDS_POSTPONING_USING_SPACED_REPETITION);
-        account.setCardsNumber(CARDS_NUMBER);
-        user.setAccount(account);
-        user.setFolder(folder);
-        user.setPerson(person);
-        userRepository.save(user);
+        userService.initializeNewUser(account, payload.getEmail(), AccountStatus.ACTIVE, AuthenticationType.GOOGLE);
+        Person person = new Person((String) payload.get(FIRST_NAME), (String) payload.get(LAST_NAME), ImageType.LINK,
+                (String) payload.get(IMAGE));
+        userRepository.save(new User(account, person, new Folder()));
+        accountService.initializeLearningRegimeSettingsForAccount(account);
     }
 }
