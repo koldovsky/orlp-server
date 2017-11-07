@@ -72,6 +72,6 @@ public class CourseCommentService {
     @Transactional
     public void deleteCommentById(Long commentId) {
         LOGGER.debug("Deleted comment with id:{}", commentId);
-        commentRepository.deleteChildComments(commentId);
+        commentRepository.deleteComment(commentId);
     }
 }

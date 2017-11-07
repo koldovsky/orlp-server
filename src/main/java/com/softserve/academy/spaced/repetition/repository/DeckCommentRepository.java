@@ -17,6 +17,6 @@ public interface DeckCommentRepository extends JpaRepository<DeckComment, Long> 
 
     @Modifying
     @Query(value = "DELETE FROM CourseComment c WHERE c.id =:commentId OR c.parentCommentId = :commentId")
-    void deleteChildComments(@Param("commentId") Long commentId);
+    void deleteComment(@Param("commentId") Long commentId);
 }
 

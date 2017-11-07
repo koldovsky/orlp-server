@@ -17,5 +17,5 @@ public interface CourseCommentRepository extends JpaRepository<CourseComment, Lo
 
     @Modifying
     @Query(value = "DELETE FROM CourseComment c WHERE c.id =:commentId OR c.parentCommentId = :commentId")
-    void deleteChildComments(@Param("commentId") Long commentId);
+    void deleteComment(@Param("commentId") Long commentId);
 }

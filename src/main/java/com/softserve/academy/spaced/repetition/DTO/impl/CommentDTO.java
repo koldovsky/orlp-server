@@ -9,7 +9,7 @@ import org.springframework.hateoas.Link;
 
 import java.util.*;
 
-public class CommentDTO extends DTO<Comment> {
+public class CommentDTO extends DTO<Comment> implements Comparable<CommentDTO> {
 
     private List<CommentDTO> childComments;
 
@@ -89,7 +89,12 @@ public class CommentDTO extends DTO<Comment> {
         for (CommentDTO comment : parentComments.values()) {
             commentsTree.add(comment);
         }
+        Collections.sort(commentsTree);
         return commentsTree;
     }
 
+    @Override
+    public int compareTo(CommentDTO o1) {
+        return this.getCommentDate().compareTo(o1.getCommentDate());
+    }
 }
