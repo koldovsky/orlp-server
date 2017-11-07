@@ -1,10 +1,12 @@
 package com.softserve.academy.spaced.repetition.service;
 
-import com.softserve.academy.spaced.repetition.domain.*;
+import com.softserve.academy.spaced.repetition.domain.Card;
+import com.softserve.academy.spaced.repetition.domain.Deck;
+import com.softserve.academy.spaced.repetition.domain.LearningRegime;
+import com.softserve.academy.spaced.repetition.domain.User;
 import com.softserve.academy.spaced.repetition.exceptions.NotAuthorisedUserException;
 import com.softserve.academy.spaced.repetition.repository.CardRepository;
 import com.softserve.academy.spaced.repetition.repository.DeckRepository;
-import com.softserve.academy.spaced.repetition.repository.UserCardQueueRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -108,8 +110,8 @@ public class CardService {
 
     @Transactional
     public boolean areThereNotPostponedCardsAvailable(Long deckId) throws NotAuthorisedUserException {
-        Account account = userService.getAuthorizedUser().getAccount();
+        User user = userService.getAuthorizedUser();
         return userCardQueueService.countCardsThatNeedRepeating(deckId) > 0 ||
-                cardRepository.getNewCards(deckId, account.getEmail(), account.getCardsNumber()).size() > 0;
+                cardRepository.getNewCards(deckId, user.getId(), user.getAccount().getCardsNumber()).size() > 0;
     }
 }
