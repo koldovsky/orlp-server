@@ -90,12 +90,12 @@ public class DeckRatingControllerTest {
                 .content("{\"rating\":0}")
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isConflict());
+                .andExpect(status().isBadRequest());
 
         mockMvc.perform(post("/api/private/deck/{deckId}", 5L)
                 .content("{\"rating\":6}")
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isConflict());
+                .andExpect(status().isBadRequest());
     }
 }
