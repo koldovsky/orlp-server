@@ -38,7 +38,7 @@ public class CourseCommentController {
         List<Comment> courseCommentsList = courseCommentService.getAllCommentsForCourse(courseId);
         Link collectionLink = linkTo(methodOn(CourseCommentController.class).getAllCommentsByCourse(categoryId, courseId)).withSelfRel();
         List<CommentDTO> listOfComments = DTOBuilder.buildDtoListForCollection(courseCommentsList, CommentDTO.class, collectionLink);
-        List<CommentDTO> commentsTree = courseCommentService.getTreeOfComments(listOfComments);
+        List<CommentDTO> commentsTree = CommentDTO.buildCommentsTree(listOfComments);
         return new ResponseEntity<>(commentsTree, HttpStatus.OK);
     }
 

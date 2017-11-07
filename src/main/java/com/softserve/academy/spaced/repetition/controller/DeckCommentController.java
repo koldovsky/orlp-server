@@ -37,7 +37,7 @@ public class DeckCommentController {
         List<Comment> commentsList = commentService.getAllCommentsForDeck(deckId);
         Link collectionLink = linkTo(methodOn(DeckCommentController.class).getAllCommentsForDeck(categoryId, deckId)).withSelfRel();
         List<CommentDTO> listOfComments = DTOBuilder.buildDtoListForCollection(commentsList, CommentDTO.class, collectionLink);
-        List<CommentDTO> commentsTree = commentService.getTreeOfComments(listOfComments);
+        List<CommentDTO> commentsTree = CommentDTO.buildCommentsTree(listOfComments);
         return new ResponseEntity<>(commentsTree, HttpStatus.OK);
     }
 

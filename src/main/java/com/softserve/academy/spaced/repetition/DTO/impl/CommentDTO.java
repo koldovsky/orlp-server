@@ -7,14 +7,11 @@ import com.softserve.academy.spaced.repetition.domain.DeckComment;
 import com.softserve.academy.spaced.repetition.domain.ImageType;
 import org.springframework.hateoas.Link;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 public class CommentDTO extends DTO<Comment> {
 
     private List<CommentDTO> childComments;
-
 
     public CommentDTO(DeckComment comment, Link link) {
         super(comment, link);
@@ -24,34 +21,75 @@ public class CommentDTO extends DTO<Comment> {
         super(comment, link);
     }
 
-    public Long getCommentId() { return getEntity().getId(); }
+    public Long getCommentId() {
+        return getEntity().getId();
+    }
 
-    public String getCommentText() { return getEntity().getCommentText(); }
+    public String getCommentText() {
+        return getEntity().getCommentText();
+    }
 
-    public Date getCommentDate() { return getEntity().getCommentDate(); }
+    public Date getCommentDate() {
+        return getEntity().getCommentDate();
+    }
 
-    public String getPersonFirstName() { return getEntity().getPerson().getFirstName(); }
+    public Long getPersonId() {
+        return getEntity().getPerson().getId();
+    }
 
-    public String getPersonLastName() { return getEntity().getPerson().getLastName(); }
+    public String getPersonFirstName() {
+        return getEntity().getPerson().getFirstName();
+    }
 
-    public ImageType getImageType() { return getEntity().getPerson().getTypeImage(); }
+    public String getPersonLastName() {
+        return getEntity().getPerson().getLastName();
+    }
 
-    public String getImageBase64() { return getEntity().getPerson().getImageBase64(); }
+    public ImageType getImageType() {
+        return getEntity().getPerson().getTypeImage();
+    }
+
+    public String getImageBase64() {
+        return getEntity().getPerson().getImageBase64();
+    }
 
     public String getImage() {
         return getEntity().getPerson().getImage();
     }
 
-    public Long getParentCommentId() { return getEntity().getParentCommentId(); }
+    public Long getParentCommentId() {
+        return getEntity().getParentCommentId();
+    }
 
-    public List<CommentDTO> getListOfChildComments() { return childComments; }
+    public List<CommentDTO> getListOfChildComments() {
+        return childComments;
+    }
 
-    public void setChildComments(CommentDTO comment) {
+    public void addChildComment(CommentDTO comment) {
         if (this.childComments == null) {
             this.childComments = new ArrayList<>();
         }
         this.childComments.add(comment);
     }
 
+    public static List<CommentDTO> buildCommentsTree(List<CommentDTO> comments) {
+        Map<Long, CommentDTO> parentComments = new HashMap<>();
+        for (CommentDTO comment : comments) {
+            if (comment.getParentCommentId() == null) {
+                parentComments.put(comment.getCommentId(), comment);
+            }
+        }
+        for (CommentDTO childComment : comments) {
+            CommentDTO parentComment = parentComments.get(childComment.getParentCommentId());
+            if (parentComment != null) {
+                parentComment.addChildComment(childComment);
+            }
+        }
+        List<CommentDTO> commentsTree = new ArrayList<>();
+        for (CommentDTO comment : parentComments.values()) {
+            commentsTree.add(comment);
+        }
+        return commentsTree;
+    }
 
 }

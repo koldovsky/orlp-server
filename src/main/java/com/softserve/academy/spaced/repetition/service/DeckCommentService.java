@@ -1,6 +1,5 @@
 package com.softserve.academy.spaced.repetition.service;
 
-import com.softserve.academy.spaced.repetition.DTO.impl.CommentDTO;
 import com.softserve.academy.spaced.repetition.domain.Comment;
 import com.softserve.academy.spaced.repetition.domain.DeckComment;
 import com.softserve.academy.spaced.repetition.exceptions.NotAuthorisedUserException;
@@ -13,7 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.*;
+import java.util.Date;
+import java.util.List;
 
 @Service
 public class DeckCommentService {
@@ -63,33 +63,9 @@ public class DeckCommentService {
         return updatedComment;
     }
 
+    @Transactional
     public void deleteCommentById(Long commentId) {
         LOGGER.debug("Deleted comment with id:{}", commentId);
-        if (commentRepository.findOne(commentId).getParentCommentId() == null) {
-            commentRepository.findDeckCommentsByParentCommentId(commentId).stream()
-                    .forEach(comment -> commentRepository.delete(comment.getId()));
-        }
-        commentRepository.delete(commentId);
-    }
-
-    public List<CommentDTO> getTreeOfComments(List<CommentDTO> comments){
-        LOGGER.debug("Built tree of all comments");
-        Map<Long, CommentDTO> parentComments = new HashMap<>();
-        for (CommentDTO comment : comments) {
-            if (comment.getParentCommentId() == null) {
-                parentComments.put(comment.getCommentId(), comment);
-            }
-        }
-        for (CommentDTO childComment : comments) {
-            CommentDTO parentComment = parentComments.get(childComment.getParentCommentId());
-            if (parentComment != null) {
-                parentComment.setChildComments(childComment);
-            }
-        }
-        List<CommentDTO> commentsTree = new ArrayList<>();
-        for (CommentDTO comment : parentComments.values()) {
-            commentsTree.add(comment);
-        }
-        return commentsTree;
+        commentRepository.deleteChildComments(commentId);
     }
 }
