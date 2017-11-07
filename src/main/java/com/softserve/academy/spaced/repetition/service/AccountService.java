@@ -15,6 +15,7 @@ import java.util.List;
 
 @Service
 public class AccountService {
+    public static final int NUMBER_OF_REMEMBERING_LEVELS = 6;
     private final AccountRepository accountRepository;
     private final RememberingLevelRepository rememberingLevelRepository;
     private final UserService userService;

@@ -8,6 +8,4 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface RememberingLevelRepository extends JpaRepository<RememberingLevel, Long> {
     RememberingLevel findRememberingLevelByAccountEqualsAndOrderNumber(Account account, Integer orderNumber);
-
-    int countAllByAccountEquals(Account account);
 }

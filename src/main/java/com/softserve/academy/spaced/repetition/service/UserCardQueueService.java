@@ -10,6 +10,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 
+import static com.softserve.academy.spaced.repetition.service.AccountService.NUMBER_OF_REMEMBERING_LEVELS;
+
 @Service
 public class UserCardQueueService {
     private static final int DAY_IN_MILLISECONDS = 24 * 60 * 60 * 1000;
@@ -28,13 +30,12 @@ public class UserCardQueueService {
     public void updateUserCardQueue(Long deckId, Long cardId, UserCardQueueStatus userCardQueueStatus)
             throws NotAuthorisedUserException {
         User user = userService.getAuthorizedUser();
-        String email = user.getAccount().getEmail();
-        UserCardQueue userCardQueue = userCardQueueRepository.findUserCardQueueByAccountEmailAndCardId(email, cardId);
+        UserCardQueue userCardQueue = userCardQueueRepository.findUserCardQueueByUserIdAndCardId(user.getId(), cardId);
         if (userCardQueue == null) {
             userCardQueue = new UserCardQueue();
             userCardQueue.setCardId(cardId);
             userCardQueue.setDeckId(deckId);
-            userCardQueue.setAccountEmail(email);
+            userCardQueue.setUserId(user.getId());
         }
         userCardQueue.setCardDate(new Date());
 
@@ -59,7 +60,7 @@ public class UserCardQueueService {
             userCardQueue.setRememberingLevel(rememberingLevelRepository
                     .findRememberingLevelByAccountEqualsAndOrderNumber(account, rememberingLevel.getOrderNumber() - 1));
         } else if (status == UserCardQueueStatus.GOOD &&
-                rememberingLevel.getOrderNumber() < rememberingLevelRepository.countAllByAccountEquals(account)) {
+                rememberingLevel.getOrderNumber() < NUMBER_OF_REMEMBERING_LEVELS) {
             userCardQueue.setRememberingLevel(rememberingLevelRepository
                     .findRememberingLevelByAccountEqualsAndOrderNumber(account, rememberingLevel.getOrderNumber() + 1));
         } else {
@@ -76,7 +77,7 @@ public class UserCardQueueService {
 
     @Transactional
     public long countCardsThatNeedRepeating(Long deckId) throws NotAuthorisedUserException {
-        return userCardQueueRepository.countAllByAccountEmailEqualsAndDeckIdEqualsAndDateToRepeatBefore(
-                userService.getAuthorizedUser().getAccount().getEmail(), deckId, new Date());
+        return userCardQueueRepository.countAllByUserIdEqualsAndDeckIdEqualsAndDateToRepeatBefore(
+                userService.getAuthorizedUser().getId(), deckId, new Date());
     }
 }

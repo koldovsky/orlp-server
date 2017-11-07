@@ -15,8 +15,8 @@ public class UserCardQueue implements EntityInterface {
     @Column(name = "user_card_queue_id")
     private Long id;
 
-    @Column(name = "account_email", nullable = false)
-    private String accountEmail;
+    @Column(name = "user_id", nullable = false)
+    private Long userId;
 
     @Column(name = "card_id", nullable = false)
     private Long cardId;
@@ -60,12 +60,12 @@ public class UserCardQueue implements EntityInterface {
         this.deckId = deckId;
     }
 
-    public String getAccountEmail() {
-        return accountEmail;
+    public Long getUserId() {
+        return userId;
     }
 
-    public void setAccountEmail(String accountEmail) {
-        this.accountEmail = accountEmail;
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
     public Long getCardId() {

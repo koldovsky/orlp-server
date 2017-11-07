@@ -13,8 +13,8 @@ public class UserCardQueuePublicDTO extends DTO<UserCardQueue> {
         super(userCardQueue, link);
     }
 
-    public String getAccountEmail() {
-        return getEntity().getAccountEmail();
+    public Long getUserId() {
+        return getEntity().getUserId();
     }
 
     public long getCardId() {

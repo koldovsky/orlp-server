@@ -8,7 +8,7 @@ import java.util.Date;
 
 @Repository
 public interface UserCardQueueRepository extends JpaRepository<UserCardQueue, Long> {
-    UserCardQueue findUserCardQueueByAccountEmailAndCardId(String accountEmail, Long cardId);
+    UserCardQueue findUserCardQueueByUserIdAndCardId(Long userId, Long cardId);
 
-    long countAllByAccountEmailEqualsAndDeckIdEqualsAndDateToRepeatBefore(String email, Long deckId, Date now);
+    long countAllByUserIdEqualsAndDeckIdEqualsAndDateToRepeatBefore(Long userId, Long deckId, Date now);
 }
