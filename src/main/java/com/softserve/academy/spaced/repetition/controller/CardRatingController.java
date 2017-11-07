@@ -6,7 +6,6 @@ import com.softserve.academy.spaced.repetition.audit.Auditable;
 import com.softserve.academy.spaced.repetition.audit.AuditingAction;
 import com.softserve.academy.spaced.repetition.domain.CardRating;
 import com.softserve.academy.spaced.repetition.exceptions.NotAuthorisedUserException;
-import com.softserve.academy.spaced.repetition.exceptions.RatingsBadValueException;
 import com.softserve.academy.spaced.repetition.service.CardRatingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Link;
@@ -48,20 +47,20 @@ public class CardRatingController {
      * @param deckId
      * @param cardId
      * @return CardRatingDTO
-     * @throws RatingsBadValueException
+     * @throws IllegalArgumentException
      * @throws NotAuthorisedUserException
      */
     @Auditable(action = AuditingAction.RATE_CARD)
     @PostMapping("/api/private/decks/{deckId}/cards/{cardId}/rate")
     @PreAuthorize(value = "@accessToUrlService.hasAccessToCard(#deckId, #cardId)")
-    public ResponseEntity<CardRatingPublicDTO> addCardRating(@RequestBody CardRating cardRating, @PathVariable Long deckId, @PathVariable Long cardId) throws RatingsBadValueException, NotAuthorisedUserException {
+    public ResponseEntity<CardRatingPublicDTO> addCardRating(@RequestBody CardRating cardRating, @PathVariable Long deckId, @PathVariable Long cardId) throws NotAuthorisedUserException {
         if ((cardRating.getRating() >= MIN_RATING) && (cardRating.getRating() <= MAX_RATING)) {
             cardRatingService.addCardRating(cardRating, cardId);
             Link selfLink = linkTo(methodOn(CardRatingController.class).getCardRatingById(cardRating.getId())).withSelfRel();
             CardRatingPublicDTO cardRatingPublicDTO = DTOBuilder.buildDtoForEntity(cardRating, CardRatingPublicDTO.class, selfLink);
             return new ResponseEntity<>(cardRatingPublicDTO, HttpStatus.CREATED);
         } else {
-            throw new RatingsBadValueException();
+            throw new IllegalArgumentException("Rating can't be less than 1 and more than 5");
         }
     }
 }

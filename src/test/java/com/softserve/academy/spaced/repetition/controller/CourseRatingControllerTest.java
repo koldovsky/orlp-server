@@ -91,12 +91,12 @@ public class CourseRatingControllerTest {
                 .content("{\"rating\":0}")
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isConflict());
+                .andExpect(status().isBadRequest());
 
         mockMvc.perform(post("/api/private/course/{courseId}", 5L)
                 .content("{\"rating\":6}")
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isConflict());
+                .andExpect(status().isBadRequest());
     }
 }

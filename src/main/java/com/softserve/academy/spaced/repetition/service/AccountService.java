@@ -13,8 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static com.softserve.academy.spaced.repetition.domain.Account.INITIAL_CARDS_NUMBER;
-
 @Service
 public class AccountService {
     public static final int NUMBER_OF_REMEMBERING_LEVELS = 6;
@@ -77,8 +75,6 @@ public class AccountService {
 
     @Transactional
     public void initializeLearningRegimeSettingsForAccount(Account account) {
-        account.setLearningRegime(LearningRegime.CARDS_POSTPONING_USING_SPACED_REPETITION);
-        account.setCardsNumber(INITIAL_CARDS_NUMBER);
         rememberingLevelRepository.save(new RememberingLevel(1, "Teapot", 1, account));
         rememberingLevelRepository.save(new RememberingLevel(2, "Monkey", 3, account));
         rememberingLevelRepository.save(new RememberingLevel(3, "Beginner", 7, account));
