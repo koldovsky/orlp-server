@@ -7,6 +7,8 @@ import com.softserve.academy.spaced.repetition.repository.RememberingLevelReposi
 import com.softserve.academy.spaced.repetition.service.UserService;
 import org.springframework.stereotype.Service;
 
+import static com.softserve.academy.spaced.repetition.service.AccountService.NUMBER_OF_REMEMBERING_LEVELS;
+
 @Service
 public class NumberOfPostponedDaysValidator {
     private final UserService userService;
@@ -30,10 +32,10 @@ public class NumberOfPostponedDaysValidator {
                         "number of postponed days for a previous one.");
             }
         }
-        if (level.getOrderNumber() < rememberingLevelRepository.countAllByAccountEquals(account)) {
+        if (level.getOrderNumber() < NUMBER_OF_REMEMBERING_LEVELS) {
             RememberingLevel nextLevel = rememberingLevelRepository
                     .findRememberingLevelByAccountEqualsAndOrderNumber(account, level.getOrderNumber() + 1);
-            if (numberOfPostponedDays <= nextLevel.getNumberOfPostponedDays()) {
+            if (numberOfPostponedDays >= nextLevel.getNumberOfPostponedDays()) {
                 throw new IllegalArgumentException("Number of postponed days for this level should be less than " +
                         "number of postponed days for a next one.");
             }

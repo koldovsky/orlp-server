@@ -17,6 +17,7 @@ import static com.softserve.academy.spaced.repetition.domain.Account.INITIAL_CAR
 
 @Service
 public class AccountService {
+    public static final int NUMBER_OF_REMEMBERING_LEVELS = 6;
     private final AccountRepository accountRepository;
     private final RememberingLevelRepository rememberingLevelRepository;
     private final UserService userService;

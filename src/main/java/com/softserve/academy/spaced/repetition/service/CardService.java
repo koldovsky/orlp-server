@@ -38,19 +38,18 @@ public class CardService {
     public List<Card> getLearningCards(Long deckId) throws NotAuthorisedUserException {
         try {
             User user = userService.getAuthorizedUser();
-            String email = user.getAccount().getEmail();
             final int cardsNumber = accountService.getCardsNumber();
             List<Card> learningCards = new ArrayList<>();
             if (user.getAccount().getLearningRegime().equals(LearningRegime.BAD_NORMAL_GOOD_STATUS_DEPENDING)) {
-                learningCards = cardRepository.cardsForLearningWithOutStatus(email, deckId, cardsNumber);
+                learningCards = cardRepository.cardsForLearningWithOutStatus(user.getId(), deckId, cardsNumber);
                 if (learningCards.size() < cardsNumber) {
-                    learningCards.addAll(cardRepository.cardsQueueForLearningWithStatus(email, deckId,
+                    learningCards.addAll(cardRepository.cardsQueueForLearningWithStatus(user.getId(), deckId,
                             cardsNumber - learningCards.size()));
                 }
             } else if (user.getAccount().getLearningRegime().equals(LearningRegime.CARDS_POSTPONING_USING_SPACED_REPETITION)) {
-                learningCards = cardRepository.getCardsThatNeedRepeating(deckId, new Date(), email, cardsNumber);
+                learningCards = cardRepository.getCardsThatNeedRepeating(deckId, new Date(), user.getId(), cardsNumber);
                 if (learningCards.size() < cardsNumber) {
-                    learningCards.addAll(cardRepository.getNewCards(deckId, email, cardsNumber - learningCards.size()));
+                    learningCards.addAll(cardRepository.getNewCards(deckId, user.getId(), cardsNumber - learningCards.size()));
                 }
             }
             return learningCards;
@@ -83,12 +82,11 @@ public class CardService {
 
     public List<Card> getCardsQueue(long deckId) throws NotAuthorisedUserException {
         User user = userService.getAuthorizedUser();
-        String email = user.getAccount().getEmail();
         final int cardsNumber = accountService.getCardsNumber();
-        List<Card> cardsQueue = cardRepository.cardsForLearningWithOutStatus(email, deckId, cardsNumber);
+        List<Card> cardsQueue = cardRepository.cardsForLearningWithOutStatus(user.getId(), deckId, cardsNumber);
 
         if (cardsQueue.size() < cardsNumber) {
-            cardsQueue.addAll(cardRepository.cardsQueueForLearningWithStatus(email, deckId, cardsNumber).subList(0,
+            cardsQueue.addAll(cardRepository.cardsQueueForLearningWithStatus(user.getId(), deckId, cardsNumber).subList(0,
                     cardsNumber - cardsQueue.size()));
         }
         return cardsQueue;
@@ -102,7 +100,6 @@ public class CardService {
 
     public List<Card> getAdditionalLearningCards(Long deckId) throws NotAuthorisedUserException {
         User user = userService.getAuthorizedUser();
-        String email = user.getAccount().getEmail();
-        return cardRepository.getPostponedCards(deckId, new Date(), email, accountService.getCardsNumber());
+        return cardRepository.getPostponedCards(deckId, new Date(), user.getId(), accountService.getCardsNumber());
     }
 }
