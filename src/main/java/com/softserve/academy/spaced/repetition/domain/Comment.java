@@ -5,6 +5,7 @@ import com.softserve.academy.spaced.repetition.DTO.EntityInterface;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
+import java.util.Objects;
 
 @Entity
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
@@ -26,6 +27,9 @@ public abstract class Comment implements EntityInterface{
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "person_id")
     private Person person;
+
+    @Column(name = "parentCommentId")
+    private Long parentCommentId;
 
     public Comment(){
     }
@@ -66,5 +70,28 @@ public abstract class Comment implements EntityInterface{
 
     public void setPerson(Person person) {
         this.person = person;
+    }
+
+    public Long getParentCommentId() { return parentCommentId; }
+
+    public void setParentCommentId(Long parentCommentId) { this.parentCommentId = parentCommentId; }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Comment comment = (Comment) o;
+        return Objects.equals(this.id, comment.id);
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 0;
+        hash += (id != null ? id.hashCode() : 0);
+        return hash;
     }
 }

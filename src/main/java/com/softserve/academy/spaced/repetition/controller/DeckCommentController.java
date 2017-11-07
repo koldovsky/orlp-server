@@ -2,6 +2,7 @@ package com.softserve.academy.spaced.repetition.controller;
 
 import com.softserve.academy.spaced.repetition.DTO.DTOBuilder;
 import com.softserve.academy.spaced.repetition.DTO.impl.CommentDTO;
+import com.softserve.academy.spaced.repetition.DTO.impl.ReplyToCommentDTO;
 import com.softserve.academy.spaced.repetition.audit.Auditable;
 import com.softserve.academy.spaced.repetition.audit.AuditingAction;
 import com.softserve.academy.spaced.repetition.domain.Comment;
@@ -35,8 +36,9 @@ public class DeckCommentController {
         LOGGER.debug("View all comments for deck with id: {}", deckId);
         List<Comment> commentsList = commentService.getAllCommentsForDeck(deckId);
         Link collectionLink = linkTo(methodOn(DeckCommentController.class).getAllCommentsForDeck(categoryId, deckId)).withSelfRel();
-        List<CommentDTO> comments = DTOBuilder.buildDtoListForCollection(commentsList, CommentDTO.class, collectionLink);
-        return new ResponseEntity<>(comments, HttpStatus.OK);
+        List<CommentDTO> listOfComments = DTOBuilder.buildDtoListForCollection(commentsList, CommentDTO.class, collectionLink);
+        List<CommentDTO> commentsTree = CommentDTO.buildCommentsTree(listOfComments);
+        return new ResponseEntity<>(commentsTree, HttpStatus.OK);
     }
 
     @Auditable(action = AuditingAction.VIEW_COMMENT_FOR_DECK)
@@ -52,9 +54,9 @@ public class DeckCommentController {
     @Auditable(action = AuditingAction.CREATE_COMMENT_FOR_DECK)
     @PostMapping(value = "/api/category/{categoryId}/deck/{deckId}/comment")
     @PreAuthorize(value = "@accessToUrlService.hasAccessToDeck(#categoryId)")
-    public ResponseEntity<CommentDTO> addCommentForDeck(@RequestBody String commentText, @PathVariable Long categoryId, @PathVariable Long deckId) throws NotAuthorisedUserException {
+    public ResponseEntity<CommentDTO> addCommentForDeck(@RequestBody ReplyToCommentDTO replyToCommentDTO, @RequestBody String commentText, @PathVariable Long categoryId, @PathVariable Long deckId) throws NotAuthorisedUserException {
         LOGGER.debug("Added comment to deck with id: {}", deckId);
-        DeckComment comment = commentService.addCommentForDeck(commentText, deckId);
+        DeckComment comment = commentService.addCommentForDeck(deckId, replyToCommentDTO.getCommentText(), replyToCommentDTO.getParentCommentId());
         Link selfLink = linkTo(methodOn(DeckCommentController.class).getCommentById(categoryId, deckId, comment.getId())).withSelfRel();
         CommentDTO commentDTO = DTOBuilder.buildDtoForEntity(comment, CommentDTO.class, selfLink);
         return new ResponseEntity<>(commentDTO, HttpStatus.CREATED);
