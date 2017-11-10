@@ -22,12 +22,17 @@ public class PasswordDTO {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof PasswordDTO)) return false;
-
+        if (this == o){
+            return true;
+        }
+        if (!(o instanceof PasswordDTO)){
+            return false;
+        }
         PasswordDTO passwordDTO = (PasswordDTO) o;
-        if (currentPassword != null && newPassword != null && currentPassword.equals(passwordDTO.currentPassword) && newPassword.equals(passwordDTO.newPassword)){
-            return true;} else {
+        if (currentPassword != null && newPassword != null && currentPassword.equals(passwordDTO.currentPassword)
+                && newPassword.equals(passwordDTO.newPassword)){
+            return true;
+        } else {
             return false;
         }
     }
