@@ -1,6 +1,6 @@
 package com.softserve.academy.spaced.repetition.service.validators;
 
-import com.softserve.academy.spaced.repetition.DTO.impl.PasswordDTO;
+import com.softserve.academy.spaced.repetition.dto.impl.PasswordDTO;
 import com.softserve.academy.spaced.repetition.exceptions.NotAuthorisedUserException;
 import com.softserve.academy.spaced.repetition.repository.UserRepository;
 import com.softserve.academy.spaced.repetition.service.UserService;

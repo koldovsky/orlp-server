@@ -1,6 +1,6 @@
-package com.softserve.academy.spaced.repetition.DTO.impl;
+package com.softserve.academy.spaced.repetition.dto.impl;
 
-import com.softserve.academy.spaced.repetition.DTO.DTO;
+import com.softserve.academy.spaced.repetition.dto.DTO;
 import com.softserve.academy.spaced.repetition.domain.Card;
 import org.springframework.hateoas.Link;
 

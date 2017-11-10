@@ -1,9 +1,9 @@
 package com.softserve.academy.spaced.repetition.controller.authorization;
 
-import com.softserve.academy.spaced.repetition.DTO.DTOBuilder;
-import com.softserve.academy.spaced.repetition.DTO.impl.CourseLinkDTO;
-import com.softserve.academy.spaced.repetition.DTO.impl.UserDTO;
-import com.softserve.academy.spaced.repetition.DTO.impl.UserLinksDTO;
+import com.softserve.academy.spaced.repetition.dto.DTOBuilder;
+import com.softserve.academy.spaced.repetition.dto.impl.CourseLinkDTO;
+import com.softserve.academy.spaced.repetition.dto.impl.UserDTO;
+import com.softserve.academy.spaced.repetition.dto.impl.UserLinksDTO;
 import com.softserve.academy.spaced.repetition.domain.Course;
 import com.softserve.academy.spaced.repetition.domain.User;
 import com.softserve.academy.spaced.repetition.exceptions.NotAuthorisedUserException;

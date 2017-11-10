@@ -1,6 +1,6 @@
 package com.softserve.academy.spaced.repetition.controller;
 
-import com.softserve.academy.spaced.repetition.DTO.impl.MessageDTO;
+import com.softserve.academy.spaced.repetition.dto.impl.MessageDTO;
 import com.softserve.academy.spaced.repetition.domain.AccountStatus;
 import com.softserve.academy.spaced.repetition.exceptions.*;
 import org.springframework.http.HttpStatus;

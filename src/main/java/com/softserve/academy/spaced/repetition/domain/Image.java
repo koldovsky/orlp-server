@@ -1,6 +1,6 @@
 package com.softserve.academy.spaced.repetition.domain;
 
-import com.softserve.academy.spaced.repetition.DTO.EntityInterface;
+import com.softserve.academy.spaced.repetition.dto.EntityInterface;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
