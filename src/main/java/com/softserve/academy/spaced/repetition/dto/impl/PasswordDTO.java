@@ -26,8 +26,10 @@ public class PasswordDTO {
         if (!(o instanceof PasswordDTO)) return false;
 
         PasswordDTO passwordDTO = (PasswordDTO) o;
-        if (currentPassword != null && newPassword != null && currentPassword.equals(passwordDTO.currentPassword) && newPassword.equals(passwordDTO.newPassword)){
-            return true;} else {
+        if (currentPassword != null && newPassword != null && currentPassword.equals(passwordDTO.currentPassword)
+                && newPassword.equals(passwordDTO.newPassword)){
+            return true;
+        } else {
             return false;
         }
     }
