@@ -1,7 +1,7 @@
 package com.softserve.academy.spaced.repetition.controller;
 
-import com.softserve.academy.spaced.repetition.DTO.DTOBuilder;
-import com.softserve.academy.spaced.repetition.DTO.impl.UserCardQueuePublicDTO;
+import com.softserve.academy.spaced.repetition.dto.DTOBuilder;
+import com.softserve.academy.spaced.repetition.dto.impl.UserCardQueuePublicDTO;
 import com.softserve.academy.spaced.repetition.domain.UserCardQueue;
 import com.softserve.academy.spaced.repetition.domain.UserCardQueueStatus;
 import com.softserve.academy.spaced.repetition.exceptions.NotAuthorisedUserException;

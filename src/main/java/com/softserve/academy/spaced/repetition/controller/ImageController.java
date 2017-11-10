@@ -1,8 +1,8 @@
 package com.softserve.academy.spaced.repetition.controller;
 
-import com.softserve.academy.spaced.repetition.DTO.DTOBuilder;
-import com.softserve.academy.spaced.repetition.DTO.impl.ImageDTO;
-import com.softserve.academy.spaced.repetition.DTO.impl.UploadingImageDTO;
+import com.softserve.academy.spaced.repetition.dto.DTOBuilder;
+import com.softserve.academy.spaced.repetition.dto.impl.ImageDTO;
+import com.softserve.academy.spaced.repetition.dto.impl.UploadingImageDTO;
 import com.softserve.academy.spaced.repetition.audit.Auditable;
 import com.softserve.academy.spaced.repetition.audit.AuditingAction;
 import com.softserve.academy.spaced.repetition.domain.Image;
