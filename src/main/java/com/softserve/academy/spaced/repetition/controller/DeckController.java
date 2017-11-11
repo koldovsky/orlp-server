@@ -1,7 +1,7 @@
 package com.softserve.academy.spaced.repetition.controller;
 
-import com.softserve.academy.spaced.repetition.DTO.DTOBuilder;
-import com.softserve.academy.spaced.repetition.DTO.impl.*;
+import com.softserve.academy.spaced.repetition.dto.DTOBuilder;
+import com.softserve.academy.spaced.repetition.dto.impl.*;
 import com.softserve.academy.spaced.repetition.audit.Auditable;
 import com.softserve.academy.spaced.repetition.audit.AuditingAction;
 import com.softserve.academy.spaced.repetition.domain.Card;
@@ -119,12 +119,12 @@ public class DeckController {
     }
 
     @Auditable(action = AuditingAction.CREATE_DECK_IN_COURSE)
-    @PostMapping(value = "/api/category/{category_id}/courses/{course_id}/decks")
-    @PreAuthorize(value = "@accessToUrlService.hasAccessToCourse(#category_id, #course_id)")
+    @PostMapping(value = "/api/category/{categoryId}/courses/{courseId}/decks")
+    @PreAuthorize(value = "@accessToUrlService.hasAccessToCourse(#categoryId, #courseId)")
     public ResponseEntity<DeckPublicDTO> addDeckToCourse(@RequestBody Deck deck,
-                                                         @PathVariable Long category_id, @PathVariable Long course_id) {
-        deckService.addDeckToCourse(deck, category_id, course_id);
-        Link selfLink = linkTo(methodOn(DeckController.class).getDeckByCourseId(category_id, course_id, deck.getId())).withSelfRel();
+                                                         @PathVariable Long categoryId, @PathVariable Long courseId) {
+        deckService.addDeckToCourse(deck, categoryId, courseId);
+        Link selfLink = linkTo(methodOn(DeckController.class).getDeckByCourseId(categoryId, courseId, deck.getId())).withSelfRel();
         DeckPublicDTO deckPublicDTO = DTOBuilder.buildDtoForEntity(deck, DeckPublicDTO.class, selfLink);
         return new ResponseEntity<>(deckPublicDTO, HttpStatus.CREATED);
     }

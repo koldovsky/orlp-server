@@ -1,9 +1,9 @@
 package com.softserve.academy.spaced.repetition.controller;
 
-import com.softserve.academy.spaced.repetition.DTO.DTOBuilder;
-import com.softserve.academy.spaced.repetition.DTO.impl.CategoryLinkDTO;
-import com.softserve.academy.spaced.repetition.DTO.impl.CategoryPublicDTO;
-import com.softserve.academy.spaced.repetition.DTO.impl.CategoryTopDTO;
+import com.softserve.academy.spaced.repetition.dto.DTOBuilder;
+import com.softserve.academy.spaced.repetition.dto.impl.CategoryLinkDTO;
+import com.softserve.academy.spaced.repetition.dto.impl.CategoryPublicDTO;
+import com.softserve.academy.spaced.repetition.dto.impl.CategoryTopDTO;
 import com.softserve.academy.spaced.repetition.audit.Auditable;
 import com.softserve.academy.spaced.repetition.audit.AuditingAction;
 import com.softserve.academy.spaced.repetition.domain.Category;
