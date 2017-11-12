@@ -22,6 +22,7 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
         USER_STATUS_ERROR_RESPONSE.put(AccountStatus.DELETED, new ResponseEntity<MessageDTO>(new MessageDTO("Account with this email is deleted"), HttpStatus.LOCKED));
         USER_STATUS_ERROR_RESPONSE.put(AccountStatus.BLOCKED, new ResponseEntity<MessageDTO>(new MessageDTO("Account with this email is blocked"), HttpStatus.FORBIDDEN));
         USER_STATUS_ERROR_RESPONSE.put(AccountStatus.INACTIVE, new ResponseEntity<MessageDTO>(new MessageDTO("Account with this email is inactive"), HttpStatus.METHOD_NOT_ALLOWED));
+        USER_STATUS_ERROR_RESPONSE.put(AccountStatus.INACTIVE_BLOCKED, new ResponseEntity<MessageDTO>(new MessageDTO("Account with this email is inactive-blocked"), HttpStatus.METHOD_NOT_ALLOWED));
     }
 
     @ExceptionHandler(MultipartException.class)
