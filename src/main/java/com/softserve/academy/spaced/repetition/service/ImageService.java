@@ -51,7 +51,7 @@ public class ImageService {
         long fileSize = file.getSize();
         User user = userService.getAuthorizedUser();
         if (fileSize > getUsersLimitInBytesForImagesLeft(user.getId())) {
-            throw new ImageRepositorySizeQuotaExceededException();
+                throw new ImageRepositorySizeQuotaExceededException();
         }
         if (fileSize > maxFileSize) {
             throw new MultipartException("File upload error: file is too large.");

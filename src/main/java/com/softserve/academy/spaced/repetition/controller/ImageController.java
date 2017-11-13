@@ -34,7 +34,7 @@ public class ImageController {
      * Upload and add the image to the database
      *
      * @param file - image-file
-     * @return - uploaded image DTO,
+     * @return - uploaded image dto,
      * @throws ImageRepositorySizeQuotaExceededException - is dropping when user has exceeded the quote of disk-space for his own images
      * @throws NotAuthorisedUserException                - is dropping when the user which wants to add the image is not authorised
      */
@@ -79,7 +79,7 @@ public class ImageController {
     }
 
     /**
-     * Allows Admin to download all images from ImageRepository as list of DTO with links on on it
+     * Allows Admin to download all images from ImageRepository as list of dto with links on on it
      *
      * @return list of ImageDTO
      */
