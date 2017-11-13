@@ -38,27 +38,26 @@ public class ImageService {
      */
     public Image addImageToDB(MultipartFile file) throws ImageRepositorySizeQuotaExceededException, NotAuthorisedUserException {
         checkImageExtention(file);
-        Image  image = new Image(encodeToBase64(file), file.getContentType(),
-                userService.getAuthorizedUser(),file.getSize());
+        Image image = new Image(encodeToBase64(file), file.getContentType(),
+                userService.getAuthorizedUser(), file.getSize());
         imageRepository.save(image);
         image = imageRepository.getImageWithoutContent(image.getId());
         return image;
     }
 
 
-     void checkImageExtention(MultipartFile file) throws ImageRepositorySizeQuotaExceededException,
+    void checkImageExtention(MultipartFile file) throws ImageRepositorySizeQuotaExceededException,
             NotAuthorisedUserException {
         long fileSize = file.getSize();
         User user = userService.getAuthorizedUser();
         if (fileSize > getUsersLimitInBytesForImagesLeft(user.getId())) {
-                throw new ImageRepositorySizeQuotaExceededException();
+            throw new ImageRepositorySizeQuotaExceededException();
         }
         if (fileSize > maxFileSize) {
             throw new MultipartException("File upload error: file is too large.");
         } else {
             String imageType = file.getContentType();
-            if (imageType == null || !imageType.split("/")[0].equalsIgnoreCase("image"))
-            {
+            if (imageType == null || !imageType.split("/")[0].equalsIgnoreCase("image")) {
                 throw new IllegalArgumentException("File upload error: file is not an image");
             }
         }
