@@ -81,6 +81,6 @@ public class CourseCommentController {
     public ResponseEntity deleteComment(@PathVariable Long courseCommentId, @PathVariable Long courseId, @PathVariable Long categoryId) {
         LOGGER.debug("Deleted comment with id:{} for course with id: {}", courseCommentId, courseId);
         courseCommentService.deleteCommentById(courseCommentId);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

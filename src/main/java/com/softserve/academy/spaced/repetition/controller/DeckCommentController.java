@@ -79,6 +79,6 @@ public class DeckCommentController {
     public ResponseEntity deleteComment(@PathVariable Long commentId, @PathVariable Long deckId) {
         LOGGER.debug("Deleted comment with id:{} for deck with id: {}", commentId, deckId);
         commentService.deleteCommentById(commentId);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

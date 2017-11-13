@@ -35,7 +35,7 @@ public class AnkiCardExtractor implements CardDataExtractor {
         return formMap(questions, answers);
     }
 
-    private List<String> extractDateInToList(Connection conn, String query, String columnName) throws SQLException {
+    private List<String> extractDateInToList(Connection conn, String query, String columnName) {
         List<String> list = new ArrayList<>();
         try (Statement statement = conn.createStatement();
              ResultSet res = statement.executeQuery(query)) {
