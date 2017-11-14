@@ -33,6 +33,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -124,8 +125,6 @@ public class DeckControllerTest {
     }
 
     private Page<Deck> createDecks() throws ParseException {
-        List<Deck> deckList = new ArrayList<>();
-
         Deck deck = createDeck(1L, "Java interview #1", "Part 1",
                 "admin@gmail.com", 0, 1L, "Java");
         Deck deck2 = createDeck(2L, "Java interview #2", "Part 2",
@@ -149,17 +148,7 @@ public class DeckControllerTest {
         Deck deck11 = createDeck(11L, "JavaScript", "Interview materials",
                 "ndadson4@mapy.cz", 0, 10L, "JavaScript");
 
-        deckList.add(deck);
-        deckList.add(deck2);
-        deckList.add(deck3);
-        deckList.add(deck4);
-        deckList.add(deck5);
-        deckList.add(deck6);
-        deckList.add(deck7);
-        deckList.add(deck8);
-        deckList.add(deck9);
-        deckList.add(deck10);
-        deckList.add(deck11);
+        List<Deck> deckList = Arrays.asList(deck, deck2, deck3, deck4, deck5, deck6, deck7, deck8, deck9, deck10, deck11);
 
         Page<Deck> deckPage = new PageImpl<>(deckList, new PageRequest(NUMBER_PAGE, QUANTITY_ADMIN_DECKS_IN_PAGE, Sort.Direction.ASC, ADMIN_DECKS_SORT_BY), deckList.size());
         return deckPage;
