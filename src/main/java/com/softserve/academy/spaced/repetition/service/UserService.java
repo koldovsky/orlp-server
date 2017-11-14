@@ -223,26 +223,16 @@ public class UserService {
         return imageService.decodeFromBase64(encodedFileContent);
     }
 
-    @Transactional
     public void activateAccount() throws NotAuthorisedUserException {
         User user = getAuthorizedUser();
-        if(user.getAccount().getStatus() == AccountStatus.INACTIVE_BLOCKED){
-            user.getAccount().setStatus(AccountStatus.BLOCKED);
-        } else {
-            user.getAccount().setStatus(AccountStatus.ACTIVE);
-        }
+        user.getAccount().setStatus(AccountStatus.ACTIVE);
         mailService.sendConfirmationMail(user);
         userRepository.save(user);
     }
 
-    @Transactional
     public void deleteAccount() throws NotAuthorisedUserException {
         User user = getAuthorizedUser();
-        if(user.getAccount().getStatus() == AccountStatus.BLOCKED){
-            user.getAccount().setStatus(AccountStatus.INACTIVE_BLOCKED);
-        } else {
-            user.getAccount().setStatus(AccountStatus.INACTIVE);
-        }
+        user.getAccount().setStatus(AccountStatus.INACTIVE);
         userRepository.save(user);
     }
 
