@@ -20,23 +20,42 @@ public class DeckService {
     private final static int QUANTITY_ADMIN_DECKS_IN_PAGE = 20;
     private final static int QUANTITY_DECKS_IN_PAGE = 12;
     private final static String DECK_EXCEPTION_MESSAGE = "Such deck not found";
-    @Autowired
+
     private DeckRepository deckRepository;
 
-    @Autowired
     private CategoryRepository categoryRepository;
 
-    @Autowired
     private CardRepository cardRepository;
 
-    @Autowired
     private CourseRepository courseRepository;
 
-    @Autowired
     private UserService userService;
 
-    @Autowired
     private FolderService folderService;
+    @Autowired
+    public void setDeckRepository(DeckRepository deckRepository) {
+        this.deckRepository = deckRepository;
+    }
+    @Autowired
+    public void setCategoryRepository(CategoryRepository categoryRepository) {
+        this.categoryRepository = categoryRepository;
+    }
+    @Autowired
+    public void setCardRepository(CardRepository cardRepository) {
+        this.cardRepository = cardRepository;
+    }
+    @Autowired
+    public void setCourseRepository(CourseRepository courseRepository) {
+        this.courseRepository = courseRepository;
+    }
+    @Autowired
+    public void setUserService(UserService userService) {
+        this.userService = userService;
+    }
+    @Autowired
+    public void setFolderService(FolderService folderService) {
+        this.folderService = folderService;
+    }
 
     public List<Deck> getAllDecks(Long courseId) {
         Course course = courseRepository.findOne(courseId);
