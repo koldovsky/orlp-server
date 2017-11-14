@@ -251,7 +251,7 @@ public class UserService {
         if (account.getPassword() == null) {
             account.setPassword("-1");
         } else {
-            passwordEncoder.encode(account.getPassword());
+           account.setPassword(passwordEncoder.encode(account.getPassword()));
         }
         account.setLastPasswordResetDate(new Date());
         account.setStatus(accountStatus);
