@@ -76,8 +76,9 @@ public class DeckCommentController {
     @Auditable(action = AuditingAction.DELETE_COMMENT_FOR_DECK)
     @DeleteMapping(value = "/api/category/{categoryId}/deck/{deckId}/comment/{commentId}")
     @PreAuthorize(value = "@accessToUrlService.hasAccessToDeleteCommentForDeck(#commentId)")
-    public void deleteComment(@PathVariable Long commentId, @PathVariable Long deckId) {
+    public ResponseEntity deleteComment(@PathVariable Long commentId, @PathVariable Long deckId) {
         LOGGER.debug("Deleted comment with id:{} for deck with id: {}", commentId, deckId);
         commentService.deleteCommentById(commentId);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
