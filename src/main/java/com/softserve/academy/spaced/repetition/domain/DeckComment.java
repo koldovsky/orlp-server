@@ -2,6 +2,7 @@ package com.softserve.academy.spaced.repetition.domain;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.Objects;
 
 @Entity
 @Table(name = "DeckComment")
@@ -24,5 +25,24 @@ public class DeckComment extends Comment {
 
     public void setDeck(Deck deck) {
         this.deck = deck;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        DeckComment comment = (DeckComment) o;
+        return Objects.equals(this.getId(), comment.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 0;
+        hash += (this.getId() != null ? this.getId().hashCode() : 0);
+        return hash;
     }
 }

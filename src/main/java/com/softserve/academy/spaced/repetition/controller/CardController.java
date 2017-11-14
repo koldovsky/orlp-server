@@ -59,29 +59,29 @@ public class CardController {
         return ResponseEntity.ok(cardService.areThereNotPostponedCardsAvailable(deckId));
     }
 
-    @GetMapping(value = "/api/category/{category_id}/courses/{course_id}/decks/{deck_id}/cards/{card_id}")
-    @PreAuthorize(value = "@accessToUrlService.hasAccessToCard(#category_id, #course_id, #deck_id, #card_id)")
-    public ResponseEntity<CardPublicDTO> getCardByCourseAndDeck(@PathVariable Long category_id, @PathVariable Long course_id, @PathVariable Long deck_id, @PathVariable Long card_id) {
-        Card card = cardService.getCard(card_id);
-        Link selfLink = linkTo(methodOn(CardController.class).getCardByCourseAndDeck(category_id, course_id, deck_id, card_id)).withSelfRel();
+    @GetMapping(value = "/api/category/{categoryId}/courses/{courseId}/decks/{deckId}/cards/{cardId}")
+    @PreAuthorize(value = "@accessToUrlService.hasAccessToCard(#categoryId, #courseId, #deckId, #cardId)")
+    public ResponseEntity<CardPublicDTO> getCardByCourseAndDeck(@PathVariable Long categoryId, @PathVariable Long courseId, @PathVariable Long deckId, @PathVariable Long cardId) {
+        Card card = cardService.getCard(cardId);
+        Link selfLink = linkTo(methodOn(CardController.class).getCardByCourseAndDeck(categoryId, courseId, deckId, cardId)).withSelfRel();
         CardPublicDTO cardPublicDTO = DTOBuilder.buildDtoForEntity(card, CardPublicDTO.class, selfLink);
         return new ResponseEntity<>(cardPublicDTO, HttpStatus.OK);
     }
 
-    @GetMapping(value = "/api/category/{category_id}/decks/{deck_id}/cards/{card_id}")
-    @PreAuthorize(value = "@accessToUrlService.hasAccessToCard(#category_id, #deck_id, #card_id)")
-    public ResponseEntity<CardPublicDTO> getCardByCategoryAndDeck(@PathVariable Long category_id, @PathVariable Long deck_id, @PathVariable Long card_id) {
-        Card card = cardService.getCard(card_id);
-        Link selfLink = linkTo(methodOn(CardController.class).getCardByCategoryAndDeck(category_id, deck_id, card_id)).withSelfRel();
+    @GetMapping(value = "/api/category/{categoryId}/decks/{deckId}/cards/{cardId}")
+    @PreAuthorize(value = "@accessToUrlService.hasAccessToCard(#categoryId, #deckId, #cardId)")
+    public ResponseEntity<CardPublicDTO> getCardByCategoryAndDeck(@PathVariable Long categoryId, @PathVariable Long deckId, @PathVariable Long cardId) {
+        Card card = cardService.getCard(cardId);
+        Link selfLink = linkTo(methodOn(CardController.class).getCardByCategoryAndDeck(categoryId, deckId, cardId)).withSelfRel();
         CardPublicDTO cardPublicDTO = DTOBuilder.buildDtoForEntity(card, CardPublicDTO.class, selfLink);
         return new ResponseEntity<>(cardPublicDTO, HttpStatus.OK);
     }
 
-    @GetMapping(value = "/api/decks/{deck_id}/cards/{card_id}")
-    @PreAuthorize(value = "@accessToUrlService.hasAccessToCard(#deck_id, #card_id)")
-    public ResponseEntity<CardPublicDTO> getCardByDeck(@PathVariable Long deck_id, @PathVariable Long card_id) {
-        Card card = cardService.getCard(card_id);
-        Link selfLink = linkTo(methodOn(CardController.class).getCardByDeck(deck_id, card_id)).withSelfRel();
+    @GetMapping(value = "/api/decks/{deckId}/cards/{cardId}")
+    @PreAuthorize(value = "@accessToUrlService.hasAccessToCard(#deckId, #cardId)")
+    public ResponseEntity<CardPublicDTO> getCardByDeck(@PathVariable Long deckId, @PathVariable Long cardId) {
+        Card card = cardService.getCard(cardId);
+        Link selfLink = linkTo(methodOn(CardController.class).getCardByDeck(deckId, cardId)).withSelfRel();
         CardPublicDTO cardPublicDTO = DTOBuilder.buildDtoForEntity(card, CardPublicDTO.class, selfLink);
         return new ResponseEntity<>(cardPublicDTO, HttpStatus.OK);
     }
@@ -145,10 +145,10 @@ public class CardController {
         cardService.deleteCard(cardId);
     }
 
-    @GetMapping("/api/category/{category_id}/decks/{deck_id}/learn/cards")
-    public ResponseEntity<List<CardPublicDTO>> getLearningCards(@PathVariable long category_id, @PathVariable long deck_id) throws NotAuthorisedUserException {
-        List<Card> learningCards = cardService.getCardsQueue(deck_id);
-        Link collectionLink = linkTo(methodOn(DeckController.class).getCardsByCategoryAndDeck(category_id, deck_id)).withSelfRel();
+    @GetMapping("/api/category/{categoryId}/decks/{deckId}/learn/cards")
+    public ResponseEntity<List<CardPublicDTO>> getLearningCards(@PathVariable long categoryId, @PathVariable long deckId) throws NotAuthorisedUserException {
+        List<Card> learningCards = cardService.getCardsQueue(deckId);
+        Link collectionLink = linkTo(methodOn(DeckController.class).getCardsByCategoryAndDeck(categoryId, deckId)).withSelfRel();
         List<CardPublicDTO> cards = DTOBuilder.buildDtoListForCollection(learningCards, CardPublicDTO.class, collectionLink);
         return new ResponseEntity<>(cards, HttpStatus.OK);
     }

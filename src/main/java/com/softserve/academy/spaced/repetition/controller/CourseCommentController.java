@@ -57,7 +57,7 @@ public class CourseCommentController {
     @PreAuthorize(value = "@accessToUrlService.hasAccessToCourse(#categoryId, #courseId)")
     public ResponseEntity<CommentDTO> addCommentByCourse(@RequestBody ReplyToCommentDTO replyToCommentDTO, @PathVariable Long categoryId, @PathVariable Long courseId) throws NotAuthorisedUserException {
         LOGGER.debug("Added comment to course with id: {}", courseId);
-        CourseComment courseComment=courseCommentService.addCommentForCourse(courseId, replyToCommentDTO.getCommentText(), replyToCommentDTO.getParentCommentId());
+        CourseComment courseComment = courseCommentService.addCommentForCourse(courseId, replyToCommentDTO.getCommentText(), replyToCommentDTO.getParentCommentId());
         Link selfLink = linkTo(methodOn(CourseCommentController.class).getCommentByCourse(categoryId, courseId, courseComment.getId())).withSelfRel();
         CommentDTO courseCommentDTO = DTOBuilder.buildDtoForEntity(courseComment, CommentDTO.class, selfLink);
         return new ResponseEntity<>(courseCommentDTO, HttpStatus.CREATED);
@@ -69,7 +69,7 @@ public class CourseCommentController {
     public ResponseEntity<CommentDTO> updateComment(@RequestBody String courseContentComment
             , @PathVariable Long categoryId, @PathVariable Long courseId, @PathVariable Long courseCommentId) {
         LOGGER.debug("Updated courseComment with id: {}", courseCommentId);
-        CourseComment courseComment=courseCommentService.updateCommentById(courseCommentId, courseContentComment);
+        CourseComment courseComment = courseCommentService.updateCommentById(courseCommentId, courseContentComment);
         Link selfLink = linkTo(methodOn(CourseCommentController.class).getCommentByCourse(categoryId, courseId, courseCommentId)).withSelfRel();
         CommentDTO courseCommentDTO = DTOBuilder.buildDtoForEntity(courseComment, CommentDTO.class, selfLink);
         return new ResponseEntity<>(courseCommentDTO, HttpStatus.OK);
@@ -78,9 +78,9 @@ public class CourseCommentController {
     @Auditable(action = AuditingAction.DELETE_COMMENT_FOR_COURSE)
     @DeleteMapping(value = "/api/category/{categoryId}/courses/{courseId}/comments/{courseCommentId}")
     @PreAuthorize(value = "@accessToUrlService.hasAccessToDeleteCommentForCourse(#courseCommentId)")
-    public void deleteComment(@PathVariable Long courseCommentId,@PathVariable Long courseId, @PathVariable Long categoryId) {
+    public ResponseEntity deleteComment(@PathVariable Long courseCommentId, @PathVariable Long courseId, @PathVariable Long categoryId) {
         LOGGER.debug("Deleted comment with id:{} for course with id: {}", courseCommentId, courseId);
         courseCommentService.deleteCommentById(courseCommentId);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-
 }

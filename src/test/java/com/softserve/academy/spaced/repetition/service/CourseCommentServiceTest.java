@@ -17,6 +17,7 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.List;
 
 import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
@@ -34,7 +35,7 @@ import static org.mockito.Mockito.when;
 @Transactional
 public class CourseCommentServiceTest {
 
-    private static final long COURSE_ID = 1L;
+    private static final Long COURSE_ID = 1L;
 
     private CourseCommentService courseCommentServiceUnderTest;
 
@@ -66,44 +67,50 @@ public class CourseCommentServiceTest {
         when(mockedUserService.getAuthorizedUser()).thenReturn(createMockedUser());
         CourseComment savedComment = courseCommentServiceUnderTest.addCommentForCourse(COURSE_ID, "Very interesting", null);
         assertNotNull(savedComment);
+        assertEquals("Checking field commentText", savedComment.getCommentText(), "Very interesting");
+        assertEquals("Checking field parentCommentId", savedComment.getParentCommentId(), null);
+        assertEquals("Checking set person", createMockedUser().getPerson(), savedComment.getPerson());
+        assertEquals("Checking set courseId", savedComment.getCourse().getId(), COURSE_ID);
     }
 
-    /*@Test
+    @Test
     public void testGetCommentById() throws Exception {
         when(mockedUserService.getAuthorizedUser()).thenReturn(createMockedUser());
-        CourseComment savedComment = courseCommentServiceUnderTest.addCommentForCourse("Very interesting", COURSE_ID);
-        assertNotNull(courseCommentServiceUnderTest.getCommentById(savedComment.getId()));
+        CourseComment savedComment = courseCommentServiceUnderTest.addCommentForCourse(COURSE_ID, "Very interesting", null);
+        assertEquals("Getting comment for course.", savedComment, courseCommentServiceUnderTest.getCommentById(savedComment.getId()));
     }
 
     @Test
     public void testGetAllCommentsForCourse() throws Exception {
         when(mockedUserService.getAuthorizedUser()).thenReturn(createMockedUser());
-        courseCommentServiceUnderTest.addCommentForCourse("Good", COURSE_ID);
-        courseCommentServiceUnderTest.addCommentForCourse("Very interesting", COURSE_ID);
+        CourseComment savedFirstComment = courseCommentServiceUnderTest.addCommentForCourse(COURSE_ID, "Good", null);
+        CourseComment savedSecondComment = courseCommentServiceUnderTest.addCommentForCourse(COURSE_ID, "Very interesting", null);
         List<Comment> listOfCommentsForCourse = courseCommentServiceUnderTest.getAllCommentsForCourse(COURSE_ID);
         assertEquals("Getting all comments for course.", 2, listOfCommentsForCourse.size());
+        assertEquals("Check first comment", savedFirstComment, listOfCommentsForCourse.get(0));
+        assertEquals("Check second comment", savedSecondComment, listOfCommentsForCourse.get(1));
     }
 
     @Test
     public void testDeleteCommentById() throws Exception {
         when(mockedUserService.getAuthorizedUser()).thenReturn(createMockedUser());
-        CourseComment savedComment = courseCommentServiceUnderTest.addCommentForCourse("Very interesting", COURSE_ID);
+        CourseComment savedComment = courseCommentServiceUnderTest.addCommentForCourse(COURSE_ID, "Very interesting", null);
+        courseCommentServiceUnderTest.addCommentForCourse(COURSE_ID, "Very interesting", savedComment.getId());
         courseCommentServiceUnderTest.deleteCommentById(savedComment.getId());
-        CourseComment deletedComment = courseCommentRepository.findOne(savedComment.getId());
-        assertNull("Trying to find comment.", deletedComment);
+        assertEquals("Trying to find comment.",0, courseCommentRepository.findCourseCommentsByCourseId(COURSE_ID).size());
     }
 
     @Test
     public void testUpdateCommentById() throws Exception {
         when(mockedUserService.getAuthorizedUser()).thenReturn(createMockedUser());
-        CourseComment savedComment = courseCommentServiceUnderTest.addCommentForCourse("Very interesting", COURSE_ID);
-        CourseComment newComment = courseCommentServiceUnderTest.updateCommentById(savedComment.getId(), "New CommentText");
-        assertEquals("Changed comment text.", newComment.getCommentText(), "New CommentText");
+        CourseComment savedComment = courseCommentServiceUnderTest.addCommentForCourse(COURSE_ID, "Very interesting", null);
+        CourseComment updatedComment = courseCommentServiceUnderTest.updateCommentById(savedComment.getId(), "New CommentText");
+        assertEquals("Changed comment text.", updatedComment.getCommentText(), "New CommentText");
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testAddCommentForCourseException() throws Exception {
         doThrow(IllegalArgumentException.class).when(mockedCommentFieldsValidator).validate(eq(""));
-        courseCommentServiceUnderTest.addCommentForCourse("", COURSE_ID);
-    }*/
+        courseCommentServiceUnderTest.addCommentForCourse(COURSE_ID, "", null);
+    }
 }

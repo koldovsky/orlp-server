@@ -7,8 +7,8 @@ import org.springframework.hateoas.Link;
 
 public class ReplyToCommentDTO {
 
-    public String commentText;
-    public Long parentCommentId;
+    private String commentText;
+    private Long parentCommentId;
 
     public String getCommentText() {
         return commentText;

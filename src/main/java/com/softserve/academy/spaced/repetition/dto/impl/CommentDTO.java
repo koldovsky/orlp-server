@@ -85,10 +85,7 @@ public class CommentDTO extends DTO<Comment> implements Comparable<CommentDTO> {
                 parentComment.addChildComment(childComment);
             }
         }
-        List<CommentDTO> commentsTree = new ArrayList<>();
-        for (CommentDTO comment : parentComments.values()) {
-            commentsTree.add(comment);
-        }
+        List<CommentDTO> commentsTree = new ArrayList<>(parentComments.values());
         Collections.sort(commentsTree);
         return commentsTree;
     }
