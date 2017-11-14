@@ -1,4 +1,5 @@
 package com.softserve.academy.spaced.repetition.controller;
+
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -38,7 +39,7 @@ public class CourseControllerTest {
     @Mock
     private CourseService courseService;
 
-    final int NUMBER_PAGE =1 ;
+    final int NUMBER_PAGE = 1;
     final String SORT_BY = "name";
     final boolean ASCENDING = true;
     final int QUANTITY_COURSES_IN_PAGE = 12;
@@ -55,7 +56,7 @@ public class CourseControllerTest {
     public void getCourseById() throws Exception {
         long categoryId = 1L;
         long courseId = 1L;
-        when(courseService.getCourseById(eq(categoryId),eq(courseId))).thenReturn(createCourse());
+        when(courseService.getCourseById(eq(categoryId), eq(courseId))).thenReturn(createCourse());
         mockMvc.perform(get("/api/category/{category_id}/courses/{course_id}", categoryId, courseId)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON))
@@ -69,14 +70,14 @@ public class CourseControllerTest {
                         "  \"ownerId\": 1," +
                         "  \"categoryId\": 1," +
                         "  \"courseId\": 1," +
-                        "  \"links\":[{\"rel\":\"self\",\"href\":\"http://localhost/api/category/1/courses/1\"},{\"rel\":\"decks\",\"href\":\"http://localhost/api/category/1/courses/1/decks\"}]"+
+                        "  \"links\":[{\"rel\":\"self\",\"href\":\"http://localhost/api/category/1/courses/1\"},{\"rel\":\"decks\",\"href\":\"http://localhost/api/category/1/courses/1/decks\"}]" +
                         "}"));
     }
 
     public static Course createCourse(long idCourse, String nameCourse,
                                       String descriptionCourse, int rating,
                                       long imageId, boolean isPublished,
-                                      long accountId, String accountEmail, int ownerId, long categoryId){
+                                      long accountId, String accountEmail, int ownerId, long categoryId) {
         Course course = new Course();
         course.setName(nameCourse);
         course.setDescription(descriptionCourse);
@@ -100,15 +101,15 @@ public class CourseControllerTest {
     }
 
     private Course createCourse() {
-        Course course = createCourse(1L, "Java interview course","4 parts of java questions & answers",
-                0,14L, true, 1L,"admin@gmail.com",1, 1L);
+        Course course = createCourse(1L, "Java interview course", "4 parts of java questions & answers",
+                0, 14L, true, 1L, "admin@gmail.com", 1, 1L);
         return course;
     }
 
     @Test
     public void getCoursesByPage() throws Exception {
-        when(courseService.getPageWithCourses(NUMBER_PAGE,SORT_BY,ASCENDING)).thenReturn(createCourses());
-        mockMvc.perform(get("/api/courses?p="+NUMBER_PAGE+"&sortBy="+SORT_BY+"&asc="+ASCENDING)
+        when(courseService.getPageWithCourses(NUMBER_PAGE, SORT_BY, ASCENDING)).thenReturn(createCourses());
+        mockMvc.perform(get("/api/courses?p=" + NUMBER_PAGE + "&sortBy=" + SORT_BY + "&asc=" + ASCENDING)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -121,20 +122,20 @@ public class CourseControllerTest {
     private Page<Course> createCourses() throws ParseException {
         List<Course> courseList = new ArrayList<>();
 
-        Course course = createCourse(3L,"C# interview course", "questions & answers",
-                0,16L,true,1L,"admin@gmail.com", 1,3L);
+        Course course = createCourse(3L, "C# interview course", "questions & answers",
+                0, 16L, true, 1L, "admin@gmail.com", 1, 3L);
 
-        Course course2 = createCourse(2L,"C++ interview course", "3 parts of java questions & answers",
-                0,15L,true,1L,"admin@gmail.com",1,2L);
+        Course course2 = createCourse(2L, "C++ interview course", "3 parts of java questions & answers",
+                0, 15L, true, 1L, "admin@gmail.com", 1, 2L);
 
-        Course course3 = createCourse(1L,"Java interview course", "4 parts of java questions & answers",
-                0,14L,true,1L,"admin@gmail.com",1,1L);
+        Course course3 = createCourse(1L, "Java interview course", "4 parts of java questions & answers",
+                0, 14L, true, 1L, "admin@gmail.com", 1, 1L);
 
-        Course course4 = createCourse(5L,"JavaScript interview course", "questions & answers",
-                0,18L,true,1L,"admin@gmail.com",1,10L);
+        Course course4 = createCourse(5L, "JavaScript interview course", "questions & answers",
+                0, 18L, true, 1L, "admin@gmail.com", 1, 10L);
 
-        Course course5 = createCourse(4L,"PHP interview course", "2 parts of java questions & answers",
-                0,17L,true,1L,"admin@gmail.com",1,4L);
+        Course course5 = createCourse(4L, "PHP interview course", "2 parts of java questions & answers",
+                0, 17L, true, 1L, "admin@gmail.com", 1, 4L);
 
         courseList.add(course);
         courseList.add(course2);
@@ -142,12 +143,8 @@ public class CourseControllerTest {
         courseList.add(course4);
         courseList.add(course5);
 
-        Page<Course> coursesPage;
-        if(ASCENDING) {
-            coursesPage = new PageImpl<>(courseList, new PageRequest(NUMBER_PAGE, QUANTITY_COURSES_IN_PAGE, Sort.Direction.ASC, SORT_BY), courseList.size());
-        }else{
-            coursesPage = new PageImpl<>(courseList, new PageRequest(NUMBER_PAGE, QUANTITY_COURSES_IN_PAGE, Sort.Direction.DESC, SORT_BY), courseList.size());
-        }
+        Page<Course> coursesPage = new PageImpl<>(courseList, new PageRequest(NUMBER_PAGE, QUANTITY_COURSES_IN_PAGE, Sort.Direction.ASC, SORT_BY), courseList.size());
+
         return coursesPage;
     }
 
@@ -155,7 +152,7 @@ public class CourseControllerTest {
     public void getCoursesByPageAndCategory() throws Exception {
         final int categoryId = 2;
         when(courseService.getPageWithCoursesByCategory(categoryId, 1, "name", true)).thenReturn(createCoursesBySelectedCategory());
-        mockMvc.perform(get("/api/category/"+categoryId+"/courses?p="+NUMBER_PAGE+"&sortBy="+SORT_BY+"&asc="+ASCENDING)
+        mockMvc.perform(get("/api/category/" + categoryId + "/courses?p=" + NUMBER_PAGE + "&sortBy=" + SORT_BY + "&asc=" + ASCENDING)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -189,12 +186,8 @@ public class CourseControllerTest {
 
         courseList.add(course);
 
-        Page<Course> coursesPage;
-        if(ASCENDING) {
-            coursesPage = new PageImpl<>(courseList, new PageRequest(NUMBER_PAGE, QUANTITY_COURSES_IN_PAGE, Sort.Direction.ASC,SORT_BY), courseList.size());
-        }else{
-            coursesPage = new PageImpl<>(courseList, new PageRequest(NUMBER_PAGE, QUANTITY_COURSES_IN_PAGE, Sort.Direction.DESC, SORT_BY), courseList.size());
-        }
+        Page<Course> coursesPage = new PageImpl<>(courseList, new PageRequest(NUMBER_PAGE, QUANTITY_COURSES_IN_PAGE, Sort.Direction.ASC, SORT_BY), courseList.size());
+
         return coursesPage;
     }
 }

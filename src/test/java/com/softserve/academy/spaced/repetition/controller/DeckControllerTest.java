@@ -1,4 +1,5 @@
 package com.softserve.academy.spaced.repetition.controller;
+
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Matchers.any;
@@ -47,7 +48,7 @@ public class DeckControllerTest {
     private final static int QUANTITY_ADMIN_DECKS_IN_PAGE = 20;
     private final static int QUANTITY_DECKS_IN_PAGE = 12;
 
-    final int NUMBER_PAGE =1 ;
+    final int NUMBER_PAGE = 1;
     final boolean ADMIN_DECKS_ASCENDING = true;
     final String ADMIN_DECKS_SORT_BY = "id";
 
@@ -85,14 +86,14 @@ public class DeckControllerTest {
 
     private Deck createDeck() {
         Deck deck = createDeck(4L, "Java interview #4", "Part 4",
-                "admin@gmail.com",0,1L,"Java");
+                "admin@gmail.com", 0, 1L, "Java");
         return deck;
     }
 
     @Test
     public void getDecksByPage() throws Exception {
         when(deckService.getPageWithAllAdminDecks(NUMBER_PAGE, ADMIN_DECKS_SORT_BY, ADMIN_DECKS_ASCENDING)).thenReturn(createDecks());
-        mockMvc.perform(get("/api/admin/decks?p="+NUMBER_PAGE+"&sortBy="+ ADMIN_DECKS_SORT_BY +"&asc="+ ADMIN_DECKS_ASCENDING)
+        mockMvc.perform(get("/api/admin/decks?p=" + NUMBER_PAGE + "&sortBy=" + ADMIN_DECKS_SORT_BY + "&asc=" + ADMIN_DECKS_ASCENDING)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -102,7 +103,7 @@ public class DeckControllerTest {
                 .andExpect(jsonPath("$.sort[:1].property", hasItem(ADMIN_DECKS_SORT_BY)));
     }
 
-    public static Deck createDeck(long idDeck,String nameDeck, String description,
+    public static Deck createDeck(long idDeck, String nameDeck, String description,
                                   String accountEmail, double rating, long idCategory,
                                   String categoryName) {
         Deck deck = new Deck();
@@ -126,27 +127,27 @@ public class DeckControllerTest {
         List<Deck> deckList = new ArrayList<>();
 
         Deck deck = createDeck(1L, "Java interview #1", "Part 1",
-                "admin@gmail.com",0,1L,"Java");
+                "admin@gmail.com", 0, 1L, "Java");
         Deck deck2 = createDeck(2L, "Java interview #2", "Part 2",
-                "admin@gmail.com",0,1L,"Java");
+                "admin@gmail.com", 0, 1L, "Java");
         Deck deck3 = createDeck(3L, "Java interview #3", "Part 3",
-                "admin@gmail.com",0,1L,"Java");
+                "admin@gmail.com", 0, 1L, "Java");
         Deck deck4 = createDeck(4L, "Java interview #4", "Part 4",
-                "admin@gmail.com",0,1L,"Java");
+                "admin@gmail.com", 0, 1L, "Java");
         Deck deck5 = createDeck(5L, "C++ interview #1", "Part 1",
-                "sgofforth1@tmall.com",0,2L,"C++");
+                "sgofforth1@tmall.com", 0, 2L, "C++");
         Deck deck6 = createDeck(6L, "C++ interview #2", "Part 2",
-                "sgofforth1@tmall.com",0,2L,"C++");
+                "sgofforth1@tmall.com", 0, 2L, "C++");
         Deck deck7 = createDeck(7L, "C++ interview #3", "Part 3",
-                "sgofforth1@tmall.com",0,2L,"C++");
+                "sgofforth1@tmall.com", 0, 2L, "C++");
         Deck deck8 = createDeck(8L, "C# interview", "Interview materials",
-                "kewins2@gizmodo.com",0,3L,"C#");
+                "kewins2@gizmodo.com", 0, 3L, "C#");
         Deck deck9 = createDeck(9L, "PHP interview #1", "Part 1",
-                "wlouys3@sitemeter.com",0,4L,"PHP");
+                "wlouys3@sitemeter.com", 0, 4L, "PHP");
         Deck deck10 = createDeck(10L, "PHP interview #2", "Part 2",
-                "wlouys3@sitemeter.com",0,4L,"PHP");
+                "wlouys3@sitemeter.com", 0, 4L, "PHP");
         Deck deck11 = createDeck(11L, "JavaScript", "Interview materials",
-                "ndadson4@mapy.cz",0,10L,"JavaScript");
+                "ndadson4@mapy.cz", 0, 10L, "JavaScript");
 
         deckList.add(deck);
         deckList.add(deck2);
@@ -160,19 +161,14 @@ public class DeckControllerTest {
         deckList.add(deck10);
         deckList.add(deck11);
 
-        Page<Deck> deckPage;
-        if(ADMIN_DECKS_ASCENDING) {
-            deckPage = new PageImpl<>(deckList, new PageRequest(NUMBER_PAGE, QUANTITY_ADMIN_DECKS_IN_PAGE, Sort.Direction.ASC, ADMIN_DECKS_SORT_BY), deckList.size());
-        }else{
-            deckPage = new PageImpl<>(deckList, new PageRequest(NUMBER_PAGE, QUANTITY_ADMIN_DECKS_IN_PAGE, Sort.Direction.DESC, ADMIN_DECKS_SORT_BY), deckList.size());
-        }
+        Page<Deck> deckPage = new PageImpl<>(deckList, new PageRequest(NUMBER_PAGE, QUANTITY_ADMIN_DECKS_IN_PAGE, Sort.Direction.ASC, ADMIN_DECKS_SORT_BY), deckList.size());
         return deckPage;
     }
 
     @Test
     public void getDecksByPageAndCategory() throws Exception {
         when(deckService.getPageWithDecksByCategory(CATEGORY_ID, NUMBER_PAGE, SORT_BY, DECKS_BY_CATEGORY_ASCENDING)).thenReturn(createDecksBySelectedCategory());
-        mockMvc.perform(get("/api/category/"+CATEGORY_ID+"/decks?p="+NUMBER_PAGE+"&sortBy="+SORT_BY+"&asc="+ DECKS_BY_CATEGORY_ASCENDING)
+        mockMvc.perform(get("/api/category/" + CATEGORY_ID + "/decks?p=" + NUMBER_PAGE + "&sortBy=" + SORT_BY + "&asc=" + DECKS_BY_CATEGORY_ASCENDING)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -185,33 +181,12 @@ public class DeckControllerTest {
     private Page<Deck> createDecksBySelectedCategory() throws ParseException {
         List<Deck> deckList = new ArrayList<>();
 
-        Deck deck = createDeck(1L, "Java interview #1",
-                "Part 1", "admin@gmail.com",
-                0, 1L,"Java");
-
-        Deck deck2 = createDeck(2L, "Java interview #2",
-                "Part 2", "admin@gmail.com",
-                0, 1L,"Java");
-
-        Deck deck3 = createDeck(3L, "Java interview #3",
-                "Part 3", "admin@gmail.com",
-                0, 1L,"Java");
-
-        Deck deck4 = createDeck(4L, "Java interview #4",
-                "Part 4", "admin@gmail.com",
-                0, 1L,"Java");
-
-        deckList.add(deck4);
-        deckList.add(deck3);
-        deckList.add(deck2);
-        deckList.add(deck);
-
-        Page<Deck> deckPage;
-        if(ADMIN_DECKS_ASCENDING) {
-            deckPage = new PageImpl<>(deckList, new PageRequest(NUMBER_PAGE, QUANTITY_DECKS_IN_PAGE, Sort.Direction.ASC, SORT_BY), deckList.size());
-        }else{
-            deckPage = new PageImpl<>(deckList, new PageRequest(NUMBER_PAGE, QUANTITY_DECKS_IN_PAGE, Sort.Direction.DESC, SORT_BY), deckList.size());
+        int QUANTITY_ADMIN_DECKS = 4;
+        for (int i = QUANTITY_ADMIN_DECKS; i >= 1; i--) {
+            Deck deck = createDeck(i, "Java interview #" + i, "Part " + i, "admin@gmail.com", 0, 1L, "Java");
+            deckList.add(deck);
         }
+        Page<Deck> deckPage = new PageImpl<>(deckList, new PageRequest(NUMBER_PAGE, QUANTITY_DECKS_IN_PAGE, Sort.Direction.ASC, SORT_BY), deckList.size());
         return deckPage;
     }
 }

@@ -61,7 +61,7 @@ public class UserServiceTest {
     @Mock
     private PasswordFieldValidator mockedPasswordFieldValidator;
 
-    final int NUMBER_PAGE = 1 ;
+    final int NUMBER_PAGE = 1;
     final String SORT_BY = "id";
     final boolean ASCENDING = true;
     final int QUANTITY_USER_IN_PAGE = 20;
@@ -181,7 +181,7 @@ public class UserServiceTest {
         userServiceUnderTest.uploadImage(image);
     }
 
-//    @Test
+    //    @Test
     public void testDeleteAccount() throws Exception {
         PowerMockito.doReturn(mockedUser).when(userServiceUnderTest, "getAuthorizedUser");
         userServiceUnderTest.deleteAccount();
@@ -196,8 +196,8 @@ public class UserServiceTest {
 
     @Test
     public void testUsersInPage() {
-        assertTrue((userServiceUnderTest.getUsersByPage(NUMBER_PAGE, SORT_BY, ASCENDING).getSort().toString()).equals(SORT_BY +": ASC"));
-        assertTrue((userServiceUnderTest.getUsersByPage(NUMBER_PAGE, SORT_BY, ASCENDING).getTotalPages())==3);
-        assertTrue((userServiceUnderTest.getUsersByPage(NUMBER_PAGE, SORT_BY, ASCENDING).getNumberOfElements())==QUANTITY_USER_IN_PAGE);
+        assertEquals(SORT_BY + ": ASC", userServiceUnderTest.getUsersByPage(NUMBER_PAGE, SORT_BY, ASCENDING).getSort().toString());
+        assertTrue((userServiceUnderTest.getUsersByPage(NUMBER_PAGE, SORT_BY, ASCENDING).getTotalPages()) == 3);
+        assertTrue((userServiceUnderTest.getUsersByPage(NUMBER_PAGE, SORT_BY, ASCENDING).getNumberOfElements()) == QUANTITY_USER_IN_PAGE);
     }
 }
