@@ -56,7 +56,6 @@ public class DeckServiceTest {
 
     final int PAGE_NUMBER = 1;
     final String SORT_BY = "id";
-    final boolean ASCENDING = true;
 
     @Before
     public void setUp() throws Exception {
@@ -72,16 +71,16 @@ public class DeckServiceTest {
 
     @Test
     public void testDeckInPage() {
-        assertEquals(SORT_BY + ": ASC", deckService.getPageWithAllAdminDecks(PAGE_NUMBER, SORT_BY, ASCENDING).getSort().toString());
-        assertTrue(deckService.getPageWithAllAdminDecks(PAGE_NUMBER, SORT_BY, ASCENDING).getTotalPages() == 1);
-        assertTrue(deckService.getPageWithAllAdminDecks(PAGE_NUMBER, SORT_BY, ASCENDING).getNumberOfElements() == 11);
+        assertEquals(SORT_BY + ": ASC", deckService.getPageWithAllAdminDecks(PAGE_NUMBER, SORT_BY, true).getSort().toString());
+        assertTrue(deckService.getPageWithAllAdminDecks(PAGE_NUMBER, SORT_BY, true).getTotalPages() == 1);
+        assertTrue(deckService.getPageWithAllAdminDecks(PAGE_NUMBER, SORT_BY, true).getNumberOfElements() == 11);
     }
 
     @Test
     public void testDeckInPageByCategory() {
         final int CATEGORY_ID = 1;
-        assertEquals(SORT_BY + ": ASC", deckService.getPageWithDecksByCategory(CATEGORY_ID, PAGE_NUMBER, SORT_BY, ASCENDING).getSort().toString());
-        assertTrue(deckService.getPageWithDecksByCategory(CATEGORY_ID, PAGE_NUMBER, SORT_BY, ASCENDING).getTotalPages() == 1);
-        assertTrue(deckService.getPageWithDecksByCategory(CATEGORY_ID, PAGE_NUMBER, SORT_BY, ASCENDING).getNumberOfElements() == 4);
+        assertEquals(SORT_BY + ": ASC", deckService.getPageWithDecksByCategory(CATEGORY_ID, PAGE_NUMBER, SORT_BY, true).getSort().toString());
+        assertTrue(deckService.getPageWithDecksByCategory(CATEGORY_ID, PAGE_NUMBER, SORT_BY, true).getTotalPages() == 1);
+        assertTrue(deckService.getPageWithDecksByCategory(CATEGORY_ID, PAGE_NUMBER, SORT_BY, true).getNumberOfElements() == 4);
     }
 }

@@ -41,14 +41,12 @@ public class CourseControllerTest {
 
     final int NUMBER_PAGE = 1;
     final String SORT_BY = "name";
-    final boolean ASCENDING = true;
     final int QUANTITY_COURSES_IN_PAGE = 12;
-
 
     @Before
     public void setUp() {
         mockMvc = MockMvcBuilders.standaloneSetup(courseController)
-                .setControllerAdvice(new ExceptionHandlerController()).alwaysDo(print())
+                .setControllerAdvice(new ExceptionHandlerController())
                 .build();
     }
 
@@ -74,7 +72,7 @@ public class CourseControllerTest {
                         "}"));
     }
 
-    public static Course createCourse(long idCourse, String nameCourse,
+    public Course createCourse(long idCourse, String nameCourse,
                                       String descriptionCourse, int rating,
                                       long imageId, boolean isPublished,
                                       long accountId, String accountEmail, int ownerId, long categoryId) {
@@ -108,40 +106,25 @@ public class CourseControllerTest {
 
     @Test
     public void getCoursesByPage() throws Exception {
-        when(courseService.getPageWithCourses(NUMBER_PAGE, SORT_BY, ASCENDING)).thenReturn(createCourses());
-        mockMvc.perform(get("/api/courses?p=" + NUMBER_PAGE + "&sortBy=" + SORT_BY + "&asc=" + ASCENDING)
+        when(courseService.getPageWithCourses(NUMBER_PAGE, SORT_BY, true)).thenReturn(createCourses());
+        mockMvc.perform(get("/api/courses?p=" + NUMBER_PAGE + "&sortBy=" + SORT_BY + "&asc=" + true)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.size", is(QUANTITY_COURSES_IN_PAGE)))
-                .andExpect(jsonPath("$.sort[:1].ascending", hasItem(ASCENDING)))
-                .andExpect(jsonPath("$.sort[:1].descending", hasItem(!ASCENDING)))
+                .andExpect(jsonPath("$.sort[:1].ascending", hasItem(true)))
+                .andExpect(jsonPath("$.sort[:1].descending", hasItem(false)))
                 .andExpect(jsonPath("$.sort[:1].property", hasItem(SORT_BY)));
     }
 
     private Page<Course> createCourses() throws ParseException {
         List<Course> courseList = new ArrayList<>();
 
-        Course course = createCourse(3L, "C# interview course", "questions & answers",
-                0, 16L, true, 1L, "admin@gmail.com", 1, 3L);
-
-        Course course2 = createCourse(2L, "C++ interview course", "3 parts of java questions & answers",
-                0, 15L, true, 1L, "admin@gmail.com", 1, 2L);
-
-        Course course3 = createCourse(1L, "Java interview course", "4 parts of java questions & answers",
-                0, 14L, true, 1L, "admin@gmail.com", 1, 1L);
-
-        Course course4 = createCourse(5L, "JavaScript interview course", "questions & answers",
-                0, 18L, true, 1L, "admin@gmail.com", 1, 10L);
-
-        Course course5 = createCourse(4L, "PHP interview course", "2 parts of java questions & answers",
-                0, 17L, true, 1L, "admin@gmail.com", 1, 4L);
-
-        courseList.add(course);
-        courseList.add(course2);
-        courseList.add(course3);
-        courseList.add(course4);
-        courseList.add(course5);
+        for (int i = 1; i <= 5; i++) {
+            Course course = createCourse(i, "C# interview course", "questions & answers",
+                    0, 16L, true, 1L, "admin@gmail.com", 1, i);
+            courseList.add(course);
+        }
 
         Page<Course> coursesPage = new PageImpl<>(courseList, new PageRequest(NUMBER_PAGE, QUANTITY_COURSES_IN_PAGE, Sort.Direction.ASC, SORT_BY), courseList.size());
 
@@ -152,13 +135,13 @@ public class CourseControllerTest {
     public void getCoursesByPageAndCategory() throws Exception {
         final int categoryId = 2;
         when(courseService.getPageWithCoursesByCategory(categoryId, 1, "name", true)).thenReturn(createCoursesBySelectedCategory());
-        mockMvc.perform(get("/api/category/" + categoryId + "/courses?p=" + NUMBER_PAGE + "&sortBy=" + SORT_BY + "&asc=" + ASCENDING)
+        mockMvc.perform(get("/api/category/" + categoryId + "/courses?p=" + NUMBER_PAGE + "&sortBy=" + SORT_BY + "&asc=" + true)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.size", is(QUANTITY_COURSES_IN_PAGE)))
-                .andExpect(jsonPath("$.sort[:1].ascending", hasItem(ASCENDING)))
-                .andExpect(jsonPath("$.sort[:1].descending", hasItem(!ASCENDING)))
+                .andExpect(jsonPath("$.sort[:1].ascending", hasItem(true)))
+                .andExpect(jsonPath("$.sort[:1].descending", hasItem(false)))
                 .andExpect(jsonPath("$.sort[:1].property", hasItem(SORT_BY)));
     }
 

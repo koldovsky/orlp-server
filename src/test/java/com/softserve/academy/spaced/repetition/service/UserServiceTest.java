@@ -63,7 +63,6 @@ public class UserServiceTest {
 
     final int NUMBER_PAGE = 1;
     final String SORT_BY = "id";
-    final boolean ASCENDING = true;
     final int QUANTITY_USER_IN_PAGE = 20;
 
     @Before
@@ -196,8 +195,8 @@ public class UserServiceTest {
 
     @Test
     public void testUsersInPage() {
-        assertEquals(SORT_BY + ": ASC", userServiceUnderTest.getUsersByPage(NUMBER_PAGE, SORT_BY, ASCENDING).getSort().toString());
-        assertTrue((userServiceUnderTest.getUsersByPage(NUMBER_PAGE, SORT_BY, ASCENDING).getTotalPages()) == 3);
-        assertTrue((userServiceUnderTest.getUsersByPage(NUMBER_PAGE, SORT_BY, ASCENDING).getNumberOfElements()) == QUANTITY_USER_IN_PAGE);
+        assertEquals(SORT_BY + ": ASC", userServiceUnderTest.getUsersByPage(NUMBER_PAGE, SORT_BY, true).getSort().toString());
+        assertTrue((userServiceUnderTest.getUsersByPage(NUMBER_PAGE, SORT_BY, true).getTotalPages()) == 3);
+        assertTrue((userServiceUnderTest.getUsersByPage(NUMBER_PAGE, SORT_BY, true).getNumberOfElements()) == QUANTITY_USER_IN_PAGE);
     }
 }

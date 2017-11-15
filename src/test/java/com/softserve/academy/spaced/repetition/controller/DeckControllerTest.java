@@ -33,7 +33,6 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -50,10 +49,8 @@ public class DeckControllerTest {
     private final static int QUANTITY_DECKS_IN_PAGE = 12;
 
     final int NUMBER_PAGE = 1;
-    final boolean ADMIN_DECKS_ASCENDING = true;
     final String ADMIN_DECKS_SORT_BY = "id";
 
-    final boolean DECKS_BY_CATEGORY_ASCENDING = false;
     final int CATEGORY_ID = 1;
     final String SORT_BY = "name";
 
@@ -93,20 +90,20 @@ public class DeckControllerTest {
 
     @Test
     public void getDecksByPage() throws Exception {
-        when(deckService.getPageWithAllAdminDecks(NUMBER_PAGE, ADMIN_DECKS_SORT_BY, ADMIN_DECKS_ASCENDING)).thenReturn(createDecks());
-        mockMvc.perform(get("/api/admin/decks?p=" + NUMBER_PAGE + "&sortBy=" + ADMIN_DECKS_SORT_BY + "&asc=" + ADMIN_DECKS_ASCENDING)
+        when(deckService.getPageWithAllAdminDecks(NUMBER_PAGE, ADMIN_DECKS_SORT_BY, true)).thenReturn(createDecks());
+        mockMvc.perform(get("/api/admin/decks?p=" + NUMBER_PAGE + "&sortBy=" + ADMIN_DECKS_SORT_BY + "&asc=true")
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.size", is(QUANTITY_ADMIN_DECKS_IN_PAGE)))
-                .andExpect(jsonPath("$.sort[:1].ascending", hasItem(ADMIN_DECKS_ASCENDING)))
-                .andExpect(jsonPath("$.sort[:1].descending", hasItem(!ADMIN_DECKS_ASCENDING)))
+                .andExpect(jsonPath("$.sort[:1].ascending", hasItem(true)))
+                .andExpect(jsonPath("$.sort[:1].descending", hasItem(false)))
                 .andExpect(jsonPath("$.sort[:1].property", hasItem(ADMIN_DECKS_SORT_BY)));
     }
 
-    public static Deck createDeck(long idDeck, String nameDeck, String description,
-                                  String accountEmail, double rating, long idCategory,
-                                  String categoryName) {
+    public Deck createDeck(long idDeck, String nameDeck, String description,
+                           String accountEmail, double rating, long idCategory,
+                           String categoryName) {
         Deck deck = new Deck();
         deck.setName(nameDeck);
         User user = new User();
@@ -125,30 +122,13 @@ public class DeckControllerTest {
     }
 
     private Page<Deck> createDecks() throws ParseException {
-        Deck deck = createDeck(1L, "Java interview #1", "Part 1",
-                "admin@gmail.com", 0, 1L, "Java");
-        Deck deck2 = createDeck(2L, "Java interview #2", "Part 2",
-                "admin@gmail.com", 0, 1L, "Java");
-        Deck deck3 = createDeck(3L, "Java interview #3", "Part 3",
-                "admin@gmail.com", 0, 1L, "Java");
-        Deck deck4 = createDeck(4L, "Java interview #4", "Part 4",
-                "admin@gmail.com", 0, 1L, "Java");
-        Deck deck5 = createDeck(5L, "C++ interview #1", "Part 1",
-                "sgofforth1@tmall.com", 0, 2L, "C++");
-        Deck deck6 = createDeck(6L, "C++ interview #2", "Part 2",
-                "sgofforth1@tmall.com", 0, 2L, "C++");
-        Deck deck7 = createDeck(7L, "C++ interview #3", "Part 3",
-                "sgofforth1@tmall.com", 0, 2L, "C++");
-        Deck deck8 = createDeck(8L, "C# interview", "Interview materials",
-                "kewins2@gizmodo.com", 0, 3L, "C#");
-        Deck deck9 = createDeck(9L, "PHP interview #1", "Part 1",
-                "wlouys3@sitemeter.com", 0, 4L, "PHP");
-        Deck deck10 = createDeck(10L, "PHP interview #2", "Part 2",
-                "wlouys3@sitemeter.com", 0, 4L, "PHP");
-        Deck deck11 = createDeck(11L, "JavaScript", "Interview materials",
-                "ndadson4@mapy.cz", 0, 10L, "JavaScript");
-
-        List<Deck> deckList = Arrays.asList(deck, deck2, deck3, deck4, deck5, deck6, deck7, deck8, deck9, deck10, deck11);
+        final int QUANTITY_DECKS = 11;
+        List<Deck> deckList = new ArrayList<>();
+        for (int i = 1; i <= QUANTITY_DECKS; i++) {
+            Deck deck = createDeck(i, "Java interview #" + i, "Part " + i,
+                    "admin@gmail.com", 0, i, "Java");
+            deckList.add(deck);
+        }
 
         Page<Deck> deckPage = new PageImpl<>(deckList, new PageRequest(NUMBER_PAGE, QUANTITY_ADMIN_DECKS_IN_PAGE, Sort.Direction.ASC, ADMIN_DECKS_SORT_BY), deckList.size());
         return deckPage;
@@ -156,14 +136,14 @@ public class DeckControllerTest {
 
     @Test
     public void getDecksByPageAndCategory() throws Exception {
-        when(deckService.getPageWithDecksByCategory(CATEGORY_ID, NUMBER_PAGE, SORT_BY, DECKS_BY_CATEGORY_ASCENDING)).thenReturn(createDecksBySelectedCategory());
-        mockMvc.perform(get("/api/category/" + CATEGORY_ID + "/decks?p=" + NUMBER_PAGE + "&sortBy=" + SORT_BY + "&asc=" + DECKS_BY_CATEGORY_ASCENDING)
+        when(deckService.getPageWithDecksByCategory(CATEGORY_ID, NUMBER_PAGE, SORT_BY, false)).thenReturn(createDecksBySelectedCategory());
+        mockMvc.perform(get("/api/category/" + CATEGORY_ID + "/decks?p=" + NUMBER_PAGE + "&sortBy=" + SORT_BY + "&asc=" + false)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.size", is(QUANTITY_DECKS_IN_PAGE)))
-                .andExpect(jsonPath("$.sort[:1].ascending", hasItem(!DECKS_BY_CATEGORY_ASCENDING)))
-                .andExpect(jsonPath("$.sort[:1].descending", hasItem(DECKS_BY_CATEGORY_ASCENDING)))
+                .andExpect(jsonPath("$.sort[:1].ascending", hasItem(true)))
+                .andExpect(jsonPath("$.sort[:1].descending", hasItem(false)))
                 .andExpect(jsonPath("$.sort[:1].property", hasItem(SORT_BY)));
     }
 

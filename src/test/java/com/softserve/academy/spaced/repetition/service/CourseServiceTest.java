@@ -58,7 +58,6 @@ public class CourseServiceTest {
 
     private final int PAGE_NUMBER = 1;
     private final String SORT_BY = "name";
-    private final boolean ASCENDING = true;
 
     @Before
     public void setUp() throws Exception {
@@ -74,18 +73,17 @@ public class CourseServiceTest {
 
     @Test
     public void testCoursesInPage() {
-
-        assertEquals(SORT_BY + ": ASC", courseService.getPageWithCourses(PAGE_NUMBER, SORT_BY, ASCENDING).getSort().toString());
-        assertTrue(courseService.getPageWithCourses(PAGE_NUMBER, SORT_BY, ASCENDING).getTotalPages() == 1);
-        assertTrue(courseService.getPageWithCourses(PAGE_NUMBER, SORT_BY, ASCENDING).getNumberOfElements() == 5);
+        assertEquals(SORT_BY + ": ASC", courseService.getPageWithCourses(PAGE_NUMBER, SORT_BY, true).getSort().toString());
+        assertTrue(courseService.getPageWithCourses(PAGE_NUMBER, SORT_BY, true).getTotalPages() == 1);
+        assertTrue(courseService.getPageWithCourses(PAGE_NUMBER, SORT_BY, true).getNumberOfElements() == 5);
     }
 
     @Test
     public void testCoursesByCategoryAndByPage() {
 
         final int CATEGORY_ID = 2;
-        assertEquals(SORT_BY + ": ASC", courseService.getPageWithCoursesByCategory(CATEGORY_ID, PAGE_NUMBER, SORT_BY, ASCENDING).getSort().toString());
-        assertTrue(courseService.getPageWithCoursesByCategory(CATEGORY_ID, PAGE_NUMBER, SORT_BY, ASCENDING).getTotalPages() == 1);
-        assertTrue(courseService.getPageWithCoursesByCategory(CATEGORY_ID, PAGE_NUMBER, SORT_BY, ASCENDING).getNumberOfElements() == 1);
+        assertEquals(SORT_BY + ": ASC", courseService.getPageWithCoursesByCategory(CATEGORY_ID, PAGE_NUMBER, SORT_BY, true).getSort().toString());
+        assertTrue(courseService.getPageWithCoursesByCategory(CATEGORY_ID, PAGE_NUMBER, SORT_BY, true).getTotalPages() == 1);
+        assertTrue(courseService.getPageWithCoursesByCategory(CATEGORY_ID, PAGE_NUMBER, SORT_BY, true).getNumberOfElements() == 1);
     }
 }
