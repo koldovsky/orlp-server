@@ -74,12 +74,7 @@ public class AuditService {
     }
 
     public Page<Audit> getAuditByPage(int pageNumber, String sortBy, boolean ascending) {
-        PageRequest request;
-        if(ascending == true){
-            request = new PageRequest(pageNumber-1, QUANTITY_AUDIT_IN_PAGE, Sort.Direction.ASC, sortBy);
-        }else {
-            request = new PageRequest(pageNumber-1, QUANTITY_AUDIT_IN_PAGE, Sort.Direction.DESC, sortBy);
-        }
+        PageRequest request = new PageRequest(pageNumber - 1, QUANTITY_AUDIT_IN_PAGE, ascending ? Sort.Direction.ASC : Sort.Direction.DESC, sortBy);
         return auditRepository.findAll(request);
     }
 }

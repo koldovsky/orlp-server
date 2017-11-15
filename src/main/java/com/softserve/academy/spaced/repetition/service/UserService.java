@@ -181,12 +181,7 @@ public class UserService {
     }
 
     public Page<User> getUsersByPage(int pageNumber, String sortBy, boolean ascending) {
-        PageRequest request;
-        if (ascending == true) {
-            request = new PageRequest(pageNumber - 1, QUANTITY_USER_IN_PAGE, Sort.Direction.ASC, sortBy);
-        } else {
-            request = new PageRequest(pageNumber - 1, QUANTITY_USER_IN_PAGE, Sort.Direction.DESC, sortBy);
-        }
+        PageRequest request = new PageRequest(pageNumber - 1, QUANTITY_USER_IN_PAGE, ascending ? Sort.Direction.ASC : Sort.Direction.DESC, sortBy);
         return userRepository.findAll(request);
     }
 
@@ -251,7 +246,7 @@ public class UserService {
         if (account.getPassword() == null) {
             account.setPassword("-1");
         } else {
-           account.setPassword(passwordEncoder.encode(account.getPassword()));
+            account.setPassword(passwordEncoder.encode(account.getPassword()));
         }
         account.setLastPasswordResetDate(new Date());
         account.setStatus(accountStatus);
