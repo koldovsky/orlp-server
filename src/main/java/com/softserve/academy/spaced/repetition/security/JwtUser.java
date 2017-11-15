@@ -12,18 +12,21 @@ public class JwtUser implements UserDetails {
     private final String password;
     private final Collection<? extends GrantedAuthority> authorities;
     private final Date lastPasswordResetDate;
+    private boolean deactivated;
 
     public JwtUser(
             Long id,
             String email,
             String password,
             Collection<? extends GrantedAuthority> authorities,
-            Date lastPasswordResetDate) {
+            Date lastPasswordResetDate,
+            boolean deactivated) {
         this.id = id;
         this.email = email;
         this.password = password;
         this.authorities = authorities;
         this.lastPasswordResetDate = lastPasswordResetDate;
+        this.deactivated = deactivated;
     }
     @JsonIgnore
     public Date getLastPasswordResetDate() {
@@ -57,7 +60,7 @@ public class JwtUser implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+        return !deactivated;
     }
 
     @Override
