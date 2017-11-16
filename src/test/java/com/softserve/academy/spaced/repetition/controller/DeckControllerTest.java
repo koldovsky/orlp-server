@@ -57,7 +57,7 @@ public class DeckControllerTest {
     @Before
     public void setUp() {
         mockMvc = MockMvcBuilders.standaloneSetup(deckController)
-                .setControllerAdvice(new ExceptionHandlerController())
+                .setControllerAdvice(new ExceptionHandlerController()).alwaysDo(print())
                 .build();
     }
 
@@ -95,6 +95,7 @@ public class DeckControllerTest {
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
+                .andExpect(jsonPath("$.totalPages", is(3)))
                 .andExpect(jsonPath("$.size", is(QUANTITY_ADMIN_DECKS_IN_PAGE)))
                 .andExpect(jsonPath("$.sort[:1].ascending", hasItem(true)))
                 .andExpect(jsonPath("$.sort[:1].descending", hasItem(false)))
@@ -122,7 +123,7 @@ public class DeckControllerTest {
     }
 
     private Page<Deck> createDecks() throws ParseException {
-        final int QUANTITY_DECKS = 11;
+        final int QUANTITY_DECKS = 41;
         List<Deck> deckList = new ArrayList<>();
         for (int i = 1; i <= QUANTITY_DECKS; i++) {
             Deck deck = createDeck(i, "Java interview #" + i, "Part " + i,
@@ -130,7 +131,7 @@ public class DeckControllerTest {
             deckList.add(deck);
         }
 
-        Page<Deck> deckPage = new PageImpl<>(deckList, new PageRequest(NUMBER_PAGE, QUANTITY_ADMIN_DECKS_IN_PAGE, Sort.Direction.ASC, ADMIN_DECKS_SORT_BY), deckList.size());
+        Page<Deck> deckPage = new PageImpl<>(deckList, new PageRequest(NUMBER_PAGE - 1, QUANTITY_ADMIN_DECKS_IN_PAGE, Sort.Direction.ASC, ADMIN_DECKS_SORT_BY), deckList.size());
         return deckPage;
     }
 
@@ -141,6 +142,7 @@ public class DeckControllerTest {
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
+                .andExpect(jsonPath("$.totalPages", is(2)))
                 .andExpect(jsonPath("$.size", is(QUANTITY_DECKS_IN_PAGE)))
                 .andExpect(jsonPath("$.sort[:1].ascending", hasItem(true)))
                 .andExpect(jsonPath("$.sort[:1].descending", hasItem(false)))
@@ -150,12 +152,12 @@ public class DeckControllerTest {
     private Page<Deck> createDecksBySelectedCategory() throws ParseException {
         List<Deck> deckList = new ArrayList<>();
 
-        int QUANTITY_ADMIN_DECKS = 4;
+        int QUANTITY_ADMIN_DECKS = 14;
         for (int i = QUANTITY_ADMIN_DECKS; i >= 1; i--) {
             Deck deck = createDeck(i, "Java interview #" + i, "Part " + i, "admin@gmail.com", 0, 1L, "Java");
             deckList.add(deck);
         }
-        Page<Deck> deckPage = new PageImpl<>(deckList, new PageRequest(NUMBER_PAGE, QUANTITY_DECKS_IN_PAGE, Sort.Direction.ASC, SORT_BY), deckList.size());
+        Page<Deck> deckPage = new PageImpl<>(deckList, new PageRequest(NUMBER_PAGE - 1, QUANTITY_DECKS_IN_PAGE, Sort.Direction.ASC, SORT_BY), deckList.size());
         return deckPage;
     }
 }

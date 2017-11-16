@@ -17,6 +17,10 @@ public class CategoryTopDTO extends DTO<Category> {
         return getEntity().getName();
     }
 
+    public String getDescription() {
+        return getEntity().getDescription();
+    }
+
     public String getImage() {
         return linkTo(methodOn(ImageController.class).getImageById(getEntity().getImage().getId())).withSelfRel().getHref();
     }

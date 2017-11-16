@@ -73,9 +73,9 @@ public class CourseControllerTest {
     }
 
     public Course createCourse(long idCourse, String nameCourse,
-                                      String descriptionCourse, int rating,
-                                      long imageId, boolean isPublished,
-                                      long accountId, String accountEmail, int ownerId, long categoryId) {
+                               String descriptionCourse, int rating,
+                               long imageId, boolean isPublished,
+                               long accountId, String accountEmail, int ownerId, long categoryId) {
         Course course = new Course();
         course.setName(nameCourse);
         course.setDescription(descriptionCourse);
@@ -111,6 +111,7 @@ public class CourseControllerTest {
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
+                .andExpect(jsonPath("$.totalPages", is(3)))
                 .andExpect(jsonPath("$.size", is(QUANTITY_COURSES_IN_PAGE)))
                 .andExpect(jsonPath("$.sort[:1].ascending", hasItem(true)))
                 .andExpect(jsonPath("$.sort[:1].descending", hasItem(false)))
@@ -119,14 +120,14 @@ public class CourseControllerTest {
 
     private Page<Course> createCourses() throws ParseException {
         List<Course> courseList = new ArrayList<>();
-
-        for (int i = 1; i <= 5; i++) {
+        final int QUANTITY_COURSES = 25;
+        for (int i = 1; i <= QUANTITY_COURSES; i++) {
             Course course = createCourse(i, "C# interview course", "questions & answers",
                     0, 16L, true, 1L, "admin@gmail.com", 1, i);
             courseList.add(course);
         }
 
-        Page<Course> coursesPage = new PageImpl<>(courseList, new PageRequest(NUMBER_PAGE, QUANTITY_COURSES_IN_PAGE, Sort.Direction.ASC, SORT_BY), courseList.size());
+        Page<Course> coursesPage = new PageImpl<>(courseList, new PageRequest(NUMBER_PAGE - 1, QUANTITY_COURSES_IN_PAGE, Sort.Direction.ASC, SORT_BY), QUANTITY_COURSES);
 
         return coursesPage;
     }
@@ -139,6 +140,7 @@ public class CourseControllerTest {
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
+                .andExpect(jsonPath("$.totalPages", is(1)))
                 .andExpect(jsonPath("$.size", is(QUANTITY_COURSES_IN_PAGE)))
                 .andExpect(jsonPath("$.sort[:1].ascending", hasItem(true)))
                 .andExpect(jsonPath("$.sort[:1].descending", hasItem(false)))
@@ -169,7 +171,7 @@ public class CourseControllerTest {
 
         courseList.add(course);
 
-        Page<Course> coursesPage = new PageImpl<>(courseList, new PageRequest(NUMBER_PAGE, QUANTITY_COURSES_IN_PAGE, Sort.Direction.ASC, SORT_BY), courseList.size());
+        Page<Course> coursesPage = new PageImpl<>(courseList, new PageRequest(NUMBER_PAGE - 1, QUANTITY_COURSES_IN_PAGE, Sort.Direction.ASC, SORT_BY), courseList.size());
 
         return coursesPage;
     }
