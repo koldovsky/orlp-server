@@ -12,12 +12,15 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.Spy;
 import org.mockito.stubbing.Answer;
 import org.powermock.api.mockito.PowerMockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
@@ -25,7 +28,8 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
@@ -56,6 +60,10 @@ public class UserServiceTest {
     private DataFieldValidator mockedDataFieldValidator;
     @Mock
     private PasswordFieldValidator mockedPasswordFieldValidator;
+
+    final int NUMBER_PAGE = 1;
+    final String SORT_BY = "id";
+    final int QUANTITY_USER_IN_PAGE = 20;
 
     @Before
     public void setUp() throws Exception {
@@ -172,7 +180,7 @@ public class UserServiceTest {
         userServiceUnderTest.uploadImage(image);
     }
 
-//    @Test
+    //    @Test
     public void testDeleteAccount() throws Exception {
         PowerMockito.doReturn(mockedUser).when(userServiceUnderTest, "getAuthorizedUser");
         userServiceUnderTest.deleteAccount();
@@ -183,5 +191,12 @@ public class UserServiceTest {
     public void testNotAuthorizedDeleteAccount() throws Exception {
         doThrow(NotAuthorisedUserException.class).when(userServiceUnderTest).getAuthorizedUser();
         userServiceUnderTest.deleteAccount();
+    }
+
+    @Test
+    public void testUsersInPage() {
+        assertEquals(SORT_BY + ": ASC", userServiceUnderTest.getUsersByPage(NUMBER_PAGE, SORT_BY, true).getSort().toString());
+        assertTrue((userServiceUnderTest.getUsersByPage(NUMBER_PAGE, SORT_BY, true).getTotalPages()) == 3);
+        assertTrue((userServiceUnderTest.getUsersByPage(NUMBER_PAGE, SORT_BY, true).getNumberOfElements()) == QUANTITY_USER_IN_PAGE);
     }
 }
