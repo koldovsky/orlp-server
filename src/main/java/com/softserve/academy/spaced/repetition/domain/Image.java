@@ -1,7 +1,6 @@
 package com.softserve.academy.spaced.repetition.domain;
 
 import com.softserve.academy.spaced.repetition.dto.EntityInterface;
-import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 
@@ -27,9 +26,8 @@ public class Image implements EntityInterface {
     @Column(name = "size", nullable = false)
     private Long size;
 
-    @Type(type= "org.hibernate.type.NumericBooleanType")
     @Column(name = "is_used")
-    private boolean isUsed;
+    private boolean isImageUsed;
 
     public Image() {
     }
@@ -38,9 +36,9 @@ public class Image implements EntityInterface {
         this.id = id;
     }
 
-    public Image(Long id, boolean isUsed) {
+    public Image(Long id, boolean isImageUsed) {
         this.id = id;
-        this.isUsed = isUsed;
+        this.isImageUsed = isImageUsed;
     }
 
     public Image(String imagebase64) {
@@ -106,11 +104,11 @@ public class Image implements EntityInterface {
         this.size = size;
     }
 
-    public boolean isUsed() {
-        return isUsed;
+    public boolean getIsImageUsed() {
+        return isImageUsed;
     }
 
-    public void setUsed(boolean used) {
-        isUsed = used;
+    public void setIsImageUsed(boolean imageUsed) {
+        isImageUsed = imageUsed;
     }
 }
