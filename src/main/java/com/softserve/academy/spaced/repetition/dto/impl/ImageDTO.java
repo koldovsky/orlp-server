@@ -1,8 +1,8 @@
 package com.softserve.academy.spaced.repetition.dto.impl;
 
-import com.softserve.academy.spaced.repetition.dto.DTO;
 import com.softserve.academy.spaced.repetition.controller.ImageController;
 import com.softserve.academy.spaced.repetition.domain.Image;
+import com.softserve.academy.spaced.repetition.dto.DTO;
 import org.springframework.hateoas.Link;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
@@ -18,5 +18,7 @@ public class ImageDTO extends DTO<Image> {
     public Long getImageId() {
         return getEntity().getId();
     }
+
+    public boolean getIsImageUsed() { return getEntity().getIsImageUsed(); }
 
 }
