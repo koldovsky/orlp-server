@@ -42,4 +42,6 @@ public class UserDTO extends DTO<User> {
     }
 
     public AccountStatus getAccountStatus() { return getEntity().getAccount().getStatus();}
+
+    public boolean isDeactivated() { return getEntity().getAccount().isDeactivated();}
 }

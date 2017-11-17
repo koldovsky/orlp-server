@@ -52,6 +52,21 @@ public class MailService {
         mailSender.send(preparator);
     }
 
+    public void sendActivationMail(String email) {
+        MimeMessagePreparator preparator = mimeMessage -> {
+            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
+            helper.setSubject("Activation account");
+            helper.setTo(email);
+            Map <String, Object> model = new HashMap <>();
+            String token = jwtTokenForMail.generateTokenForMailFromEmail(email);
+            model.put("token", token);
+            model.put("url", URL);
+            String text = getActivationAccountTemplateContent(model);
+            helper.setText(text, true);
+        };
+        mailSender.send(preparator);
+    }
+
     public void sendPasswordNotificationMail(User user) {
         MimeMessagePreparator preparator = mimeMessage -> {
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
@@ -72,6 +87,18 @@ public class MailService {
         try {
             content.append(FreeMarkerTemplateUtils.processTemplateIntoString(
                     freemarkerConfiguration.getTemplate("registrationVerificationMailTemplate.txt"), model));
+            return content.toString();
+        } catch (IOException | TemplateException e) {
+            LOGGER.error("Couldn't generate email content.", e);
+        }
+        return "";
+    }
+
+    private String getActivationAccountTemplateContent(Map <String, Object> model) {
+        StringBuilder content = new StringBuilder();
+        try {
+            content.append(FreeMarkerTemplateUtils.processTemplateIntoString(
+                    freemarkerConfiguration.getTemplate("activationAccountMailTemplate.txt"), model));
             return content.toString();
         } catch (IOException | TemplateException e) {
             LOGGER.error("Couldn't generate email content.", e);

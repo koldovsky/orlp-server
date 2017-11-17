@@ -138,12 +138,25 @@ public class UserService {
         return user;
     }
 
+    public String getNoAuthenticatedUserEmail() throws NotAuthorisedUserException {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (principal instanceof JwtUser) {
+            JwtUser jwtUser = (JwtUser) principal;
+            return jwtUser.getUsername();
+        } else {
+            throw new NotAuthorisedUserException();
+        }
+    }
+
     public User getAuthorizedUser() throws NotAuthorisedUserException {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (principal instanceof String) {
             throw new NotAuthorisedUserException();
         } else {
             JwtUser jwtUser = (JwtUser) principal;
+            if(!jwtUser.isAccountNonLocked()) {
+                throw new LockedException("Account is deactivated");
+            }
             return userRepository.findUserByAccountEmail(jwtUser.getUsername());
         }
     }
@@ -220,10 +233,7 @@ public class UserService {
     }
 
     public void activateAccount() throws NotAuthorisedUserException {
-        User user = getAuthorizedUser();
-        user.getAccount().setDeactivated(false);
-        mailService.sendConfirmationMail(user);
-        userRepository.save(user);
+        mailService.sendActivationMail(getNoAuthenticatedUserEmail());
     }
 
     public void deleteAccount() throws NotAuthorisedUserException {
