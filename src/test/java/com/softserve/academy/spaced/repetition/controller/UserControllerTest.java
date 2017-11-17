@@ -104,14 +104,14 @@ public class UserControllerTest {
     }
 
     private Page<User> createUsers() {
-        final int QUANTITY_USERS = 40;
+        final int quantityUsers = 40;
         List<User> users = new ArrayList<>();
-        for (int i = 1; i <= QUANTITY_USERS; i++) {
+        for (int i = 1; i <= quantityUsers; i++) {
             User user = createUser(i, i, "Admin", "Admin",
                     i, AccountStatus.ACTIVE, "admin" + i + "@gmail.com");
             users.add(user);
         }
-        Page<User> userPage = new PageImpl<>(users, new PageRequest(NUMBER_PAGE - 1, QUANTITY_USER_IN_PAGE, Sort.Direction.ASC, SORT_BY), QUANTITY_USERS);
+        Page<User> userPage = new PageImpl<>(users, new PageRequest(NUMBER_PAGE - 1, QUANTITY_USER_IN_PAGE, Sort.Direction.ASC, SORT_BY), quantityUsers);
         return userPage;
     }
 }

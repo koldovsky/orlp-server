@@ -57,7 +57,7 @@ public class DeckControllerTest {
     @Before
     public void setUp() {
         mockMvc = MockMvcBuilders.standaloneSetup(deckController)
-                .setControllerAdvice(new ExceptionHandlerController()).alwaysDo(print())
+                .setControllerAdvice(new ExceptionHandlerController())
                 .build();
     }
 
@@ -123,15 +123,15 @@ public class DeckControllerTest {
     }
 
     private Page<Deck> createDecks() throws ParseException {
-        final int QUANTITY_DECKS = 41;
+        final int quantityDecks = 41;
         List<Deck> deckList = new ArrayList<>();
-        for (int i = 1; i <= QUANTITY_DECKS; i++) {
+        for (int i = 1; i <= quantityDecks; i++) {
             Deck deck = createDeck(i, "Java interview #" + i, "Part " + i,
                     "admin@gmail.com", 0, i, "Java");
             deckList.add(deck);
         }
 
-        Page<Deck> deckPage = new PageImpl<>(deckList, new PageRequest(NUMBER_PAGE - 1, QUANTITY_ADMIN_DECKS_IN_PAGE, Sort.Direction.ASC, ADMIN_DECKS_SORT_BY), deckList.size());
+        Page<Deck> deckPage = new PageImpl<>(deckList, new PageRequest(NUMBER_PAGE - 1, QUANTITY_ADMIN_DECKS_IN_PAGE, Sort.Direction.ASC, ADMIN_DECKS_SORT_BY), quantityDecks);
         return deckPage;
     }
 
@@ -152,12 +152,12 @@ public class DeckControllerTest {
     private Page<Deck> createDecksBySelectedCategory() throws ParseException {
         List<Deck> deckList = new ArrayList<>();
 
-        int QUANTITY_ADMIN_DECKS = 14;
-        for (int i = QUANTITY_ADMIN_DECKS; i >= 1; i--) {
+        int quantityAdminDecks = 14;
+        for (int i = quantityAdminDecks; i >= 1; i--) {
             Deck deck = createDeck(i, "Java interview #" + i, "Part " + i, "admin@gmail.com", 0, 1L, "Java");
             deckList.add(deck);
         }
-        Page<Deck> deckPage = new PageImpl<>(deckList, new PageRequest(NUMBER_PAGE - 1, QUANTITY_DECKS_IN_PAGE, Sort.Direction.ASC, SORT_BY), deckList.size());
+        Page<Deck> deckPage = new PageImpl<>(deckList, new PageRequest(NUMBER_PAGE - 1, QUANTITY_DECKS_IN_PAGE, Sort.Direction.ASC, SORT_BY), quantityAdminDecks);
         return deckPage;
     }
 }

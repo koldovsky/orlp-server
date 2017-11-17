@@ -57,7 +57,6 @@ public class CategoryController {
         return new ResponseEntity<>(categories, HttpStatus.OK);
     }
 
-    @Auditable(action = AuditingAction.VIEW_TOP_CATEGORIES)
     @GetMapping("/api/sortedCategoriesByPage/top")
     public ResponseEntity<Page<CategoryTopDTO>> getTopSortedCategories(@RequestParam(name = "p") int pageNumber, @RequestParam(name = "sortBy") String sortBy, @RequestParam(name = "asc") boolean ascending) {
         Page<CategoryTopDTO> sortedCategoriesDTOS = categoryService.getSortedCategories(pageNumber, sortBy, ascending).map((deck) -> {

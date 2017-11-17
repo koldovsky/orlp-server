@@ -52,8 +52,8 @@ public class CourseControllerTest {
 
     @Test
     public void getCourseById() throws Exception {
-        long categoryId = 1L;
-        long courseId = 1L;
+        final long categoryId = 1L;
+        final long courseId = 1L;
         when(courseService.getCourseById(eq(categoryId), eq(courseId))).thenReturn(createCourse());
         mockMvc.perform(get("/api/category/{category_id}/courses/{course_id}", categoryId, courseId)
                 .accept(MediaType.APPLICATION_JSON)
@@ -120,14 +120,14 @@ public class CourseControllerTest {
 
     private Page<Course> createCourses() throws ParseException {
         List<Course> courseList = new ArrayList<>();
-        final int QUANTITY_COURSES = 25;
-        for (int i = 1; i <= QUANTITY_COURSES; i++) {
+        final int quantityCourses = 25;
+        for (int i = 1; i <= quantityCourses; i++) {
             Course course = createCourse(i, "C# interview course", "questions & answers",
                     0, 16L, true, 1L, "admin@gmail.com", 1, i);
             courseList.add(course);
         }
 
-        Page<Course> coursesPage = new PageImpl<>(courseList, new PageRequest(NUMBER_PAGE - 1, QUANTITY_COURSES_IN_PAGE, Sort.Direction.ASC, SORT_BY), QUANTITY_COURSES);
+        Page<Course> coursesPage = new PageImpl<>(courseList, new PageRequest(NUMBER_PAGE - 1, QUANTITY_COURSES_IN_PAGE, Sort.Direction.ASC, SORT_BY), quantityCourses);
 
         return coursesPage;
     }
