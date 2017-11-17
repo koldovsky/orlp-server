@@ -3,7 +3,10 @@ package com.softserve.academy.spaced.repetition.service;
 import com.google.api.client.util.Base64;
 import com.softserve.academy.spaced.repetition.domain.Image;
 import com.softserve.academy.spaced.repetition.domain.User;
-import com.softserve.academy.spaced.repetition.exceptions.*;
+import com.softserve.academy.spaced.repetition.exceptions.CanNotBeDeletedException;
+import com.softserve.academy.spaced.repetition.exceptions.ImageRepositorySizeQuotaExceededException;
+import com.softserve.academy.spaced.repetition.exceptions.NotAuthorisedUserException;
+import com.softserve.academy.spaced.repetition.exceptions.NotOwnerOperationException;
 import com.softserve.academy.spaced.repetition.repository.ImageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -38,15 +41,15 @@ public class ImageService {
      */
     public Image addImageToDB(MultipartFile file) throws ImageRepositorySizeQuotaExceededException, NotAuthorisedUserException {
         checkImageExtention(file);
-        Image  image = new Image(encodeToBase64(file), file.getContentType(),
-                userService.getAuthorizedUser(),file.getSize());
+        Image image = new Image(encodeToBase64(file), file.getContentType(),
+                userService.getAuthorizedUser(), file.getSize());
         imageRepository.save(image);
         image = imageRepository.getImageWithoutContent(image.getId());
         return image;
     }
 
 
-     void checkImageExtention(MultipartFile file) throws ImageRepositorySizeQuotaExceededException,
+    void checkImageExtention(MultipartFile file) throws ImageRepositorySizeQuotaExceededException,
             NotAuthorisedUserException {
         long fileSize = file.getSize();
         User user = userService.getAuthorizedUser();
@@ -57,8 +60,7 @@ public class ImageService {
             throw new MultipartException("File upload error: file is too large.");
         } else {
             String imageType = file.getContentType();
-            if (imageType == null || !imageType.split("/")[0].equalsIgnoreCase("image"))
-            {
+            if (imageType == null || !imageType.split("/")[0].equalsIgnoreCase("image")) {
                 throw new IllegalArgumentException("File upload error: file is not an image");
             }
         }
@@ -146,7 +148,7 @@ public class ImageService {
         if (imageOwnerId != userId) {
             throw new NotOwnerOperationException();
         }
-        boolean isUsed = image.isUsed();
+        boolean isUsed = image.getIsImageUsed();
         if (isUsed) {
             throw new CanNotBeDeletedException();
         } else {
@@ -161,7 +163,7 @@ public class ImageService {
      */
     public void setImageStatusInUse(Long imageId) {
         Image image = imageRepository.findOne(imageId);
-        image.setUsed(true);
+        image.setIsImageUsed(true);
         imageRepository.save(image);
     }
 
@@ -172,7 +174,7 @@ public class ImageService {
      */
     public void setImageStatusNotInUse(Long imageId) {
         Image image = imageRepository.findOne(imageId);
-        image.setUsed(false);
+        image.setIsImageUsed(false);
         imageRepository.save(image);
     }
 
