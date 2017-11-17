@@ -10,6 +10,7 @@ import com.softserve.academy.spaced.repetition.dto.impl.CategoryPublicDTO;
 import com.softserve.academy.spaced.repetition.dto.impl.CategoryTopDTO;
 import com.softserve.academy.spaced.repetition.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.hateoas.Link;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -55,6 +56,15 @@ public class CategoryController {
         List<CategoryTopDTO> categories = DTOBuilder.buildDtoListForCollection(categoryList,
                 CategoryTopDTO.class, collectionLink);
         return new ResponseEntity<>(categories, HttpStatus.OK);
+    }
+
+    @GetMapping("/api/sortedCategoriesByPage/top")
+    public ResponseEntity<Page<CategoryTopDTO>> getTopSortedCategories(@RequestParam(name = "p") int pageNumber, @RequestParam(name = "sortBy") String sortBy, @RequestParam(name = "asc") boolean ascending) {
+        Page<CategoryTopDTO> sortedCategoriesDTOS = categoryService.getSortedCategories(pageNumber, sortBy, ascending).map((category) -> {
+            Link selfLink = linkTo(methodOn(CategoryController.class).getCategoryById(category.getId())).withRel("category");
+            return DTOBuilder.buildDtoForEntity(category, CategoryTopDTO.class, selfLink);
+        });
+        return new ResponseEntity<>(sortedCategoriesDTOS, HttpStatus.OK);
     }
 
     @Auditable(action = AuditingAction.CREATE_CATEGORY)

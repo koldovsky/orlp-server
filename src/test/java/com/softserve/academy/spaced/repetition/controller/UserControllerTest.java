@@ -67,7 +67,7 @@ public class UserControllerTest {
     }
 
     public User createUser(int idUser, int idPerson, String firstName, String lastName, long accountId,
-                                  AccountStatus accountStatus, String email) {
+                           AccountStatus accountStatus, String email) {
         User user = new User();
         user.setId(idUser);
         Person person = new Person();
@@ -96,7 +96,7 @@ public class UserControllerTest {
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.totalPages", is(3)))
+                .andExpect(jsonPath("$.totalPages", is(2)))
                 .andExpect(jsonPath("$.size", is(QUANTITY_USER_IN_PAGE)))
                 .andExpect(jsonPath("$.sort[:1].ascending", hasItem(true)))
                 .andExpect(jsonPath("$.sort[:1].descending", hasItem(false)))
@@ -104,16 +104,14 @@ public class UserControllerTest {
     }
 
     private Page<User> createUsers() {
-        final int QUANTITY_USERS = 20;
+        final int quantityUsers = 40;
         List<User> users = new ArrayList<>();
-        for (int i = 1; i <= QUANTITY_USERS; i++) {
+        for (int i = 1; i <= quantityUsers; i++) {
             User user = createUser(i, i, "Admin", "Admin",
                     i, AccountStatus.ACTIVE, "admin" + i + "@gmail.com");
             users.add(user);
         }
-
-        final int QUANTITY_ALL_USER = 50;
-        Page<User> userPage = new PageImpl<>(users, new PageRequest(NUMBER_PAGE, QUANTITY_USER_IN_PAGE, Sort.Direction.ASC, SORT_BY), QUANTITY_ALL_USER);
+        Page<User> userPage = new PageImpl<>(users, new PageRequest(NUMBER_PAGE - 1, QUANTITY_USER_IN_PAGE, Sort.Direction.ASC, SORT_BY), quantityUsers);
         return userPage;
     }
 }
