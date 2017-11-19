@@ -14,7 +14,6 @@ public class PasswordDTO {
 
     @NotNull(message = NULL_MESSAGE, groups = Request.class)
     @NotEmpty(message = EMPTY_MESSAGE, groups = Request.class)
-    @Length(min = PASSWORD_MIN_LENGTH, max = PASSWORD_MAX_LENGTH, message = PASSWORD_LENGTH_MESSAGE, groups = Request.class)
     @PasswordMatches(groups = Request.class)
     private String currentPassword;
 
