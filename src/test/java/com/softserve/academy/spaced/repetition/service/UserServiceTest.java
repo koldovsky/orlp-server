@@ -6,8 +6,6 @@ import com.softserve.academy.spaced.repetition.domain.*;
 import com.softserve.academy.spaced.repetition.exceptions.NotAuthorisedUserException;
 import com.softserve.academy.spaced.repetition.repository.DeckRepository;
 import com.softserve.academy.spaced.repetition.repository.UserRepository;
-import com.softserve.academy.spaced.repetition.service.validators.DataFieldValidator;
-import com.softserve.academy.spaced.repetition.service.validators.PasswordFieldValidator;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,19 +15,12 @@ import org.powermock.api.mockito.PowerMockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
@@ -56,10 +47,6 @@ public class UserServiceTest {
     private ImageService mockedImageService;
     @Mock
     private MailService mockedMailService;
-    @Mock
-    private DataFieldValidator mockedDataFieldValidator;
-    @Mock
-    private PasswordFieldValidator mockedPasswordFieldValidator;
 
     final int NUMBER_PAGE = 1;
     final String SORT_BY = "id";
@@ -74,8 +61,6 @@ public class UserServiceTest {
         mockedImageService = PowerMockito.spy(new ImageService());
         userServiceUnderTest.setImageService(mockedImageService);
         userServiceUnderTest.setMailService(mockedMailService);
-        userServiceUnderTest.setDataFieldValidator(mockedDataFieldValidator);
-        userServiceUnderTest.setPasswordFieldValidator(mockedPasswordFieldValidator);
     }
 
     Person mockedPerson = new Person("firstName", "lastName");
@@ -90,7 +75,7 @@ public class UserServiceTest {
         doAnswer((Answer<Void>) invocation -> {
             person = invocation.getArgumentAt(0, Person.class);
             return null;
-        }).when(mockedDataFieldValidator).validate(any());
+        });
         PowerMockito.doReturn(mockedUser).when(userServiceUnderTest, "getAuthorizedUser");
         User editedUser = userServiceUnderTest.editPersonalData(newPerson);
         assertEquals("DataFieldValidator invoked", newPerson, person);
@@ -102,7 +87,7 @@ public class UserServiceTest {
         Person newPerson = new Person("", "");
         User mockedUser = new User(new Account("email1@email.com"),
                 new Person("firstName", "lastName"), new Folder());
-        doThrow(IllegalArgumentException.class).when(mockedDataFieldValidator).validate(eq(newPerson));
+        doThrow(IllegalArgumentException.class);
         PowerMockito.doReturn(mockedUser).when(userServiceUnderTest, "getAuthorizedUser");
         userServiceUnderTest.editPersonalData(newPerson);
     }
@@ -124,7 +109,7 @@ public class UserServiceTest {
         doAnswer((Answer<Void>) invocation -> {
             password = invocation.getArgumentAt(0, PasswordDTO.class);
             return null;
-        }).when(mockedPasswordFieldValidator).validate(any());
+        });
         doAnswer((Answer<Void>) invocation -> {
             newPassword = invocation.getArgumentAt(0, String.class);
             return null;
@@ -143,7 +128,7 @@ public class UserServiceTest {
     @Test(expected = IllegalArgumentException.class)
     public void testChangePasswordException() throws Exception {
         PasswordDTO passwordDTO = new PasswordDTO("", "");
-        doThrow(IllegalArgumentException.class).when(mockedPasswordFieldValidator).validate(eq(passwordDTO));
+        doThrow(IllegalArgumentException.class);
         PowerMockito.doReturn(mockedUser).when(userServiceUnderTest, "getAuthorizedUser");
         userServiceUnderTest.changePassword(passwordDTO);
     }

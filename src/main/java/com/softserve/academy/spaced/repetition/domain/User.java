@@ -1,11 +1,17 @@
 package com.softserve.academy.spaced.repetition.domain;
 
 import com.softserve.academy.spaced.repetition.dto.EntityInterface;
+import com.softserve.academy.spaced.repetition.dto.Request;
+import org.springframework.validation.annotation.Validated;
 
 import javax.persistence.*;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
+
+import static com.softserve.academy.spaced.repetition.service.validators.ValidationConstants.NULL_MESSAGE;
 
 @Entity
 @Table(name = "User")
@@ -18,10 +24,12 @@ public class User implements EntityInterface {
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "account_id")
+    @Valid
     private Account account;
 
     @OneToOne(cascade = {CascadeType.REFRESH, CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST})
     @JoinColumn(name = "person_id")
+    @Valid
     private Person person;
 
     @OneToOne(cascade = {CascadeType.REFRESH, CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST})

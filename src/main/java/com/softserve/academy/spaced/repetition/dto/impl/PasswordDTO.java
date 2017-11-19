@@ -1,7 +1,26 @@
 package com.softserve.academy.spaced.repetition.dto.impl;
 
+import com.softserve.academy.spaced.repetition.dto.Request;
+import com.softserve.academy.spaced.repetition.service.validators.PasswordMatchesAnnotation.PasswordMatches;
+import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.NotEmpty;
+
+import javax.validation.constraints.NotNull;
+
+import static com.softserve.academy.spaced.repetition.service.validators.ValidationConstants.*;
+import static com.softserve.academy.spaced.repetition.service.validators.ValidationConstants.PASSWORD_LENGTH_MESSAGE;
+
 public class PasswordDTO {
+
+    @NotNull(message = NULL_MESSAGE, groups = Request.class)
+    @NotEmpty(message = EMPTY_MESSAGE, groups = Request.class)
+    @Length(min = PASSWORD_MIN_LENGTH, max = PASSWORD_MAX_LENGTH, message = PASSWORD_LENGTH_MESSAGE, groups = Request.class)
+    @PasswordMatches(groups = Request.class)
     private String currentPassword;
+
+    @NotNull(message = NULL_MESSAGE, groups = Request.class)
+    @NotEmpty(message = EMPTY_MESSAGE, groups = Request.class)
+    @Length(min = PASSWORD_MIN_LENGTH, max = PASSWORD_MAX_LENGTH, message = PASSWORD_LENGTH_MESSAGE, groups = Request.class)
     private String newPassword;
 
     public PasswordDTO(){

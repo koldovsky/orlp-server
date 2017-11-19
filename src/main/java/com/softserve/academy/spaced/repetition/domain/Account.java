@@ -1,12 +1,22 @@
 package com.softserve.academy.spaced.repetition.domain;
 
 import com.softserve.academy.spaced.repetition.dto.EntityInterface;
+import com.softserve.academy.spaced.repetition.dto.Request;
+import com.softserve.academy.spaced.repetition.service.validators.EmailExistsAnnotation.EmailExists;
+import com.softserve.academy.spaced.repetition.service.validators.PasswordMatchesAnnotation.PasswordMatches;
+import com.sun.org.apache.regexp.internal.RE;
+import org.hibernate.validator.constraints.Email;
+import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
+
+import static com.softserve.academy.spaced.repetition.service.validators.ValidationConstants.*;
 
 @Entity
 @Table(name = "account")
@@ -19,9 +29,16 @@ public class Account implements EntityInterface {
     private Long id;
 
     @Column(name = "password", nullable = false)
+    @NotNull(message = NULL_MESSAGE, groups = Request.class)
+    @NotEmpty(message = EMPTY_MESSAGE, groups = Request.class)
+    @Length(min = PASSWORD_MIN_LENGTH, max = PASSWORD_MAX_LENGTH, message = PASSWORD_LENGTH_MESSAGE, groups = Request.class)
     private String password;
 
     @Column(name = "email", unique = true, nullable = false)
+    @NotNull(message = NULL_MESSAGE, groups = Request.class)
+    @NotEmpty(message = EMPTY_MESSAGE, groups = Request.class)
+    @Pattern(regexp = EMAIL_PATTERN, message = EMAIL_PATTERN_MESSAGE, groups = Request.class)
+    @EmailExists(groups = Request.class)
     private String email;
 
     @Column(name = "AUTHENTICATIONTYPE", length = 8)

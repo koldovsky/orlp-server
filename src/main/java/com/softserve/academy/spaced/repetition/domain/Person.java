@@ -1,8 +1,16 @@
 package com.softserve.academy.spaced.repetition.domain;
 
+import com.softserve.academy.spaced.repetition.dto.Request;
+import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.NotEmpty;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import java.util.Objects;
+
+import static com.softserve.academy.spaced.repetition.service.validators.ValidationConstants.*;
+
 
 @Entity
 @Table(name = "Person")
@@ -14,9 +22,17 @@ public class Person {
     private Long id;
 
     @Column(name = "first_name")
+    @NotNull(message = NULL_MESSAGE, groups = Request.class)
+    @NotEmpty(message = EMPTY_MESSAGE, groups = Request.class)
+    @Length(min = PERSON_FIELD_MIN_LENGTH, max = PERSON_FIELD_MAX_LENGTH, message = PERSON_FIELD_LENGTH_MESSAGE, groups = Request.class)
+    @Pattern(regexp = SPECIAL_SYMBOLS_PATTERN, message = SPECIAL_SYMBOLS_PATTERN_MESSAGE, groups = Request.class)
     private String firstName;
 
     @Column(name = "last_name")
+    @NotNull(message = NULL_MESSAGE, groups = Request.class)
+    @NotEmpty(message = EMPTY_MESSAGE, groups = Request.class)
+    @Length(min = PERSON_FIELD_MIN_LENGTH, max = PERSON_FIELD_MAX_LENGTH, message = PERSON_FIELD_LENGTH_MESSAGE, groups = Request.class)
+    @Pattern(regexp = SPECIAL_SYMBOLS_PATTERN, message = SPECIAL_SYMBOLS_PATTERN_MESSAGE, groups = Request.class)
     private String lastName;
 
 

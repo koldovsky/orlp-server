@@ -9,8 +9,6 @@ import com.softserve.academy.spaced.repetition.repository.AuthorityRepository;
 import com.softserve.academy.spaced.repetition.repository.DeckRepository;
 import com.softserve.academy.spaced.repetition.repository.UserRepository;
 import com.softserve.academy.spaced.repetition.security.JwtUser;
-import com.softserve.academy.spaced.repetition.service.validators.DataFieldValidator;
-import com.softserve.academy.spaced.repetition.service.validators.PasswordFieldValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -39,10 +37,6 @@ public class UserService {
     private ImageService imageService;
 
     private MailService mailService;
-
-    private DataFieldValidator dataFieldValidator;
-
-    private PasswordFieldValidator passwordFieldValidator;
 
     private AuthorityRepository authorityRepository;
 
@@ -74,16 +68,6 @@ public class UserService {
     @Autowired
     public void setMailService(MailService mailService) {
         this.mailService = mailService;
-    }
-
-    @Autowired
-    public void setDataFieldValidator(DataFieldValidator dataFieldValidator) {
-        this.dataFieldValidator = dataFieldValidator;
-    }
-
-    @Autowired
-    public void setPasswordFieldValidator(PasswordFieldValidator passwordFieldValidator) {
-        this.passwordFieldValidator = passwordFieldValidator;
     }
 
     public void addUser(User user) {
@@ -188,7 +172,6 @@ public class UserService {
     @Transactional
     public User editPersonalData(Person person) throws NotAuthorisedUserException {
         User user = getAuthorizedUser();
-        dataFieldValidator.validate(person);
         user.getPerson().setFirstName(person.getFirstName());
         user.getPerson().setLastName(person.getLastName());
         return userRepository.save(user);
@@ -197,7 +180,6 @@ public class UserService {
     @Transactional
     public void changePassword(PasswordDTO passwordDTO) throws NotAuthorisedUserException {
         User user = getAuthorizedUser();
-        passwordFieldValidator.validate(passwordDTO);
         user.getAccount().setPassword(passwordEncoder.encode(passwordDTO.getNewPassword()));
         userRepository.save(user);
         mailService.sendPasswordNotificationMail(user);
