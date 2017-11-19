@@ -15,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import org.springframework.security.authentication.LockedException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -154,9 +153,6 @@ public class UserService {
             throw new NotAuthorisedUserException();
         } else {
             JwtUser jwtUser = (JwtUser) principal;
-            if(!jwtUser.isAccountNonLocked()) {
-                throw new LockedException("Account is deactivated");
-            }
             return userRepository.findUserByAccountEmail(jwtUser.getUsername());
         }
     }
@@ -244,13 +240,9 @@ public class UserService {
 
     public void getUserStatus() throws UserStatusException {
         JwtUser jwtUser = (JwtUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if(jwtUser.isAccountNonLocked()) {
-            User user = userRepository.findUserByAccountEmail(jwtUser.getUsername());
-            if (user.getAccount().getStatus().isNotActive()) {
-                throw new UserStatusException(user.getAccount().getStatus());
-            }
-        }else {
-            throw new LockedException("Account is deactivated");
+        User user = userRepository.findUserByAccountEmail(jwtUser.getUsername());
+        if (user.getAccount().getStatus().isNotActive()) {
+            throw new UserStatusException(user.getAccount().getStatus());
         }
     }
 
