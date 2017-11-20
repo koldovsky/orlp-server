@@ -27,9 +27,7 @@ public class AccountVerificationByEmailService {
             throw new NoSuchElementException("Email not exists");
         }
         Account editedAcc = userRepository.findUserByAccountEmail(email).getAccount();
-        if (editedAcc.getStatus().equals(AccountStatus.INACTIVE)) {
-            editedAcc.setStatus(AccountStatus.ACTIVE);
-        }
+        editedAcc.setDeactivated(false);
         accountRepository.save(editedAcc);
     }
 }
