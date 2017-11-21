@@ -7,6 +7,7 @@ import com.softserve.academy.spaced.repetition.service.validators.PasswordMatche
 import com.sun.org.apache.regexp.internal.RE;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
@@ -39,7 +40,7 @@ public class Account implements EntityInterface {
     @NotNull(message = NULL_MESSAGE, groups = Request.class)
     @NotEmpty(message = EMPTY_MESSAGE, groups = Request.class)
     @Pattern(regexp = EMAIL_PATTERN, message = EMAIL_PATTERN_MESSAGE, groups = Request.class)
-//    @EmailExists(groups = Request.class)
+    @EmailExists(groups = Request.class)
     private String email;
 
     @Column(name = "AUTHENTICATIONTYPE", length = 8)

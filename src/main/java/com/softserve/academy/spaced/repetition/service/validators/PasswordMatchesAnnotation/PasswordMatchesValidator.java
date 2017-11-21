@@ -13,7 +13,7 @@ import org.springframework.validation.Validator;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
-public class PasswordMatchesValidator implements Validator {
+public class PasswordMatchesValidator implements ConstraintValidator<PasswordMatches, String> {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -21,40 +21,20 @@ public class PasswordMatchesValidator implements Validator {
     @Autowired
     private UserService userService;
 
-//    @Autowired
-    public void setPasswordEncoder(PasswordEncoder passwordEncoder) {
-        this.passwordEncoder = passwordEncoder;
-    }
-
-//    @Autowired
-    public void setUserService(UserService userService) {
-        this.userService = userService;
-    }
-
-//    @Override
-//    public void initialize(PasswordMatches constraintAnnotation) {
-//    }
-//
-//    @Override
-//    public boolean isValid(String password, ConstraintValidatorContext context) {
-//        boolean valid = false;
-//        try {
-//            User user =  userService.getAuthorizedUser();
-//            Account account = user.getAccount();
-//            String pass = account.getPassword();
-//            valid = passwordEncoder.matches(password, pass);
-//        } catch (NotAuthorisedUserException ignored) {
-//        }
-//        return valid;
-//    }
-
     @Override
-    public boolean supports(Class<?> aClass) {
-        return false;
+    public void initialize(PasswordMatches constraintAnnotation) {
     }
 
     @Override
-    public void validate(Object o, Errors errors) {
-
+    public boolean isValid(String password, ConstraintValidatorContext context) {
+        boolean valid = false;
+        try {
+            User user =  userService.getAuthorizedUser();
+            Account account = user.getAccount();
+            String pass = account.getPassword();
+            valid = passwordEncoder.matches(password, pass);
+        } catch (NotAuthorisedUserException ignored) {
+        }
+        return valid;
     }
 }

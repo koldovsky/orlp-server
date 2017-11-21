@@ -31,7 +31,6 @@ public class UserProfileController {
     @Auditable(action =  AuditingAction.CHANGE_PASSWORD)
     @PutMapping(value = "/api/private/user/password-change")
     public ResponseEntity changePassword (@Validated(Request.class) @RequestBody PasswordDTO passwordDTO) throws NotAuthorisedUserException {
-        validator.validate(passwordDTO, bindingResult);
         userService.changePassword(passwordDTO);
         return new ResponseEntity(HttpStatus.OK);
     }
