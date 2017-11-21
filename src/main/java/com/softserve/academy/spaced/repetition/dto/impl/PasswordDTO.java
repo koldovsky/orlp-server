@@ -8,13 +8,12 @@ import org.hibernate.validator.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 import static com.softserve.academy.spaced.repetition.service.validators.ValidationConstants.*;
-import static com.softserve.academy.spaced.repetition.service.validators.ValidationConstants.PASSWORD_LENGTH_MESSAGE;
 
 public class PasswordDTO {
 
     @NotNull(message = NULL_MESSAGE, groups = Request.class)
     @NotEmpty(message = EMPTY_MESSAGE, groups = Request.class)
-    @PasswordMatches(groups = Request.class)
+//    @PasswordMatches(groups = Request.class)
     private String currentPassword;
 
     @NotNull(message = NULL_MESSAGE, groups = Request.class)
@@ -36,6 +35,14 @@ public class PasswordDTO {
 
     public String getNewPassword() {
         return newPassword;
+    }
+
+    public void setCurrentPassword(String currentPassword) {
+        this.currentPassword = currentPassword;
+    }
+
+    public void setNewPassword(String newPassword) {
+        this.newPassword = newPassword;
     }
 
     @Override

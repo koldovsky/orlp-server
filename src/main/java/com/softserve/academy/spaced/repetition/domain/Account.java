@@ -32,13 +32,14 @@ public class Account implements EntityInterface {
     @NotNull(message = NULL_MESSAGE, groups = Request.class)
     @NotEmpty(message = EMPTY_MESSAGE, groups = Request.class)
     @Length(min = PASSWORD_MIN_LENGTH, max = PASSWORD_MAX_LENGTH, message = PASSWORD_LENGTH_MESSAGE, groups = Request.class)
+    @PasswordMatches(groups = Request.class)
     private String password;
 
     @Column(name = "email", unique = true, nullable = false)
     @NotNull(message = NULL_MESSAGE, groups = Request.class)
     @NotEmpty(message = EMPTY_MESSAGE, groups = Request.class)
     @Pattern(regexp = EMAIL_PATTERN, message = EMAIL_PATTERN_MESSAGE, groups = Request.class)
-    @EmailExists(groups = Request.class)
+//    @EmailExists(groups = Request.class)
     private String email;
 
     @Column(name = "AUTHENTICATIONTYPE", length = 8)

@@ -67,21 +67,13 @@ public class UserServiceTest {
     Person mockedPerson = new Person("firstName", "lastName");
     User mockedUser = new User(new Account("email1@email.com"), mockedPerson, new Folder());
 
-    Person person;
-
-//    @Test
-//    public void testEditPersonalData() throws Exception {
-//        Person newPerson = new Person("newFirstName", "newLastName");
-//        User newUser = new User(new Account("email1@email.com"), newPerson, new Folder());
-//        doAnswer((Answer<Void>) invocation -> {
-//            person = invocation.getArgumentAt(0, Person.class);
-//            return null;
-//        });
-//        PowerMockito.doReturn(mockedUser).when(userServiceUnderTest, "getAuthorizedUser");
-//        User editedUser = userServiceUnderTest.editPersonalData(newPerson);
-//        assertEquals("DataFieldValidator invoked", newPerson, person);
-//        assertEquals("Change personal data", mockedUser, editedUser);
-//    }
+    @Test
+    public void testEditPersonalData() throws Exception {
+        Person newPerson = new Person("newFirstName", "newLastName");
+        PowerMockito.doReturn(mockedUser).when(userServiceUnderTest, "getAuthorizedUser");
+        User editedUser = userServiceUnderTest.editPersonalData(newPerson);
+        assertEquals("Change personal data", mockedUser, editedUser);
+    }
 
     @Test(expected = NotAuthorisedUserException.class)
     public void testNotAuthorizedEditPersonalData() throws Exception {
@@ -90,31 +82,25 @@ public class UserServiceTest {
         userServiceUnderTest.editPersonalData(newPerson);
     }
 
-    PasswordDTO password;
     String newPassword;
     User user;
 
-//    @Test
-//    public void testChangePassword() throws Exception {
-//        PasswordDTO passwordDTO = new PasswordDTO("11111111", "22222222");
-//        doAnswer((Answer<Void>) invocation -> {
-//            password = invocation.getArgumentAt(0, PasswordDTO.class);
-//            return null;
-//        });
-//        doAnswer((Answer<Void>) invocation -> {
-//            newPassword = invocation.getArgumentAt(0, String.class);
-//            return null;
-//        }).when(mockedPasswordEncoder).encode(any());
-//        doAnswer((Answer<Void>) invocation -> {
-//            user = invocation.getArgumentAt(0, User.class);
-//            return null;
-//        }).when(mockedMailService).sendPasswordNotificationMail(any());
-//        PowerMockito.doReturn(mockedUser).when(userServiceUnderTest, "getAuthorizedUser");
-//        userServiceUnderTest.changePassword(passwordDTO);
-//        assertEquals("PasswordFieldValidator invoked", passwordDTO, password);
-//        assertEquals("PasswordEncoder invoked", passwordDTO.getNewPassword(), newPassword);
-//        assertEquals("NotificationMail is sent", mockedUser, user);
-//    }
+    @Test
+    public void testChangePassword() throws Exception {
+        PasswordDTO passwordDTO = new PasswordDTO("11111111", "22222222");
+        doAnswer((Answer<Void>) invocation -> {
+            newPassword = invocation.getArgumentAt(0, String.class);
+            return null;
+        }).when(mockedPasswordEncoder).encode(any());
+        doAnswer((Answer<Void>) invocation -> {
+            user = invocation.getArgumentAt(0, User.class);
+            return null;
+        }).when(mockedMailService).sendPasswordNotificationMail(any());
+        PowerMockito.doReturn(mockedUser).when(userServiceUnderTest, "getAuthorizedUser");
+        userServiceUnderTest.changePassword(passwordDTO);
+        assertEquals("PasswordEncoder invoked", passwordDTO.getNewPassword(), newPassword);
+        assertEquals("NotificationMail is sent", mockedUser, user);
+    }
 
     @Test(expected = NotAuthorisedUserException.class)
     public void testNotAuthorizedChangePassword() throws Exception {
@@ -148,7 +134,6 @@ public class UserServiceTest {
         userServiceUnderTest.uploadImage(image);
     }
 
-    //    @Test
     public void testDeleteAccount() throws Exception {
         PowerMockito.doReturn(mockedUser).when(userServiceUnderTest, "getAuthorizedUser");
         userServiceUnderTest.deleteAccount();

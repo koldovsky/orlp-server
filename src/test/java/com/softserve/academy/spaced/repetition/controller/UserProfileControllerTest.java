@@ -1,26 +1,39 @@
 package com.softserve.academy.spaced.repetition.controller;
 
+import com.softserve.academy.spaced.repetition.domain.Account;
 import com.softserve.academy.spaced.repetition.dto.impl.PasswordDTO;
 import com.softserve.academy.spaced.repetition.domain.Person;
 import com.softserve.academy.spaced.repetition.domain.User;
 import com.softserve.academy.spaced.repetition.exceptions.NotAuthorisedUserException;
+import com.softserve.academy.spaced.repetition.security.JwtUser;
 import com.softserve.academy.spaced.repetition.service.UserService;
+import com.softserve.academy.spaced.repetition.service.validators.PasswordMatchesAnnotation.PasswordMatchesValidator;
+import org.hibernate.jdbc.Expectations;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.powermock.api.mockito.PowerMockito;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.http.MediaType;
+import org.springframework.security.authentication.TestingAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import javax.validation.*;
+
+import java.util.Set;
+
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -31,17 +44,36 @@ public class UserProfileControllerTest {
 
     private MockMvc mockMvc;
 
+    @Autowired
+    private ApplicationContext applicationContext;
+
     @InjectMocks
     private UserProfileController userProfileController;
+
+    @InjectMocks
+    private PasswordMatchesValidator passwordMatchesValidator;
 
     @Mock
     private UserService userService;
 
+//    @Mock
+    private PasswordEncoder passwordEncoder;
 
     @Before
-    public void setUp() {
+    public void setUp() throws NotAuthorisedUserException {
+//        passwordMatchesValidator = new PasswordMatchesValidator();
+        UserService mockedUserService = new UserService();
+        passwordMatchesValidator.setUserService(mockedUserService);
+        passwordEncoder = new BCryptPasswordEncoder();
+        passwordMatchesValidator.setPasswordEncoder(passwordEncoder);
+
+//        when(userService.getAuthorizedUser()).thenReturn(editedUser());
+
+//        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+//        validator = factory.getValidator();
         mockMvc = MockMvcBuilders.standaloneSetup(userProfileController)
                 .setControllerAdvice(new ExceptionHandlerController())
+                .setValidator(null)
                 .build();
     }
 
@@ -50,6 +82,10 @@ public class UserProfileControllerTest {
         Person person = new Person();
         person.setFirstName("Admin2");
         person.setLastName("Admin2");
+        Account account = new Account();
+        account.setEmail("Admin2@gmail.com");
+        account.setPassword("11111111");
+        user.setAccount(account);
         user.setPerson(person);
         return user;
     }
@@ -61,6 +97,13 @@ public class UserProfileControllerTest {
         return person;
     }
 
+
+    private PasswordDTO passwordDTO(){
+        PasswordDTO password = new PasswordDTO();
+        password.setCurrentPassword("11111111");
+        password.setNewPassword("22222222");
+        return password;
+    }
     @Test
     public void testEditPersonalData() throws Exception {
         when(userService.editPersonalData(eq(newPerson()))).thenReturn(editedUser());
@@ -99,15 +142,27 @@ public class UserProfileControllerTest {
                 .andExpect(status().isBadRequest());
     }
 
-//    @Test
-//    public void testChangePassword() throws Exception {
-//        mockMvc.perform(put("/api/private/user/password-change")
-//                .content("{\"currentPassword\":\"11111111\",\"newPassword\": \"22222222\"}")
-//                .accept(MediaType.APPLICATION_JSON)
-//                .contentType(MediaType.APPLICATION_JSON))
-//                .andExpect(status().isOk());
-//        verify(userService, times(1)).changePassword(eq( new PasswordDTO("11111111", "22222222")));
-//    }
+    @Test
+    public void testChangePassword() throws Exception {
+        JwtUser jwtUser = mock(JwtUser.class);
+        SecurityContextHolder.getContext().setAuthentication(new TestingAuthenticationToken(jwtUser, null));
+        String pas = "11111111";
+//        when(userService.getAuthorizedUser()).thenReturn(editedUser());
+//        when(passwordMatchesValidator.isValid(eq(pas), any(ConstraintValidatorContext.class))).thenReturn(true);
+//        doReturn(eq(true)).when(passwordMatchesValidator.isValid(pas,any))
+//          when(passwordEncoder.matches(any(),any())).thenReturn(null);
+//        Set<ConstraintViolation<String>> constraintViolations =
+//                validator.validate("11111111");
+//        Set<ConstraintViolation<String>> violations = validator
+//                .validate("11111111");
+//        assertEquals(1,violations.size());
+        mockMvc.perform(put("/api/private/user/password-change")
+                .content("{\"currentPassword\":\"11111111\",\"newPassword\": \"22222222\"}")
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+        verify(userService, times(1)).changePassword(eq( new PasswordDTO("11111111", "22222222")));
+    }
 
     @Test
     public void testNotAuthorizedChangePassword() throws Exception {
