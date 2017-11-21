@@ -1,0 +1,10 @@
+<html>
+<body>
+<h3>Dear user.</h3>
+<div>
+    Please follow the link below to activate your ORLP account.
+</div>
+<span><a href="${url}/registrationConfirm?token=${token}" rel="link">Activate ORLP Account</a></span>
+<span><${token}</span>
+</body>
+</html>

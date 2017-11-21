@@ -53,6 +53,10 @@ public class Account implements EntityInterface {
     @Enumerated(EnumType.STRING)
     private AccountStatus status;
 
+    @Column(name = "deactivated")
+    @NotNull
+    private boolean deactivated;
+
     @Column(name = "LASTPASSWORDRESETDATE")
     @Temporal(TemporalType.TIMESTAMP)
     @NotNull
@@ -142,6 +146,14 @@ public class Account implements EntityInterface {
 
     public void setLastPasswordResetDate(Date lastPasswordResetDate) {
         this.lastPasswordResetDate = lastPasswordResetDate;
+    }
+
+    public boolean isDeactivated() {
+        return deactivated;
+    }
+
+    public void setDeactivated(boolean deactivated) {
+        this.deactivated = deactivated;
     }
 
     public AuthenticationType getAuthenticationType() {

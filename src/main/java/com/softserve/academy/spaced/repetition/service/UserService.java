@@ -121,6 +121,16 @@ public class UserService {
         return user;
     }
 
+    public String getNoAuthenticatedUserEmail() throws NotAuthorisedUserException {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (principal instanceof JwtUser) {
+            JwtUser jwtUser = (JwtUser) principal;
+            return jwtUser.getUsername();
+        } else {
+            throw new NotAuthorisedUserException();
+        }
+    }
+
     public User getAuthorizedUser() throws NotAuthorisedUserException {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (principal instanceof String) {
@@ -201,15 +211,12 @@ public class UserService {
     }
 
     public void activateAccount() throws NotAuthorisedUserException {
-        User user = getAuthorizedUser();
-        user.getAccount().setStatus(AccountStatus.ACTIVE);
-        mailService.sendConfirmationMail(user);
-        userRepository.save(user);
+        mailService.sendActivationMail(getNoAuthenticatedUserEmail());
     }
 
     public void deleteAccount() throws NotAuthorisedUserException {
         User user = getAuthorizedUser();
-        user.getAccount().setStatus(AccountStatus.INACTIVE);
+        user.getAccount().setDeactivated(true);
         userRepository.save(user);
     }
 
@@ -222,7 +229,7 @@ public class UserService {
     }
 
     @Transactional
-    public void initializeNewUser(Account account, String email, AccountStatus accountStatus, AuthenticationType
+    public void initializeNewUser(Account account, String email, AccountStatus accountStatus, boolean deactivated,  AuthenticationType
             authenticationType) {
         account.setEmail(email);
         if (account.getPassword() == null) {
@@ -233,6 +240,7 @@ public class UserService {
         account.setLastPasswordResetDate(new Date());
         account.setStatus(accountStatus);
         account.setAuthenticationType(authenticationType);
+        account.setDeactivated(deactivated);
         Authority authority = authorityRepository.findAuthorityByName(AuthorityName.ROLE_USER);
         account.setAuthorities(Collections.singleton(authority));
         account.setLearningRegime(LearningRegime.CARDS_POSTPONING_USING_SPACED_REPETITION);

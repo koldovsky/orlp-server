@@ -20,8 +20,8 @@ public class RegistrationService {
 
     public User registerNewUser(User user) {
         Account account = user.getAccount();
-        userService.initializeNewUser(account, account.getEmail().toLowerCase(), AccountStatus.INACTIVE,
-                AuthenticationType.LOCAL);
+        userService.initializeNewUser(account, account.getEmail().toLowerCase(), AccountStatus.ACTIVE,
+               true, AuthenticationType.LOCAL);
         user.getPerson().setTypeImage(ImageType.NONE);
         user.setFolder(new Folder());
         userService.addUser(user);
