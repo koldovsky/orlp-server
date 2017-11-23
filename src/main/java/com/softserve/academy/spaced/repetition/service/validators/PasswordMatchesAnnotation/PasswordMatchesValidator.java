@@ -7,8 +7,6 @@ import com.softserve.academy.spaced.repetition.exceptions.NotAuthorisedUserExcep
 import com.softserve.academy.spaced.repetition.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.validation.Errors;
-import org.springframework.validation.Validator;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
@@ -29,7 +27,7 @@ public class PasswordMatchesValidator implements ConstraintValidator<PasswordMat
     public boolean isValid(String password, ConstraintValidatorContext context) {
         boolean valid = false;
         try {
-            User user =  userService.getAuthorizedUser();
+            User user = userService.getAuthorizedUser();
             Account account = user.getAccount();
             String pass = account.getPassword();
             valid = passwordEncoder.matches(password, pass);

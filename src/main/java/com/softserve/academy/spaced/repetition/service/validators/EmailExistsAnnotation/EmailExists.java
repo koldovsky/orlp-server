@@ -4,12 +4,14 @@ import javax.validation.Constraint;
 import javax.validation.Payload;
 import java.lang.annotation.*;
 
+import static com.softserve.academy.spaced.repetition.service.validators.ValidationConstants.EMAIL_EXIST_MESSAGE;
+
 @Target({ElementType.TYPE, ElementType.METHOD, ElementType.FIELD, ElementType.PARAMETER})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Constraint(validatedBy = {EmailExistsValidator.class})
 public @interface EmailExists {
-    String message() default "Email already exists";
+    String message() default EMAIL_EXIST_MESSAGE;
 
     Class<?>[] groups() default {};
 

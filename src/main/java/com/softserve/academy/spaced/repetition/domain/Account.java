@@ -3,7 +3,6 @@ package com.softserve.academy.spaced.repetition.domain;
 import com.softserve.academy.spaced.repetition.dto.EntityInterface;
 import com.softserve.academy.spaced.repetition.dto.Request;
 import com.softserve.academy.spaced.repetition.service.validators.EmailExistsAnnotation.EmailExists;
-import com.softserve.academy.spaced.repetition.service.validators.PasswordMatchesAnnotation.PasswordMatches;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -28,7 +27,6 @@ public class Account implements EntityInterface {
     @Column(name = "password", nullable = false)
     @NotNull(message = NULL_MESSAGE, groups = Request.class)
     @Size(message = PASSWORD_SIZE_MESSAGE, min = PASSWORD_MIN_SIZE, max = PASSWORD_MAX_SIZE, groups = Request.class)
-    @PasswordMatches(groups = Request.class)
     private String password;
 
     @Column(name = "email", unique = true, nullable = false)
