@@ -24,9 +24,11 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static com.softserve.academy.spaced.repetition.service.validators.ValidationConstants.*;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -93,7 +95,7 @@ public class ValidatorsTest {
         user.getAccount().setEmail("");
         Set<ConstraintViolation<User>> violations = validator.validate(user, Request.class);
         assertEquals(2, violations.size());
-        assertEquals(EMPTY_MESSAGE, violations.iterator().next().getMessage());
+        assertTrue(violations.stream().map(p->p.getMessage()).collect(Collectors.toList()).contains(EMPTY_MESSAGE));
     }
 
     @Test
@@ -102,7 +104,6 @@ public class ValidatorsTest {
         Set<ConstraintViolation<User>> violations = validator.validate(user, Request.class);
         assertEquals(1, violations.size());
         assertEquals(EMAIL_PATTERN_MESSAGE, violations.iterator().next().getMessage());
-
     }
 
     @Test
