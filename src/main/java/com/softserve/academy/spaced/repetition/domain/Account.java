@@ -1,12 +1,18 @@
 package com.softserve.academy.spaced.repetition.domain;
 
 import com.softserve.academy.spaced.repetition.dto.EntityInterface;
+import com.softserve.academy.spaced.repetition.dto.Request;
+import com.softserve.academy.spaced.repetition.service.validators.EmailExistsAnnotation.EmailExists;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
+
+import static com.softserve.academy.spaced.repetition.service.validators.ValidationConstants.*;
 
 @Entity
 @Table(name = "account")
@@ -19,9 +25,15 @@ public class Account implements EntityInterface {
     private Long id;
 
     @Column(name = "password", nullable = false)
+    @NotNull(message = NULL_MESSAGE, groups = Request.class)
+    @Size(message = PASSWORD_SIZE_MESSAGE, min = PASSWORD_MIN_SIZE, max = PASSWORD_MAX_SIZE, groups = Request.class)
     private String password;
 
     @Column(name = "email", unique = true, nullable = false)
+    @NotNull(message = NULL_MESSAGE, groups = Request.class)
+    @Size(min = 1, message = EMPTY_MESSAGE, groups = Request.class)
+    @Pattern(regexp = EMAIL_PATTERN, message = EMAIL_PATTERN_MESSAGE, groups = Request.class)
+    @EmailExists(groups = Request.class)
     private String email;
 
     @Column(name = "AUTHENTICATIONTYPE", length = 8)
