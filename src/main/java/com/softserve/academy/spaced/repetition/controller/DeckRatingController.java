@@ -1,5 +1,4 @@
 package com.softserve.academy.spaced.repetition.controller;
-import com.softserve.academy.spaced.repetition.dto.DTO;
 import com.softserve.academy.spaced.repetition.dto.DTOBuilder;
 import com.softserve.academy.spaced.repetition.dto.RatingDTO;
 import com.softserve.academy.spaced.repetition.dto.impl.DeckRatingPublicDTO;
