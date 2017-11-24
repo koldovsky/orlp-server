@@ -6,6 +6,7 @@ import com.softserve.academy.spaced.repetition.exceptions.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.MailException;
+import org.springframework.security.authentication.LockedException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.multipart.MultipartException;
@@ -19,9 +20,8 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
     private static final EnumMap<AccountStatus, ResponseEntity<MessageDTO>> USER_STATUS_ERROR_RESPONSE = new EnumMap<>(AccountStatus.class);
 
     static{
-        USER_STATUS_ERROR_RESPONSE.put(AccountStatus.DELETED, new ResponseEntity<MessageDTO>(new MessageDTO("Account with this email is deleted"), HttpStatus.LOCKED));
-        USER_STATUS_ERROR_RESPONSE.put(AccountStatus.BLOCKED, new ResponseEntity<MessageDTO>(new MessageDTO("Account with this email is blocked"), HttpStatus.FORBIDDEN));
-        USER_STATUS_ERROR_RESPONSE.put(AccountStatus.INACTIVE, new ResponseEntity<MessageDTO>(new MessageDTO("Account with this email is inactive"), HttpStatus.METHOD_NOT_ALLOWED));
+        USER_STATUS_ERROR_RESPONSE.put(AccountStatus.DELETED, new ResponseEntity<>(new MessageDTO("Account with this email is deleted"), HttpStatus.LOCKED));
+        USER_STATUS_ERROR_RESPONSE.put(AccountStatus.BLOCKED, new ResponseEntity<>(new MessageDTO("Account with this email is blocked"), HttpStatus.FORBIDDEN));
     }
 
     @ExceptionHandler(MultipartException.class)
@@ -78,6 +78,11 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
     @ExceptionHandler(NoSuchElementException.class)
     ResponseEntity <MessageDTO> handleNoSuchElementException(NoSuchElementException noSuchElementException) {
         return new ResponseEntity <>(new MessageDTO(noSuchElementException.getMessage()), HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(LockedException.class)
+    ResponseEntity <MessageDTO> handleLockedException(LockedException lockedException) {
+        return new ResponseEntity <>(new MessageDTO(lockedException.getMessage()), HttpStatus.METHOD_NOT_ALLOWED);
     }
 
 }

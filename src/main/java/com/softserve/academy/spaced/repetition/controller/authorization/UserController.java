@@ -74,7 +74,6 @@ public class UserController {
 
     @GetMapping("api/confirmation-mail")
     public ResponseEntity sendConfirmationMail() throws NotAuthorisedUserException {
-        mailService.sendConfirmationMail(userService.getAuthorizedUser());
         userService.activateAccount();
         return new ResponseEntity(HttpStatus.OK);
     }

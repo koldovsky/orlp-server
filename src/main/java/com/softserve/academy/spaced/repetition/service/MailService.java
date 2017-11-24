@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.mail.javamail.MimeMessagePreparator;
@@ -44,7 +45,7 @@ public class MailService {
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
             helper.setSubject("Confirmation registration");
             helper.setTo(user.getAccount().getEmail());
-            Map<String, Object> model = new HashMap<>();
+            Map <String, Object> model = new HashMap <>();
             String token = jwtTokenForMail.generateTokenForMail(user);
             model.put("person", user.getPerson());
             model.put("token", token);
@@ -55,12 +56,27 @@ public class MailService {
         mailSender.send(preparator);
     }
 
+    public void sendActivationMail(String email) {
+        MimeMessagePreparator preparator = mimeMessage -> {
+            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
+            helper.setSubject("Activation account");
+            helper.setTo(email);
+            Map <String, Object> model = new HashMap <>();
+            String token = jwtTokenForMail.generateTokenForMailFromEmail(email);
+            model.put("token", token);
+            model.put("url", URL);
+            String text = getActivationAccountTemplateContent(model);
+            helper.setText(text, true);
+        };
+        mailSender.send(preparator);
+    }
+
     public void sendPasswordNotificationMail(User user) {
         MimeMessagePreparator preparator = mimeMessage -> {
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
             helper.setSubject("Change password notification");
             helper.setTo(user.getAccount().getEmail());
-            Map<String, Object> model = new HashMap<>();
+            Map <String, Object> model = new HashMap <>();
             model.put("person", user.getPerson());
             model.put("datachange", Calendar.getInstance().getTime().toString());
             model.put("url", URL);
@@ -91,6 +107,18 @@ public class MailService {
         try {
             content.append(FreeMarkerTemplateUtils.processTemplateIntoString(
                     freemarkerConfiguration.getTemplate("registrationVerificationMailTemplate.txt"), model));
+            return content.toString();
+        } catch (IOException | TemplateException e) {
+            LOGGER.error("Couldn't generate email content.", e);
+        }
+        return "";
+    }
+
+    private String getActivationAccountTemplateContent(Map <String, Object> model) {
+        StringBuilder content = new StringBuilder();
+        try {
+            content.append(FreeMarkerTemplateUtils.processTemplateIntoString(
+                    freemarkerConfiguration.getTemplate("activationAccountMailTemplate.txt"), model));
             return content.toString();
         } catch (IOException | TemplateException e) {
             LOGGER.error("Couldn't generate email content.", e);

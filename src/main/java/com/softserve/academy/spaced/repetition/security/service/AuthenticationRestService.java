@@ -13,6 +13,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.mobile.device.Device;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.LockedException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -53,6 +54,7 @@ public class AuthenticationRestService {
         Authentication authentication = getAuthenticationToken(email, password);
         SecurityContextHolder.getContext().setAuthentication(authentication);
         UserDetails userDetails = userDetailsService.loadUserByUsername(email);
+        validateUser(userDetails);
         String token = jwtTokenUtil.generateToken(userDetails, device);
         return addTokenToHeaderCookie(token);
     }
@@ -67,6 +69,7 @@ public class AuthenticationRestService {
         Authentication authentication = getAuthenticationTokenWithoutVerify(email);
         SecurityContextHolder.getContext().setAuthentication(authentication);
         UserDetails userDetails = userDetailsService.loadUserByUsername(email);
+        validateUser(userDetails);
         String token = jwtTokenUtil.generateToken(userDetails, device);
 
         return addTokenToHeaderCookie(token);
@@ -81,6 +84,7 @@ public class AuthenticationRestService {
         Authentication authentication = getAuthenticationTokenWithoutVerify(email);
         SecurityContextHolder.getContext().setAuthentication(authentication);
         UserDetails userDetails = userDetailsService.loadUserByUsername(email);
+        validateUser(userDetails);
         String token = jwtTokenUtil.generateToken(userDetails, device);
         return addTokenToHeaderCookie(token);
     }
@@ -89,6 +93,7 @@ public class AuthenticationRestService {
         String token = getTokenFromRequest(request);
         String username = jwtTokenUtil.getUsernameFromToken(token);
         JwtUser user = (JwtUser) userDetailsService.loadUserByUsername(username);
+        validateUser(user);
         if (jwtTokenUtil.canTokenBeRefreshed(token, user.getLastPasswordResetDate())) {
             String refreshedToken = jwtTokenUtil.refreshToken(token);
             return addTokenToHeaderCookie(refreshedToken);
@@ -131,5 +136,11 @@ public class AuthenticationRestService {
         final UsernamePasswordAuthenticationToken authentication =
                 new UsernamePasswordAuthenticationToken(email, null, Collections.singletonList(new SimpleGrantedAuthority(AuthorityName.ROLE_USER.toString())));
         return authentication;
+    }
+
+    private void validateUser(UserDetails userDetails){
+        if(!userDetails.isAccountNonLocked()){
+            throw new LockedException("Account is deactivated");
+        }
     }
 }

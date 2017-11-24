@@ -24,13 +24,20 @@ public class JwtTokenForMail extends JwtTokenUtil {
     private String secret;
 
     public String generateTokenForMail(User user) {
-        Map<String, Object> claims = new HashMap<>();
+        Map <String, Object> claims = new HashMap <>();
         claims.put(USER_EMAIL, user.getAccount().getEmail());
         claims.put(DATE_OF_CREATION, new Date());
         return generateTokenForMail(claims);
     }
 
-    private String generateTokenForMail(Map<String, Object> claims) {
+    public String generateTokenForMailFromEmail(String email) {
+        Map <String, Object> claims = new HashMap <>();
+        claims.put(USER_EMAIL, email);
+        claims.put(DATE_OF_CREATION, new Date());
+        return generateTokenForMail(claims);
+    }
+
+    private String generateTokenForMail(Map <String, Object> claims) {
         return Jwts.builder()
                 .setClaims(claims)
                 .setExpiration(generateExpirationDate())
