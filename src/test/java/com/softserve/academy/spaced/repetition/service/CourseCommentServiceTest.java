@@ -57,7 +57,7 @@ public class CourseCommentServiceTest {
     }
 
     private User createMockedUser() {
-        User mockedUser = new User(new Account("user@email.com"), new Person("Ivan", "Kruk"), new Folder());
+        User mockedUser = new User(new Account("","user@email.com"), new Person("Ivan", "Kruk"), new Folder());
         mockedUser.getPerson().setId(1l);
         return mockedUser;
     }
@@ -67,10 +67,10 @@ public class CourseCommentServiceTest {
         when(mockedUserService.getAuthorizedUser()).thenReturn(createMockedUser());
         CourseComment savedComment = courseCommentServiceUnderTest.addCommentForCourse(COURSE_ID, "Very interesting", null);
         assertNotNull(savedComment);
-        assertEquals("Checking field commentText", savedComment.getCommentText(), "Very interesting");
-        assertEquals("Checking field parentCommentId", savedComment.getParentCommentId(), null);
+        assertEquals("Checking field commentText", "Very interesting", savedComment.getCommentText());
+        assertEquals("Checking field parentCommentId", null, savedComment.getParentCommentId());
         assertEquals("Checking set person", createMockedUser().getPerson(), savedComment.getPerson());
-        assertEquals("Checking set courseId", savedComment.getCourse().getId(), COURSE_ID);
+        assertEquals("Checking set courseId", COURSE_ID, savedComment.getCourse().getId());
     }
 
     @Test
@@ -105,7 +105,7 @@ public class CourseCommentServiceTest {
         when(mockedUserService.getAuthorizedUser()).thenReturn(createMockedUser());
         CourseComment savedComment = courseCommentServiceUnderTest.addCommentForCourse(COURSE_ID, "Very interesting", null);
         CourseComment updatedComment = courseCommentServiceUnderTest.updateCommentById(savedComment.getId(), "New CommentText");
-        assertEquals("Changed comment text.", updatedComment.getCommentText(), "New CommentText");
+        assertEquals("Changed comment text.","New CommentText", updatedComment.getCommentText());
     }
 
     @Test(expected = IllegalArgumentException.class)

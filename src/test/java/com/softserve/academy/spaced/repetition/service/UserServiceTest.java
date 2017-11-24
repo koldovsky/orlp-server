@@ -65,7 +65,7 @@ public class UserServiceTest {
     }
 
     Person mockedPerson = new Person("firstName", "lastName");
-    User mockedUser = new User(new Account("email1@email.com"), mockedPerson, new Folder());
+    User mockedUser = new User(new Account("","email1@email.com"), mockedPerson, new Folder());
 
     @Test
     public void testEditPersonalData() throws Exception {

@@ -69,7 +69,7 @@ public class ValidatorsTest {
         user.getAccount().setPassword("user");
         Set<ConstraintViolation<User>> violations = validator.validate(user, Request.class);
         assertEquals(1, violations.size());
-        assertEquals(PASSWORD_SIZE_MESSAGE, violations.iterator().next().getMessage());
+        assertEquals(PASS_SIZE_MESSAGE, violations.iterator().next().getMessage());
     }
 
     @Test
@@ -78,7 +78,7 @@ public class ValidatorsTest {
         PasswordDTO passwordDTO = new PasswordDTO("admin1", "administrator");
         Set<ConstraintViolation<PasswordDTO>> violations = validator.validate(passwordDTO, Request.class);
         assertEquals(1, violations.size());
-        assertEquals(PASSWORD_MATCHES_MESSAGE, violations.iterator().next().getMessage());
+        assertEquals(PASS_MATCHES_MESSAGE, violations.iterator().next().getMessage());
     }
 
     @Test
@@ -95,7 +95,7 @@ public class ValidatorsTest {
         user.getAccount().setEmail("");
         Set<ConstraintViolation<User>> violations = validator.validate(user, Request.class);
         assertEquals(2, violations.size());
-        assertTrue(violations.stream().map(p->p.getMessage()).collect(Collectors.toList()).contains(EMPTY_MESSAGE));
+        assertTrue(violations.stream().map(p->p.getMessage()).collect(Collectors.toList()).contains(EMAIL_SIZE_MESSAGE));
     }
 
     @Test
@@ -111,6 +111,6 @@ public class ValidatorsTest {
         user.getAccount().setEmail("admin@gmail.com");
         Set<ConstraintViolation<User>> violations = validator.validate(user, Request.class);
         assertEquals(1, violations.size());
-        assertEquals(EMAIL_EXIST_MESSAGE, violations.iterator().next().getMessage());
+        assertEquals(EMAIL_NOT_EXIST_MESSAGE, violations.iterator().next().getMessage());
     }
 }

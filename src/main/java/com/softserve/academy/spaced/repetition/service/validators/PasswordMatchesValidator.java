@@ -1,10 +1,10 @@
-package com.softserve.academy.spaced.repetition.service.validators.PasswordMatchesAnnotation;
+package com.softserve.academy.spaced.repetition.service.validators;
 
 
-import com.softserve.academy.spaced.repetition.domain.Account;
-import com.softserve.academy.spaced.repetition.domain.User;
 import com.softserve.academy.spaced.repetition.exceptions.NotAuthorisedUserException;
 import com.softserve.academy.spaced.repetition.service.UserService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -12,6 +12,8 @@ import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
 public class PasswordMatchesValidator implements ConstraintValidator<PasswordMatches, String> {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(PasswordMatchesValidator.class);
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -21,17 +23,21 @@ public class PasswordMatchesValidator implements ConstraintValidator<PasswordMat
 
     @Override
     public void initialize(PasswordMatches constraintAnnotation) {
+        /**
+         * Initializes the validator in preparation for isValid(Object, ConstraintValidatorContext) calls.
+         * This method is guaranteed to be called before any use of this instance for validation.
+         * @param constraintAnnotation
+         */
     }
 
     @Override
     public boolean isValid(String password, ConstraintValidatorContext context) {
         boolean valid = false;
         try {
-            User user = userService.getAuthorizedUser();
-            Account account = user.getAccount();
-            String pass = account.getPassword();
-            valid = passwordEncoder.matches(password, pass);
-        } catch (NotAuthorisedUserException ignored) {
+            valid = passwordEncoder.matches(password, userService.getAuthorizedUser().getAccount().getPassword());
+        } catch (NotAuthorisedUserException ex) {
+            LOGGER.trace("Ignored exception.", ex);
+            LOGGER.warn("Operation is unavailable for unauthorized users!");
         }
         return valid;
     }
