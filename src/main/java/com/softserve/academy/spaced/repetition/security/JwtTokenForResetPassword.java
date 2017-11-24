@@ -1,6 +1,6 @@
 package com.softserve.academy.spaced.repetition.security;
 
-import com.softserve.academy.spaced.repetition.domain.User;
+import com.softserve.academy.spaced.repetition.domain.Account;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -13,8 +13,8 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 
 @Service
-public class JwtTokenForMail extends JwtTokenUtil {
-    private static final String USER_EMAIL = "email";
+public class JwtTokenForResetPassword extends JwtTokenUtil {
+    private static final String ACCOUNT_IDENTIFIER = "identifier";
     private static final String DATE_OF_CREATION = "date";
 
     @Value("${app.jwt.expiration}")
@@ -23,14 +23,14 @@ public class JwtTokenForMail extends JwtTokenUtil {
     @Value("${app.jwt.secret}")
     private String secret;
 
-    public String generateTokenForMail(User user) {
+    public String generateTokenForRestorePassword(Account account) {
         Map<String, Object> claims = new HashMap<>();
-        claims.put(USER_EMAIL, user.getAccount().getEmail());
+        claims.put(ACCOUNT_IDENTIFIER, account.getIdentifier());
         claims.put(DATE_OF_CREATION, new Date());
-        return generateTokenForMail(claims);
+        return generateToken(claims);
     }
 
-    private String generateTokenForMail(Map<String, Object> claims) {
+    private String generateToken(Map<String, Object> claims) {
         return Jwts.builder()
                 .setClaims(claims)
                 .setExpiration(generateExpirationDate())
@@ -43,21 +43,23 @@ public class JwtTokenForMail extends JwtTokenUtil {
     }
 
     public String decryptToken(String token) {
-        final String email = getEmailFromToken(token);
+        final String identifier = getAccountIdentifierFromToken(token);
         if (!isTokenExpired(token)) {
-            return email;
+            return identifier;
         }
-        throw new NoSuchElementException("No token found");
+        throw new NoSuchElementException("Token is invalid");
     }
 
-    public String getEmailFromToken(String token) {
-        String email;
+
+    public String getAccountIdentifierFromToken(String token) {
+        String identifier;
         try {
             final Claims claims = getClaimsFromToken(token);
-            email = String.valueOf(claims.get(USER_EMAIL));
+            identifier = String.valueOf(claims.get(ACCOUNT_IDENTIFIER));
         } catch (Exception e) {
-            email = null;
+            identifier = null;
         }
-        return email;
+        return identifier;
     }
+
 }

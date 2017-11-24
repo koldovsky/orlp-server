@@ -3,9 +3,11 @@ package com.softserve.academy.spaced.repetition.controller;
 import com.softserve.academy.spaced.repetition.domain.LearningRegime;
 import com.softserve.academy.spaced.repetition.domain.RememberingLevel;
 import com.softserve.academy.spaced.repetition.dto.DTOBuilder;
+import com.softserve.academy.spaced.repetition.dto.impl.NewAccountPasswordDTO;
 import com.softserve.academy.spaced.repetition.dto.impl.RememberingLevelDTO;
 import com.softserve.academy.spaced.repetition.exceptions.NotAuthorisedUserException;
 import com.softserve.academy.spaced.repetition.service.AccountService;
+import com.softserve.academy.spaced.repetition.service.AccountVerificationByEmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +23,9 @@ public class AccountController {
     public AccountController(AccountService accountService) {
         this.accountService = accountService;
     }
+
+    @Autowired
+    private AccountVerificationByEmailService verificationService;
 
     @GetMapping("/api/private/account/learning-regime")
     public ResponseEntity<LearningRegime> getLearningRegime() throws NotAuthorisedUserException {
@@ -61,5 +66,23 @@ public class AccountController {
                                                  @RequestBody String numberOfPostponedDays) throws NotAuthorisedUserException {
         accountService.updateRememberingLevel(levelId, Integer.parseInt(numberOfPostponedDays));
         return ResponseEntity.ok().build();
+    }
+
+    @PutMapping(value = "api/reset/password")
+    public ResponseEntity sendResetPasswordMail(@RequestBody String email) {
+        accountService.sendResetPasswordMail(email);
+        return new ResponseEntity(HttpStatus.OK);
+    }
+
+    @PutMapping(value = "api/verification/token")
+    public ResponseEntity verificationToken(@RequestBody String token) {
+        verificationService.verificationTokenForResetPassword(token);
+        return new ResponseEntity(HttpStatus.OK);
+    }
+
+    @PutMapping(value = "api/create/password")
+    public ResponseEntity createNewPasswordForUser(@RequestBody NewAccountPasswordDTO newAccountPasswordDTO) {
+        accountService.createNewAccountPassword(newAccountPasswordDTO.getEmail(), newAccountPasswordDTO.getPassword());
+        return new ResponseEntity(HttpStatus.OK);
     }
 }

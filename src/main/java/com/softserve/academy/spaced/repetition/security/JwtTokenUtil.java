@@ -42,7 +42,7 @@ public class JwtTokenUtil {
         return username;
     }
 
-    private Claims getClaimsFromToken(String token) {
+    protected Claims getClaimsFromToken(String token) {
         Claims claims;
         try {
             claims = Jwts.parser()
@@ -92,7 +92,7 @@ public class JwtTokenUtil {
         return new Date(System.currentTimeMillis() + expiration * MILLISECONDS_TO_SECONDS);
     }
 
-    private Boolean isTokenExpired(String token) {
+    protected Boolean isTokenExpired(String token) {
         final Date expiration = getExpirationDateFromToken(token);
         return expiration.before(new Date());
     }

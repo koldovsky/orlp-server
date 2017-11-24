@@ -8,10 +8,13 @@ import com.softserve.academy.spaced.repetition.repository.AccountRepository;
 import com.softserve.academy.spaced.repetition.repository.RememberingLevelRepository;
 import com.softserve.academy.spaced.repetition.service.validators.NumberOfPostponedDaysValidator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.UUID;
 
 @Service
 public class AccountService {
@@ -20,13 +23,19 @@ public class AccountService {
     private final RememberingLevelRepository rememberingLevelRepository;
     private final UserService userService;
     private final NumberOfPostponedDaysValidator numberOfPostponedDaysValidator;
+    private final MailService mailService;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public AccountService(AccountRepository accountRepository, RememberingLevelRepository rememberingLevelRepository, UserService userService, NumberOfPostponedDaysValidator numberOfPostponedDaysValidator) {
+    public AccountService(AccountRepository accountRepository, RememberingLevelRepository rememberingLevelRepository,
+                          UserService userService, NumberOfPostponedDaysValidator numberOfPostponedDaysValidator,
+                          MailService mailService, PasswordEncoder passwordEncoder) {
         this.accountRepository = accountRepository;
         this.rememberingLevelRepository = rememberingLevelRepository;
         this.userService = userService;
         this.numberOfPostponedDaysValidator = numberOfPostponedDaysValidator;
+        this.mailService = mailService;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public void updateAccount(Account account) {
@@ -82,4 +91,24 @@ public class AccountService {
         rememberingLevelRepository.save(new RememberingLevel(5, "Expert", 30, account));
         rememberingLevelRepository.save(new RememberingLevel(6, "Genius", 60, account));
     }
+
+
+    public void createNewAccountPassword(String email, String newPassword) {
+        Account account = accountRepository.findByEmail(email);
+        account.setPassword(passwordEncoder.encode(newPassword));
+        accountRepository.save(account);
+    }
+
+    @Transactional
+    public void sendResetPasswordMail(String accountEmail) {
+        if (accountRepository.findByEmail(accountEmail) == null) {
+            throw new NoSuchElementException("Email not exists");
+        }
+        Account account = accountRepository.findByEmail(accountEmail);
+        account.setIdentifier(UUID.randomUUID().toString());
+        accountRepository.save(account);
+        mailService.sendPasswordRestoreMail(account);
+    }
+
+
 }
