@@ -2,13 +2,10 @@ package com.softserve.academy.spaced.repetition.domain;
 
 import com.softserve.academy.spaced.repetition.dto.EntityInterface;
 import com.softserve.academy.spaced.repetition.dto.Request;
-import org.springframework.validation.annotation.Validated;
 
 import javax.persistence.*;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
-import java.util.Collection;
-import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 

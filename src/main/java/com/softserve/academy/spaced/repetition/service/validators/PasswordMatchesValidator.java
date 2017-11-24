@@ -36,7 +36,8 @@ public class PasswordMatchesValidator implements ConstraintValidator<PasswordMat
         try {
             valid = passwordEncoder.matches(password, userService.getAuthorizedUser().getAccount().getPassword());
         } catch (NotAuthorisedUserException ex) {
-            LOGGER.error("Operation is unavailable for unauthorized users!");
+            LOGGER.trace("Ignored exception.", ex);
+            LOGGER.warn("Operation is unavailable for unauthorized users!");
         }
         return valid;
     }
