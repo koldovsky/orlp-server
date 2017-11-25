@@ -23,9 +23,9 @@ public class JwtTokenForResetPassword extends JwtTokenUtil {
     @Value("${app.jwt.secret}")
     private String secret;
 
-    public String generateTokenForRestorePassword(Account account) {
+    public String generateTokenForRestorePassword(String accountEmail) {
         Map<String, Object> claims = new HashMap<>();
-        claims.put(ACCOUNT_IDENTIFIER, account.getIdentifier());
+        claims.put(ACCOUNT_IDENTIFIER, accountEmail);
         claims.put(DATE_OF_CREATION, new Date());
         return generateToken(claims);
     }
