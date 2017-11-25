@@ -60,11 +60,11 @@ public class DeckRatingServiceTest {
     @Test
     public void testAverageDeckRating() throws NotAuthorisedUserException, UserStatusException {
 
-        User mockedUser1 = new User(new Account("email1@email.com"), new Person("first1", "last1"), new Folder());
+        User mockedUser1 = new User(new Account("","email1@email.com"), new Person("first1", "last1"), new Folder());
         when(mockedUserService.getAuthorizedUser()).thenReturn(mockedUser1);
         deckRatingServiceUnderTest.addDeckRating(2, DECK_ID);
 
-        User mockedUser2 = new User(new Account("email2@email.com"), new Person("first2", "last2"), new Folder());
+        User mockedUser2 = new User(new Account("","email2@email.com"), new Person("first2", "last2"), new Folder());
         when(mockedUserService.getAuthorizedUser()).thenReturn(mockedUser2);
         deckRatingServiceUnderTest.addDeckRating(4, DECK_ID);
 

@@ -1,18 +1,24 @@
 package com.softserve.academy.spaced.repetition.controller;
 
+import com.softserve.academy.spaced.repetition.dto.FieldErrorDTO;
+import com.softserve.academy.spaced.repetition.dto.ValidationMessageDTO;
 import com.softserve.academy.spaced.repetition.dto.impl.MessageDTO;
 import com.softserve.academy.spaced.repetition.domain.AccountStatus;
 import com.softserve.academy.spaced.repetition.exceptions.*;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.MailException;
 import org.springframework.security.authentication.LockedException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.multipart.MultipartException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import java.net.UnknownHostException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @ControllerAdvice
 public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
@@ -78,6 +84,14 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
     @ExceptionHandler(NoSuchElementException.class)
     ResponseEntity <MessageDTO> handleNoSuchElementException(NoSuchElementException noSuchElementException) {
         return new ResponseEntity <>(new MessageDTO(noSuchElementException.getMessage()), HttpStatus.NOT_FOUND);
+    }
+
+    @Override
+    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
+        List<FieldErrorDTO> errors = ex.getBindingResult().getFieldErrors().stream()
+                .map(p -> new FieldErrorDTO(p.getField(), p.getDefaultMessage())).collect(Collectors.toList());
+        ValidationMessageDTO messageDTO = new ValidationMessageDTO(errors);
+        return new ResponseEntity<>(messageDTO, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(LockedException.class)

@@ -1,12 +1,18 @@
 package com.softserve.academy.spaced.repetition.domain;
 
 import com.softserve.academy.spaced.repetition.dto.EntityInterface;
+import com.softserve.academy.spaced.repetition.dto.Request;
+import com.softserve.academy.spaced.repetition.service.validators.EmailNotExist;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
+
+import static com.softserve.academy.spaced.repetition.service.validators.ValidationConstants.*;
 
 @Entity
 @Table(name = "account")
@@ -19,9 +25,15 @@ public class Account implements EntityInterface {
     private Long id;
 
     @Column(name = "password", nullable = false)
+    @NotNull(message = NULL_MESSAGE, groups = Request.class)
+    @Size(message = PASS_SIZE_MESSAGE, min = PASS_MIN_SIZE, max = PASS_MAX_SIZE, groups = Request.class)
     private String password;
 
     @Column(name = "email", unique = true, nullable = false)
+    @NotNull(message = NULL_MESSAGE, groups = Request.class)
+    @Size(min = EMAIL_MIN_SIZE, max = EMAIL_MAX_SIZE, message = EMAIL_SIZE_MESSAGE, groups = Request.class)
+    @Pattern(regexp = EMAIL_PATTERN, message = EMAIL_PATTERN_MESSAGE, groups = Request.class)
+    @EmailNotExist(groups = Request.class)
     private String email;
 
     @Column(name = "AUTHENTICATIONTYPE", length = 8)
@@ -68,20 +80,9 @@ public class Account implements EntityInterface {
     public Account() {
     }
 
-    public Account(String email) {
-        this.email = email;
-    }
-
     public Account(String password, String email) {
         this.password = password;
         this.email = email;
-    }
-
-    public Account(String password, String email, Date lastPasswordResetDate, Set<Authority> authorities) {
-        this.password = password;
-        this.email = email;
-        this.lastPasswordResetDate = lastPasswordResetDate;
-        this.authorities = authorities;
     }
 
     public Account(String password, String email, Date lastPasswordResetDate, Set<Authority> authorities, AccountStatus accountStatus) {

@@ -71,7 +71,7 @@ public class CardControllerTest {
     @Test
     public void getLearningCards() throws Exception {
         Long deckId = 1L;
-        User mockedUser1 = new User(new Account("email1@email.com"), new Person("first1", "last1"), new Folder());
+        User mockedUser1 = new User(new Account("","email1@email.com"), new Person("first1", "last1"), new Folder());
         when(mockedUserService.getAuthorizedUser()).thenReturn(mockedUser1);
         when(cardService.getLearningCards(deckId)).thenReturn(createLearningCards());
         mockMvc.perform(get("/api/decks/{deckId}/learn", 1L)

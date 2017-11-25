@@ -1,11 +1,23 @@
 package com.softserve.academy.spaced.repetition.dto.impl;
 
-public class PasswordDTO {
-    private String currentPassword;
-    private String newPassword;
+import com.softserve.academy.spaced.repetition.dto.Request;
+import com.softserve.academy.spaced.repetition.service.validators.PasswordMatches;
 
-    public PasswordDTO(){
-    }
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
+import static com.softserve.academy.spaced.repetition.service.validators.ValidationConstants.*;
+
+public class PasswordDTO {
+
+    @NotNull(message = NULL_MESSAGE, groups = Request.class)
+    @Size(min = 1, message = PASS_SIZE_MESSAGE, groups = Request.class)
+    @PasswordMatches(groups = Request.class)
+    private String currentPassword;
+
+    @NotNull(message = NULL_MESSAGE, groups = Request.class)
+    @Size(min = PASS_MIN_SIZE, max = PASS_MAX_SIZE, message = PASS_SIZE_MESSAGE, groups = Request.class)
+    private String newPassword;
 
     public PasswordDTO(String currentPassword, String newPassword){
         this.currentPassword = currentPassword;
@@ -20,26 +32,12 @@ public class PasswordDTO {
         return newPassword;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o){
-            return true;
-        }
-        if (!(o instanceof PasswordDTO)){
-            return false;
-        }
-        PasswordDTO passwordDTO = (PasswordDTO) o;
-        if (currentPassword != null && newPassword != null && currentPassword.equals(passwordDTO.currentPassword)
-                && newPassword.equals(passwordDTO.newPassword)){
-            return true;
-        } else {
-            return false;
-        }
+    public void setCurrentPassword(String currentPassword) {
+        this.currentPassword = currentPassword;
     }
 
-    @Override
-    public int hashCode() {
-        return currentPassword.hashCode() + newPassword.hashCode();
+    public void setNewPassword(String newPassword) {
+        this.newPassword = newPassword;
     }
 
 }

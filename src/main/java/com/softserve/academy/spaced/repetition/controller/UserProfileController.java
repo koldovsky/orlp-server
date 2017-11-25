@@ -1,5 +1,6 @@
 package com.softserve.academy.spaced.repetition.controller;
 
+import com.softserve.academy.spaced.repetition.dto.Request;
 import com.softserve.academy.spaced.repetition.dto.impl.PasswordDTO;
 import com.softserve.academy.spaced.repetition.audit.Auditable;
 import com.softserve.academy.spaced.repetition.audit.AuditingAction;
@@ -9,6 +10,7 @@ import com.softserve.academy.spaced.repetition.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.multipart.MultipartFile;
@@ -21,14 +23,14 @@ public class UserProfileController {
 
     @Auditable(action = AuditingAction.EDIT_PERSONAL_DATA)
     @PutMapping(value = "/api/private/user/data")
-    public ResponseEntity editPersonalData(@RequestBody Person person)throws NotAuthorisedUserException {
+    public ResponseEntity editPersonalData(@Validated(Request.class) @RequestBody Person person)throws NotAuthorisedUserException {
         userService.editPersonalData(person);
         return new ResponseEntity(HttpStatus.OK);
     }
 
     @Auditable(action =  AuditingAction.CHANGE_PASSWORD)
     @PutMapping(value = "/api/private/user/password-change")
-    public ResponseEntity changePassword (@RequestBody PasswordDTO passwordDTO) throws NotAuthorisedUserException {
+    public ResponseEntity changePassword (@Validated(Request.class) @RequestBody PasswordDTO passwordDTO) throws NotAuthorisedUserException {
         userService.changePassword(passwordDTO);
         return new ResponseEntity(HttpStatus.OK);
     }
