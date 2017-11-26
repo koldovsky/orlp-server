@@ -1,9 +1,7 @@
 package com.softserve.academy.spaced.repetition.service;
 
-import com.softserve.academy.spaced.repetition.domain.Account;
 import com.softserve.academy.spaced.repetition.domain.User;
 import com.softserve.academy.spaced.repetition.security.JwtTokenForMail;
-import com.softserve.academy.spaced.repetition.security.JwtTokenForResetPassword;
 import freemarker.template.Configuration;
 import freemarker.template.TemplateException;
 import org.slf4j.Logger;
@@ -11,7 +9,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.mail.javamail.MimeMessagePreparator;
@@ -26,14 +23,12 @@ import java.util.Map;
 @Service
 public class MailService {
     @Value("${app.origin.url}")
-    private String URL;
+    private String url;
 
     @Autowired
     private JavaMailSender mailSender;
     @Autowired
     private JwtTokenForMail jwtTokenForMail;
-    @Autowired
-    private JwtTokenForResetPassword jwtTokenForResetPassword;
     @Autowired
     @Qualifier("freemarkerConf")
     private Configuration freemarkerConfiguration;
@@ -45,11 +40,11 @@ public class MailService {
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
             helper.setSubject("Confirmation registration");
             helper.setTo(user.getAccount().getEmail());
-            Map <String, Object> model = new HashMap <>();
-            String token = jwtTokenForMail.generateTokenForMail(user);
+            Map<String, Object> model = new HashMap<>();
+            String token = jwtTokenForMail.generateTokenForMail(user.getAccount().getEmail());
             model.put("person", user.getPerson());
             model.put("token", token);
-            model.put("url", URL);
+            model.put("url", url);
             String text = getFreeMarkerTemplateContent(model);
             helper.setText(text, true);
         };
@@ -61,10 +56,10 @@ public class MailService {
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
             helper.setSubject("Activation account");
             helper.setTo(email);
-            Map <String, Object> model = new HashMap <>();
-            String token = jwtTokenForMail.generateTokenForMailFromEmail(email);
+            Map<String, Object> model = new HashMap<>();
+            String token = jwtTokenForMail.generateTokenForMail(email);
             model.put("token", token);
-            model.put("url", URL);
+            model.put("url", url);
             String text = getActivationAccountTemplateContent(model);
             helper.setText(text, true);
         };
@@ -76,26 +71,26 @@ public class MailService {
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
             helper.setSubject("Change password notification");
             helper.setTo(user.getAccount().getEmail());
-            Map <String, Object> model = new HashMap <>();
+            Map<String, Object> model = new HashMap<>();
             model.put("person", user.getPerson());
             model.put("datachange", Calendar.getInstance().getTime().toString());
-            model.put("url", URL);
+            model.put("url", url);
             String text = getChangePasswordTemplateContent(model);
             helper.setText(text, true);
         };
         mailSender.send(preparator);
     }
 
-    public void sendPasswordRestoreMail(Account account) {
+    public void sendPasswordRestoreMail(String accountEmail) {
+        LOGGER.debug("Send mail for reset password to email: {}", accountEmail);
         MimeMessagePreparator preparator = mimeMessage -> {
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
             helper.setSubject("Password restore");
-            helper.setTo(account.getEmail());
+            helper.setTo(accountEmail);
             Map<String, Object> model = new HashMap<>();
-            String token = jwtTokenForResetPassword.generateTokenForRestorePassword(account);
+            String token = jwtTokenForMail.generateTokenForMail(accountEmail);
             model.put("token", token);
-            model.put("url", URL);
-            model.put("email", account.getEmail());
+            model.put("url", url);
             String text = getRestorePasswordTemplateContent(model);
             helper.setText(text, true);
         };
@@ -114,7 +109,7 @@ public class MailService {
         return "";
     }
 
-    private String getActivationAccountTemplateContent(Map <String, Object> model) {
+    private String getActivationAccountTemplateContent(Map<String, Object> model) {
         StringBuilder content = new StringBuilder();
         try {
             content.append(FreeMarkerTemplateUtils.processTemplateIntoString(

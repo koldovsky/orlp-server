@@ -16,6 +16,7 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
     @Query("UPDATE Account acc set acc.status = :status WHERE id = :account_id")
     public void updateAccount(@Param("status") String status, @Param("account_id") long accountId);
 
-    Account findAccountByIdentifier(String identifier);
+    @Query("SELECT CASE WHEN COUNT(a) > 0 THEN TRUE ELSE FALSE END FROM Account a WHERE a.email = :email")
+    Boolean isEmailExists(@Param("email") String email);
 
 }

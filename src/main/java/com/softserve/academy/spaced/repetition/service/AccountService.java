@@ -1,23 +1,22 @@
 package com.softserve.academy.spaced.repetition.service;
 
-import com.softserve.academy.spaced.repetition.domain.Account;
-import com.softserve.academy.spaced.repetition.domain.LearningRegime;
-import com.softserve.academy.spaced.repetition.domain.RememberingLevel;
+import com.softserve.academy.spaced.repetition.domain.*;
 import com.softserve.academy.spaced.repetition.exceptions.NotAuthorisedUserException;
 import com.softserve.academy.spaced.repetition.repository.AccountRepository;
 import com.softserve.academy.spaced.repetition.repository.RememberingLevelRepository;
 import com.softserve.academy.spaced.repetition.service.validators.NumberOfPostponedDaysValidator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.UUID;
 
 @Service
 public class AccountService {
+    private static final Logger LOGGER = LoggerFactory.getLogger(AccountService.class);
     public static final int NUMBER_OF_REMEMBERING_LEVELS = 6;
     private final AccountRepository accountRepository;
     private final RememberingLevelRepository rememberingLevelRepository;
@@ -94,21 +93,29 @@ public class AccountService {
 
 
     public void createNewAccountPassword(String email, String newPassword) {
+        LOGGER.debug("Create new password for: {}", email);
         Account account = accountRepository.findByEmail(email);
         account.setPassword(passwordEncoder.encode(newPassword));
         accountRepository.save(account);
     }
 
-    @Transactional
-    public void sendResetPasswordMail(String accountEmail) {
-        if (accountRepository.findByEmail(accountEmail) == null) {
-            throw new NoSuchElementException("Email not exists");
-        }
+    public String checkAccountStatusAndSendMail(String accountEmail) {
+        LOGGER.debug("Check account status for: {}", accountEmail);
         Account account = accountRepository.findByEmail(accountEmail);
-        account.setIdentifier(UUID.randomUUID().toString());
-        accountRepository.save(account);
-        mailService.sendPasswordRestoreMail(account);
+        if (account == null) {
+            return "NOT_FOUND";
+        }
+        if (account.isDeactivated()) {
+            return "DEACTIVATED";
+        }
+        if (account.getStatus() == AccountStatus.DELETED) {
+            return "DELETED";
+        }
+        AuthenticationType type = account.getAuthenticationType();
+        if (type == AuthenticationType.LOCAL) {
+            mailService.sendPasswordRestoreMail(accountEmail);
+            return "LOCAL";
+        }
+        return type.toString();
     }
-
-
 }

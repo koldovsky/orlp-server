@@ -23,7 +23,7 @@ public class JwtTokenUtil {
     private static final String AUDIENCE_TABLET = "tablet";
 
     private static final int MILLISECONDS_TO_SECONDS = 1000;
-    private final int FIVE_SECONDS = 5000;
+    private static final int FIVE_SECONDS = 5000;
 
     @Value("${app.jwt.secret}")
     private String secret;
@@ -67,14 +67,14 @@ public class JwtTokenUtil {
     }
 
     public Date getExpirationDateFromToken(String token) {
-        Date expiration;
+        Date tokenExpiration;
         try {
             final Claims claims = getClaimsFromToken(token);
-            expiration = claims.getExpiration();
+            tokenExpiration = claims.getExpiration();
         } catch (NullPointerException e) {
-            expiration = null;
+            tokenExpiration = null;
         }
-        return expiration;
+        return tokenExpiration;
     }
 
     private String getAudienceFromToken(String token) {
@@ -93,8 +93,8 @@ public class JwtTokenUtil {
     }
 
     protected Boolean isTokenExpired(String token) {
-        final Date expiration = getExpirationDateFromToken(token);
-        return expiration.before(new Date());
+        final Date tokenExpiration = getExpirationDateFromToken(token);
+        return tokenExpiration.before(new Date());
     }
 
     private Boolean isCreatedBeforeLastPasswordReset(Date created, Date lastPasswordReset) {

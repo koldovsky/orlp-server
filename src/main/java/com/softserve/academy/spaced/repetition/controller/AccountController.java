@@ -8,6 +8,8 @@ import com.softserve.academy.spaced.repetition.dto.impl.RememberingLevelDTO;
 import com.softserve.academy.spaced.repetition.exceptions.NotAuthorisedUserException;
 import com.softserve.academy.spaced.repetition.service.AccountService;
 import com.softserve.academy.spaced.repetition.service.AccountVerificationByEmailService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +19,8 @@ import java.util.List;
 
 @RestController
 public class AccountController {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(AccountController.class);
     private final AccountService accountService;
 
     @Autowired
@@ -69,20 +73,23 @@ public class AccountController {
     }
 
     @PutMapping(value = "api/reset/password")
-    public ResponseEntity sendResetPasswordMail(@RequestBody String email) {
-        accountService.sendResetPasswordMail(email);
-        return new ResponseEntity(HttpStatus.OK);
+    public ResponseEntity<String> sendResetPasswordMail(@RequestBody String email) {
+        LOGGER.debug("Send reset password mail to email: {}", email);
+        String accountStatus = accountService.checkAccountStatusAndSendMail(email);
+        return ResponseEntity.ok(accountStatus);
     }
 
     @PutMapping(value = "api/verification/token")
-    public ResponseEntity verificationToken(@RequestBody String token) {
-        verificationService.verificationTokenForResetPassword(token);
-        return new ResponseEntity(HttpStatus.OK);
+    public ResponseEntity<String> verificationToken(@RequestBody String token) {
+        LOGGER.debug("Token verification");
+        String emailFromToken = verificationService.getAccountEmail(token);
+        return ResponseEntity.ok(emailFromToken);
     }
 
     @PutMapping(value = "api/create/password")
     public ResponseEntity createNewPasswordForUser(@RequestBody NewAccountPasswordDTO newAccountPasswordDTO) {
+        LOGGER.debug("Created new password for: {}", newAccountPasswordDTO.getEmail());
         accountService.createNewAccountPassword(newAccountPasswordDTO.getEmail(), newAccountPasswordDTO.getPassword());
-        return new ResponseEntity(HttpStatus.OK);
+        return ResponseEntity.ok().build();
     }
 }

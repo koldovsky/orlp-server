@@ -55,9 +55,6 @@ public class Account implements EntityInterface {
     @NotNull
     private Date lastPasswordResetDate;
 
-    @Column(name = "identifier")
-    private String identifier;
-
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(name = "account_authority", joinColumns = {
             @JoinColumn(name = "account_id")},
@@ -180,12 +177,6 @@ public class Account implements EntityInterface {
     public void setRememberingLevels(List<RememberingLevel> rememberingLevels) {
         this.rememberingLevels = rememberingLevels;
     }
-
-    public String getIdentifier() {
-        return identifier;
-    }
-
-    public void setIdentifier(String identifier) { this.identifier = identifier; }
 
     @Override
     public boolean equals(Object o) {
