@@ -61,13 +61,13 @@ public class CourseController {
 
     @Auditable(action = AuditingAction.VIEW_TOP_COURSES)
     @GetMapping("/api/course/top")
-    public ResponseEntity<List<CourseTopDTO>> getTopCourse() {
+    public ResponseEntity<List<CourseLinkDTO>> getTopCourse() {
         List<Course> courseList = courseService.getTopCourse();
-        List<CourseTopDTO> courses = new ArrayList<>();
+        List<CourseLinkDTO> courses = new ArrayList<>();
         for (Course course : courseList) {
             Link selfLink = linkTo(methodOn(CourseController.class).getCourseById(course.getCategory().getId(),
                     course.getId())).withSelfRel();
-            courses.add(DTOBuilder.buildDtoForEntity(course, CourseTopDTO.class, selfLink));
+            courses.add(DTOBuilder.buildDtoForEntity(course, CourseLinkDTO.class, selfLink));
         }
         return new ResponseEntity<>(courses, HttpStatus.OK);
     }
