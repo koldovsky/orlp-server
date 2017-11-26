@@ -101,7 +101,7 @@ public class MailService {
         StringBuilder content = new StringBuilder();
         try {
             content.append(FreeMarkerTemplateUtils.processTemplateIntoString(
-                    freemarkerConfiguration.getTemplate("registrationVerificationMailTemplate.txt"), model));
+                    freemarkerConfiguration.getTemplate("registrationVerificationMailTemplate.html"), model));
             return content.toString();
         } catch (IOException | TemplateException e) {
             LOGGER.error("Couldn't generate email content.", e);
@@ -113,7 +113,7 @@ public class MailService {
         StringBuilder content = new StringBuilder();
         try {
             content.append(FreeMarkerTemplateUtils.processTemplateIntoString(
-                    freemarkerConfiguration.getTemplate("activationAccountMailTemplate.txt"), model));
+                    freemarkerConfiguration.getTemplate("activationAccountMailTemplate.html"), model));
             return content.toString();
         } catch (IOException | TemplateException e) {
             LOGGER.error("Couldn't generate email content.", e);
@@ -125,7 +125,7 @@ public class MailService {
         StringBuilder content = new StringBuilder();
         try {
             content.append(FreeMarkerTemplateUtils.processTemplateIntoString(
-                    freemarkerConfiguration.getTemplate("changePasswordMailTemplate.txt"), model));
+                    freemarkerConfiguration.getTemplate("changePasswordMailTemplate.html"), model));
             return content.toString();
         } catch (IOException | TemplateException e) {
             LOGGER.error("Couldn't generate email content.", e);
@@ -137,7 +137,7 @@ public class MailService {
         StringBuilder content = new StringBuilder();
         try {
             content.append(FreeMarkerTemplateUtils.processTemplateIntoString(
-                    freemarkerConfiguration.getTemplate("restorePasswordMailTemplate.txt"), model));
+                    freemarkerConfiguration.getTemplate("restorePasswordMailTemplate.html"), model));
             return content.toString();
         } catch (IOException | TemplateException e) {
             LOGGER.error("Couldn't generate email content.", e);
