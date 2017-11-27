@@ -170,6 +170,7 @@ public class DeckService {
             deck.setName(updatedDeck.getName());
             deck.setDescription(updatedDeck.getDescription());
             deck.setCategory(categoryRepository.findOne(categoryId));
+            deck.setSynthaxToHighlight(updatedDeck.getSynthaxToHighlight());
             return deckRepository.save(deck);
         } else {
             throw new NotOwnerOperationException();
@@ -202,5 +203,9 @@ public class DeckService {
     public Page<Deck> getPageWithAllAdminDecks(int pageNumber, String sortBy, boolean ascending) {
         PageRequest request = new PageRequest(pageNumber - 1, QUANTITY_ADMIN_DECKS_IN_PAGE, ascending ? Sort.Direction.ASC : Sort.Direction.DESC, sortBy);
         return deckRepository.findAll(request);
+    }
+
+    public String getSynthaxToHightlight(long deckId){
+        return deckRepository.getDeckById(deckId).getSynthaxToHighlight();
     }
 }

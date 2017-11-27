@@ -3,6 +3,7 @@ package com.softserve.academy.spaced.repetition.domain;
 import com.softserve.academy.spaced.repetition.dto.EntityInterface;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Set;
 
@@ -20,6 +21,9 @@ public class Deck implements EntityInterface {
 
     @Column(name = "description", nullable = false)
     private String description;
+
+    @Column(name = "synthax")
+    private String synthaxToHighlight;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
@@ -149,5 +153,13 @@ public class Deck implements EntityInterface {
     @Override
     public int hashCode() {
         return id.hashCode();
+    }
+
+    public String getSynthaxToHighlight() {
+        return synthaxToHighlight;
+    }
+
+    public void setSynthaxToHighlight(String synthaxToHighlight) {
+        this.synthaxToHighlight = synthaxToHighlight;
     }
 }
