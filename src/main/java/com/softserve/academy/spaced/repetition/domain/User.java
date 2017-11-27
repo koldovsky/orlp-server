@@ -1,11 +1,15 @@
 package com.softserve.academy.spaced.repetition.domain;
 
 import com.softserve.academy.spaced.repetition.dto.EntityInterface;
+import com.softserve.academy.spaced.repetition.dto.Request;
 
 import javax.persistence.*;
-import java.util.Collection;
-import java.util.List;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import java.util.Objects;
 import java.util.Set;
+
+import static com.softserve.academy.spaced.repetition.service.validators.ValidationConstants.NULL_MESSAGE;
 
 @Entity
 @Table(name = "User")
@@ -14,14 +18,18 @@ public class User implements EntityInterface {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "user_id")
-    private long id;
+    private Long id;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "account_id")
+    @NotNull(message = NULL_MESSAGE, groups = Request.class)
+    @Valid
     private Account account;
 
     @OneToOne(cascade = {CascadeType.REFRESH, CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST})
     @JoinColumn(name = "person_id")
+    @NotNull(message = NULL_MESSAGE, groups = Request.class)
+    @Valid
     private Person person;
 
     @OneToOne(cascade = {CascadeType.REFRESH, CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST})
@@ -88,22 +96,17 @@ public class User implements EntityInterface {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof User)) {
+        if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        User user = (User)o;
-        if(this.id==user.id && this.getPerson().equals(user.getPerson())
-                && this.getAccount().equals(user.getAccount())) {
-            return true;
-        } else {
-            return false;
-        }
+        User user = (User) o;
+        return Objects.equals(this.id, user.id);
     }
 
     @Override
     public int hashCode() {
-        return (int)id + account.hashCode()+ person.hashCode();
+        int hash = 0;
+        hash += (id != null ? id.hashCode() : 0);
+        return hash;
     }
-
-
 }

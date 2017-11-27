@@ -9,7 +9,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.mail.javamail.MimeMessagePreparator;
@@ -24,7 +23,7 @@ import java.util.Map;
 @Service
 public class MailService {
     @Value("${app.origin.url}")
-    private String URL;
+    private String url;
 
     @Autowired
     private JavaMailSender mailSender;
@@ -41,11 +40,11 @@ public class MailService {
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
             helper.setSubject("Confirmation registration");
             helper.setTo(user.getAccount().getEmail());
-            Map <String, Object> model = new HashMap <>();
-            String token = jwtTokenForMail.generateTokenForMail(user);
+            Map<String, Object> model = new HashMap<>();
+            String token = jwtTokenForMail.generateTokenForMail(user.getAccount().getEmail());
             model.put("person", user.getPerson());
             model.put("token", token);
-            model.put("url", URL);
+            model.put("url", url);
             String text = getFreeMarkerTemplateContent(model);
             helper.setText(text, true);
         };
@@ -57,10 +56,10 @@ public class MailService {
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
             helper.setSubject("Activation account");
             helper.setTo(email);
-            Map <String, Object> model = new HashMap <>();
-            String token = jwtTokenForMail.generateTokenForMailFromEmail(email);
+            Map<String, Object> model = new HashMap<>();
+            String token = jwtTokenForMail.generateTokenForMail(email);
             model.put("token", token);
-            model.put("url", URL);
+            model.put("url", url);
             String text = getActivationAccountTemplateContent(model);
             helper.setText(text, true);
         };
@@ -72,21 +71,37 @@ public class MailService {
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
             helper.setSubject("Change password notification");
             helper.setTo(user.getAccount().getEmail());
-            Map <String, Object> model = new HashMap <>();
+            Map<String, Object> model = new HashMap<>();
             model.put("person", user.getPerson());
             model.put("datachange", Calendar.getInstance().getTime().toString());
-            model.put("url", URL);
+            model.put("url", url);
             String text = getChangePasswordTemplateContent(model);
             helper.setText(text, true);
         };
         mailSender.send(preparator);
     }
 
-    private String getFreeMarkerTemplateContent(Map <String, Object> model) {
+    public void sendPasswordRestoreMail(String accountEmail) {
+        LOGGER.debug("Send mail for reset password to email: {}", accountEmail);
+        MimeMessagePreparator preparator = mimeMessage -> {
+            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
+            helper.setSubject("Password restore");
+            helper.setTo(accountEmail);
+            Map<String, Object> model = new HashMap<>();
+            String token = jwtTokenForMail.generateTokenForMail(accountEmail);
+            model.put("token", token);
+            model.put("url", url);
+            String text = getRestorePasswordTemplateContent(model);
+            helper.setText(text, true);
+        };
+        mailSender.send(preparator);
+    }
+
+    private String getFreeMarkerTemplateContent(Map<String, Object> model) {
         StringBuilder content = new StringBuilder();
         try {
             content.append(FreeMarkerTemplateUtils.processTemplateIntoString(
-                    freemarkerConfiguration.getTemplate("registrationVerificationMailTemplate.txt"), model));
+                    freemarkerConfiguration.getTemplate("registrationVerificationMailTemplate.html"), model));
             return content.toString();
         } catch (IOException | TemplateException e) {
             LOGGER.error("Couldn't generate email content.", e);
@@ -94,11 +109,11 @@ public class MailService {
         return "";
     }
 
-    private String getActivationAccountTemplateContent(Map <String, Object> model) {
+    private String getActivationAccountTemplateContent(Map<String, Object> model) {
         StringBuilder content = new StringBuilder();
         try {
             content.append(FreeMarkerTemplateUtils.processTemplateIntoString(
-                    freemarkerConfiguration.getTemplate("activationAccountMailTemplate.txt"), model));
+                    freemarkerConfiguration.getTemplate("activationAccountMailTemplate.html"), model));
             return content.toString();
         } catch (IOException | TemplateException e) {
             LOGGER.error("Couldn't generate email content.", e);
@@ -106,11 +121,23 @@ public class MailService {
         return "";
     }
 
-    private String getChangePasswordTemplateContent(Map <String, Object> model) {
+    private String getChangePasswordTemplateContent(Map<String, Object> model) {
         StringBuilder content = new StringBuilder();
         try {
             content.append(FreeMarkerTemplateUtils.processTemplateIntoString(
-                    freemarkerConfiguration.getTemplate("changePasswordMailTemplate.txt"), model));
+                    freemarkerConfiguration.getTemplate("changePasswordMailTemplate.html"), model));
+            return content.toString();
+        } catch (IOException | TemplateException e) {
+            LOGGER.error("Couldn't generate email content.", e);
+        }
+        return "";
+    }
+
+    private String getRestorePasswordTemplateContent(Map<String, Object> model) {
+        StringBuilder content = new StringBuilder();
+        try {
+            content.append(FreeMarkerTemplateUtils.processTemplateIntoString(
+                    freemarkerConfiguration.getTemplate("restorePasswordMailTemplate.html"), model));
             return content.toString();
         } catch (IOException | TemplateException e) {
             LOGGER.error("Couldn't generate email content.", e);

@@ -12,7 +12,7 @@ spring:
   mail:
     host: smtp.gmail.com
     port: 587
-    username: sybez.market@gmail.com
+    username: infolve.team@gmail.com
     password: z0935152261
 app:
   jwt:

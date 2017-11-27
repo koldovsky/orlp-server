@@ -1,9 +1,10 @@
 package com.softserve.academy.spaced.repetition.security;
 
-import com.softserve.academy.spaced.repetition.domain.User;
+import com.softserve.academy.spaced.repetition.repository.AccountRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -16,37 +17,33 @@ import java.util.NoSuchElementException;
 public class JwtTokenForMail extends JwtTokenUtil {
     private static final String USER_EMAIL = "email";
     private static final String DATE_OF_CREATION = "date";
+    private static final int EXPIRATION_TO_ONE_DAY = 143;
 
+    @Autowired
+    AccountRepository accountRepository;
     @Value("${app.jwt.expiration}")
     private Long expiration;
 
     @Value("${app.jwt.secret}")
     private String secret;
 
-    public String generateTokenForMail(User user) {
-        Map <String, Object> claims = new HashMap <>();
-        claims.put(USER_EMAIL, user.getAccount().getEmail());
-        claims.put(DATE_OF_CREATION, new Date());
-        return generateTokenForMail(claims);
-    }
-
-    public String generateTokenForMailFromEmail(String email) {
-        Map <String, Object> claims = new HashMap <>();
+    public String generateTokenForMail(String email) {
+        Map<String, Object> claims = new HashMap<>();
         claims.put(USER_EMAIL, email);
         claims.put(DATE_OF_CREATION, new Date());
         return generateTokenForMail(claims);
     }
 
-    private String generateTokenForMail(Map <String, Object> claims) {
+    private String generateTokenForMail(Map<String, Object> claims) {
         return Jwts.builder()
                 .setClaims(claims)
-                .setExpiration(generateExpirationDate())
+                .setExpiration(generateTokenExpiration())
                 .signWith(SignatureAlgorithm.HS512, secret)
                 .compact();
     }
 
-    private Date generateExpirationDate() {
-        return new Date(System.currentTimeMillis() + expiration);
+    private Date generateTokenExpiration() {
+        return new Date(System.currentTimeMillis() + expiration * EXPIRATION_TO_ONE_DAY);
     }
 
     public String decryptToken(String token) {
@@ -57,11 +54,23 @@ public class JwtTokenForMail extends JwtTokenUtil {
         throw new NoSuchElementException("No token found");
     }
 
-    private Boolean isTokenExpired(String token) {
-        final Date expiration = getExpirationDateFromToken(token);
-        return expiration.before(new Date());
+    public String getAccountEmailFromToken(String token) {
+        if (!isTokenForResetPasswordExpired(token)) {
+            String email = getEmailFromToken(token);
+            if (accountRepository.isEmailExists(email)) {
+                return email;
+            }
+        }
+        return "";
     }
 
+    protected Boolean isTokenForResetPasswordExpired(String token) {
+        final Date tokenExpiration = getExpirationDateFromToken(token);
+        if (tokenExpiration == null) {
+            return true;
+        }
+        return tokenExpiration.before(new Date());
+    }
 
     public String getEmailFromToken(String token) {
         String email;
@@ -72,18 +81,5 @@ public class JwtTokenForMail extends JwtTokenUtil {
             email = null;
         }
         return email;
-    }
-
-    private Claims getClaimsFromToken(String token) {
-        Claims claims;
-        try {
-            claims = Jwts.parser()
-                    .setSigningKey(secret)
-                    .parseClaimsJws(token)
-                    .getBody();
-        } catch (Exception e) {
-            claims = null;
-        }
-        return claims;
     }
 }
