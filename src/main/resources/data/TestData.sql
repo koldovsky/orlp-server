@@ -295,9 +295,9 @@ insert into course (course_id, description, image, name,  rating, category_id, p
 
 
 
-insert into deck (deck_id, description, name, rating, category_id, user_id) values (1, 'Part 1', 'Java interview #1', 0, 1, 1);
-insert into deck (deck_id, description, name, rating, category_id, user_id) values (2, 'Part 2', 'Java interview #2', 0, 1, 1);
-insert into deck (deck_id, description, name, rating, category_id, user_id) values (3, 'Part 3', 'Java interview #3', 0, 1, 1);
+insert into deck (deck_id, description, name, rating, category_id, user_id, synthax) values (1, 'Part 1', 'Java interview #1', 0, 1, 1, 'JAVA');
+insert into deck (deck_id, description, name, rating, category_id, user_id, synthax) values (2, 'Part 2', 'Java interview #2', 0, 1, 1, 'HTML');
+insert into deck (deck_id, description, name, rating, category_id, user_id, synthax) values (3, 'Part 3', 'Java interview #3', 0, 1, 1, 'HTML');
 insert into deck (deck_id, description, name, rating, category_id, user_id) values (4, 'Part 4', 'Java interview #4', 0, 1, 1);
 insert into deck (deck_id, description, name, rating, category_id, user_id) values (5, 'Part 1', 'C++ interview #1', 0, 2, 2);
 insert into deck (deck_id, description, name, rating, category_id, user_id) values (6, 'Part 2', 'C++ interview #2', 0, 2, 2);
