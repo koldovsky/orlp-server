@@ -15,12 +15,15 @@ import com.softserve.academy.spaced.repetition.repository.DeckRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
+import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
+import org.yaml.snakeyaml.constructor.ConstructorException;
+import org.yaml.snakeyaml.parser.ParserException;
 
 import java.io.*;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 public class CardService {
@@ -126,25 +129,52 @@ public class CardService {
     }
 
     @Transactional
-    public void uploadCards(MultipartFile cardsFile, Long deckId) throws WrongFormatException, EmptyFileException, IOException, NotOwnerOperationException, NotAuthorisedUserException {
+    public void uploadCards(MultipartFile cardsFile, Long deckId) throws WrongFormatException, EmptyFileException, NotOwnerOperationException, NotAuthorisedUserException, IOException {
         if (deckService.getDeckUser(deckId) != null) {
             if (!cardsFile.getContentType().equals("application/octet-stream")) {
                 throw new WrongFormatException();
             } else if (cardsFile.isEmpty()) {
-                throw new EmptyFileException();
+                throw new EmptyFileException("File is empty!");
             }
             Yaml yaml = new Yaml();
             InputStream in = cardsFile.getInputStream();
-            CardFileDTOList cards = yaml.loadAs(in, CardFileDTOList.class);
-            for (CardFileDTO card : cards.getCards()) {
-                addCard(new Card(card.getQuestion(), card.getAnswer(), card.getTitle()), deckId);
+            try {
+                CardFileDTOList cards = yaml.loadAs(in, CardFileDTOList.class);
+                for (CardFileDTO card : cards.getCards()) {
+                    addCard(new Card(card.getQuestion(), card.getAnswer(), card.getTitle()), deckId);
+                }
+            } catch (ParserException | ConstructorException ex) {
+                throw new IllegalArgumentException("Invalid format of file!");
             }
         }
     }
 
-    public List<CardFileDTO> downloadCards(Long deckId) {
-        return cardRepository.findAllByDeckId(deckId).stream().map(card ->
-                new CardFileDTO(card.getTitle(), card.getQuestion(), card.getAnswer())).collect(Collectors.toList());
+    public void downloadCards(Long deckId, OutputStream outputStream) {
+        List<Map<String, String>> list = new ArrayList<>();
+        cardRepository.findAllByDeckId(deckId).forEach(card -> {
+            Map<String, String> cardMap = new HashMap<>();
+            cardMap.put("title", card.getTitle());
+            cardMap.put("question", card.getQuestion());
+            cardMap.put("answer", card.getAnswer());
+            list.add(cardMap);
+        });
+        DumperOptions options = new DumperOptions();
+        options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
+        options.setDefaultScalarStyle(DumperOptions.ScalarStyle.SINGLE_QUOTED);
+        options.setPrettyFlow(true);
+        Map<String, List<Map<String, String>>> cardsMap = new HashMap<>();
+        cardsMap.put("cards", list);
+        Yaml yaml = new Yaml(options);
+        Writer out = new BufferedWriter(new OutputStreamWriter(outputStream));
+        yaml.dump(cardsMap, out);
     }
 
+    public void downloadCardsTemplate(OutputStream outputStream) {
+        try (InputStream in = CardService.class.getResourceAsStream("/data/CardsTemplate.yml")) {
+            FileCopyUtils.copy(in, outputStream);
+        } catch (IOException ex) {
+            throw new IllegalArgumentException("Copy of file failed!");
+        }
+
+    }
 }
