@@ -1,12 +1,13 @@
 package com.softserve.academy.spaced.repetition.controller;
 
-import com.softserve.academy.spaced.repetition.dto.DTOBuilder;
-import com.softserve.academy.spaced.repetition.dto.impl.CommentDTO;
-import com.softserve.academy.spaced.repetition.dto.impl.ReplyToCommentDTO;
 import com.softserve.academy.spaced.repetition.audit.Auditable;
 import com.softserve.academy.spaced.repetition.audit.AuditingAction;
 import com.softserve.academy.spaced.repetition.domain.Comment;
 import com.softserve.academy.spaced.repetition.domain.CourseComment;
+import com.softserve.academy.spaced.repetition.dto.DTOBuilder;
+import com.softserve.academy.spaced.repetition.dto.Request;
+import com.softserve.academy.spaced.repetition.dto.impl.CommentDTO;
+import com.softserve.academy.spaced.repetition.dto.impl.ReplyToCommentDTO;
 import com.softserve.academy.spaced.repetition.exceptions.NotAuthorisedUserException;
 import com.softserve.academy.spaced.repetition.service.CourseCommentService;
 import org.slf4j.Logger;
@@ -16,6 +17,7 @@ import org.springframework.hateoas.Link;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -55,7 +57,7 @@ public class CourseCommentController {
     @Auditable(action = AuditingAction.CREATE_COMMENT_FOR_COURSE)
     @PostMapping(value = "/api/category/{categoryId}/courses/{courseId}/comments")
     @PreAuthorize(value = "@accessToUrlService.hasAccessToCourse(#categoryId, #courseId)")
-    public ResponseEntity<CommentDTO> addCommentByCourse(@RequestBody ReplyToCommentDTO replyToCommentDTO, @PathVariable Long categoryId, @PathVariable Long courseId) throws NotAuthorisedUserException {
+    public ResponseEntity<CommentDTO> addCommentByCourse(@Validated(Request.class) @RequestBody ReplyToCommentDTO replyToCommentDTO, @PathVariable Long categoryId, @PathVariable Long courseId) throws NotAuthorisedUserException {
         LOGGER.debug("Added comment to course with id: {}", courseId);
         CourseComment courseComment = courseCommentService.addCommentForCourse(courseId, replyToCommentDTO.getCommentText(), replyToCommentDTO.getParentCommentId());
         Link selfLink = linkTo(methodOn(CourseCommentController.class).getCommentByCourse(categoryId, courseId, courseComment.getId())).withSelfRel();
@@ -66,7 +68,7 @@ public class CourseCommentController {
     @Auditable(action = AuditingAction.EDIT_COMMENT_FOR_COURSE)
     @PutMapping(value = "/api/category/{categoryId}/courses/{courseId}/comments/{courseCommentId}")
     @PreAuthorize(value = "@accessToUrlService.hasAccessToUpdateCommentForCourse(#courseCommentId)")
-    public ResponseEntity<CommentDTO> updateComment(@RequestBody String courseContentComment
+    public ResponseEntity<CommentDTO> updateComment(@Validated(Request.class) @RequestBody String courseContentComment
             , @PathVariable Long categoryId, @PathVariable Long courseId, @PathVariable Long courseCommentId) {
         LOGGER.debug("Updated courseComment with id: {}", courseCommentId);
         CourseComment courseComment = courseCommentService.updateCommentById(courseCommentId, courseContentComment);
