@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.multipart.MultipartException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+import org.yaml.snakeyaml.constructor.ConstructorException;
+
 import java.net.UnknownHostException;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -98,5 +100,17 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
     ResponseEntity <MessageDTO> handleLockedException(LockedException lockedException) {
         return new ResponseEntity <>(new MessageDTO(lockedException.getMessage()), HttpStatus.METHOD_NOT_ALLOWED);
     }
+
+    @ExceptionHandler(ConstructorException.class)
+    ResponseEntity <MessageDTO> handleConstructorException(ConstructorException constructorException) {
+        return new ResponseEntity <>(new MessageDTO("Invalid structure of uploaded file!"), HttpStatus.NOT_ACCEPTABLE);
+    }
+
+    @ExceptionHandler(EmptyFileException.class)
+    ResponseEntity <MessageDTO> handleEmptyFileException(EmptyFileException emptyFileException) {
+        return new ResponseEntity <>(new MessageDTO("Uploaded file is empty!"), HttpStatus.NOT_ACCEPTABLE);
+    }
+
+
 
 }

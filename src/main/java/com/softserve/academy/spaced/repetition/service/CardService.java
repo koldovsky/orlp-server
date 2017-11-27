@@ -4,16 +4,23 @@ import com.softserve.academy.spaced.repetition.domain.Card;
 import com.softserve.academy.spaced.repetition.domain.Deck;
 import com.softserve.academy.spaced.repetition.domain.LearningRegime;
 import com.softserve.academy.spaced.repetition.domain.User;
+import com.softserve.academy.spaced.repetition.dto.CardFileDTO;
+import com.softserve.academy.spaced.repetition.dto.CardFileDTOList;
+import com.softserve.academy.spaced.repetition.exceptions.EmptyFileException;
 import com.softserve.academy.spaced.repetition.exceptions.NotAuthorisedUserException;
+import com.softserve.academy.spaced.repetition.exceptions.NotOwnerOperationException;
+import com.softserve.academy.spaced.repetition.exceptions.WrongFormatException;
 import com.softserve.academy.spaced.repetition.repository.CardRepository;
 import com.softserve.academy.spaced.repetition.repository.DeckRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+import org.yaml.snakeyaml.Yaml;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.io.*;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class CardService {
@@ -28,14 +35,17 @@ public class CardService {
 
     private final UserCardQueueService userCardQueueService;
 
+    private final DeckService deckService;
+
     @Autowired
     public CardService(CardRepository cardRepository, DeckRepository deckRepository, AccountService accountService,
-                       UserService userService, UserCardQueueService userCardQueueService) {
+                       UserService userService, UserCardQueueService userCardQueueService, DeckService deckService) {
         this.cardRepository = cardRepository;
         this.deckRepository = deckRepository;
         this.userService = userService;
         this.accountService = accountService;
         this.userCardQueueService = userCardQueueService;
+        this.deckService = deckService;
     }
 
     @Transactional
@@ -112,6 +122,29 @@ public class CardService {
     public boolean areThereNotPostponedCardsAvailable(Long deckId) throws NotAuthorisedUserException {
         User user = userService.getAuthorizedUser();
         return userCardQueueService.countCardsThatNeedRepeating(deckId) > 0 ||
-                cardRepository.getNewCards(deckId, user.getId(), user.getAccount().getCardsNumber()).size() > 0;
+                !cardRepository.getNewCards(deckId, user.getId(), user.getAccount().getCardsNumber()).isEmpty();
     }
+
+    @Transactional
+    public void uploadCards(MultipartFile cardsFile, Long deckId) throws WrongFormatException, EmptyFileException, IOException, NotOwnerOperationException, NotAuthorisedUserException {
+        if (deckService.getDeckUser(deckId) != null) {
+            if (!cardsFile.getContentType().equals("application/octet-stream")) {
+                throw new WrongFormatException();
+            } else if (cardsFile.isEmpty()) {
+                throw new EmptyFileException();
+            }
+            Yaml yaml = new Yaml();
+            InputStream in = cardsFile.getInputStream();
+            CardFileDTOList cards = yaml.loadAs(in, CardFileDTOList.class);
+            for (CardFileDTO card : cards.getCards()) {
+                addCard(new Card(card.getQuestion(), card.getAnswer(), card.getTitle()), deckId);
+            }
+        }
+    }
+
+    public List<CardFileDTO> downloadCards(Long deckId) {
+        return cardRepository.findAllByDeckId(deckId).stream().map(card ->
+                new CardFileDTO(card.getTitle(), card.getQuestion(), card.getAnswer())).collect(Collectors.toList());
+    }
+
 }
