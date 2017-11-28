@@ -57,14 +57,6 @@ public class ValidatorsTest {
     }
 
     @Test
-    public void testPasswordNotNull() throws Exception {
-        user.getAccount().setPassword(null);
-        Set<ConstraintViolation<User>> violations = validator.validate(user, Request.class);
-        assertEquals(1, violations.size());
-        assertEquals(NULL_MESSAGE, violations.iterator().next().getMessage());
-    }
-
-    @Test
     public void testPasswordSize() throws Exception {
         user.getAccount().setPassword("user");
         Set<ConstraintViolation<User>> violations = validator.validate(user, Request.class);
