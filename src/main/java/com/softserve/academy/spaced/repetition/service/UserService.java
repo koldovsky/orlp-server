@@ -232,9 +232,7 @@ public class UserService {
     public void initializeNewUser(Account account, String email, AccountStatus accountStatus, boolean deactivated,  AuthenticationType
             authenticationType) {
         account.setEmail(email);
-        if (account.getPassword() == null) {
-            account.setPassword("-1");
-        } else {
+        if (account.getPassword() != null) {
             account.setPassword(passwordEncoder.encode(account.getPassword()));
         }
         account.setLastPasswordResetDate(new Date());

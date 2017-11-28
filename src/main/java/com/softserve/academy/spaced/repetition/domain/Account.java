@@ -24,8 +24,7 @@ public class Account implements EntityInterface {
     @Column(name = "account_id", nullable = false)
     private Long id;
 
-    @Column(name = "password", nullable = false)
-    @NotNull(message = NULL_MESSAGE, groups = Request.class)
+    @Column(name = "password")
     @Size(message = PASS_SIZE_MESSAGE, min = PASS_MIN_SIZE, max = PASS_MAX_SIZE, groups = Request.class)
     private String password;
 
