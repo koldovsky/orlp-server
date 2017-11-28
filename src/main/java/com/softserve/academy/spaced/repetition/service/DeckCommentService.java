@@ -10,8 +10,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.util.Date;
 import java.util.List;
 
@@ -32,9 +32,9 @@ public class DeckCommentService {
     @Autowired
     private CommentFieldsValidator commentFieldsValidator;
 
+    @Transactional
     public DeckComment addCommentForDeck(Long deckId, String commentText, Long parentCommentId) throws NotAuthorisedUserException {
         LOGGER.debug("Added comment to deck with id: {}", deckId);
-        commentFieldsValidator.validate(commentText);
         DeckComment comment = new DeckComment(commentText, new Date());
         comment.setPerson(userService.getAuthorizedUser().getPerson());
         comment.setDeck(deckRepository.findOne(deckId));
@@ -54,9 +54,9 @@ public class DeckCommentService {
         return commentRepository.findDeckCommentsByDeckId(deckId);
     }
 
+    @Transactional
     public DeckComment updateCommentById(Long commentId, String commentText) {
         LOGGER.debug("Updated comment with id: {}", commentId);
-        commentFieldsValidator.validate(commentText);
         DeckComment updatedComment = commentRepository.findOne(commentId);
         updatedComment.setCommentDate(new Date());
         updatedComment.setCommentText(commentText);

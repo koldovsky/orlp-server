@@ -12,6 +12,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -91,11 +92,12 @@ public class AccountService {
         rememberingLevelRepository.save(new RememberingLevel(6, "Genius", 60, account));
     }
 
-
+    @Transactional
     public void createNewAccountPassword(String email, String newPassword) {
         LOGGER.debug("Create new password for: {}", email);
         Account account = accountRepository.findByEmail(email);
         account.setPassword(passwordEncoder.encode(newPassword));
+        account.setLastPasswordResetDate(new Date());
         accountRepository.save(account);
     }
 

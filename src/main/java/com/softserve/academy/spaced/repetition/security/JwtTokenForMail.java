@@ -46,31 +46,6 @@ public class JwtTokenForMail extends JwtTokenUtil {
         return new Date(System.currentTimeMillis() + expiration * EXPIRATION_TO_ONE_DAY);
     }
 
-    public String decryptToken(String token) {
-        final String email = getEmailFromToken(token);
-        if (!isTokenExpired(token)) {
-            return email;
-        }
-        throw new NoSuchElementException("No token found");
-    }
-
-    public String getAccountEmailFromToken(String token) {
-        if (!isTokenForResetPasswordExpired(token)) {
-            String email = getEmailFromToken(token);
-            if (accountRepository.isEmailExists(email)) {
-                return email;
-            }
-        }
-        return "";
-    }
-
-    protected Boolean isTokenForResetPasswordExpired(String token) {
-        final Date tokenExpiration = getExpirationDateFromToken(token);
-        if (tokenExpiration == null) {
-            return true;
-        }
-        return tokenExpiration.before(new Date());
-    }
 
     public String getEmailFromToken(String token) {
         String email;
@@ -81,5 +56,44 @@ public class JwtTokenForMail extends JwtTokenUtil {
             email = null;
         }
         return email;
+    }
+
+    public String decryptToken(String token) {
+        final String email = getEmailFromToken(token);
+        if (!isTokenExpired(token)) {
+            return email;
+        }
+        throw new NoSuchElementException("No token found");
+    }
+
+    public String getAccountEmailFromToken(String token) {
+        Date tokenExpiration;
+        Date tokenDateCreation;
+        String accountEmail;
+        try {
+            final Claims claims = getClaimsFromToken(token);
+            accountEmail = String.valueOf(claims.get(USER_EMAIL));
+            tokenExpiration = claims.getExpiration();
+            tokenDateCreation = new Date((Long) claims.get(DATE_OF_CREATION));
+        } catch (NullPointerException e) {
+            return "";
+        }
+        if (isTokenValid(tokenDateCreation, tokenExpiration, accountEmail)) {
+            return accountEmail;
+        }
+        return "";
+    }
+
+    private Boolean isTokenValid(Date tokenDateCreation, Date tokenExpiration, String accountEmail) {
+        return (!isTokenUsed(tokenDateCreation, accountEmail) && !isTokenExpired(tokenExpiration));
+    }
+
+    private Boolean isTokenUsed(Date created, String email) {
+        Date lastPasswordReset = accountRepository.getLastPasswordResetDate(email);
+        return (lastPasswordReset != null && created.before(lastPasswordReset));
+    }
+
+    protected Boolean isTokenExpired(Date tokenExpiration) {
+        return tokenExpiration.before(new Date());
     }
 }

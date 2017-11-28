@@ -37,10 +37,9 @@ public class CourseCommentService {
         this.commentFieldsValidator = commentFieldsValidator;
     }
 
-
+    @Transactional
     public CourseComment addCommentForCourse(Long courseId, String commentText, Long parentCommentId) throws NotAuthorisedUserException {
         LOGGER.debug("Added new comment for course with id: {}", courseId);
-        commentFieldsValidator.validate(commentText);
         CourseComment comment = new CourseComment(commentText, new Date());
         comment.setPerson(userService.getAuthorizedUser().getPerson());
         comment.setCourse(courseRepository.findOne(courseId));
@@ -60,9 +59,9 @@ public class CourseCommentService {
         return commentRepository.findCourseCommentsByCourseId(courseId);
     }
 
+    @Transactional
     public CourseComment updateCommentById(Long commentId, String commentText) {
         LOGGER.debug("Updated courseComment with id: {}", commentId);
-        commentFieldsValidator.validate(commentText);
         CourseComment updatedComment = commentRepository.findOne(commentId);
         updatedComment.setCommentDate(new Date());
         updatedComment.setCommentText(commentText);
