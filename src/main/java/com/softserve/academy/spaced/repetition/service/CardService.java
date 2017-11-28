@@ -162,11 +162,14 @@ public class CardService {
         options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
         options.setDefaultScalarStyle(DumperOptions.ScalarStyle.SINGLE_QUOTED);
         options.setPrettyFlow(true);
-        Map<String, List<Map<String, String>>> cardsMap = new HashMap<>();
-        cardsMap.put("cards", list);
+        Map cardsMap = Collections.singletonMap("cards", list);
         Yaml yaml = new Yaml(options);
-        Writer out = new BufferedWriter(new OutputStreamWriter(outputStream));
-        yaml.dump(cardsMap, out);
+        try (Writer out = new BufferedWriter(new OutputStreamWriter(outputStream))) {
+            yaml.dump(cardsMap, out);
+        } catch (IOException ex) {
+            throw new IllegalArgumentException("Dumping of file failed!");
+        }
+
     }
 
     public void downloadCardsTemplate(OutputStream outputStream) {
@@ -175,6 +178,5 @@ public class CardService {
         } catch (IOException ex) {
             throw new IllegalArgumentException("Copy of file failed!");
         }
-
     }
 }
