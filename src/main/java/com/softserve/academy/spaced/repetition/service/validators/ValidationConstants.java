@@ -13,6 +13,8 @@ public class ValidationConstants {
 
     public static final String NULL_MESSAGE = "Field can not be null";
 
+    public static final String EMPTY_MESSAGE = "Field can not be empty";
+
     private static final String FIRST_PART_OF_SIZE_MESSAGE = "Can not have less than ";
 
     private static final String SECOND_PART_OF_SIZE_MESSAGE = " and more than ";

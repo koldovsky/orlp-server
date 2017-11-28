@@ -21,4 +21,6 @@ public class DeckPublicDTO extends DTO<Deck> {
     public double getRating(){
         return getEntity().getRating();
     }
+
+    public String getSynthax() {return getEntity().getSynthaxToHighlight();}
 }

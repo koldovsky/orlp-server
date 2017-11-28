@@ -1,22 +1,25 @@
 package com.softserve.academy.spaced.repetition.domain;
 
 import com.softserve.academy.spaced.repetition.dto.EntityInterface;
+import com.softserve.academy.spaced.repetition.dto.Request;
+import org.hibernate.validator.constraints.NotBlank;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.util.Date;
 import java.util.Objects;
 
+import static com.softserve.academy.spaced.repetition.service.validators.ValidationConstants.EMPTY_MESSAGE;
+
 @Entity
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-public abstract class Comment implements EntityInterface{
+public abstract class Comment implements EntityInterface {
 
     @Id
     @GeneratedValue(strategy = GenerationType.TABLE)
     @Column(name = "comment_id", nullable = false)
     private Long id;
 
-    @NotNull
+    @NotBlank(message = EMPTY_MESSAGE, groups = Request.class)
     @Column(name = "commentText", nullable = false, columnDefinition = "LONGTEXT")
     private String commentText;
 
@@ -31,7 +34,7 @@ public abstract class Comment implements EntityInterface{
     @Column(name = "parentCommentId")
     private Long parentCommentId;
 
-    public Comment(){
+    public Comment() {
     }
 
     public Comment(String commentText, Date commentDate) {
@@ -72,9 +75,13 @@ public abstract class Comment implements EntityInterface{
         this.person = person;
     }
 
-    public Long getParentCommentId() { return parentCommentId; }
+    public Long getParentCommentId() {
+        return parentCommentId;
+    }
 
-    public void setParentCommentId(Long parentCommentId) { this.parentCommentId = parentCommentId; }
+    public void setParentCommentId(Long parentCommentId) {
+        this.parentCommentId = parentCommentId;
+    }
 
     @Override
     public boolean equals(Object o) {

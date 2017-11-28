@@ -5,7 +5,6 @@ import com.softserve.academy.spaced.repetition.domain.DeckComment;
 import com.softserve.academy.spaced.repetition.exceptions.NotAuthorisedUserException;
 import com.softserve.academy.spaced.repetition.repository.DeckCommentRepository;
 import com.softserve.academy.spaced.repetition.repository.DeckRepository;
-import com.softserve.academy.spaced.repetition.service.validators.CommentFieldsValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,9 +27,6 @@ public class DeckCommentService {
 
     @Autowired
     private UserService userService;
-
-    @Autowired
-    private CommentFieldsValidator commentFieldsValidator;
 
     @Transactional
     public DeckComment addCommentForDeck(Long deckId, String commentText, Long parentCommentId) throws NotAuthorisedUserException {

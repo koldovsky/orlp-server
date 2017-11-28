@@ -5,7 +5,6 @@ import com.softserve.academy.spaced.repetition.domain.CourseComment;
 import com.softserve.academy.spaced.repetition.exceptions.NotAuthorisedUserException;
 import com.softserve.academy.spaced.repetition.repository.CourseCommentRepository;
 import com.softserve.academy.spaced.repetition.repository.CourseRepository;
-import com.softserve.academy.spaced.repetition.service.validators.CommentFieldsValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,15 +25,13 @@ public class CourseCommentService {
 
     private final UserService userService;
 
-    private final CommentFieldsValidator commentFieldsValidator;
 
     @Autowired
     public CourseCommentService(CourseCommentRepository commentRepository, CourseRepository courseRepository
-            , UserService userService, CommentFieldsValidator commentFieldsValidator) {
+            , UserService userService) {
         this.commentRepository = commentRepository;
         this.courseRepository = courseRepository;
         this.userService = userService;
-        this.commentFieldsValidator = commentFieldsValidator;
     }
 
     @Transactional

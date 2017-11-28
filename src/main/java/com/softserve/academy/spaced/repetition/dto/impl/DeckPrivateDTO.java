@@ -35,4 +35,5 @@ public class DeckPrivateDTO extends DTO<Deck> {
     public String getOwner() {
         return getEntity().getDeckOwner().getAccount().getEmail();
     }
+    public String getSynthax() {return getEntity().getSynthaxToHighlight();}
 }

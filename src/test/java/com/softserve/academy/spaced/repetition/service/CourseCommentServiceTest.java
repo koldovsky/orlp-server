@@ -4,7 +4,6 @@ import com.softserve.academy.spaced.repetition.config.TestDatabaseConfig;
 import com.softserve.academy.spaced.repetition.domain.*;
 import com.softserve.academy.spaced.repetition.repository.CourseCommentRepository;
 import com.softserve.academy.spaced.repetition.repository.CourseRepository;
-import com.softserve.academy.spaced.repetition.service.validators.CommentFieldsValidator;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,7 +16,6 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Date;
 import java.util.List;
 
 import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
@@ -48,12 +46,9 @@ public class CourseCommentServiceTest {
     @Mock
     private UserService mockedUserService;
 
-    @Mock
-    private CommentFieldsValidator mockedCommentFieldsValidator;
-
     @Before
     public void setUp() throws Exception {
-        courseCommentServiceUnderTest = new CourseCommentService(courseCommentRepository, courseRepository, mockedUserService, mockedCommentFieldsValidator);
+        courseCommentServiceUnderTest = new CourseCommentService(courseCommentRepository, courseRepository, mockedUserService);
     }
 
     private User createMockedUser() {
@@ -108,9 +103,4 @@ public class CourseCommentServiceTest {
         assertEquals("Changed comment text.","New CommentText", updatedComment.getCommentText());
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void testAddCommentForCourseException() throws Exception {
-        doThrow(IllegalArgumentException.class).when(mockedCommentFieldsValidator).validate(eq(""));
-        courseCommentServiceUnderTest.addCommentForCourse(COURSE_ID, "", null);
-    }
 }

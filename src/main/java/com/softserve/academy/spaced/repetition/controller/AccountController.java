@@ -3,6 +3,7 @@ package com.softserve.academy.spaced.repetition.controller;
 import com.softserve.academy.spaced.repetition.domain.LearningRegime;
 import com.softserve.academy.spaced.repetition.domain.RememberingLevel;
 import com.softserve.academy.spaced.repetition.dto.DTOBuilder;
+import com.softserve.academy.spaced.repetition.dto.Request;
 import com.softserve.academy.spaced.repetition.dto.impl.NewAccountPasswordDTO;
 import com.softserve.academy.spaced.repetition.dto.impl.RememberingLevelDTO;
 import com.softserve.academy.spaced.repetition.exceptions.NotAuthorisedUserException;
@@ -13,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -87,7 +89,7 @@ public class AccountController {
     }
 
     @PutMapping(value = "api/create/password")
-    public ResponseEntity createNewPasswordForUser(@RequestBody NewAccountPasswordDTO newAccountPasswordDTO) {
+    public ResponseEntity createNewPasswordForUser(@Validated(Request.class) @RequestBody NewAccountPasswordDTO newAccountPasswordDTO) {
         LOGGER.debug("Created new password for: {}", newAccountPasswordDTO.getEmail());
         accountService.createNewAccountPassword(newAccountPasswordDTO.getEmail(), newAccountPasswordDTO.getPassword());
         return ResponseEntity.ok().build();
