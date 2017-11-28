@@ -61,7 +61,7 @@ public class CardServiceTest {
 
     @Before
     public void setUp() throws Exception {
-        cardServiceUnderTest = new CardService(cardRepository, deckRepository, mockedAccountService, mockedUserService, userCardQueueService);
+        cardServiceUnderTest = new CardService(cardRepository, deckRepository, mockedAccountService, mockedUserService, userCardQueueService, null);
     }
 
     @Test

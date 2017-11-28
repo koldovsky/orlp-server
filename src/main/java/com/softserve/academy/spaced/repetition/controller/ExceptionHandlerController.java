@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.multipart.MultipartException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+
 import java.net.UnknownHostException;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -98,5 +99,12 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
     ResponseEntity <MessageDTO> handleLockedException(LockedException lockedException) {
         return new ResponseEntity <>(new MessageDTO(lockedException.getMessage()), HttpStatus.METHOD_NOT_ALLOWED);
     }
+
+    @ExceptionHandler(EmptyFileException.class)
+    ResponseEntity <MessageDTO> handleEmptyFileException(EmptyFileException emptyFileException) {
+        return new ResponseEntity <>(new MessageDTO(emptyFileException.getMessage()), HttpStatus.NOT_ACCEPTABLE);
+    }
+
+
 
 }

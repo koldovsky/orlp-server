@@ -1,0 +1,17 @@
+#  'title': 'card title'
+#  'question': 'card question'
+#  'answer': 'card answer ...
+#   ...'
+'cards':
+- 'title': 'Card 1'
+  'question': 'How many access modifiers do you know in Java?'
+  'answer': 'There are 4 access modifiers in Java: public, protected, default and private.'
+- 'title': 'High Performance'
+  'question': 'How Java enabled High Performance?'
+  'answer': 'Java uses Just-In-Time compiler to enable high performance.
+   Just-In-Time compiler is a program that turns Java bytecode, which is a program that contains instructions that must
+   be interpreted into instructions that can be sent directly to the processor.'
+- 'title': 'Singleton'
+  'question': 'What is Singleton class?'
+  'answer': 'Singleton class control object creation,
+   limiting the number to one but allowing the flexibility to create more objects if the situation changes.'
