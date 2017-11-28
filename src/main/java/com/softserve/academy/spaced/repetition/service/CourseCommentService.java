@@ -34,7 +34,7 @@ public class CourseCommentService {
         this.userService = userService;
     }
 
-
+    @Transactional
     public CourseComment addCommentForCourse(Long courseId, String commentText, Long parentCommentId) throws NotAuthorisedUserException {
         LOGGER.debug("Added new comment for course with id: {}", courseId);
         CourseComment comment = new CourseComment(commentText, new Date());
@@ -56,6 +56,7 @@ public class CourseCommentService {
         return commentRepository.findCourseCommentsByCourseId(courseId);
     }
 
+    @Transactional
     public CourseComment updateCommentById(Long commentId, String commentText) {
         LOGGER.debug("Updated courseComment with id: {}", commentId);
         CourseComment updatedComment = commentRepository.findOne(commentId);
