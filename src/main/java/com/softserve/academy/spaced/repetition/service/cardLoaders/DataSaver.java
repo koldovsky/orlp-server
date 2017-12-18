@@ -13,7 +13,7 @@ import java.util.Map;
 @Service
 public class DataSaver {
     @Autowired
-    private CardService cardServiceImpl;
+    private CardService cardService;
     @Autowired
     private CardRepository cardRepository;
 
@@ -25,7 +25,7 @@ public class DataSaver {
                 Card card = new Card();
                 card.setAnswer(elem.getKey());
                 card.setQuestion(elem.getValue());
-                cardServiceImpl.addCard(card, deckId);
+                cardService.addCard(card, deckId);
             }
         }
     }
