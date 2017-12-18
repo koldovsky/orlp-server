@@ -12,6 +12,7 @@ import com.softserve.academy.spaced.repetition.exceptions.NotOwnerOperationExcep
 import com.softserve.academy.spaced.repetition.exceptions.WrongFormatException;
 import com.softserve.academy.spaced.repetition.repository.CardRepository;
 import com.softserve.academy.spaced.repetition.repository.DeckRepository;
+import com.softserve.academy.spaced.repetition.service.impl.DeckServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,17 +39,17 @@ public class CardService {
 
     private final UserCardQueueService userCardQueueService;
 
-    private final DeckService deckService;
+    private final DeckServiceImpl deckServiceImpl;
 
     @Autowired
     public CardService(CardRepository cardRepository, DeckRepository deckRepository, AccountService accountService,
-                       UserService userService, UserCardQueueService userCardQueueService, DeckService deckService) {
+                       UserService userService, UserCardQueueService userCardQueueService, DeckServiceImpl deckServiceImpl) {
         this.cardRepository = cardRepository;
         this.deckRepository = deckRepository;
         this.userService = userService;
         this.accountService = accountService;
         this.userCardQueueService = userCardQueueService;
-        this.deckService = deckService;
+        this.deckServiceImpl = deckServiceImpl;
     }
 
     @Transactional
@@ -130,7 +131,7 @@ public class CardService {
 
     @Transactional
     public void uploadCards(MultipartFile cardsFile, Long deckId) throws WrongFormatException, EmptyFileException, NotOwnerOperationException, NotAuthorisedUserException, IOException {
-        if (deckService.getDeckUser(deckId) != null) {
+        if (deckServiceImpl.getDeckUser(deckId) != null) {
             if (!cardsFile.getContentType().equals("application/octet-stream")) {
                 throw new WrongFormatException();
             } else if (cardsFile.isEmpty()) {

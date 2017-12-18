@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.persistence.ElementCollection;
 import java.util.*;
 
 import static com.softserve.academy.spaced.repetition.domain.Account.INITIAL_CARDS_NUMBER;
@@ -27,6 +28,8 @@ import static com.softserve.academy.spaced.repetition.domain.Account.INITIAL_CAR
 public class UserService {
 
     public final static int QUANTITY_USER_IN_PAGE = 20;
+
+    private final String UNAUTHORIZED_USER = "anonymousUser";
 
     private UserRepository userRepository;
 
@@ -221,10 +224,14 @@ public class UserService {
     }
 
     public void getUserStatus() throws UserStatusException {
-        JwtUser jwtUser = (JwtUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        User user = userRepository.findUserByAccountEmail(jwtUser.getUsername());
-        if (user.getAccount().getStatus().isNotActive()) {
-            throw new UserStatusException(user.getAccount().getStatus());
+        if(!SecurityContextHolder.getContext().getAuthentication().getPrincipal().equals(UNAUTHORIZED_USER)) {
+            System.out.println(SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+            JwtUser jwtUser = (JwtUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+            User user = userRepository.findUserByAccountEmail(jwtUser.getUsername());
+            if (user.getAccount().getStatus().isNotActive()) {
+                throw new UserStatusException(user.getAccount().getStatus());
+            }
         }
     }
 
