@@ -1,80 +1,32 @@
 package com.softserve.academy.spaced.repetition.service;
 
-
 import com.softserve.academy.spaced.repetition.domain.Audit;
-import com.softserve.academy.spaced.repetition.repository.AuditRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Service
-public class AuditService {
+public interface AuditService {
+    List<Audit> getFullAuditList();
 
-    @Autowired
-    private AuditRepository auditRepository;
-    public final static int QUANTITY_AUDIT_IN_PAGE = 10;
+    List<Audit> getAuditListSortedByAccountEmailAsc();
 
-    public List<Audit> getFullAuditList() {
-        List<Audit> auditList = auditRepository.findAll();
-        return auditList;
-    }
+    List<Audit> getAuditListSortedByAccountEmailDesc();
 
-    public List<Audit> getAuditListSortedByAccountEmailAsc() {
-        List<Audit> auditList = auditRepository.findAllByOrderByAccountEmail();
-        return auditList;
-    }
+    List<Audit> getAuditListSortedByActionAsc();
 
-    public List<Audit> getAuditListSortedByAccountEmailDesc() {
-        List<Audit> auditList = auditRepository.findAllByOrderByAccountEmailDesc();
-        return auditList;
-    }
+    List<Audit> getAuditListSortedByActionAscDesc();
 
-    public List<Audit> getAuditListSortedByActionAsc() {
-        List<Audit> auditList = auditRepository.findAllByOrderByAction();
-        return auditList;
-    }
+    List<Audit> getAuditListSortedByIpAddressAsc();
 
-    public List<Audit> getAuditListSortedByActionAscDesc() {
-        List<Audit> auditList = auditRepository.findAllByOrderByActionDesc();
-        return auditList;
-    }
+    List<Audit> getAuditListSortedByIpAddressDesc();
 
-    public List<Audit> getAuditListSortedByIpAddressAsc() {
-        List<Audit> auditList = auditRepository.findAllByOrderByIpAddress();
-        return auditList;
-    }
+    List<Audit> getAuditListSortedByTimeAsc();
 
-    public List<Audit> getAuditListSortedByIpAddressDesc() {
-        List<Audit> auditList = auditRepository.findAllByOrderByIpAddressDesc();
-        return auditList;
-    }
+    List<Audit> getAuditListSortedByTimeDesc();
 
-    public List<Audit> getAuditListSortedByTimeAsc() {
-        List<Audit> auditList = auditRepository.findAllByOrderByTime();
-        return auditList;
-    }
+    List<Audit> getAuditListSortedByRoleAsc();
 
-    public List<Audit> getAuditListSortedByTimeDesc() {
-        List<Audit> auditList = auditRepository.findAllByOrderByTimeDesc();
-        return auditList;
-    }
+    List<Audit> getAuditListSortedByRoleDesc();
 
-    public List<Audit> getAuditListSortedByRoleAsc() {
-        List<Audit> auditList = auditRepository.findAllByOrderByRole();
-        return auditList;
-    }
-
-    public List<Audit> getAuditListSortedByRoleDesc() {
-        List<Audit> auditList = auditRepository.findAllByOrderByRoleDesc();
-        return auditList;
-    }
-
-    public Page<Audit> getAuditByPage(int pageNumber, String sortBy, boolean ascending) {
-        PageRequest request = new PageRequest(pageNumber - 1, QUANTITY_AUDIT_IN_PAGE, ascending ? Sort.Direction.ASC : Sort.Direction.DESC, sortBy);
-        return auditRepository.findAll(request);
-    }
+    Page<Audit> getAuditByPage(int pageNumber, String sortBy, boolean ascending);
 }

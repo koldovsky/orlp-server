@@ -26,6 +26,9 @@ public class Card implements EntityInterface {
     @Column(name = "rating")
     private double rating;
 
+    @Column(name = "image")
+    private String image;
+
     @ManyToOne
     @JoinColumn(name = "deck_id")
     private Deck deck;
@@ -103,6 +106,14 @@ public class Card implements EntityInterface {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public String getString() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 
     @Override

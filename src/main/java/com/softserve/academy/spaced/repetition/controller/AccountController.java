@@ -7,8 +7,8 @@ import com.softserve.academy.spaced.repetition.dto.Request;
 import com.softserve.academy.spaced.repetition.dto.impl.NewAccountPasswordDTO;
 import com.softserve.academy.spaced.repetition.dto.impl.RememberingLevelDTO;
 import com.softserve.academy.spaced.repetition.exceptions.NotAuthorisedUserException;
-import com.softserve.academy.spaced.repetition.service.AccountService;
-import com.softserve.academy.spaced.repetition.service.AccountVerificationByEmailService;
+import com.softserve.academy.spaced.repetition.service.impl.AccountServiceImpl;
+import com.softserve.academy.spaced.repetition.service.impl.AccountVerificationByEmailServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,19 +23,19 @@ import java.util.List;
 public class AccountController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AccountController.class);
-    private final AccountService accountService;
+    private final AccountServiceImpl accountServiceImpl;
 
     @Autowired
-    public AccountController(AccountService accountService) {
-        this.accountService = accountService;
+    public AccountController(AccountServiceImpl accountServiceImpl) {
+        this.accountServiceImpl = accountServiceImpl;
     }
 
     @Autowired
-    private AccountVerificationByEmailService verificationService;
+    private AccountVerificationByEmailServiceImpl verificationService;
 
     @GetMapping("/api/private/account/learning-regime")
     public ResponseEntity<LearningRegime> getLearningRegime() throws NotAuthorisedUserException {
-        LearningRegime learningRegime = accountService.getLearningRegime();
+        LearningRegime learningRegime = accountServiceImpl.getLearningRegime();
         return new ResponseEntity<>(learningRegime, HttpStatus.OK);
     }
 
@@ -43,7 +43,7 @@ public class AccountController {
     public ResponseEntity updateLearningRegime(@RequestBody String learningRegime) throws NotAuthorisedUserException {
         for (LearningRegime regime : LearningRegime.values()) {
             if (regime.getRegime().equals(learningRegime)) {
-                accountService.updateLearningRegime(regime);
+                accountServiceImpl.updateLearningRegime(regime);
                 return ResponseEntity.ok().build();
             }
         }
@@ -52,32 +52,32 @@ public class AccountController {
 
     @GetMapping("/api/private/account/cards-number")
     public ResponseEntity<Integer> getCardsNumber() throws NotAuthorisedUserException {
-        return ResponseEntity.ok(accountService.getCardsNumber());
+        return ResponseEntity.ok(accountServiceImpl.getCardsNumber());
     }
 
     @PutMapping("/api/private/account/cards-number")
     public ResponseEntity updateCardsNumber(@RequestBody String cardsNumber) throws NotAuthorisedUserException {
-        accountService.updateCardsNumber(Integer.parseInt(cardsNumber));
+        accountServiceImpl.updateCardsNumber(Integer.parseInt(cardsNumber));
         return ResponseEntity.ok().build();
     }
 
     @GetMapping("api/private/account/remembering-levels")
     public ResponseEntity<List<RememberingLevelDTO>> getRememberingLevels() throws NotAuthorisedUserException {
-        List<RememberingLevel> rememberingLevels = accountService.getRememberingLevels();
+        List<RememberingLevel> rememberingLevels = accountServiceImpl.getRememberingLevels();
         return ResponseEntity.ok(DTOBuilder.buildDtoListForCollection(rememberingLevels, RememberingLevelDTO.class));
     }
 
     @PutMapping("api/private/account/remembering-levels/{levelId}")
     public ResponseEntity updateRememberingLevel(@PathVariable Long levelId,
                                                  @RequestBody String numberOfPostponedDays) throws NotAuthorisedUserException {
-        accountService.updateRememberingLevel(levelId, Integer.parseInt(numberOfPostponedDays));
+        accountServiceImpl.updateRememberingLevel(levelId, Integer.parseInt(numberOfPostponedDays));
         return ResponseEntity.ok().build();
     }
 
     @PutMapping(value = "api/reset/password")
     public ResponseEntity<String> sendResetPasswordMail(@RequestBody String email) {
         LOGGER.debug("Send reset password mail to email: {}", email);
-        String accountStatus = accountService.checkAccountStatusAndSendMail(email);
+        String accountStatus = accountServiceImpl.checkAccountStatusAndSendMail(email);
         return ResponseEntity.ok(accountStatus);
     }
 
@@ -91,7 +91,7 @@ public class AccountController {
     @PutMapping(value = "api/create/password")
     public ResponseEntity createNewPasswordForUser(@Validated(Request.class) @RequestBody NewAccountPasswordDTO newAccountPasswordDTO) {
         LOGGER.debug("Created new password for: {}", newAccountPasswordDTO.getEmail());
-        accountService.createNewAccountPassword(newAccountPasswordDTO.getEmail(), newAccountPasswordDTO.getPassword());
+        accountServiceImpl.createNewAccountPassword(newAccountPasswordDTO.getEmail(), newAccountPasswordDTO.getPassword());
         return ResponseEntity.ok().build();
     }
 }
