@@ -35,7 +35,7 @@ public class CourseRatingControllerTest {
     private CourseRatingController courseRatingController;
 
     @Mock
-    private CourseRatingServiceImpl courseRatingServiceImpl;
+    private CourseRatingServiceImpl courseRatingService;
 
     @Before
     public void setUp() {
@@ -46,7 +46,7 @@ public class CourseRatingControllerTest {
 
     @Test
     public void getCourseRatingById() throws Exception {
-        when(courseRatingServiceImpl.getCourseRatingById(eq(77L))).thenReturn(createCourseRating());
+        when(courseRatingService.getCourseRatingById(eq(77L))).thenReturn(createCourseRating());
         mockMvc.perform(get("/api/course/{courseId}/rating/{id}", 5L, 77L)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON))
@@ -71,12 +71,12 @@ public class CourseRatingControllerTest {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated());
 
-        verify(courseRatingServiceImpl, times(1)).addCourseRating(eq(3), eq(5L));
+        verify(courseRatingService, times(1)).addCourseRating(eq(3), eq(5L));
     }
 
     @Test
     public void testNotAuthorizedAddCourseRating() throws Exception {
-        doThrow(NotAuthorisedUserException.class).when(courseRatingServiceImpl).addCourseRating(eq(3), eq(5L));
+        doThrow(NotAuthorisedUserException.class).when(courseRatingService).addCourseRating(eq(3), eq(5L));
 
         mockMvc.perform(post("/api/private/course/{courseId}", 5L)
                 .content("{\"rating\":3,\"accountEmail\":\"email@email\",\"courseId\":5}")

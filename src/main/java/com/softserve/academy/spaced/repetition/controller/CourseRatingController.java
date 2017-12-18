@@ -23,11 +23,11 @@ public class CourseRatingController {
     public static final int MAX_RATING = 5;
 
     @Autowired
-    private CourseRatingServiceImpl courseRatingServiceImpl;
+    private CourseRatingServiceImpl courseRatingService;
 
     @GetMapping("api/course/{courseId}/rating/{id}")
     public ResponseEntity<CourseRatingPublicDTO> getCourseRatingById(@PathVariable Long courseId, @PathVariable Long id) {
-        CourseRating courseRating = courseRatingServiceImpl.getCourseRatingById(id);
+        CourseRating courseRating = courseRatingService.getCourseRatingById(id);
         Link selfLink = linkTo(methodOn(CourseRatingController.class).getCourseRatingById(courseRating.getCourse().getId(), courseRating.getId())).withRel("courseRating");
         CourseRatingPublicDTO courseRatingDTO = DTOBuilder.buildDtoForEntity(courseRating, CourseRatingPublicDTO.class, selfLink);
         return new ResponseEntity<>(courseRatingDTO, HttpStatus.OK);
@@ -36,7 +36,7 @@ public class CourseRatingController {
     @PostMapping("/api/private/course/{courseId}")
     public ResponseEntity addCourseRating(@RequestBody RatingDTO ratingDTO, @PathVariable Long courseId) throws NotAuthorisedUserException, UserStatusException {
         if ((ratingDTO.getRating() >= MIN_RATING) && (ratingDTO.getRating() <= MAX_RATING)) {
-            courseRatingServiceImpl.addCourseRating(ratingDTO.getRating(), courseId);
+            courseRatingService.addCourseRating(ratingDTO.getRating(), courseId);
            return new ResponseEntity(HttpStatus.CREATED);
         } else {
             throw new IllegalArgumentException("Rating can't be less than 1 and more than 5");

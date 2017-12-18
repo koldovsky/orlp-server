@@ -37,7 +37,7 @@ public class CourseCommentControllerTest {
     private CourseCommentController courseCommentController;
 
     @Mock
-    private CourseCommentServiceImpl courseCommentServiceImpl;
+    private CourseCommentServiceImpl courseCommentService;
 
     @Before
     public void setUp() {
@@ -67,7 +67,7 @@ public class CourseCommentControllerTest {
 
     @Test
     public void getCommentByCourse() throws Exception {
-        when(courseCommentServiceImpl.getCommentById(eq(COMMENT_ID)))
+        when(courseCommentService.getCommentById(eq(COMMENT_ID)))
                 .thenReturn(createCourseComment("Admin", "Admin", "Good course", COMMENT_ID, null));
         mockMvc.perform(get("/api/category/{categoryId}/courses/{courseId}/comments/{courseCommentId}"
                 , CATEGORY_ID, COURSE_ID, COMMENT_ID)
@@ -89,7 +89,7 @@ public class CourseCommentControllerTest {
 
     @Test
     public void getAllCommentsByCourse() throws Exception {
-        when(courseCommentServiceImpl.getAllCommentsForCourse(eq(COURSE_ID))).thenReturn(createListOfComments());
+        when(courseCommentService.getAllCommentsForCourse(eq(COURSE_ID))).thenReturn(createListOfComments());
         mockMvc.perform(get("/api/category/{categoryId}/courses/{courseId}/comments"
                 , CATEGORY_ID, COURSE_ID)
                 .accept(MediaType.APPLICATION_JSON)
@@ -133,7 +133,7 @@ public class CourseCommentControllerTest {
 
     @Test
     public void updateComment() throws Exception {
-        when(courseCommentServiceImpl.updateCommentById(eq(COMMENT_ID), eq("Good course")))
+        when(courseCommentService.updateCommentById(eq(COMMENT_ID), eq("Good course")))
                 .thenReturn(createCourseComment("Admin", "Admin", "Good course", COMMENT_ID, null));
         mockMvc.perform(put("/api/category/{categoryId}/courses/{courseId}/comments/{courseCommentId}"
                 , CATEGORY_ID, COURSE_ID, COMMENT_ID)
@@ -155,7 +155,7 @@ public class CourseCommentControllerTest {
 
     @Test
     public void testAddComment() throws Exception {
-        when(courseCommentServiceImpl.addCommentForCourse(eq(COURSE_ID), eq("Good course"), eq(null)))
+        when(courseCommentService.addCommentForCourse(eq(COURSE_ID), eq("Good course"), eq(null)))
                 .thenReturn(createCourseComment("Admin", "Admin", "Good course", COMMENT_ID, null));
         mockMvc.perform(post("/api/category/{categoryId}/courses/{courseId}/comments"
                 , CATEGORY_ID, COURSE_ID)
