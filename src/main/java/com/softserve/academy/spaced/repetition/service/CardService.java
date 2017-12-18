@@ -35,19 +35,19 @@ public class CardService {
 
     private final UserService userService;
 
-    private final AccountServiceImpl accountServiceImpl;
+    private final AccountServiceImpl accountService;
 
     private final UserCardQueueService userCardQueueService;
 
     private final DeckService deckService;
 
     @Autowired
-    public CardService(CardRepository cardRepository, DeckRepository deckRepository, AccountServiceImpl accountServiceImpl,
+    public CardService(CardRepository cardRepository, DeckRepository deckRepository, AccountServiceImpl accountService,
                        UserService userService, UserCardQueueService userCardQueueService, DeckService deckService) {
         this.cardRepository = cardRepository;
         this.deckRepository = deckRepository;
         this.userService = userService;
-        this.accountServiceImpl = accountServiceImpl;
+        this.accountService = accountService;
         this.userCardQueueService = userCardQueueService;
         this.deckService = deckService;
     }
@@ -56,7 +56,7 @@ public class CardService {
     public List<Card> getLearningCards(Long deckId) throws NotAuthorisedUserException {
         try {
             User user = userService.getAuthorizedUser();
-            final int cardsNumber = accountServiceImpl.getCardsNumber();
+            final int cardsNumber = accountService.getCardsNumber();
             List<Card> learningCards = new ArrayList<>();
             if (user.getAccount().getLearningRegime().equals(LearningRegime.BAD_NORMAL_GOOD_STATUS_DEPENDING)) {
                 learningCards = cardRepository.cardsForLearningWithOutStatus(user.getId(), deckId, cardsNumber);
@@ -72,7 +72,7 @@ public class CardService {
             }
             return learningCards;
         } catch (NotAuthorisedUserException e) {
-            return cardRepository.findAllByDeckId(deckId).subList(0, accountServiceImpl.getCardsNumber());
+            return cardRepository.findAllByDeckId(deckId).subList(0, accountService.getCardsNumber());
         }
     }
 
@@ -100,7 +100,7 @@ public class CardService {
 
     public List<Card> getCardsQueue(long deckId) throws NotAuthorisedUserException {
         User user = userService.getAuthorizedUser();
-        final int cardsNumber = accountServiceImpl.getCardsNumber();
+        final int cardsNumber = accountService.getCardsNumber();
         List<Card> cardsQueue = cardRepository.cardsForLearningWithOutStatus(user.getId(), deckId, cardsNumber);
 
         if (cardsQueue.size() < cardsNumber) {
@@ -119,7 +119,7 @@ public class CardService {
     @Transactional
     public List<Card> getAdditionalLearningCards(Long deckId) throws NotAuthorisedUserException {
         User user = userService.getAuthorizedUser();
-        return cardRepository.getPostponedCards(deckId, new Date(), user.getId(), accountServiceImpl.getCardsNumber());
+        return cardRepository.getPostponedCards(deckId, new Date(), user.getId(), accountService.getCardsNumber());
     }
 
     @Transactional

@@ -17,7 +17,7 @@ public class RegistrationService {
     private PasswordEncoder passwordEncoder;
     private MailService mailService;
 
-    private AccountServiceImpl accountServiceImpl;
+    private AccountServiceImpl accountService;
 
     public User registerNewUser(User user) {
         Account account = user.getAccount();
@@ -26,7 +26,7 @@ public class RegistrationService {
         user.getPerson().setTypeImage(ImageType.NONE);
         user.setFolder(new Folder());
         userService.addUser(user);
-        accountServiceImpl.initializeLearningRegimeSettingsForAccount(account);
+        accountService.initializeLearningRegimeSettingsForAccount(account);
         return user;
     }
 
@@ -55,7 +55,7 @@ public class RegistrationService {
     }
 
     @Autowired
-    public void setAccountServiceImpl(AccountServiceImpl accountServiceImpl) {
-        this.accountServiceImpl = accountServiceImpl;
+    public void setAccountService(AccountServiceImpl accountService) {
+        this.accountService = accountService;
     }
 }
