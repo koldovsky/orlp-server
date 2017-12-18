@@ -2,7 +2,6 @@ package com.softserve.academy.spaced.repetition.controller;
 
 
 import com.softserve.academy.spaced.repetition.domain.*;
-import com.softserve.academy.spaced.repetition.exceptions.NotAuthorisedUserException;
 import com.softserve.academy.spaced.repetition.service.CardService;
 import com.softserve.academy.spaced.repetition.service.UserService;
 import org.junit.Before;
@@ -33,7 +32,7 @@ public class CardControllerTest {
     private CardController cardController;
 
     @Mock
-    private CardService cardService;
+    private CardService cardServiceImpl;
 
     @Mock
     private UserService mockedUserService;
@@ -50,7 +49,7 @@ public class CardControllerTest {
 
     @Test
     public void getCardById() throws Exception {
-        when(cardService.getCard(eq(1L))).thenReturn(createCard());
+        when(cardServiceImpl.getCard(eq(1L))).thenReturn(createCard());
         mockMvc.perform(get("/api/card/{cardId}", 1L)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON))
@@ -73,7 +72,7 @@ public class CardControllerTest {
         Long deckId = 1L;
         User mockedUser1 = new User(new Account("","email1@email.com"), new Person("first1", "last1"), new Folder());
         when(mockedUserService.getAuthorizedUser()).thenReturn(mockedUser1);
-        when(cardService.getLearningCards(deckId)).thenReturn(createLearningCards());
+        when(cardServiceImpl.getLearningCards(deckId)).thenReturn(createLearningCards());
         mockMvc.perform(get("/api/decks/{deckId}/learn", 1L)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON))

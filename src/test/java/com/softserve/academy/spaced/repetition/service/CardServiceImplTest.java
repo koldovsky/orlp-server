@@ -4,6 +4,7 @@ import com.softserve.academy.spaced.repetition.config.TestDatabaseConfig;
 import com.softserve.academy.spaced.repetition.domain.Card;
 import com.softserve.academy.spaced.repetition.repository.CardRepository;
 import com.softserve.academy.spaced.repetition.repository.DeckRepository;
+import com.softserve.academy.spaced.repetition.service.impl.CardServiceImpl;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -24,14 +25,14 @@ import static org.junit.Assert.assertEquals;
 @Import(TestDatabaseConfig.class)
 @Sql("/data/TestData.sql")
 @Transactional
-public class CardServiceTest {
+public class CardServiceImplTest {
 
     private static final long CARD_ID = 1L;
     private final String CARD_ANSWER = "Answer";
     private final String CARD_QUESTION = "Question";
     private final String CARD_TITLE = "Title";
 
-    private CardService cardServiceUnderTest;
+    private CardServiceImpl cardServiceImplImplUnderTest;
 
     @Autowired
     private CardRepository cardRepository;
@@ -61,7 +62,7 @@ public class CardServiceTest {
 
     @Before
     public void setUp() throws Exception {
-        cardServiceUnderTest = new CardService(cardRepository, deckRepository, mockedAccountService, mockedUserService, userCardQueueService, null);
+        cardServiceImplImplUnderTest = new CardServiceImpl(cardRepository, deckRepository, mockedAccountService, mockedUserService, userCardQueueService, null);
     }
 
     @Test
@@ -77,7 +78,7 @@ public class CardServiceTest {
 
     @Test
     public void testCardUpdate() {
-        cardServiceUnderTest.updateCard(1L, newCard);
+        cardServiceImplImplUnderTest.updateCard(1L, newCard);
         assertEquals("Update Card", newCard, getCardForTest(1L));
     }
 

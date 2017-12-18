@@ -32,14 +32,14 @@ public class CardController {
     private static final Logger LOGGER = LoggerFactory.getLogger(CardController.class);
 
     @Autowired
-    private CardService cardService;
+    private CardService cardServiceImpl;
 
     @Autowired
     private CardLoadService cardLoadService;
 
     @GetMapping("/api/decks/{deckId}/learn")
     public ResponseEntity<List<CardPublicDTO>> getLearningCards(@PathVariable Long deckId) throws NotAuthorisedUserException {
-        List<Card> learningCards = cardService.getLearningCards(deckId);
+        List<Card> learningCards = cardServiceImpl.getLearningCards(deckId);
         Link collectionLink = linkTo(methodOn(DeckController.class).getCardsByDeck(deckId)).withSelfRel();
         List<CardPublicDTO> cards = DTOBuilder.buildDtoListForCollection(learningCards, CardPublicDTO.class, collectionLink);
         return ResponseEntity.ok(cards);
@@ -48,7 +48,7 @@ public class CardController {
     @GetMapping("/api/private/decks/{deckId}/learn/additional")
     public ResponseEntity<List<CardPublicDTO>> getAdditionalLearningCards(@PathVariable Long deckId)
             throws NotAuthorisedUserException {
-        List<Card> learningCards = cardService.getAdditionalLearningCards(deckId);
+        List<Card> learningCards = cardServiceImpl.getAdditionalLearningCards(deckId);
         Link collectionLink = linkTo(methodOn(DeckController.class).getCardsByDeck(deckId)).withSelfRel();
         List<CardPublicDTO> cards = DTOBuilder.buildDtoListForCollection(learningCards, CardPublicDTO.class, collectionLink);
         return ResponseEntity.ok(cards);
@@ -56,13 +56,13 @@ public class CardController {
 
     @GetMapping("api/private/decks/{deckId}/not-postponed")
     public ResponseEntity<Boolean> areThereNotPostponedCardsAvailable(@PathVariable Long deckId) throws NotAuthorisedUserException {
-        return ResponseEntity.ok(cardService.areThereNotPostponedCardsAvailable(deckId));
+        return ResponseEntity.ok(cardServiceImpl.areThereNotPostponedCardsAvailable(deckId));
     }
 
     @GetMapping(value = "/api/category/{categoryId}/courses/{courseId}/decks/{deckId}/cards/{cardId}")
     @PreAuthorize(value = "@accessToUrlService.hasAccessToCard(#categoryId, #courseId, #deckId, #cardId)")
     public ResponseEntity<CardPublicDTO> getCardByCourseAndDeck(@PathVariable Long categoryId, @PathVariable Long courseId, @PathVariable Long deckId, @PathVariable Long cardId) {
-        Card card = cardService.getCard(cardId);
+        Card card = cardServiceImpl.getCard(cardId);
         Link selfLink = linkTo(methodOn(CardController.class).getCardByCourseAndDeck(categoryId, courseId, deckId, cardId)).withSelfRel();
         CardPublicDTO cardPublicDTO = DTOBuilder.buildDtoForEntity(card, CardPublicDTO.class, selfLink);
         return new ResponseEntity<>(cardPublicDTO, HttpStatus.OK);
@@ -71,7 +71,7 @@ public class CardController {
     @GetMapping(value = "/api/category/{categoryId}/decks/{deckId}/cards/{cardId}")
     @PreAuthorize(value = "@accessToUrlService.hasAccessToCard(#categoryId, #deckId, #cardId)")
     public ResponseEntity<CardPublicDTO> getCardByCategoryAndDeck(@PathVariable Long categoryId, @PathVariable Long deckId, @PathVariable Long cardId) {
-        Card card = cardService.getCard(cardId);
+        Card card = cardServiceImpl.getCard(cardId);
         Link selfLink = linkTo(methodOn(CardController.class).getCardByCategoryAndDeck(categoryId, deckId, cardId)).withSelfRel();
         CardPublicDTO cardPublicDTO = DTOBuilder.buildDtoForEntity(card, CardPublicDTO.class, selfLink);
         return new ResponseEntity<>(cardPublicDTO, HttpStatus.OK);
@@ -80,7 +80,7 @@ public class CardController {
     @GetMapping(value = "/api/decks/{deckId}/cards/{cardId}")
     @PreAuthorize(value = "@accessToUrlService.hasAccessToCard(#deckId, #cardId)")
     public ResponseEntity<CardPublicDTO> getCardByDeck(@PathVariable Long deckId, @PathVariable Long cardId) {
-        Card card = cardService.getCard(cardId);
+        Card card = cardServiceImpl.getCard(cardId);
         Link selfLink = linkTo(methodOn(CardController.class).getCardByDeck(deckId, cardId)).withSelfRel();
         CardPublicDTO cardPublicDTO = DTOBuilder.buildDtoForEntity(card, CardPublicDTO.class, selfLink);
         return new ResponseEntity<>(cardPublicDTO, HttpStatus.OK);
@@ -91,7 +91,7 @@ public class CardController {
     @PostMapping(value = "/api/category/{categoryId}/courses/{courseId}/decks/{deckId}/cards")
     @PreAuthorize(value = "@accessToUrlService.hasAccessToDeck(#categoryId, #courseId, #deckId)")
     public ResponseEntity<CardPublicDTO> addCardByCourseAndDeck(@RequestBody Card card, @PathVariable Long categoryId, @PathVariable Long courseId, @PathVariable Long deckId) {
-        cardService.addCard(card, deckId);
+        cardServiceImpl.addCard(card, deckId);
         Link selfLink = linkTo(methodOn(CardController.class).getCardByCourseAndDeck(categoryId, courseId, deckId, card.getId())).withSelfRel();
         CardPublicDTO cardPublicDTO = DTOBuilder.buildDtoForEntity(card, CardPublicDTO.class, selfLink);
         return new ResponseEntity<>(cardPublicDTO, HttpStatus.CREATED);
@@ -102,7 +102,7 @@ public class CardController {
     @PreAuthorize(value = "@accessToUrlService.hasAccessToDeckFromCategory(#categoryId, #deckId)")
     public ResponseEntity<CardPublicDTO> addCardByCategoryAndDeck(@RequestBody Card card, @PathVariable Long categoryId, @PathVariable Long deckId) {
         LOGGER.debug("Add card to categoryId: {}, deckId: {}", categoryId, deckId);
-        cardService.addCard(card, deckId);
+        cardServiceImpl.addCard(card, deckId);
         Link selfLink = linkTo(methodOn(CardController.class).getCardByCategoryAndDeck(categoryId, deckId, card.getId())).withSelfRel();
         CardPublicDTO cardPublicDTO = DTOBuilder.buildDtoForEntity(card, CardPublicDTO.class, selfLink);
         return new ResponseEntity<>(cardPublicDTO, HttpStatus.CREATED);
@@ -113,7 +113,7 @@ public class CardController {
     @PreAuthorize(value = "@accessToUrlService.hasAccessToCard(#categoryId, #courseId, #deckId, #cardId)")
     public ResponseEntity<CardPublicDTO> updateCardByCourseAndDeck(@PathVariable Long categoryId, @PathVariable Long courseId,
                                                                    @PathVariable Long deckId, @PathVariable Long cardId, @RequestBody Card card) {
-        cardService.updateCard(cardId, card);
+        cardServiceImpl.updateCard(cardId, card);
         Link selfLink = linkTo(methodOn(CardController.class).getCardByCourseAndDeck(categoryId, courseId, deckId, card.getId())).withSelfRel();
         CardPublicDTO cardPublicDTO = DTOBuilder.buildDtoForEntity(card, CardPublicDTO.class, selfLink);
         return new ResponseEntity<>(cardPublicDTO, HttpStatus.OK);
@@ -123,7 +123,7 @@ public class CardController {
     @PutMapping(value = "/api/category/{categoryId}/decks/{deckId}/cards/{cardId}")
     @PreAuthorize(value = "@accessToUrlService.hasAccessToCard(#categoryId, #deckId, #cardId)")
     public ResponseEntity<CardPublicDTO> updateCardByCategoryAndDeck(@PathVariable Long categoryId, @PathVariable Long deckId, @PathVariable Long cardId, @RequestBody Card card) {
-        cardService.updateCard(cardId, card);
+        cardServiceImpl.updateCard(cardId, card);
         Link selfLink = linkTo(methodOn(CardController.class).getCardByCategoryAndDeck(categoryId, deckId, card.getId())).withSelfRel();
         CardPublicDTO cardPublicDTO = DTOBuilder.buildDtoForEntity(card, CardPublicDTO.class, selfLink);
         return new ResponseEntity<>(cardPublicDTO, HttpStatus.OK);
@@ -133,7 +133,7 @@ public class CardController {
     @PreAuthorize(value = "@accessToUrlService.hasAccessToCard(#deckId, #cardId)")
     public ResponseEntity<CardPublicDTO> updateCardByDeck(@PathVariable Long deckId, @PathVariable Long cardId, @RequestBody Card card) {
         LOGGER.debug("Updating card with id: {}  in deck with id: {}", cardId, deckId);
-        cardService.updateCard(cardId, card);
+        cardServiceImpl.updateCard(cardId, card);
         Link selfLink = linkTo(methodOn(CardController.class).getCardByDeck(deckId, cardId)).withSelfRel();
         CardPublicDTO cardPublicDTO = DTOBuilder.buildDtoForEntity(card, CardPublicDTO.class, selfLink);
         return new ResponseEntity<>(cardPublicDTO, HttpStatus.OK);
@@ -142,12 +142,12 @@ public class CardController {
     @Auditable(action = AuditingAction.DELETE_CARD)
     @DeleteMapping(value = {"/api/category/{categoryId}/decks/{deckId}/cards/{cardId}", "/api/decks/{deckId}/cards/{cardId}", "/api/courses/{courseId}/decks/{deckId}/cards/{cardId}"})
     public void deleteCard(@PathVariable Long cardId) {
-        cardService.deleteCard(cardId);
+        cardServiceImpl.deleteCard(cardId);
     }
 
     @GetMapping("/api/category/{categoryId}/decks/{deckId}/learn/cards")
     public ResponseEntity<List<CardPublicDTO>> getLearningCards(@PathVariable long categoryId, @PathVariable long deckId) throws NotAuthorisedUserException {
-        List<Card> learningCards = cardService.getCardsQueue(deckId);
+        List<Card> learningCards = cardServiceImpl.getCardsQueue(deckId);
         Link collectionLink = linkTo(methodOn(DeckController.class).getCardsByCategoryAndDeck(categoryId, deckId)).withSelfRel();
         List<CardPublicDTO> cards = DTOBuilder.buildDtoListForCollection(learningCards, CardPublicDTO.class, collectionLink);
         return new ResponseEntity<>(cards, HttpStatus.OK);
@@ -180,7 +180,7 @@ public class CardController {
     @GetMapping(value = "/api/card/{cardId}")
     @PreAuthorize(value = "@accessToUrlService.hasAccessToCard(#cardId)")
     public ResponseEntity<CardPublicDTO> getCardById(@PathVariable Long cardId) {
-        Card card = cardService.getCard(cardId);
+        Card card = cardServiceImpl.getCard(cardId);
         Link selfLink = linkTo(methodOn(CardController.class).getCardById(cardId)).withSelfRel();
         CardPublicDTO cardPublicDTO = DTOBuilder.buildDtoForEntity(card, CardPublicDTO.class, selfLink);
         return new ResponseEntity<>(cardPublicDTO, HttpStatus.OK);

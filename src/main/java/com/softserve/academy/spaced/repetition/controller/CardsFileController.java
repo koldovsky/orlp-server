@@ -19,11 +19,11 @@ import java.io.*;
 public class CardsFileController {
 
     @Autowired
-    private CardService cardService;
+    private CardService cardServiceImpl;
 
     @PostMapping("api/private/upload/deck/{deckId}/cards")
     public ResponseEntity uploadFile(@RequestParam("file") MultipartFile cardsFile, @PathVariable Long deckId) throws WrongFormatException, NotOwnerOperationException, NotAuthorisedUserException, EmptyFileException, IOException {
-        cardService.uploadCards(cardsFile, deckId);
+        cardServiceImpl.uploadCards(cardsFile, deckId);
         return new ResponseEntity(HttpStatus.OK);
     }
 
@@ -31,13 +31,13 @@ public class CardsFileController {
     public void downloadFile(HttpServletResponse response, @PathVariable Long deckId) throws IOException {
         response.setContentType("application/octet-stream");
         response.setHeader("Content-Disposition", "attachment; filename=Cards.yml");
-        cardService.downloadCards(deckId, response.getOutputStream());
+        cardServiceImpl.downloadCards(deckId, response.getOutputStream());
     }
 
     @GetMapping("api/private/download/template/cards")
     public void downloadFileTemplate(HttpServletResponse response) throws IOException {
         response.setContentType("application/octet-stream");
         response.setHeader("Content-Disposition", "attachment; filename=CardsTemplate.yml");
-        cardService.downloadCardsTemplate(response.getOutputStream());
+        cardServiceImpl.downloadCardsTemplate(response.getOutputStream());
     }
 }
