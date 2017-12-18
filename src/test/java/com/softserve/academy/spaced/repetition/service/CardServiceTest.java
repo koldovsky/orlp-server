@@ -44,7 +44,7 @@ public class CardServiceTest {
     private UserService mockedUserService;
 
     @Mock
-    private AccountServiceImpl mockedAccountServiceImpl;
+    private AccountServiceImpl mockedAccountService;
 
     @Mock
     private UserCardQueueService userCardQueueService;
@@ -62,7 +62,7 @@ public class CardServiceTest {
 
     @Before
     public void setUp() throws Exception {
-        cardServiceUnderTest = new CardService(cardRepository, deckRepository, mockedAccountServiceImpl, mockedUserService, userCardQueueService, null);
+        cardServiceUnderTest = new CardService(cardRepository, deckRepository, mockedAccountService, mockedUserService, userCardQueueService, null);
     }
 
     @Test

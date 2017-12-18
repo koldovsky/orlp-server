@@ -24,7 +24,7 @@ public class CardRatingController {
     public static final int MAX_RATING = 5;
 
     @Autowired
-    private CardRatingServiceImpl cardRatingServiceImpl;
+    private CardRatingServiceImpl cardRatingService;
 
     /**
      * Get rating of card by id.
@@ -34,7 +34,7 @@ public class CardRatingController {
      */
     @GetMapping("api/rate/card/{cardId}")
     public ResponseEntity<CardRatingPublicDTO> getCardRatingById(@PathVariable Long cardId) {
-        CardRating cardRating = cardRatingServiceImpl.getCardRatingById(cardId);
+        CardRating cardRating = cardRatingService.getCardRatingById(cardId);
         Link selfLink = linkTo(methodOn(CardRatingController.class).getCardRatingById(cardRating.getId())).withRel("cardRating");
         CardRatingPublicDTO cardRatingDTO = DTOBuilder.buildDtoForEntity(cardRating, CardRatingPublicDTO.class, selfLink);
         return new ResponseEntity<>(cardRatingDTO, HttpStatus.OK);
@@ -55,7 +55,7 @@ public class CardRatingController {
     @PreAuthorize(value = "@accessToUrlService.hasAccessToCard(#deckId, #cardId)")
     public ResponseEntity<CardRatingPublicDTO> addCardRating(@RequestBody CardRating cardRating, @PathVariable Long deckId, @PathVariable Long cardId) throws NotAuthorisedUserException {
         if ((cardRating.getRating() >= MIN_RATING) && (cardRating.getRating() <= MAX_RATING)) {
-            cardRatingServiceImpl.addCardRating(cardRating, cardId);
+            cardRatingService.addCardRating(cardRating, cardId);
             Link selfLink = linkTo(methodOn(CardRatingController.class).getCardRatingById(cardRating.getId())).withSelfRel();
             CardRatingPublicDTO cardRatingPublicDTO = DTOBuilder.buildDtoForEntity(cardRating, CardRatingPublicDTO.class, selfLink);
             return new ResponseEntity<>(cardRatingPublicDTO, HttpStatus.CREATED);

@@ -32,7 +32,7 @@ public class AuditControllerTest {
     private AuditController auditController;
 
     @Mock
-    private AuditServiceImpl auditServiceImpl;
+    private AuditServiceImpl auditService;
 
     @Before
     public void setUp() {

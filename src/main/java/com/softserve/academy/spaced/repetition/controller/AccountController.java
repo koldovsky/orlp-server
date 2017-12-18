@@ -23,11 +23,11 @@ import java.util.List;
 public class AccountController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AccountController.class);
-    private final AccountServiceImpl accountServiceImpl;
+    private final AccountServiceImpl accountService;
 
     @Autowired
-    public AccountController(AccountServiceImpl accountServiceImpl) {
-        this.accountServiceImpl = accountServiceImpl;
+    public AccountController(AccountServiceImpl accountService) {
+        this.accountService = accountService;
     }
 
     @Autowired
@@ -35,7 +35,7 @@ public class AccountController {
 
     @GetMapping("/api/private/account/learning-regime")
     public ResponseEntity<LearningRegime> getLearningRegime() throws NotAuthorisedUserException {
-        LearningRegime learningRegime = accountServiceImpl.getLearningRegime();
+        LearningRegime learningRegime = accountService.getLearningRegime();
         return new ResponseEntity<>(learningRegime, HttpStatus.OK);
     }
 
@@ -43,7 +43,7 @@ public class AccountController {
     public ResponseEntity updateLearningRegime(@RequestBody String learningRegime) throws NotAuthorisedUserException {
         for (LearningRegime regime : LearningRegime.values()) {
             if (regime.getRegime().equals(learningRegime)) {
-                accountServiceImpl.updateLearningRegime(regime);
+                accountService.updateLearningRegime(regime);
                 return ResponseEntity.ok().build();
             }
         }
@@ -52,32 +52,32 @@ public class AccountController {
 
     @GetMapping("/api/private/account/cards-number")
     public ResponseEntity<Integer> getCardsNumber() throws NotAuthorisedUserException {
-        return ResponseEntity.ok(accountServiceImpl.getCardsNumber());
+        return ResponseEntity.ok(accountService.getCardsNumber());
     }
 
     @PutMapping("/api/private/account/cards-number")
     public ResponseEntity updateCardsNumber(@RequestBody String cardsNumber) throws NotAuthorisedUserException {
-        accountServiceImpl.updateCardsNumber(Integer.parseInt(cardsNumber));
+        accountService.updateCardsNumber(Integer.parseInt(cardsNumber));
         return ResponseEntity.ok().build();
     }
 
     @GetMapping("api/private/account/remembering-levels")
     public ResponseEntity<List<RememberingLevelDTO>> getRememberingLevels() throws NotAuthorisedUserException {
-        List<RememberingLevel> rememberingLevels = accountServiceImpl.getRememberingLevels();
+        List<RememberingLevel> rememberingLevels = accountService.getRememberingLevels();
         return ResponseEntity.ok(DTOBuilder.buildDtoListForCollection(rememberingLevels, RememberingLevelDTO.class));
     }
 
     @PutMapping("api/private/account/remembering-levels/{levelId}")
     public ResponseEntity updateRememberingLevel(@PathVariable Long levelId,
                                                  @RequestBody String numberOfPostponedDays) throws NotAuthorisedUserException {
-        accountServiceImpl.updateRememberingLevel(levelId, Integer.parseInt(numberOfPostponedDays));
+        accountService.updateRememberingLevel(levelId, Integer.parseInt(numberOfPostponedDays));
         return ResponseEntity.ok().build();
     }
 
     @PutMapping(value = "api/reset/password")
     public ResponseEntity<String> sendResetPasswordMail(@RequestBody String email) {
         LOGGER.debug("Send reset password mail to email: {}", email);
-        String accountStatus = accountServiceImpl.checkAccountStatusAndSendMail(email);
+        String accountStatus = accountService.checkAccountStatusAndSendMail(email);
         return ResponseEntity.ok(accountStatus);
     }
 
@@ -91,7 +91,7 @@ public class AccountController {
     @PutMapping(value = "api/create/password")
     public ResponseEntity createNewPasswordForUser(@Validated(Request.class) @RequestBody NewAccountPasswordDTO newAccountPasswordDTO) {
         LOGGER.debug("Created new password for: {}", newAccountPasswordDTO.getEmail());
-        accountServiceImpl.createNewAccountPassword(newAccountPasswordDTO.getEmail(), newAccountPasswordDTO.getPassword());
+        accountService.createNewAccountPassword(newAccountPasswordDTO.getEmail(), newAccountPasswordDTO.getPassword());
         return ResponseEntity.ok().build();
     }
 }

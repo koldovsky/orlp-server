@@ -37,18 +37,18 @@ public class GoogleAuthUtil {
 
     private final AuthorityRepository authorityRepository;
 
-    private final AccountServiceImpl accountServiceImpl;
+    private final AccountServiceImpl accountService;
 
     private final UserService userService;
 
     @Autowired
     public GoogleAuthUtil(AccountRepository accountRepository, UserRepository userRepository,
                           AuthorityRepository authorityRepository,
-                          RememberingLevelRepository rememberingLevelRepository, AccountServiceImpl accountServiceImpl, UserService userService) {
+                          RememberingLevelRepository rememberingLevelRepository, AccountServiceImpl accountService, UserService userService) {
         this.accountRepository = accountRepository;
         this.userRepository = userRepository;
         this.authorityRepository = authorityRepository;
-        this.accountServiceImpl = accountServiceImpl;
+        this.accountService = accountService;
         this.userService = userService;
     }
 
@@ -91,6 +91,6 @@ public class GoogleAuthUtil {
         Person person = new Person((String) payload.get(FIRST_NAME), (String) payload.get(LAST_NAME), ImageType.LINK,
                 (String) payload.get(IMAGE));
         userRepository.save(new User(account, person, new Folder()));
-        accountServiceImpl.initializeLearningRegimeSettingsForAccount(account);
+        accountService.initializeLearningRegimeSettingsForAccount(account);
     }
 }
