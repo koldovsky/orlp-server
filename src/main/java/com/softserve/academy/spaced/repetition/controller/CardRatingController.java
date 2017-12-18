@@ -6,7 +6,7 @@ import com.softserve.academy.spaced.repetition.audit.Auditable;
 import com.softserve.academy.spaced.repetition.audit.AuditingAction;
 import com.softserve.academy.spaced.repetition.domain.CardRating;
 import com.softserve.academy.spaced.repetition.exceptions.NotAuthorisedUserException;
-import com.softserve.academy.spaced.repetition.service.CardRatingService;
+import com.softserve.academy.spaced.repetition.service.impl.CardRatingServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Link;
 import org.springframework.http.HttpStatus;
@@ -24,7 +24,7 @@ public class CardRatingController {
     public static final int MAX_RATING = 5;
 
     @Autowired
-    private CardRatingService cardRatingService;
+    private CardRatingServiceImpl cardRatingServiceImpl;
 
     /**
      * Get rating of card by id.
@@ -34,7 +34,7 @@ public class CardRatingController {
      */
     @GetMapping("api/rate/card/{cardId}")
     public ResponseEntity<CardRatingPublicDTO> getCardRatingById(@PathVariable Long cardId) {
-        CardRating cardRating = cardRatingService.getCardRatingById(cardId);
+        CardRating cardRating = cardRatingServiceImpl.getCardRatingById(cardId);
         Link selfLink = linkTo(methodOn(CardRatingController.class).getCardRatingById(cardRating.getId())).withRel("cardRating");
         CardRatingPublicDTO cardRatingDTO = DTOBuilder.buildDtoForEntity(cardRating, CardRatingPublicDTO.class, selfLink);
         return new ResponseEntity<>(cardRatingDTO, HttpStatus.OK);
@@ -55,7 +55,7 @@ public class CardRatingController {
     @PreAuthorize(value = "@accessToUrlService.hasAccessToCard(#deckId, #cardId)")
     public ResponseEntity<CardRatingPublicDTO> addCardRating(@RequestBody CardRating cardRating, @PathVariable Long deckId, @PathVariable Long cardId) throws NotAuthorisedUserException {
         if ((cardRating.getRating() >= MIN_RATING) && (cardRating.getRating() <= MAX_RATING)) {
-            cardRatingService.addCardRating(cardRating, cardId);
+            cardRatingServiceImpl.addCardRating(cardRating, cardId);
             Link selfLink = linkTo(methodOn(CardRatingController.class).getCardRatingById(cardRating.getId())).withSelfRel();
             CardRatingPublicDTO cardRatingPublicDTO = DTOBuilder.buildDtoForEntity(cardRating, CardRatingPublicDTO.class, selfLink);
             return new ResponseEntity<>(cardRatingPublicDTO, HttpStatus.CREATED);

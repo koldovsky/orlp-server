@@ -22,7 +22,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import com.softserve.academy.spaced.repetition.audit.AuditingAction;
 import com.softserve.academy.spaced.repetition.domain.Audit;
-import com.softserve.academy.spaced.repetition.service.AuditService;
+import com.softserve.academy.spaced.repetition.service.impl.AuditServiceImpl;
 
 @RunWith(MockitoJUnitRunner.class)
 public class AuditControllerTest {
@@ -32,7 +32,7 @@ public class AuditControllerTest {
     private AuditController auditController;
 
     @Mock
-    private AuditService auditService;
+    private AuditServiceImpl auditServiceImpl;
 
     @Before
     public void setUp() {

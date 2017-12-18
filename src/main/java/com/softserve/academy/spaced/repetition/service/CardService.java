@@ -12,6 +12,7 @@ import com.softserve.academy.spaced.repetition.exceptions.NotOwnerOperationExcep
 import com.softserve.academy.spaced.repetition.exceptions.WrongFormatException;
 import com.softserve.academy.spaced.repetition.repository.CardRepository;
 import com.softserve.academy.spaced.repetition.repository.DeckRepository;
+import com.softserve.academy.spaced.repetition.service.impl.AccountServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,19 +35,19 @@ public class CardService {
 
     private final UserService userService;
 
-    private final AccountService accountService;
+    private final AccountServiceImpl accountServiceImpl;
 
     private final UserCardQueueService userCardQueueService;
 
     private final DeckService deckService;
 
     @Autowired
-    public CardService(CardRepository cardRepository, DeckRepository deckRepository, AccountService accountService,
+    public CardService(CardRepository cardRepository, DeckRepository deckRepository, AccountServiceImpl accountServiceImpl,
                        UserService userService, UserCardQueueService userCardQueueService, DeckService deckService) {
         this.cardRepository = cardRepository;
         this.deckRepository = deckRepository;
         this.userService = userService;
-        this.accountService = accountService;
+        this.accountServiceImpl = accountServiceImpl;
         this.userCardQueueService = userCardQueueService;
         this.deckService = deckService;
     }
@@ -55,7 +56,7 @@ public class CardService {
     public List<Card> getLearningCards(Long deckId) throws NotAuthorisedUserException {
         try {
             User user = userService.getAuthorizedUser();
-            final int cardsNumber = accountService.getCardsNumber();
+            final int cardsNumber = accountServiceImpl.getCardsNumber();
             List<Card> learningCards = new ArrayList<>();
             if (user.getAccount().getLearningRegime().equals(LearningRegime.BAD_NORMAL_GOOD_STATUS_DEPENDING)) {
                 learningCards = cardRepository.cardsForLearningWithOutStatus(user.getId(), deckId, cardsNumber);
@@ -71,7 +72,7 @@ public class CardService {
             }
             return learningCards;
         } catch (NotAuthorisedUserException e) {
-            return cardRepository.findAllByDeckId(deckId).subList(0, accountService.getCardsNumber());
+            return cardRepository.findAllByDeckId(deckId).subList(0, accountServiceImpl.getCardsNumber());
         }
     }
 
@@ -99,7 +100,7 @@ public class CardService {
 
     public List<Card> getCardsQueue(long deckId) throws NotAuthorisedUserException {
         User user = userService.getAuthorizedUser();
-        final int cardsNumber = accountService.getCardsNumber();
+        final int cardsNumber = accountServiceImpl.getCardsNumber();
         List<Card> cardsQueue = cardRepository.cardsForLearningWithOutStatus(user.getId(), deckId, cardsNumber);
 
         if (cardsQueue.size() < cardsNumber) {
@@ -118,7 +119,7 @@ public class CardService {
     @Transactional
     public List<Card> getAdditionalLearningCards(Long deckId) throws NotAuthorisedUserException {
         User user = userService.getAuthorizedUser();
-        return cardRepository.getPostponedCards(deckId, new Date(), user.getId(), accountService.getCardsNumber());
+        return cardRepository.getPostponedCards(deckId, new Date(), user.getId(), accountServiceImpl.getCardsNumber());
     }
 
     @Transactional

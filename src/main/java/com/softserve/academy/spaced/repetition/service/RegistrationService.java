@@ -2,6 +2,7 @@ package com.softserve.academy.spaced.repetition.service;
 
 import com.softserve.academy.spaced.repetition.domain.*;
 import com.softserve.academy.spaced.repetition.repository.AuthorityRepository;
+import com.softserve.academy.spaced.repetition.service.impl.AccountServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -16,7 +17,7 @@ public class RegistrationService {
     private PasswordEncoder passwordEncoder;
     private MailService mailService;
 
-    private AccountService accountService;
+    private AccountServiceImpl accountServiceImpl;
 
     public User registerNewUser(User user) {
         Account account = user.getAccount();
@@ -25,7 +26,7 @@ public class RegistrationService {
         user.getPerson().setTypeImage(ImageType.NONE);
         user.setFolder(new Folder());
         userService.addUser(user);
-        accountService.initializeLearningRegimeSettingsForAccount(account);
+        accountServiceImpl.initializeLearningRegimeSettingsForAccount(account);
         return user;
     }
 
@@ -54,7 +55,7 @@ public class RegistrationService {
     }
 
     @Autowired
-    public void setAccountService(AccountService accountService) {
-        this.accountService = accountService;
+    public void setAccountServiceImpl(AccountServiceImpl accountServiceImpl) {
+        this.accountServiceImpl = accountServiceImpl;
     }
 }
