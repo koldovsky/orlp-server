@@ -8,8 +8,8 @@ import com.softserve.academy.spaced.repetition.domain.Card;
 import com.softserve.academy.spaced.repetition.domain.Deck;
 import com.softserve.academy.spaced.repetition.exceptions.NotAuthorisedUserException;
 import com.softserve.academy.spaced.repetition.exceptions.NotOwnerOperationException;
-import com.softserve.academy.spaced.repetition.service.DeckService;
-import com.softserve.academy.spaced.repetition.service.FolderService;
+import com.softserve.academy.spaced.repetition.service.impl.DeckServiceImpl;
+import com.softserve.academy.spaced.repetition.service.impl.FolderServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.hateoas.Link;
@@ -26,10 +26,10 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 @RestController
 public class DeckController {
     @Autowired
-    private DeckService deckService;
+    private DeckServiceImpl deckService;
 
     @Autowired
-    private FolderService folderService;
+    private FolderServiceImpl folderService;
 
     @Auditable(action = AuditingAction.VIEW_DECKS_VIA_CATEGORY)
     @GetMapping(value = "/api/category/{category_id}/decks")

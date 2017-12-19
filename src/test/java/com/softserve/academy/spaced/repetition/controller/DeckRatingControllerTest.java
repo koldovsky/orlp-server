@@ -13,7 +13,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import com.softserve.academy.spaced.repetition.domain.Deck;
 import com.softserve.academy.spaced.repetition.domain.DeckRating;
-import com.softserve.academy.spaced.repetition.service.DeckRatingService;
+import com.softserve.academy.spaced.repetition.service.impl.DeckRatingServiceImpl;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -34,7 +34,7 @@ public class DeckRatingControllerTest {
     private DeckRatingController deckRatingController;
 
     @Mock
-    private DeckRatingService deckRatingService;
+    private DeckRatingServiceImpl deckRatingServiceImpl;
 
     @Before
     public void setUp() {
@@ -45,7 +45,7 @@ public class DeckRatingControllerTest {
 
     @Test
     public void getDeckRatingById() throws Exception {
-        when(deckRatingService.getDeckRatingById(eq(77L))).thenReturn(createDeckRating());
+        when(deckRatingServiceImpl.getDeckRatingById(eq(77L))).thenReturn(createDeckRating());
         mockMvc.perform(get("/api/deck/{deckId}/rating/{id}", 5L, 77L)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON))
@@ -70,12 +70,12 @@ public class DeckRatingControllerTest {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated());
 
-        verify(deckRatingService, times(1)).addDeckRating(eq(3), eq(5L));
+        verify(deckRatingServiceImpl, times(1)).addDeckRating(eq(3), eq(5L));
     }
 
     @Test
     public void testNotAuthorizedAddDeckRating() throws Exception {
-        doThrow(NotAuthorisedUserException.class).when(deckRatingService).addDeckRating(eq(3), eq(5L));
+        doThrow(NotAuthorisedUserException.class).when(deckRatingServiceImpl).addDeckRating(eq(3), eq(5L));
 
         mockMvc.perform(post("/api/private/deck/{deckId}", 5L)
                 .content("{\"rating\":3,\"accountEmail\":\"email@email\",\"deckId\":5}")
