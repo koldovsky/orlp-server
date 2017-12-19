@@ -60,11 +60,6 @@ public class CardServiceImplTest {
         return new Card(newId, question, answer, title);
     }
 
-    @Before
-    public void setUp() throws Exception {
-        cardServiceImplImplUnderTest = new CardServiceImpl(cardRepository, deckRepository, mockedAccountService, mockedUserService, userCardQueueService, null);
-    }
-
     @Test
     public void getCardTest() {
         Card returnedCard = getCardForTest(1L);

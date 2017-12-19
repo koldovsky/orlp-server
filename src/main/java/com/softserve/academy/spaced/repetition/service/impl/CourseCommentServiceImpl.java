@@ -20,15 +20,13 @@ import java.util.List;
 public class CourseCommentServiceImpl implements CourseCommentService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CourseCommentServiceImpl.class);
-
     @Autowired
     private CourseCommentRepository commentRepository;
-
     @Autowired
     private CourseRepository courseRepository;
-
     @Autowired
     private UserService userService;
+
 
     @Override
     @Transactional

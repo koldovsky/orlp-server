@@ -47,10 +47,10 @@ public class CourseCommentServiceImplTest {
     @Mock
     private UserService mockedUserService;
 
-    @Before
-    public void setUp() throws Exception {
-        courseCommentServiceUnderTest = new CourseCommentServiceImpl(courseCommentRepository, courseRepository, mockedUserService);
-    }
+//    @Before
+//    public void setUp() throws Exception {
+//        courseCommentServiceUnderTest = new CourseCommentServiceImpl(courseCommentRepository, courseRepository, mockedUserService);
+//    }
 
     private User createMockedUser() {
         User mockedUser = new User(new Account("","user@email.com"), new Person("Ivan", "Kruk"), new Folder());

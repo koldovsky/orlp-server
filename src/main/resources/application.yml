@@ -2,7 +2,7 @@ spring:
   datasource:
     url: jdbc:mysql://localhost/orlp?createDataBaseIfNotExist=true&useSSL=false
     username: root
-    password: 123456
+    password: root
     driver-class-name: com.mysql.jdbc.Driver
   jpa:
     show-sql: false
