@@ -37,7 +37,7 @@ public class CourseControllerTest {
     private CourseController courseController;
 
     @Mock
-    private CourseServiceImpl courseServiceImpl;
+    private CourseServiceImpl courseService;
 
     final int NUMBER_PAGE = 1;
     final String SORT_BY = "name";
@@ -54,7 +54,7 @@ public class CourseControllerTest {
     public void getCourseById() throws Exception {
         final long categoryId = 1L;
         final long courseId = 1L;
-        when(courseServiceImpl.getCourseById(eq(categoryId), eq(courseId))).thenReturn(createCourse());
+        when(courseService.getCourseById(eq(categoryId), eq(courseId))).thenReturn(createCourse());
         mockMvc.perform(get("/api/category/{category_id}/courses/{course_id}", categoryId, courseId)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON))
@@ -106,7 +106,7 @@ public class CourseControllerTest {
 
     @Test
     public void getCoursesByPage() throws Exception {
-        when(courseServiceImpl.getPageWithCourses(NUMBER_PAGE, SORT_BY, true)).thenReturn(createCourses());
+        when(courseService.getPageWithCourses(NUMBER_PAGE, SORT_BY, true)).thenReturn(createCourses());
         mockMvc.perform(get("/api/courses?p=" + NUMBER_PAGE + "&sortBy=" + SORT_BY + "&asc=" + true)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON))
@@ -135,7 +135,7 @@ public class CourseControllerTest {
     @Test
     public void getCoursesByPageAndCategory() throws Exception {
         final int categoryId = 2;
-        when(courseServiceImpl.getPageWithCoursesByCategory(categoryId, 1, "name", true)).thenReturn(createCoursesBySelectedCategory());
+        when(courseService.getPageWithCoursesByCategory(categoryId, 1, "name", true)).thenReturn(createCoursesBySelectedCategory());
         mockMvc.perform(get("/api/category/" + categoryId + "/courses?p=" + NUMBER_PAGE + "&sortBy=" + SORT_BY + "&asc=" + true)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON))
