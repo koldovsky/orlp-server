@@ -31,26 +31,20 @@ public class GoogleAuthUtil {
     @Value("${app.social.google.client-id}")
     private String clientId;
 
-    private final AccountRepository accountRepository;
-
-    private final UserRepository userRepository;
-
-    private final AuthorityRepository authorityRepository;
-
-    private final AccountService accountService;
-
-    private final UserService userService;
+    @Autowired
+    private AccountRepository accountRepository;
 
     @Autowired
-    public GoogleAuthUtil(AccountRepository accountRepository, UserRepository userRepository,
-                          AuthorityRepository authorityRepository,
-                          RememberingLevelRepository rememberingLevelRepository, AccountService accountService, UserService userService) {
-        this.accountRepository = accountRepository;
-        this.userRepository = userRepository;
-        this.authorityRepository = authorityRepository;
-        this.accountService = accountService;
-        this.userService = userService;
-    }
+    private UserRepository userRepository;
+
+    @Autowired
+    private AuthorityRepository authorityRepository;
+
+    @Autowired
+    private AccountService accountService;
+
+    @Autowired
+    private UserService userService;
 
     public GoogleIdToken getGoogleIdToken(String idToken) {
         GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(new NetHttpTransport(), new JacksonFactory())
