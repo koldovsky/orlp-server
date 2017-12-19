@@ -1,253 +1,91 @@
 package com.softserve.academy.spaced.repetition.service;
 
-import com.softserve.academy.spaced.repetition.dto.impl.PasswordDTO;
 import com.softserve.academy.spaced.repetition.domain.*;
+import com.softserve.academy.spaced.repetition.dto.impl.PasswordDTO;
 import com.softserve.academy.spaced.repetition.exceptions.ImageRepositorySizeQuotaExceededException;
 import com.softserve.academy.spaced.repetition.exceptions.NotAuthorisedUserException;
 import com.softserve.academy.spaced.repetition.exceptions.UserStatusException;
 import com.softserve.academy.spaced.repetition.repository.AuthorityRepository;
 import com.softserve.academy.spaced.repetition.repository.DeckRepository;
 import com.softserve.academy.spaced.repetition.repository.UserRepository;
-import com.softserve.academy.spaced.repetition.security.JwtUser;
+import com.softserve.academy.spaced.repetition.service.impl.ImageServiceImpl;
+import com.softserve.academy.spaced.repetition.service.impl.MailServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.*;
+import java.util.List;
+import java.util.Set;
 
-import static com.softserve.academy.spaced.repetition.domain.Account.INITIAL_CARDS_NUMBER;
-
-@Service
-public class UserService {
-
-    public final static int QUANTITY_USER_IN_PAGE = 20;
-
-    private UserRepository userRepository;
-
-    private DeckRepository deckRepository;
-
-    private PasswordEncoder passwordEncoder;
-
-    private ImageService imageService;
-
-    private MailService mailService;
-
-    private AuthorityRepository authorityRepository;
+public interface UserService {
+    @Autowired
+    void setAuthorityRepository(AuthorityRepository authorityRepository);
 
     @Autowired
-    public void setAuthorityRepository(AuthorityRepository authorityRepository) {
-        this.authorityRepository = authorityRepository;
-    }
+    void setUserRepository(UserRepository userRepository);
 
     @Autowired
-    public void setUserRepository(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
+    void setDeckRepository(DeckRepository deckRepository);
 
     @Autowired
-    public void setDeckRepository(DeckRepository deckRepository) {
-        this.deckRepository = deckRepository;
-    }
+    void setPasswordEncoder(PasswordEncoder passwordEncoder);
 
     @Autowired
-    public void setPasswordEncoder(PasswordEncoder passwordEncoder) {
-        this.passwordEncoder = passwordEncoder;
-    }
+    void setImageService(ImageServiceImpl imageService);
 
     @Autowired
-    public void setImageService(ImageService imageService) {
-        this.imageService = imageService;
-    }
+    void setMailService(MailServiceImpl mailService);
 
-    @Autowired
-    public void setMailService(MailService mailService) {
-        this.mailService = mailService;
-    }
+    void addUser(User user);
 
-    public void addUser(User user) {
-        userRepository.save(user);
-    }
+    User findUserByEmail(String email);
 
-    public User findUserByEmail(String email) {
-        return userRepository.findUserByAccountEmail(email);
-    }
+    List<User> getAllUsers();
 
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
-    }
+    User setUsersStatusActive(Long id);
 
-    public User setUsersStatusActive(Long id) {
-        User user = userRepository.findOne(id);
-        user.getAccount().setStatus(AccountStatus.ACTIVE);
-        userRepository.save(user);
-        return userRepository.findOne(id);
-    }
+    User setUsersStatusDeleted(Long id);
 
-    public User setUsersStatusDeleted(Long id) {
-        User user = userRepository.findOne(id);
-        user.getAccount().setStatus(AccountStatus.DELETED);
-        userRepository.save(user);
-        return userRepository.findOne(id);
-    }
+    User setUsersStatusBlocked(Long id);
 
-    public User setUsersStatusBlocked(Long id) {
-        User user = userRepository.findOne(id);
-        user.getAccount().setStatus(AccountStatus.BLOCKED);
-        userRepository.save(user);
-        return userRepository.findOne(id);
-    }
+    User getUserById(Long userId);
 
-    public User getUserById(Long userId) {
-        return userRepository.findOne(userId);
-    }
+    User addExistingDeckToUsersFolder(Long userId, Long deckId);
 
-    public User addExistingDeckToUsersFolder(Long userId, Long deckId) {
-        User user = userRepository.findOne(userId);
-        Folder usersFolder = user.getFolder();
-        for (Deck deck : usersFolder.getDecks()) {
-            if (deck.getId().equals(deckId)) {
-                return null;
-            }
-        }
-        Deck deckForAdding = deckRepository.findOne(deckId);
-        usersFolder.getDecks().add(deckForAdding);
-        userRepository.save(user);
-        return user;
-    }
+    String getNoAuthenticatedUserEmail() throws NotAuthorisedUserException;
 
-    public String getNoAuthenticatedUserEmail() throws NotAuthorisedUserException {
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (principal instanceof JwtUser) {
-            JwtUser jwtUser = (JwtUser) principal;
-            return jwtUser.getUsername();
-        } else {
-            throw new NotAuthorisedUserException();
-        }
-    }
+    User getAuthorizedUser() throws NotAuthorisedUserException;
 
-    public User getAuthorizedUser() throws NotAuthorisedUserException {
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (principal instanceof String) {
-            throw new NotAuthorisedUserException();
-        } else {
-            JwtUser jwtUser = (JwtUser) principal;
-            return userRepository.findUserByAccountEmail(jwtUser.getUsername());
-        }
-    }
+    Set<Course> getAllCoursesByUserId(Long user_id);
 
-    public Set<Course> getAllCoursesByUserId(Long user_id) {
-        User user = userRepository.findOne(user_id);
-        return user.getCourses();
-    }
+    User removeDeckFromUsersFolder(Long userId, Long deckId);
 
-    public User removeDeckFromUsersFolder(Long userId, Long deckId) {
-        Deck deck = deckRepository.getDeckByItsIdAndOwnerOfDeck(deckId, userId);
-        User user = userRepository.findOne(userId);
-        Folder usersFolder = user.getFolder();
-        boolean hasFolderDeck = false;
-        for (Deck deckFromUsersFolder : usersFolder.getDecks()) {
-            if (deckFromUsersFolder.getId().equals(deckId)) {
-                hasFolderDeck = true;
-            }
-        }
-        if (deck == null && hasFolderDeck == true) {
-            deck = deckRepository.findOne(deckId);
-            usersFolder.getDecks().remove(deck);
-            userRepository.save(user);
-        } else {
-            return null;
-        }
-        return user;
-    }
+    List<Deck> getAllDecksFromUsersFolder(Long userId);
 
-    public List<Deck> getAllDecksFromUsersFolder(Long userId) {
-        User user = userRepository.findOne(userId);
-        Folder usersFolder = user.getFolder();
-        List<Deck> decks = new ArrayList<>();
-        decks.addAll(usersFolder.getDecks());
-        return decks;
-    }
-
-    public Page<User> getUsersByPage(int pageNumber, String sortBy, boolean ascending) {
-        PageRequest request = new PageRequest(pageNumber - 1, QUANTITY_USER_IN_PAGE, ascending ? Sort.Direction.ASC : Sort.Direction.DESC, sortBy);
-        return userRepository.findAll(request);
-    }
+    Page<User> getUsersByPage(int pageNumber, String sortBy, boolean ascending);
 
     @Transactional
-    public User editPersonalData(Person person) throws NotAuthorisedUserException {
-        User user = getAuthorizedUser();
-        user.getPerson().setFirstName(person.getFirstName());
-        user.getPerson().setLastName(person.getLastName());
-        return userRepository.save(user);
-    }
+    User editPersonalData(Person person) throws NotAuthorisedUserException;
 
     @Transactional
-    public void changePassword(PasswordDTO passwordDTO) throws NotAuthorisedUserException {
-        User user = getAuthorizedUser();
-        user.getAccount().setPassword(passwordEncoder.encode(passwordDTO.getNewPassword()));
-        userRepository.save(user);
-        mailService.sendPasswordNotificationMail(user);
-    }
+    void changePassword(PasswordDTO passwordDTO) throws NotAuthorisedUserException;
 
-    public User uploadImage(MultipartFile file) throws ImageRepositorySizeQuotaExceededException,
-            NotAuthorisedUserException {
-        imageService.checkImageExtention(file);
-        User user = getAuthorizedUser();
-        user.getPerson().setImageBase64(imageService.encodeToBase64(file));
-        user.getPerson().setTypeImage(ImageType.BASE64);
-        return userRepository.save(user);
-    }
+    User uploadImage(MultipartFile file) throws ImageRepositorySizeQuotaExceededException,
+            NotAuthorisedUserException;
 
-    public byte[] getDecodedImageContent() throws NotAuthorisedUserException {
-        User user = getAuthorizedUser();
-        String encodedFileContent = user.getPerson().getImageBase64();
-        return imageService.decodeFromBase64(encodedFileContent);
-    }
+    byte[] getDecodedImageContent() throws NotAuthorisedUserException;
 
-    public void activateAccount() throws NotAuthorisedUserException {
-        mailService.sendActivationMail(getNoAuthenticatedUserEmail());
-    }
+    void activateAccount() throws NotAuthorisedUserException;
 
-    public void deleteAccount() throws NotAuthorisedUserException {
-        User user = getAuthorizedUser();
-        user.getAccount().setDeactivated(true);
-        userRepository.save(user);
-    }
+    void deleteAccount() throws NotAuthorisedUserException;
 
-    public void getUserStatus() throws UserStatusException {
-        JwtUser jwtUser = (JwtUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        User user = userRepository.findUserByAccountEmail(jwtUser.getUsername());
-        if (user.getAccount().getStatus().isNotActive()) {
-            throw new UserStatusException(user.getAccount().getStatus());
-        }
-    }
+    void getUserStatus() throws UserStatusException;
 
     @Transactional
-    public void initializeNewUser(Account account, String email, AccountStatus accountStatus, boolean deactivated,  AuthenticationType
-            authenticationType) {
-        account.setEmail(email);
-        if (account.getPassword() != null) {
-            account.setPassword(passwordEncoder.encode(account.getPassword()));
-        }
-        account.setLastPasswordResetDate(new Date());
-        account.setStatus(accountStatus);
-        account.setAuthenticationType(authenticationType);
-        account.setDeactivated(deactivated);
-        Authority authority = authorityRepository.findAuthorityByName(AuthorityName.ROLE_USER);
-        account.setAuthorities(Collections.singleton(authority));
-        account.setLearningRegime(LearningRegime.CARDS_POSTPONING_USING_SPACED_REPETITION);
-        account.setCardsNumber(INITIAL_CARDS_NUMBER);
-    }
+    void initializeNewUser(Account account, String email, AccountStatus accountStatus, boolean deactivated, AuthenticationType
+            authenticationType);
 
-    public void isUserStatusActive(User user) throws UserStatusException {
-        if (user.getAccount().getStatus().isNotActive()) {
-            throw new UserStatusException(user.getAccount().getStatus());
-        }
-    }
+    void isUserStatusActive(User user) throws UserStatusException;
 }
