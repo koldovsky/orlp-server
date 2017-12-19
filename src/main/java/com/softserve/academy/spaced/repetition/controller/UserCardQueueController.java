@@ -17,7 +17,6 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
 @RestController
 public class UserCardQueueController {
-
     @Autowired
     private UserCardQueueService userCardQueueService;
 
