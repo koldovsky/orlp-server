@@ -1,7 +1,12 @@
 package com.softserve.academy.spaced.repetition.dto;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+
 public class RatingDTO {
 
+    @Min(value = 1)
+    @Max(value = 5)
     private int rating;
 
     public RatingDTO() {
