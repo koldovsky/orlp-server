@@ -35,12 +35,12 @@ import java.util.Map;
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
+    private final int MAX_AGE = 3600;
+
     @Autowired
     private JwtAuthenticationEntryPoint unauthorizedHandler;
     @Autowired
     private UserDetailsService userDetailsService;
-
-    private final int MAX_AGE = 3600;
 
     @Autowired
     public void configureAuthentication(AuthenticationManagerBuilder builder) throws Exception {
