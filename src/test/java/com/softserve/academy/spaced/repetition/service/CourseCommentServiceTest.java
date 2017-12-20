@@ -4,7 +4,7 @@ import com.softserve.academy.spaced.repetition.config.TestDatabaseConfig;
 import com.softserve.academy.spaced.repetition.domain.*;
 import com.softserve.academy.spaced.repetition.repository.CourseCommentRepository;
 import com.softserve.academy.spaced.repetition.repository.CourseRepository;
-import com.softserve.academy.spaced.repetition.service.impl.CourseCommentService;
+import com.softserve.academy.spaced.repetition.service.impl.CourseCommentServiceImpl;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,9 +21,6 @@ import java.util.List;
 
 import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 
 @RunWith(SpringRunner.class)
@@ -50,7 +47,7 @@ public class CourseCommentServiceTest {
 
     @Before
     public void setUp() throws Exception {
-        courseCommentServiceUnderTest = new CourseCommentService(courseCommentRepository, courseRepository, mockedUserService);
+        courseCommentServiceUnderTest = new CourseCommentServiceImpl(courseCommentRepository, courseRepository, mockedUserService);
     }
 
     private User createMockedUser() {
