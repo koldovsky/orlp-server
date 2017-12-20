@@ -4,7 +4,7 @@ import com.softserve.academy.spaced.repetition.config.TestDatabaseConfig;
 import com.softserve.academy.spaced.repetition.domain.*;
 import com.softserve.academy.spaced.repetition.repository.CourseCommentRepository;
 import com.softserve.academy.spaced.repetition.repository.CourseRepository;
-import com.softserve.academy.spaced.repetition.service.impl.CourseCommentServiceImpl;
+import com.softserve.academy.spaced.repetition.service.impl.CourseCommentService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -32,11 +32,12 @@ import static org.mockito.Mockito.when;
 @Import(TestDatabaseConfig.class)
 @Sql("/data/TestData.sql")
 @Transactional
-public class CourseCommentServiceImplTest {
+public class CourseCommentServiceTest {
 
     private static final Long COURSE_ID = 1L;
 
-    private CourseCommentServiceImpl courseCommentServiceUnderTest;
+    @Autowired
+    private CourseCommentService courseCommentServiceUnderTest;
 
     @Autowired
     private CourseCommentRepository courseCommentRepository;
@@ -49,7 +50,7 @@ public class CourseCommentServiceImplTest {
 
     @Before
     public void setUp() throws Exception {
-        courseCommentServiceUnderTest = new CourseCommentServiceImpl(courseCommentRepository, courseRepository, mockedUserService);
+        courseCommentServiceUnderTest = new CourseCommentService(courseCommentRepository, courseRepository, mockedUserService);
     }
 
     private User createMockedUser() {

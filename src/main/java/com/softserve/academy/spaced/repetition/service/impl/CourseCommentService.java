@@ -5,7 +5,6 @@ import com.softserve.academy.spaced.repetition.domain.CourseComment;
 import com.softserve.academy.spaced.repetition.exceptions.NotAuthorisedUserException;
 import com.softserve.academy.spaced.repetition.repository.CourseCommentRepository;
 import com.softserve.academy.spaced.repetition.repository.CourseRepository;
-import com.softserve.academy.spaced.repetition.service.CourseCommentService;
 import com.softserve.academy.spaced.repetition.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,9 +16,9 @@ import java.util.Date;
 import java.util.List;
 
 @Service
-public class CourseCommentServiceImpl implements CourseCommentService {
+public class CourseCommentService implements CourseCommentService {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(CourseCommentServiceImpl.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(CourseCommentService.class);
 
     private final CourseCommentRepository commentRepository;
 
@@ -29,7 +28,7 @@ public class CourseCommentServiceImpl implements CourseCommentService {
 
 
     @Autowired
-    public CourseCommentServiceImpl(CourseCommentRepository commentRepository, CourseRepository courseRepository
+    public CourseCommentService(CourseCommentRepository commentRepository, CourseRepository courseRepository
             , UserService userService) {
         this.commentRepository = commentRepository;
         this.courseRepository = courseRepository;

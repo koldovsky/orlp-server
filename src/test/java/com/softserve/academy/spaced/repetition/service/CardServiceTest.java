@@ -25,14 +25,15 @@ import static org.junit.Assert.assertEquals;
 @Import(TestDatabaseConfig.class)
 @Sql("/data/TestData.sql")
 @Transactional
-public class CardServiceImplTest {
+public class CardServiceTest {
 
     private static final long CARD_ID = 1L;
     private final String CARD_ANSWER = "Answer";
     private final String CARD_QUESTION = "Question";
     private final String CARD_TITLE = "Title";
 
-    private CardServiceImpl cardServiceImplImplUnderTest;
+    @Autowired
+    private CardService cardServiceUnderTest;
 
     @Autowired
     private CardRepository cardRepository;
@@ -62,7 +63,7 @@ public class CardServiceImplTest {
 
     @Before
     public void setUp() throws Exception {
-        cardServiceImplImplUnderTest = new CardServiceImpl(cardRepository, deckRepository, mockedAccountService, mockedUserService, userCardQueueService, null);
+        cardServiceUnderTest = new CardServiceImpl(cardRepository, deckRepository, mockedAccountService, mockedUserService, userCardQueueService, null);
     }
 
     @Test
@@ -78,7 +79,7 @@ public class CardServiceImplTest {
 
     @Test
     public void testCardUpdate() {
-        cardServiceImplImplUnderTest.updateCard(1L, newCard);
+        cardServiceUnderTest.updateCard(1L, newCard);
         assertEquals("Update Card", newCard, getCardForTest(1L));
     }
 
