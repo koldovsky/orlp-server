@@ -32,10 +32,11 @@ import static org.mockito.Mockito.when;
 @Import(TestDatabaseConfig.class)
 @Sql("/data/TestData.sql")
 @Transactional
-public class CourseCommentServiceImplTest {
+public class CourseCommentServiceTest {
 
     private static final Long COURSE_ID = 1L;
 
+    @Autowired
     private CourseCommentServiceImpl courseCommentServiceUnderTest;
 
     @Autowired
