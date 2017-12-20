@@ -15,6 +15,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
@@ -37,7 +39,7 @@ public class CourseRatingController {
     }
 
     @PostMapping("/api/private/course/{courseId}")
-    public ResponseEntity addCourseRating(@Validated(Request.class) @RequestBody RatingDTO ratingDTO,
+    public ResponseEntity addCourseRating(@Validated @RequestBody RatingDTO ratingDTO,
                                           @PathVariable Long courseId) throws NotAuthorisedUserException, UserStatusException {
         courseRatingService.addCourseRating(ratingDTO.getRating(), courseId);
         return new ResponseEntity(HttpStatus.CREATED);

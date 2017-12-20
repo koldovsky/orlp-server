@@ -1,21 +1,24 @@
 package com.softserve.academy.spaced.repetition.dto;
 
-public class RatingDTO {
+import com.softserve.academy.spaced.repetition.service.validators.ValidationConstants;
 
-    private int rating;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+
+public class RatingDTO {
+    @Min(value = 1, message = "<1")    //
+    @Max(value = 5, message = ">5")  //will be replaced
+    private Integer rating;
 
     public RatingDTO() {
     }
 
-    public RatingDTO(int rating) {
-        this.rating = rating;
-    }
 
-    public int getRating() {
+    public Integer getRating() {
         return rating;
     }
 
-    public void setRating(int rating) {
+    public void setRating(Integer rating) {
         this.rating = rating;
     }
 }
