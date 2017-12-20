@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 import java.util.List;
 
@@ -62,6 +63,7 @@ public class CourseCommentService {
         CourseComment updatedComment = commentRepository.findOne(commentId);
         updatedComment.setCommentDate(new Date());
         updatedComment.setCommentText(commentText);
+        commentRepository.save(updatedComment);
         return updatedComment;
     }
 

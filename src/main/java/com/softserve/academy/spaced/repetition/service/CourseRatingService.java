@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import static java.util.Optional.ofNullable;
+
 @Service
 public class CourseRatingService {
 
@@ -28,15 +30,15 @@ public class CourseRatingService {
         User user = userService.getAuthorizedUser();
         userService.isUserStatusActive(user);
         String email = user.getAccount().getEmail();
-        CourseRating courseRating = courseRatingRepository.findAllByAccountEmailAndCourse_Id(email, courseId);
-        if (courseRating == null) {
-            courseRating = new CourseRating();
-        }
+        CourseRating courseRating = ofNullable(courseRatingRepository.findAllByAccountEmailAndCourse_Id(email, courseId))
+                .orElse(new CourseRating()) ;
         Course course = courseRepository.findOne(courseId);
         courseRating.setAccountEmail(email);
         courseRating.setCourse(course);
         courseRating.setRating(rating);
+
         courseRatingRepository.save(courseRating);
+
         double courseAverageRating = courseRatingRepository.findRatingByCourse_Id(courseId);
         course.setRating(courseAverageRating);
         courseRepository.save(course);

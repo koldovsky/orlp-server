@@ -22,7 +22,6 @@ import java.util.Set;
 
 @Service
 public class CourseService {
-    public static final int TOP_COURSES = 4;
 
     private final static int QUANTITY_COURSES_IN_PAGE = 12;
 
@@ -94,15 +93,13 @@ public class CourseService {
     }
 
     public void addCourse(Course course, Long category_id) {
-        Long imageId = course.getImage().getId();
-        imageService.setImageStatusInUse(imageId);
+        imageService.setImageStatusInUse(course.getImage().getId());
         course.setCategory(new Category(category_id));
         courseRepository.save(course);
     }
 
     public List<Course> getTopCourse() {
-        List<Course> courses = courseRepository.findTop4ByOrderByRating();
-        return courses;
+        return courseRepository.findTop4ByOrderByRating();
     }
 
     public List<Course> getAllOrderedCourses() {
@@ -118,13 +115,12 @@ public class CourseService {
         User user = userService.getAuthorizedUser();
         Set<Course> courses = user.getCourses();
         for (Course course : courses) {
-            if (course.getId() == course_id) {
+            if (course.getId().equals(course_id)) {
                 course.setPublished(false);
                 courses.remove(course);
                 break;
             }
         }
-
         userRepository.save(user);
         courseRepository.delete(course_id);
     }
@@ -177,7 +173,7 @@ public class CourseService {
         User user = userService.getAuthorizedUser();
         Set<Course> courses = user.getCourses();
         for (Course course : courses) {
-            if (course.getId() == course_id) {
+            if (course.getId().equals(course_id)) {
                 courses.remove(course);
                 break;
             }
@@ -196,12 +192,14 @@ public class CourseService {
 
 
     public Page<Course> getPageWithCourses(int pageNumber, String sortBy, boolean ascending) {
-        PageRequest request = new PageRequest(pageNumber - 1, QUANTITY_COURSES_IN_PAGE, ascending ? Sort.Direction.ASC : Sort.Direction.DESC, sortBy);
+        PageRequest request = new PageRequest(pageNumber - 1,
+                QUANTITY_COURSES_IN_PAGE, ascending ? Sort.Direction.ASC : Sort.Direction.DESC, sortBy);
         return courseRepository.findAll(request);
     }
 
     public Page<Course> getPageWithCoursesByCategory(long categoryId, int pageNumber, String sortBy, boolean ascending) {
-        PageRequest request = new PageRequest(pageNumber - 1, QUANTITY_COURSES_IN_PAGE, ascending ? Sort.Direction.ASC : Sort.Direction.DESC, sortBy);
+        PageRequest request = new PageRequest(pageNumber - 1,
+                QUANTITY_COURSES_IN_PAGE, ascending ? Sort.Direction.ASC : Sort.Direction.DESC, sortBy);
         return courseRepository.findAllByCategoryEquals(categoryRepository.findOne(categoryId), request);
     }
 }

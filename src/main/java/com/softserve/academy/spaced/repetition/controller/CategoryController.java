@@ -4,6 +4,7 @@ import com.softserve.academy.spaced.repetition.audit.Auditable;
 import com.softserve.academy.spaced.repetition.audit.AuditingAction;
 import com.softserve.academy.spaced.repetition.domain.Category;
 import com.softserve.academy.spaced.repetition.dto.DTOBuilder;
+import com.softserve.academy.spaced.repetition.dto.Request;
 import com.softserve.academy.spaced.repetition.dto.impl.CategoryDTO;
 import com.softserve.academy.spaced.repetition.dto.impl.CategoryLinkDTO;
 import com.softserve.academy.spaced.repetition.dto.impl.CategoryPublicDTO;
@@ -15,6 +16,7 @@ import org.springframework.hateoas.Link;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -59,9 +61,13 @@ public class CategoryController {
     }
 
     @GetMapping("/api/sortedCategoriesByPage/top")
-    public ResponseEntity<Page<CategoryTopDTO>> getTopSortedCategories(@RequestParam(name = "p") int pageNumber, @RequestParam(name = "sortBy") String sortBy, @RequestParam(name = "asc") boolean ascending) {
-        Page<CategoryTopDTO> sortedCategoriesDTOS = categoryService.getSortedCategories(pageNumber, sortBy, ascending).map((category) -> {
-            Link selfLink = linkTo(methodOn(CategoryController.class).getCategoryById(category.getId())).withRel("category");
+    public ResponseEntity<Page<CategoryTopDTO>> getTopSortedCategories(@RequestParam(name = "p") int pageNumber,
+                                                                       @RequestParam(name = "sortBy") String sortBy,
+                                                                       @RequestParam(name = "asc") boolean ascending) {
+        Page<CategoryTopDTO> sortedCategoriesDTOS = categoryService.
+                getSortedCategories(pageNumber, sortBy, ascending).map((category) -> {
+            Link selfLink = linkTo(methodOn(CategoryController.class).
+                    getCategoryById(category.getId())).withRel("category");
             return DTOBuilder.buildDtoForEntity(category, CategoryTopDTO.class, selfLink);
         });
         return new ResponseEntity<>(sortedCategoriesDTOS, HttpStatus.OK);
@@ -69,8 +75,9 @@ public class CategoryController {
 
     @Auditable(action = AuditingAction.CREATE_CATEGORY)
     @PostMapping("/api/admin/add/category")
-    public ResponseEntity<CategoryPublicDTO> addCategory(@RequestBody CategoryDTO categoryDTO) {
-        Category category = categoryService.addCategory(categoryDTO.getName(), categoryDTO.getDescription(), categoryDTO.getImage());
+    public ResponseEntity<CategoryPublicDTO> addCategory(@Validated(Request.class) @RequestBody CategoryDTO categoryDTO) {
+        Category category = categoryService.
+                addCategory(categoryDTO.getName(), categoryDTO.getDescription(), categoryDTO.getImage());
         Link selfLink = linkTo(methodOn(CategoryController.class).getCategoryById(category.getId())).withSelfRel();
         CategoryPublicDTO categoryPublicDTO = DTOBuilder.buildDtoForEntity(category, CategoryPublicDTO.class, selfLink);
         return new ResponseEntity<>(categoryPublicDTO, HttpStatus.CREATED);
@@ -79,7 +86,8 @@ public class CategoryController {
     @Auditable(action = AuditingAction.EDIT_CATEGORY)
     @PutMapping("/api/admin/add/category/{id}")
     @PreAuthorize(value = "@accessToUrlService.hasAccessToCategory(#id)")
-    public ResponseEntity<CategoryPublicDTO> updateCategory(@RequestBody Category category, @PathVariable Long id) {
+    public ResponseEntity<CategoryPublicDTO> updateCategory(@Validated(Request.class) @RequestBody Category category,
+                                                            @PathVariable Long id) {
         category = categoryService.updateCategory(category, id);
         Link selfLink = linkTo(methodOn(CategoryController.class).getCategoryById(category.getId())).withSelfRel();
         CategoryPublicDTO categoryDTO = DTOBuilder.buildDtoForEntity(category, CategoryPublicDTO.class, selfLink);

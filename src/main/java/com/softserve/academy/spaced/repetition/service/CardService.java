@@ -103,8 +103,8 @@ public class CardService {
         List<Card> cardsQueue = cardRepository.cardsForLearningWithOutStatus(user.getId(), deckId, cardsNumber);
 
         if (cardsQueue.size() < cardsNumber) {
-            cardsQueue.addAll(cardRepository.cardsQueueForLearningWithStatus(user.getId(), deckId, cardsNumber).subList(0,
-                    cardsNumber - cardsQueue.size()));
+            cardsQueue.addAll(cardRepository.cardsQueueForLearningWithStatus(user.getId(), deckId, cardsNumber)
+                    .subList(0, cardsNumber - cardsQueue.size()));
         }
         return cardsQueue;
     }

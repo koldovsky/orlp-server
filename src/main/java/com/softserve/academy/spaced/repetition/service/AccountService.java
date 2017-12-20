@@ -62,9 +62,6 @@ public class AccountService {
     @Transactional
     public void updateCardsNumber(Integer cardsNumber) throws NotAuthorisedUserException {
         Account account = userService.getAuthorizedUser().getAccount();
-        if (cardsNumber < 1) {
-            throw new IllegalArgumentException("Number of cards should be greater than 0.");
-        }
         account.setCardsNumber(cardsNumber);
         accountRepository.save(account);
     }

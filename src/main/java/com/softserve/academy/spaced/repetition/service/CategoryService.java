@@ -29,17 +29,14 @@ public class CategoryService {
 
     private final int QUANTITY_CATEGORIES_IN_PAGE = 8;
 
-    @Transactional
+
     public List<Category> getAllCategory() {
-        List<Category> categories = categoryRepository.findAll();
-        return categories;
+        return categoryRepository.findAll();
     }
 
-    @Transactional
-    public Category getCategoryById(Long id) {
-        Category category = categoryRepository.findById(id);
-        return category;
 
+    public Category getCategoryById(Long id) {
+        return categoryRepository.findById(id);
     }
 
     public List<Category> getTopCategory() {
