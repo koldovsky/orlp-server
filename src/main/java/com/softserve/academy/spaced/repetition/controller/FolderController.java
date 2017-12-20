@@ -9,6 +9,8 @@ import com.softserve.academy.spaced.repetition.audit.AuditingAction;
 import com.softserve.academy.spaced.repetition.domain.Card;
 import com.softserve.academy.spaced.repetition.domain.Deck;
 import com.softserve.academy.spaced.repetition.exceptions.NotAuthorisedUserException;
+import com.softserve.academy.spaced.repetition.service.DeckService;
+import com.softserve.academy.spaced.repetition.service.FolderService;
 import com.softserve.academy.spaced.repetition.service.impl.DeckServiceImpl;
 import com.softserve.academy.spaced.repetition.service.impl.FolderServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,10 +29,10 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 public class FolderController {
 
     @Autowired
-    private FolderServiceImpl folderService;
+    private FolderService folderService;
 
     @Autowired
-    private DeckServiceImpl deckService;
+    private DeckService deckService;
 
     @Auditable(action = AuditingAction.ADD_DECK_TO_FOLDER)
     @PutMapping("/api/user/folder/add/deck/{deckId}")

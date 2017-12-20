@@ -8,7 +8,7 @@ import com.softserve.academy.spaced.repetition.audit.AuditingAction;
 import com.softserve.academy.spaced.repetition.domain.Comment;
 import com.softserve.academy.spaced.repetition.domain.DeckComment;
 import com.softserve.academy.spaced.repetition.exceptions.NotAuthorisedUserException;
-import com.softserve.academy.spaced.repetition.service.impl.DeckCommentServiceImpl;
+import com.softserve.academy.spaced.repetition.service.DeckCommentService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +28,7 @@ public class DeckCommentController {
     private static final Logger LOGGER = LoggerFactory.getLogger(DeckCommentController.class);
 
     @Autowired
-    private DeckCommentServiceImpl commentService;
+    private DeckCommentService commentService;
 
     @Auditable(action = AuditingAction.VIEW_ALL_COMMENTS_FOR_DECK)
     @GetMapping(value = "/api/category/{categoryId}/deck/{deckId}/comments")

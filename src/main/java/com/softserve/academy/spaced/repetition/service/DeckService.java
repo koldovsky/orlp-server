@@ -1,5 +1,6 @@
 package com.softserve.academy.spaced.repetition.service;
 
+import com.softserve.academy.spaced.repetition.domain.Card;
 import com.softserve.academy.spaced.repetition.domain.Deck;
 import com.softserve.academy.spaced.repetition.exceptions.NotAuthorisedUserException;
 import com.softserve.academy.spaced.repetition.exceptions.NotOwnerOperationException;
@@ -36,4 +37,14 @@ public interface DeckService {
     Page<Deck> getPageWithAllAdminDecks(int pageNumber, String sortBy, boolean ascending);
 
     String getSynthaxToHightlight(long deckId);
+
+    Deck getDeck(Long deckId);
+
+    List<Deck> getAllDecks(Long courseId);
+
+    List<Deck> getAllDecksByCategory(Long categoryId);
+
+    List<Deck> getAllOrderedDecks();
+
+    List<Card> getAllCardsByDeckId(Long deckId);
 }

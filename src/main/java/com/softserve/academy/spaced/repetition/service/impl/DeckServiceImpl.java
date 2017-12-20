@@ -65,25 +65,30 @@ public class DeckServiceImpl implements DeckService {
         this.folderService = folderService;
     }
 
+    @Override
     public List<Deck> getAllDecks(Long courseId) {
         Course course = courseRepository.findOne(courseId);
         return course.getDecks();
     }
 
+    @Override
     public List<Deck> getAllDecksByCategory(Long categoryId) {
         Category category = categoryRepository.findOne(categoryId);
         return category.getDecks();
     }
 
+    @Override
     public List<Deck> getAllOrderedDecks() {
         return deckRepository.findAllByOrderByRatingDesc();
     }
 
+    @Override
     @Transactional
     public Deck getDeck(Long deckId) {
         return deckRepository.findOne(deckId);
     }
 
+    @Override
     public List<Card> getAllCardsByDeckId(Long deckId) {
         Deck deck = deckRepository.findOne(deckId);
         return deck.getCards();

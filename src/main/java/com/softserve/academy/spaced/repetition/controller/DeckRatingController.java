@@ -5,7 +5,7 @@ import com.softserve.academy.spaced.repetition.dto.impl.DeckRatingPublicDTO;
 import com.softserve.academy.spaced.repetition.domain.DeckRating;
 import com.softserve.academy.spaced.repetition.exceptions.NotAuthorisedUserException;
 import com.softserve.academy.spaced.repetition.exceptions.UserStatusException;
-import com.softserve.academy.spaced.repetition.service.impl.DeckRatingServiceImpl;
+import com.softserve.academy.spaced.repetition.service.DeckRatingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Link;
 import org.springframework.http.HttpStatus;
@@ -22,7 +22,7 @@ public class DeckRatingController {
     public static final int MAX_RATING = 5;
 
     @Autowired
-    private DeckRatingServiceImpl deckRatingService;
+    private DeckRatingService deckRatingService;
 
     @GetMapping("api/deck/{deckId}/rating/{id}")
     public ResponseEntity<DeckRatingPublicDTO> getDeckRatingById(@PathVariable Long deckId, @PathVariable Long id) {

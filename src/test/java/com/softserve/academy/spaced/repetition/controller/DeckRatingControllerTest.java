@@ -13,7 +13,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import com.softserve.academy.spaced.repetition.domain.Deck;
 import com.softserve.academy.spaced.repetition.domain.DeckRating;
-import com.softserve.academy.spaced.repetition.service.impl.DeckRatingServiceImpl;
+import com.softserve.academy.spaced.repetition.service.DeckRatingService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -34,7 +34,7 @@ public class DeckRatingControllerTest {
     private DeckRatingController deckRatingController;
 
     @Mock
-    private DeckRatingServiceImpl deckRatingService;
+    private DeckRatingService deckRatingService;
 
     @Before
     public void setUp() {
