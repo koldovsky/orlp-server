@@ -1,7 +1,8 @@
-package com.softserve.academy.spaced.repetition.service;
+package com.softserve.academy.spaced.repetition.service.impl;
 
 import com.softserve.academy.spaced.repetition.domain.User;
 import com.softserve.academy.spaced.repetition.security.JwtTokenForMail;
+import com.softserve.academy.spaced.repetition.service.MailService;
 import freemarker.template.Configuration;
 import freemarker.template.TemplateException;
 import org.slf4j.Logger;
@@ -21,7 +22,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Service
-public class MailService {
+public class MailServiceImpl implements MailService {
     @Value("${app.origin.url}")
     private String url;
 
@@ -33,8 +34,9 @@ public class MailService {
     @Qualifier("freemarkerConf")
     private Configuration freemarkerConfiguration;
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(MailService.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(MailServiceImpl.class);
 
+    @Override
     public void sendConfirmationMail(User user) {
         MimeMessagePreparator preparator = mimeMessage -> {
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
@@ -51,6 +53,7 @@ public class MailService {
         mailSender.send(preparator);
     }
 
+    @Override
     public void sendActivationMail(String email) {
         MimeMessagePreparator preparator = mimeMessage -> {
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
@@ -66,6 +69,7 @@ public class MailService {
         mailSender.send(preparator);
     }
 
+    @Override
     public void sendPasswordNotificationMail(User user) {
         MimeMessagePreparator preparator = mimeMessage -> {
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
@@ -81,6 +85,7 @@ public class MailService {
         mailSender.send(preparator);
     }
 
+    @Override
     public void sendPasswordRestoreMail(String accountEmail) {
         LOGGER.debug("Send mail for reset password to email: {}", accountEmail);
         MimeMessagePreparator preparator = mimeMessage -> {

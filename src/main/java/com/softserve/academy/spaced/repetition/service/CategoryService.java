@@ -3,6 +3,7 @@ package com.softserve.academy.spaced.repetition.service;
 
 import java.util.List;
 
+import com.softserve.academy.spaced.repetition.service.impl.ImageServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -13,11 +14,7 @@ import org.springframework.stereotype.Service;
 import com.softserve.academy.spaced.repetition.domain.Category;
 import com.softserve.academy.spaced.repetition.domain.Image;
 import com.softserve.academy.spaced.repetition.repository.CategoryRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Service
 public class CategoryService {
@@ -25,7 +22,7 @@ public class CategoryService {
     @Autowired
     private CategoryRepository categoryRepository;
     @Autowired
-    private ImageService imageService;
+    private ImageServiceImpl imageServiceImpl;
 
     private final int QUANTITY_CATEGORIES_IN_PAGE = 8;
 
@@ -51,7 +48,7 @@ public class CategoryService {
     public Category addCategory(String categoryName, String categoryDescription, Image categoryImage) {
         Category category = new Category(categoryName, categoryDescription, categoryImage);
         Long imageId = category.getImage().getId();
-        imageService.setImageStatusInUse(imageId);
+        imageServiceImpl.setImageStatusInUse(imageId);
         return categoryRepository.save(category);
     }
 

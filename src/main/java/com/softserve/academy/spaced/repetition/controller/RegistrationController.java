@@ -7,7 +7,7 @@ import com.softserve.academy.spaced.repetition.domain.Person;
 import com.softserve.academy.spaced.repetition.domain.User;
 import com.softserve.academy.spaced.repetition.dto.Request;
 import com.softserve.academy.spaced.repetition.service.AccountVerificationByEmailService;
-import com.softserve.academy.spaced.repetition.service.RegistrationService;
+import com.softserve.academy.spaced.repetition.service.impl.RegistrationServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,15 +21,15 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(value = "/api")
 public class RegistrationController {
     @Autowired
-    private RegistrationService registrationService;
+    private RegistrationServiceImpl registrationServiceImpl;
     @Autowired
     private AccountVerificationByEmailService verificationService;
 
     @Auditable(action = AuditingAction.SIGN_UP)
     @RequestMapping(value = "/registration", method = RequestMethod.POST)
     public ResponseEntity<Person> addUser(@Validated(Request.class) @RequestBody User userFromClient) {
-        User user = registrationService.registerNewUser(userFromClient);
-        registrationService.sendConfirmationEmailMessage(user);
+        User user = registrationServiceImpl.registerNewUser(userFromClient);
+        registrationServiceImpl.sendConfirmationEmailMessage(user);
         return new ResponseEntity<>(user.getPerson(), HttpStatus.CREATED);
     }
 

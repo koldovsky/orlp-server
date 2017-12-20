@@ -6,6 +6,8 @@ import com.softserve.academy.spaced.repetition.domain.*;
 import com.softserve.academy.spaced.repetition.exceptions.NotAuthorisedUserException;
 import com.softserve.academy.spaced.repetition.repository.DeckRepository;
 import com.softserve.academy.spaced.repetition.repository.UserRepository;
+import com.softserve.academy.spaced.repetition.service.impl.ImageServiceImpl;
+import com.softserve.academy.spaced.repetition.service.impl.UserServiceImpl;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,7 +23,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
@@ -35,7 +36,7 @@ import static org.junit.Assert.*;
 @Import(TestDatabaseConfig.class)
 @Sql("/data/TestData.sql")
 @Transactional
-public class UserServiceTest {
+public class UserServiceImplTest {
 
     private UserService userServiceUnderTest;
     @Autowired
@@ -45,7 +46,7 @@ public class UserServiceTest {
     @Mock
     private PasswordEncoder mockedPasswordEncoder;
 
-    private ImageService mockedImageService;
+    private ImageServiceImpl mockedImageServiceImpl;
     @Mock
     private MailService mockedMailService;
 
@@ -55,13 +56,13 @@ public class UserServiceTest {
 
     @Before
     public void setUp() throws Exception {
-        userServiceUnderTest = PowerMockito.spy(new UserService());
+        userServiceUnderTest = PowerMockito.spy(new UserServiceImpl());
         userServiceUnderTest.setUserRepository(userRepository);
         userServiceUnderTest.setDeckRepository(deckRepository);
         userServiceUnderTest.setPasswordEncoder(mockedPasswordEncoder);
-        mockedImageService = PowerMockito.spy(new ImageService());
-        userServiceUnderTest.setImageService(mockedImageService);
-        userServiceUnderTest.setMailService(mockedMailService);
+        mockedImageServiceImpl = PowerMockito.spy(new ImageServiceImpl());
+        userServiceUnderTest.setImageServiceImpl(mockedImageServiceImpl);
+        userServiceUnderTest.setMailServiceImpl(mockedMailService);
     }
 
     Person mockedPerson = new Person("firstName", "lastName");
@@ -119,8 +120,8 @@ public class UserServiceTest {
         doAnswer((Answer<Void>) invocation -> {
             newImage = invocation.getArgumentAt(0, MockMultipartFile.class);
             return null;
-        }).when(mockedImageService).checkImageExtention(any());
-        String base64String = mockedImageService.encodeToBase64(image);
+        }).when(mockedImageServiceImpl).checkImageExtention(any());
+        String base64String = mockedImageServiceImpl.encodeToBase64(image);
         PowerMockito.doReturn(mockedUser).when(userServiceUnderTest, "getAuthorizedUser");
         User userWithUploadImage = userServiceUnderTest.uploadImage(image);
         assertEquals("checkImageExtention invoked", image, newImage);
@@ -130,7 +131,7 @@ public class UserServiceTest {
     @Test(expected = IllegalArgumentException.class)
     public void testUploadImageException() throws Exception {
         MockMultipartFile image = new MockMultipartFile("image", "", "", "".getBytes());
-        doThrow(IllegalArgumentException.class).when(mockedImageService).checkImageExtention(eq(image));
+        doThrow(IllegalArgumentException.class).when(mockedImageServiceImpl).checkImageExtention(eq(image));
         userServiceUnderTest.uploadImage(image);
     }
 

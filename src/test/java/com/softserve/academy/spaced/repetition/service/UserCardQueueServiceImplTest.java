@@ -5,6 +5,7 @@ import com.softserve.academy.spaced.repetition.domain.*;
 import com.softserve.academy.spaced.repetition.exceptions.NotAuthorisedUserException;
 import com.softserve.academy.spaced.repetition.repository.RememberingLevelRepository;
 import com.softserve.academy.spaced.repetition.repository.UserCardQueueRepository;
+import com.softserve.academy.spaced.repetition.service.impl.UserCardQueueServiceImpl;
 import org.junit.Before;
 import org.junit.ClassRule;
 import org.junit.Rule;
@@ -38,7 +39,7 @@ import static org.mockito.Mockito.when;
 @Import(TestDatabaseConfig.class)
 @Sql("/data/TestData.sql")
 @Transactional
-public class UserCardQueueServiceTest {
+public class UserCardQueueServiceImplTest {
     private static final int DAY_IN_MILLISECONDS = 24 * 60 * 60 * 1000;
     private static final Long ACCOUNT_ID = 1L;
     private static final Long CARD_ID = 1L;
@@ -88,7 +89,7 @@ public class UserCardQueueServiceTest {
 
     @Before
     public void setUp() throws Exception {
-        userCardQueueService = new UserCardQueueService(userCardQueueRepository, mockedUserService,
+        userCardQueueService = new UserCardQueueServiceImpl(userCardQueueRepository, mockedUserService,
                 rememberingLevelRepository);
         User mockedUser = createMockedUser(learningRegime);
         when(mockedUserService.getAuthorizedUser()).thenReturn(mockedUser);

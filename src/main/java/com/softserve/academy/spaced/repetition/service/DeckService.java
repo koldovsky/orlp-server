@@ -54,7 +54,7 @@ public class DeckService {
     }
 
     @Autowired
-    public void setUserService(UserService userService) {
+    public void setUserServiceImpl(UserService userService) {
         this.userService = userService;
     }
 
