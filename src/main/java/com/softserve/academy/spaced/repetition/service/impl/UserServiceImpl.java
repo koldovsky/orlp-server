@@ -1,4 +1,4 @@
-package com.softserve.academy.spaced.repetition.service;
+package com.softserve.academy.spaced.repetition.service.impl;
 
 import com.softserve.academy.spaced.repetition.dto.impl.PasswordDTO;
 import com.softserve.academy.spaced.repetition.domain.*;
@@ -9,6 +9,9 @@ import com.softserve.academy.spaced.repetition.repository.AuthorityRepository;
 import com.softserve.academy.spaced.repetition.repository.DeckRepository;
 import com.softserve.academy.spaced.repetition.repository.UserRepository;
 import com.softserve.academy.spaced.repetition.security.JwtUser;
+import com.softserve.academy.spaced.repetition.service.ImageService;
+import com.softserve.academy.spaced.repetition.service.MailService;
+import com.softserve.academy.spaced.repetition.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -24,7 +27,7 @@ import java.util.*;
 import static com.softserve.academy.spaced.repetition.domain.Account.INITIAL_CARDS_NUMBER;
 
 @Service
-public class UserService {
+public class UserServiceImpl implements UserService {
 
     public final static int QUANTITY_USER_IN_PAGE = 20;
 
@@ -40,48 +43,58 @@ public class UserService {
 
     private AuthorityRepository authorityRepository;
 
+    @Override
     @Autowired
     public void setAuthorityRepository(AuthorityRepository authorityRepository) {
         this.authorityRepository = authorityRepository;
     }
 
+    @Override
     @Autowired
     public void setUserRepository(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
+    @Override
     @Autowired
     public void setDeckRepository(DeckRepository deckRepository) {
         this.deckRepository = deckRepository;
     }
 
+    @Override
     @Autowired
     public void setPasswordEncoder(PasswordEncoder passwordEncoder) {
         this.passwordEncoder = passwordEncoder;
     }
 
+    @Override
     @Autowired
-    public void setImageService(ImageService imageService) {
-        this.imageService = imageService;
+    public void setImageServiceImpl(ImageServiceImpl imageServiceImpl) {
+        this.imageService = imageServiceImpl;
     }
 
+    @Override
     @Autowired
-    public void setMailService(MailService mailService) {
+    public void setMailServiceImpl(MailService mailService) {
         this.mailService = mailService;
     }
 
+    @Override
     public void addUser(User user) {
         userRepository.save(user);
     }
 
+    @Override
     public User findUserByEmail(String email) {
         return userRepository.findUserByAccountEmail(email);
     }
 
+    @Override
     public List<User> getAllUsers() {
         return userRepository.findAll();
     }
 
+    @Override
     public User setUsersStatusActive(Long id) {
         User user = userRepository.findOne(id);
         user.getAccount().setStatus(AccountStatus.ACTIVE);
@@ -89,6 +102,7 @@ public class UserService {
         return userRepository.findOne(id);
     }
 
+    @Override
     public User setUsersStatusDeleted(Long id) {
         User user = userRepository.findOne(id);
         user.getAccount().setStatus(AccountStatus.DELETED);
@@ -96,6 +110,7 @@ public class UserService {
         return userRepository.findOne(id);
     }
 
+    @Override
     public User setUsersStatusBlocked(Long id) {
         User user = userRepository.findOne(id);
         user.getAccount().setStatus(AccountStatus.BLOCKED);
@@ -103,10 +118,12 @@ public class UserService {
         return userRepository.findOne(id);
     }
 
+    @Override
     public User getUserById(Long userId) {
         return userRepository.findOne(userId);
     }
 
+    @Override
     public User addExistingDeckToUsersFolder(Long userId, Long deckId) {
         User user = userRepository.findOne(userId);
         Folder usersFolder = user.getFolder();
@@ -121,6 +138,7 @@ public class UserService {
         return user;
     }
 
+    @Override
     public String getNoAuthenticatedUserEmail() throws NotAuthorisedUserException {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (principal instanceof JwtUser) {
@@ -131,6 +149,7 @@ public class UserService {
         }
     }
 
+    @Override
     public User getAuthorizedUser() throws NotAuthorisedUserException {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (principal instanceof String) {
@@ -141,11 +160,13 @@ public class UserService {
         }
     }
 
+    @Override
     public Set<Course> getAllCoursesByUserId(Long user_id) {
         User user = userRepository.findOne(user_id);
         return user.getCourses();
     }
 
+    @Override
     public User removeDeckFromUsersFolder(Long userId, Long deckId) {
         Deck deck = deckRepository.getDeckByItsIdAndOwnerOfDeck(deckId, userId);
         User user = userRepository.findOne(userId);
@@ -166,6 +187,7 @@ public class UserService {
         return user;
     }
 
+    @Override
     public List<Deck> getAllDecksFromUsersFolder(Long userId) {
         User user = userRepository.findOne(userId);
         Folder usersFolder = user.getFolder();
@@ -174,11 +196,13 @@ public class UserService {
         return decks;
     }
 
+    @Override
     public Page<User> getUsersByPage(int pageNumber, String sortBy, boolean ascending) {
         PageRequest request = new PageRequest(pageNumber - 1, QUANTITY_USER_IN_PAGE, ascending ? Sort.Direction.ASC : Sort.Direction.DESC, sortBy);
         return userRepository.findAll(request);
     }
 
+    @Override
     @Transactional
     public User editPersonalData(Person person) throws NotAuthorisedUserException {
         User user = getAuthorizedUser();
@@ -187,6 +211,7 @@ public class UserService {
         return userRepository.save(user);
     }
 
+    @Override
     @Transactional
     public void changePassword(PasswordDTO passwordDTO) throws NotAuthorisedUserException {
         User user = getAuthorizedUser();
@@ -195,6 +220,7 @@ public class UserService {
         mailService.sendPasswordNotificationMail(user);
     }
 
+    @Override
     public User uploadImage(MultipartFile file) throws ImageRepositorySizeQuotaExceededException,
             NotAuthorisedUserException {
         imageService.checkImageExtention(file);
@@ -204,22 +230,26 @@ public class UserService {
         return userRepository.save(user);
     }
 
+    @Override
     public byte[] getDecodedImageContent() throws NotAuthorisedUserException {
         User user = getAuthorizedUser();
         String encodedFileContent = user.getPerson().getImageBase64();
         return imageService.decodeFromBase64(encodedFileContent);
     }
 
+    @Override
     public void activateAccount() throws NotAuthorisedUserException {
         mailService.sendActivationMail(getNoAuthenticatedUserEmail());
     }
 
+    @Override
     public void deleteAccount() throws NotAuthorisedUserException {
         User user = getAuthorizedUser();
         user.getAccount().setDeactivated(true);
         userRepository.save(user);
     }
 
+    @Override
     public void getUserStatus() throws UserStatusException {
         JwtUser jwtUser = (JwtUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User user = userRepository.findUserByAccountEmail(jwtUser.getUsername());
@@ -228,8 +258,9 @@ public class UserService {
         }
     }
 
+    @Override
     @Transactional
-    public void initializeNewUser(Account account, String email, AccountStatus accountStatus, boolean deactivated,  AuthenticationType
+    public void initializeNewUser(Account account, String email, AccountStatus accountStatus, boolean deactivated, AuthenticationType
             authenticationType) {
         account.setEmail(email);
         if (account.getPassword() != null) {
@@ -245,6 +276,7 @@ public class UserService {
         account.setCardsNumber(INITIAL_CARDS_NUMBER);
     }
 
+    @Override
     public void isUserStatusActive(User user) throws UserStatusException {
         if (user.getAccount().getStatus().isNotActive()) {
             throw new UserStatusException(user.getAccount().getStatus());

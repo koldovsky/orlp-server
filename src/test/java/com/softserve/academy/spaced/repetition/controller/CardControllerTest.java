@@ -2,7 +2,6 @@ package com.softserve.academy.spaced.repetition.controller;
 
 
 import com.softserve.academy.spaced.repetition.domain.*;
-import com.softserve.academy.spaced.repetition.exceptions.NotAuthorisedUserException;
 import com.softserve.academy.spaced.repetition.service.CardService;
 import com.softserve.academy.spaced.repetition.service.UserService;
 import org.junit.Before;

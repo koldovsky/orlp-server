@@ -55,7 +55,7 @@ public class DeckRatingService {
     }
 
     @Autowired
-    public void setUserService(UserService userService) {
+    public void setUserServiceImpl(UserService userService) {
         this.userService = userService;
     }
 }

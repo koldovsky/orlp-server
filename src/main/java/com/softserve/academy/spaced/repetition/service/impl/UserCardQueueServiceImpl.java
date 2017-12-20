@@ -1,9 +1,11 @@
-package com.softserve.academy.spaced.repetition.service;
+package com.softserve.academy.spaced.repetition.service.impl;
 
 import com.softserve.academy.spaced.repetition.domain.*;
 import com.softserve.academy.spaced.repetition.exceptions.NotAuthorisedUserException;
 import com.softserve.academy.spaced.repetition.repository.RememberingLevelRepository;
 import com.softserve.academy.spaced.repetition.repository.UserCardQueueRepository;
+import com.softserve.academy.spaced.repetition.service.UserCardQueueService;
+import com.softserve.academy.spaced.repetition.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,19 +15,20 @@ import java.util.Date;
 import static com.softserve.academy.spaced.repetition.service.AccountService.NUMBER_OF_REMEMBERING_LEVELS;
 
 @Service
-public class UserCardQueueService {
+public class UserCardQueueServiceImpl implements UserCardQueueService {
     private static final int DAY_IN_MILLISECONDS = 24 * 60 * 60 * 1000;
     private final UserCardQueueRepository userCardQueueRepository;
     private final UserService userService;
     private final RememberingLevelRepository rememberingLevelRepository;
 
     @Autowired
-    public UserCardQueueService(UserCardQueueRepository userCardQueueRepository, UserService userService, RememberingLevelRepository rememberingLevelRepository) {
+    public UserCardQueueServiceImpl(UserCardQueueRepository userCardQueueRepository, UserService userService, RememberingLevelRepository rememberingLevelRepository) {
         this.userCardQueueRepository = userCardQueueRepository;
         this.userService = userService;
         this.rememberingLevelRepository = rememberingLevelRepository;
     }
 
+    @Override
     @Transactional
     public void updateUserCardQueue(Long deckId, Long cardId, UserCardQueueStatus userCardQueueStatus)
             throws NotAuthorisedUserException {
@@ -71,10 +74,12 @@ public class UserCardQueueService {
                 userCardQueue.getRememberingLevel().getNumberOfPostponedDays() * DAY_IN_MILLISECONDS));
     }
 
+    @Override
     public UserCardQueue getUserCardQueueById(long id) {
         return userCardQueueRepository.findOne(id);
     }
 
+    @Override
     @Transactional
     public long countCardsThatNeedRepeating(Long deckId) throws NotAuthorisedUserException {
         return userCardQueueRepository.countAllByUserIdEqualsAndDeckIdEqualsAndDateToRepeatBefore(

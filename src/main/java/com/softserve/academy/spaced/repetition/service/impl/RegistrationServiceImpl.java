@@ -1,7 +1,11 @@
-package com.softserve.academy.spaced.repetition.service;
+package com.softserve.academy.spaced.repetition.service.impl;
 
 import com.softserve.academy.spaced.repetition.domain.*;
 import com.softserve.academy.spaced.repetition.repository.AuthorityRepository;
+import com.softserve.academy.spaced.repetition.service.AccountService;
+import com.softserve.academy.spaced.repetition.service.MailService;
+import com.softserve.academy.spaced.repetition.service.RegistrationService;
+import com.softserve.academy.spaced.repetition.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -9,7 +13,7 @@ import org.springframework.stereotype.Service;
 
 
 @Service
-public class RegistrationService {
+public class RegistrationServiceImpl implements RegistrationService {
 
     private AuthorityRepository authorityRepository;
     private UserService userService;
@@ -18,6 +22,7 @@ public class RegistrationService {
 
     private AccountService accountService;
 
+    @Override
     public User registerNewUser(User user) {
         Account account = user.getAccount();
         userService.initializeNewUser(account, account.getEmail().toLowerCase(), AccountStatus.ACTIVE,
@@ -33,26 +38,31 @@ public class RegistrationService {
         mailService.sendConfirmationMail(user);
     }
 
+    @Override
     @Autowired
     public void setAuthorityRepository(AuthorityRepository authorityRepository) {
         this.authorityRepository = authorityRepository;
     }
 
+    @Override
     @Autowired
-    public void setUserService(UserService userService) {
+    public void setUserServiceImpl(UserService userService) {
         this.userService = userService;
     }
 
+    @Override
     @Autowired
     public void setPasswordEncoder(PasswordEncoder passwordEncoder) {
         this.passwordEncoder = passwordEncoder;
     }
 
+    @Override
     @Autowired
-    public void setMailService(MailService mailService) {
+    public void setMailServiceImpl(MailService mailService) {
         this.mailService = mailService;
     }
 
+    @Override
     @Autowired
     public void setAccountService(AccountService accountService) {
         this.accountService = accountService;

@@ -10,6 +10,7 @@ import com.softserve.academy.spaced.repetition.exceptions.NotAuthorisedUserExcep
 import com.softserve.academy.spaced.repetition.repository.CourseRepository;
 import com.softserve.academy.spaced.repetition.repository.DeckRepository;
 import com.softserve.academy.spaced.repetition.repository.UserRepository;
+import com.softserve.academy.spaced.repetition.service.impl.ImageServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -33,7 +34,7 @@ public class CourseService {
     private UserRepository userRepository;
 
 
-    private ImageService imageService;
+    private ImageServiceImpl imageServiceImpl;
 
     private ImageRepository imageRepository;
 
@@ -47,7 +48,7 @@ public class CourseService {
     }
 
     @Autowired
-    public void setUserService(UserService userService) {
+    public void setUserServiceImpl(UserService userService) {
         this.userService = userService;
     }
 
@@ -57,8 +58,8 @@ public class CourseService {
     }
 
     @Autowired
-    public void setImageService(ImageService imageService) {
-        this.imageService = imageService;
+    public void setImageServiceImpl(ImageServiceImpl imageServiceImpl) {
+        this.imageServiceImpl = imageServiceImpl;
     }
 
     @Autowired
@@ -95,7 +96,7 @@ public class CourseService {
 
     public void addCourse(Course course, Long category_id) {
         Long imageId = course.getImage().getId();
-        imageService.setImageStatusInUse(imageId);
+        imageServiceImpl.setImageStatusInUse(imageId);
         course.setCategory(new Category(category_id));
         courseRepository.save(course);
     }

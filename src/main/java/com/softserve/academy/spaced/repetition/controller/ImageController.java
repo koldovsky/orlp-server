@@ -8,7 +8,7 @@ import com.softserve.academy.spaced.repetition.audit.AuditingAction;
 import com.softserve.academy.spaced.repetition.domain.Image;
 import com.softserve.academy.spaced.repetition.exceptions.*;
 import com.softserve.academy.spaced.repetition.repository.ImageRepository;
-import com.softserve.academy.spaced.repetition.service.ImageService;
+import com.softserve.academy.spaced.repetition.service.impl.ImageServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Link;
 import org.springframework.http.HttpStatus;
@@ -26,7 +26,7 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 public class ImageController {
 
     @Autowired
-    private ImageService imageService;
+    private ImageServiceImpl imageServiceImpl;
     @Autowired
     private ImageRepository imageRepository;
 
@@ -41,11 +41,11 @@ public class ImageController {
     @Auditable(action = AuditingAction.UPLOAD_IMAGE)
     @PostMapping("/api/service/image")
     public ResponseEntity<UploadingImageDTO> addImageToDB(@RequestParam("file") MultipartFile file) throws ImageRepositorySizeQuotaExceededException, NotAuthorisedUserException {
-        Image image = imageService.addImageToDB(file);
+        Image image = imageServiceImpl.addImageToDB(file);
         Long imageId = image.getId();
         Link link = linkTo(methodOn(ImageController.class).getImageById(imageId)).withSelfRel();
         UploadingImageDTO uploadingimageDTO = DTOBuilder.buildDtoForEntity(image, UploadingImageDTO.class, link);
-        Long bytesLeft = imageService.getUsersLimitInBytesForImagesLeft(image.getCreatedBy().getId());
+        Long bytesLeft = imageServiceImpl.getUsersLimitInBytesForImagesLeft(image.getCreatedBy().getId());
         uploadingimageDTO.setBytesLeft(bytesLeft);
         return new ResponseEntity<>(uploadingimageDTO, HttpStatus.OK);
     }
@@ -57,7 +57,7 @@ public class ImageController {
      */
     @GetMapping("/api/service/images/user")
     public ResponseEntity<List<ImageDTO>> getAllImagesByUserId() throws NotAuthorisedUserException {
-        List<Image> listId = imageService.getImagesForCurrentUser();
+        List<Image> listId = imageServiceImpl.getImagesForCurrentUser();
         Link link = linkTo(methodOn(ImageController.class).getImageList()).withSelfRel();
         List<ImageDTO> imageDTOList = DTOBuilder.buildDtoListForCollection(listId, ImageDTO.class, link);
         return new ResponseEntity<>(imageDTOList, HttpStatus.OK);
@@ -71,7 +71,7 @@ public class ImageController {
      */
     @GetMapping(value = "/api/service/image/{id}", produces = {MediaType.IMAGE_JPEG_VALUE})
     public ResponseEntity<byte[]> getImageById(@PathVariable("id") Long id) {
-        byte[] imageContentBytes = imageService.getDecodedImageContentByImageId(id);
+        byte[] imageContentBytes = imageServiceImpl.getDecodedImageContentByImageId(id);
         if (imageContentBytes == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -104,7 +104,7 @@ public class ImageController {
     @Auditable(action = AuditingAction.DELETE_IMAGE)
     @DeleteMapping(value = "/api/service/image/{id}")
     public ResponseEntity<?> deleteImage(@PathVariable("id") Long id) throws CanNotBeDeletedException, NotOwnerOperationException, NotAuthorisedUserException {
-        imageService.deleteImage(id);
+        imageServiceImpl.deleteImage(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

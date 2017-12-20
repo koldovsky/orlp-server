@@ -52,7 +52,7 @@ public class DeckRatingServiceTest {
     @Before
     public void setUp() throws Exception {
         deckRatingServiceUnderTest = new DeckRatingService();
-        deckRatingServiceUnderTest.setUserService(mockedUserService);
+        deckRatingServiceUnderTest.setUserServiceImpl(mockedUserService);
         deckRatingServiceUnderTest.setDeckRatingRepository(deckRatingRepository);
         deckRatingServiceUnderTest.setDeckRepository(deckRepository);
     }

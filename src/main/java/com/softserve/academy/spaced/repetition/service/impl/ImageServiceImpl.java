@@ -1,4 +1,4 @@
-package com.softserve.academy.spaced.repetition.service;
+package com.softserve.academy.spaced.repetition.service.impl;
 
 import com.google.api.client.util.Base64;
 import com.softserve.academy.spaced.repetition.domain.Image;
@@ -8,6 +8,8 @@ import com.softserve.academy.spaced.repetition.exceptions.ImageRepositorySizeQuo
 import com.softserve.academy.spaced.repetition.exceptions.NotAuthorisedUserException;
 import com.softserve.academy.spaced.repetition.exceptions.NotOwnerOperationException;
 import com.softserve.academy.spaced.repetition.repository.ImageRepository;
+import com.softserve.academy.spaced.repetition.service.ImageService;
+import com.softserve.academy.spaced.repetition.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -21,7 +23,7 @@ import java.util.List;
  * Service for processing images
  */
 @Service
-public class ImageService {
+public class ImageServiceImpl implements ImageService {
     @Autowired
     private UserService userService;
     @Autowired
@@ -39,6 +41,7 @@ public class ImageService {
      * @throws ImageRepositorySizeQuotaExceededException - is dropping when user has exceeded the quote of disk-space for his own images
      * @throws NotAuthorisedUserException                - is dropping when the user which wants to add the image is not authorised
      */
+    @Override
     public Image addImageToDB(MultipartFile file) throws ImageRepositorySizeQuotaExceededException, NotAuthorisedUserException {
         checkImageExtention(file);
         Image image = new Image(encodeToBase64(file), file.getContentType(),
@@ -49,7 +52,8 @@ public class ImageService {
     }
 
 
-    void checkImageExtention(MultipartFile file) throws ImageRepositorySizeQuotaExceededException,
+   @Override
+   public void checkImageExtention(MultipartFile file) throws ImageRepositorySizeQuotaExceededException,
             NotAuthorisedUserException {
         long fileSize = file.getSize();
         User user = userService.getAuthorizedUser();
@@ -73,6 +77,7 @@ public class ImageService {
      * @param id id of the image in the database
      * @return String, which contains decoded image content
      */
+    @Override
     public byte[] getDecodedImageContentByImageId(Long id) {
         byte[] imageContent = null;
         List<Long> idList = imageRepository.getIdList();
@@ -93,7 +98,8 @@ public class ImageService {
      * @param file - MultiPartFile
      * @return encoded file-content
      */
-    String encodeToBase64(MultipartFile file) {
+    @Override
+    public String encodeToBase64(MultipartFile file) {
         String encodedFile = null;
         byte[] bytes = new byte[(int) file.getSize()];
         try {
@@ -111,7 +117,7 @@ public class ImageService {
      * @param encodedFileContent
      * @return decoded file-content
      */
-    byte[] decodeFromBase64(String encodedFileContent) {
+    public byte[] decodeFromBase64(String encodedFileContent) {
 
         return Base64.decodeBase64(encodedFileContent);
     }
@@ -122,6 +128,7 @@ public class ImageService {
      * @param userId - user's id
      * @return number of bytes that left to upload
      */
+    @Override
     public Long getUsersLimitInBytesForImagesLeft(Long userId) {
 
         Long bytesUsed = imageRepository.getSumOfImagesSizesOfUserById(userId);
@@ -140,6 +147,7 @@ public class ImageService {
      * @throws NotOwnerOperationException - is dropping when the image which we want to delete is already in use
      * @throws NotAuthorisedUserException - is dropping when the user which wants to delete the image is not authorised
      */
+    @Override
     public void deleteImage(Long id) throws CanNotBeDeletedException, NotOwnerOperationException, NotAuthorisedUserException {
         Image image = imageRepository.findImageById(id);
         Long imageOwnerId = image.getCreatedBy().getId();
@@ -161,6 +169,7 @@ public class ImageService {
      *
      * @param imageId
      */
+    @Override
     public void setImageStatusInUse(Long imageId) {
         Image image = imageRepository.findOne(imageId);
         image.setIsImageUsed(true);
@@ -172,6 +181,7 @@ public class ImageService {
      *
      * @param imageId
      */
+    @Override
     public void setImageStatusNotInUse(Long imageId) {
         Image image = imageRepository.findOne(imageId);
         image.setIsImageUsed(false);
@@ -183,6 +193,7 @@ public class ImageService {
      *
      * @return List of images
      */
+    @Override
     public List<Image> getImagesForCurrentUser() throws NotAuthorisedUserException {
         Long userId = userService.getAuthorizedUser().getId();
         return imageRepository.getImagesWithoutContentById(userId);
