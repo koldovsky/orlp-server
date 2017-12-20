@@ -1,12 +1,12 @@
 package com.softserve.academy.spaced.repetition.controller;
 
+import com.softserve.academy.spaced.repetition.domain.CourseRating;
 import com.softserve.academy.spaced.repetition.dto.DTOBuilder;
 import com.softserve.academy.spaced.repetition.dto.RatingDTO;
 import com.softserve.academy.spaced.repetition.dto.impl.CourseRatingPublicDTO;
-import com.softserve.academy.spaced.repetition.domain.CourseRating;
 import com.softserve.academy.spaced.repetition.exceptions.NotAuthorisedUserException;
 import com.softserve.academy.spaced.repetition.exceptions.UserStatusException;
-import com.softserve.academy.spaced.repetition.service.impl.CourseRatingServiceImpl;
+import com.softserve.academy.spaced.repetition.service.CourseRatingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Link;
 import org.springframework.http.HttpStatus;
@@ -23,7 +23,7 @@ public class CourseRatingController {
     public static final int MAX_RATING = 5;
 
     @Autowired
-    private CourseRatingServiceImpl courseRatingService;
+    private CourseRatingService courseRatingService;
 
     @GetMapping("api/course/{courseId}/rating/{id}")
     public ResponseEntity<CourseRatingPublicDTO> getCourseRatingById(@PathVariable Long courseId, @PathVariable Long id) {

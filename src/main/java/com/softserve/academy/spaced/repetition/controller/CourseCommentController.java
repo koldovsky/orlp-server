@@ -9,7 +9,7 @@ import com.softserve.academy.spaced.repetition.dto.Request;
 import com.softserve.academy.spaced.repetition.dto.impl.CommentDTO;
 import com.softserve.academy.spaced.repetition.dto.impl.ReplyToCommentDTO;
 import com.softserve.academy.spaced.repetition.exceptions.NotAuthorisedUserException;
-import com.softserve.academy.spaced.repetition.service.impl.CourseCommentServiceImpl;
+import com.softserve.academy.spaced.repetition.service.CourseCommentService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +31,7 @@ public class CourseCommentController {
     private static final Logger LOGGER = LoggerFactory.getLogger(CourseCommentController.class);
 
     @Autowired
-    private CourseCommentServiceImpl courseCommentService;
+    private CourseCommentService courseCommentService;
 
     @Auditable(action = AuditingAction.VIEW_ALL_COMMENTS_FOR_COURSE)
     @GetMapping(value = "/api/category/{categoryId}/courses/{courseId}/comments")
