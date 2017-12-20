@@ -1,9 +1,9 @@
 package com.softserve.academy.spaced.repetition.controller;
 
+import com.softserve.academy.spaced.repetition.domain.CourseRating;
 import com.softserve.academy.spaced.repetition.dto.DTOBuilder;
 import com.softserve.academy.spaced.repetition.dto.RatingDTO;
 import com.softserve.academy.spaced.repetition.dto.impl.CourseRatingPublicDTO;
-import com.softserve.academy.spaced.repetition.domain.CourseRating;
 import com.softserve.academy.spaced.repetition.exceptions.NotAuthorisedUserException;
 import com.softserve.academy.spaced.repetition.exceptions.UserStatusException;
 import com.softserve.academy.spaced.repetition.service.CourseRatingService;
@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Link;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
@@ -18,9 +19,6 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
 @RestController
 public class CourseRatingController {
-
-    public static final int MIN_RATING = 1;
-    public static final int MAX_RATING = 5;
 
     @Autowired
     private CourseRatingService courseRatingService;
@@ -34,12 +32,8 @@ public class CourseRatingController {
     }
 
     @PostMapping("/api/private/course/{courseId}")
-    public ResponseEntity addCourseRating(@RequestBody RatingDTO ratingDTO, @PathVariable Long courseId) throws NotAuthorisedUserException, UserStatusException {
-        if ((ratingDTO.getRating() >= MIN_RATING) && (ratingDTO.getRating() <= MAX_RATING)) {
-            courseRatingService.addCourseRating(ratingDTO.getRating(), courseId);
-           return new ResponseEntity(HttpStatus.CREATED);
-        } else {
-            throw new IllegalArgumentException("Rating can't be less than 1 and more than 5");
-        }
+    public ResponseEntity addCourseRating(@Validated @RequestBody RatingDTO ratingDTO, @PathVariable Long courseId) throws NotAuthorisedUserException, UserStatusException {
+        courseRatingService.addCourseRating(ratingDTO.getRating(), courseId);
+        return new ResponseEntity(HttpStatus.CREATED);
     }
 }
