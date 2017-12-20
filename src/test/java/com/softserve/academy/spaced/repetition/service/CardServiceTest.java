@@ -4,7 +4,6 @@ import com.softserve.academy.spaced.repetition.config.TestDatabaseConfig;
 import com.softserve.academy.spaced.repetition.domain.Card;
 import com.softserve.academy.spaced.repetition.repository.CardRepository;
 import com.softserve.academy.spaced.repetition.repository.DeckRepository;
-import com.softserve.academy.spaced.repetition.service.impl.AccountServiceImpl;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -44,7 +43,7 @@ public class CardServiceTest {
     private UserService mockedUserService;
 
     @Mock
-    private AccountServiceImpl mockedAccountService;
+    private AccountService mockedAccountService;
 
     @Mock
     private UserCardQueueService userCardQueueService;

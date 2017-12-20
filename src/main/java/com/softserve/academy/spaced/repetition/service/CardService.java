@@ -12,7 +12,6 @@ import com.softserve.academy.spaced.repetition.exceptions.NotOwnerOperationExcep
 import com.softserve.academy.spaced.repetition.exceptions.WrongFormatException;
 import com.softserve.academy.spaced.repetition.repository.CardRepository;
 import com.softserve.academy.spaced.repetition.repository.DeckRepository;
-import com.softserve.academy.spaced.repetition.service.impl.AccountServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,14 +34,14 @@ public class CardService {
 
     private final UserService userService;
 
-    private final AccountServiceImpl accountService;
+    private final AccountService accountService;
 
     private final UserCardQueueService userCardQueueService;
 
     private final DeckService deckService;
 
     @Autowired
-    public CardService(CardRepository cardRepository, DeckRepository deckRepository, AccountServiceImpl accountService,
+    public CardService(CardRepository cardRepository, DeckRepository deckRepository, AccountService accountService,
                        UserService userService, UserCardQueueService userCardQueueService, DeckService deckService) {
         this.cardRepository = cardRepository;
         this.deckRepository = deckRepository;

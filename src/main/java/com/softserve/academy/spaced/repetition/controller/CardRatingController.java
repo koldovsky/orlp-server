@@ -1,12 +1,12 @@
 package com.softserve.academy.spaced.repetition.controller;
 
-import com.softserve.academy.spaced.repetition.dto.DTOBuilder;
-import com.softserve.academy.spaced.repetition.dto.impl.CardRatingPublicDTO;
 import com.softserve.academy.spaced.repetition.audit.Auditable;
 import com.softserve.academy.spaced.repetition.audit.AuditingAction;
 import com.softserve.academy.spaced.repetition.domain.CardRating;
+import com.softserve.academy.spaced.repetition.dto.DTOBuilder;
+import com.softserve.academy.spaced.repetition.dto.impl.CardRatingPublicDTO;
 import com.softserve.academy.spaced.repetition.exceptions.NotAuthorisedUserException;
-import com.softserve.academy.spaced.repetition.service.impl.CardRatingServiceImpl;
+import com.softserve.academy.spaced.repetition.service.CardRatingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Link;
 import org.springframework.http.HttpStatus;
@@ -24,7 +24,7 @@ public class CardRatingController {
     public static final int MAX_RATING = 5;
 
     @Autowired
-    private CardRatingServiceImpl cardRatingService;
+    private CardRatingService cardRatingService;
 
     /**
      * Get rating of card by id.

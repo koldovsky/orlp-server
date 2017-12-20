@@ -6,7 +6,7 @@ import com.softserve.academy.spaced.repetition.audit.AuditingAction;
 import com.softserve.academy.spaced.repetition.domain.Person;
 import com.softserve.academy.spaced.repetition.domain.User;
 import com.softserve.academy.spaced.repetition.dto.Request;
-import com.softserve.academy.spaced.repetition.service.impl.AccountVerificationByEmailServiceImpl;
+import com.softserve.academy.spaced.repetition.service.AccountVerificationByEmailService;
 import com.softserve.academy.spaced.repetition.service.RegistrationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,7 +23,7 @@ public class RegistrationController {
     @Autowired
     private RegistrationService registrationService;
     @Autowired
-    private AccountVerificationByEmailServiceImpl verificationService;
+    private AccountVerificationByEmailService verificationService;
 
     @Auditable(action = AuditingAction.SIGN_UP)
     @RequestMapping(value = "/registration", method = RequestMethod.POST)

@@ -1,15 +1,17 @@
 package com.softserve.academy.spaced.repetition.controller;
 
+import com.softserve.academy.spaced.repetition.domain.Audit;
 import com.softserve.academy.spaced.repetition.dto.DTOBuilder;
 import com.softserve.academy.spaced.repetition.dto.impl.AuditPublicDTO;
-import com.softserve.academy.spaced.repetition.domain.Audit;
-import com.softserve.academy.spaced.repetition.service.impl.AuditServiceImpl;
+import com.softserve.academy.spaced.repetition.service.AuditService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.hateoas.Link;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
@@ -20,7 +22,7 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 public class AuditController {
 
     @Autowired
-    private AuditServiceImpl auditService;
+    private AuditService auditService;
 
     /**
      * Get list of audit with self-link

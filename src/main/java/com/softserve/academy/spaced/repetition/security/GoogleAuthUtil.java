@@ -11,7 +11,7 @@ import com.softserve.academy.spaced.repetition.repository.AccountRepository;
 import com.softserve.academy.spaced.repetition.repository.AuthorityRepository;
 import com.softserve.academy.spaced.repetition.repository.RememberingLevelRepository;
 import com.softserve.academy.spaced.repetition.repository.UserRepository;
-import com.softserve.academy.spaced.repetition.service.impl.AccountServiceImpl;
+import com.softserve.academy.spaced.repetition.service.AccountService;
 import com.softserve.academy.spaced.repetition.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -37,14 +37,14 @@ public class GoogleAuthUtil {
 
     private final AuthorityRepository authorityRepository;
 
-    private final AccountServiceImpl accountService;
+    private final AccountService accountService;
 
     private final UserService userService;
 
     @Autowired
     public GoogleAuthUtil(AccountRepository accountRepository, UserRepository userRepository,
                           AuthorityRepository authorityRepository,
-                          RememberingLevelRepository rememberingLevelRepository, AccountServiceImpl accountService, UserService userService) {
+                          RememberingLevelRepository rememberingLevelRepository, AccountService accountService, UserService userService) {
         this.accountRepository = accountRepository;
         this.userRepository = userRepository;
         this.authorityRepository = authorityRepository;
@@ -87,7 +87,7 @@ public class GoogleAuthUtil {
     public void saveNewGoogleUser(GoogleIdToken googleIdToken) {
         GoogleIdToken.Payload payload = googleIdToken.getPayload();
         Account account = new Account();
-        userService.initializeNewUser(account, payload.getEmail(), AccountStatus.ACTIVE,false, AuthenticationType.GOOGLE);
+        userService.initializeNewUser(account, payload.getEmail(), AccountStatus.ACTIVE, false, AuthenticationType.GOOGLE);
         Person person = new Person((String) payload.get(FIRST_NAME), (String) payload.get(LAST_NAME), ImageType.LINK,
                 (String) payload.get(IMAGE));
         userRepository.save(new User(account, person, new Folder()));

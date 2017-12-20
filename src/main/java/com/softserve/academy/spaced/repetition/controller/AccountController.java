@@ -7,8 +7,8 @@ import com.softserve.academy.spaced.repetition.dto.Request;
 import com.softserve.academy.spaced.repetition.dto.impl.NewAccountPasswordDTO;
 import com.softserve.academy.spaced.repetition.dto.impl.RememberingLevelDTO;
 import com.softserve.academy.spaced.repetition.exceptions.NotAuthorisedUserException;
-import com.softserve.academy.spaced.repetition.service.impl.AccountServiceImpl;
-import com.softserve.academy.spaced.repetition.service.impl.AccountVerificationByEmailServiceImpl;
+import com.softserve.academy.spaced.repetition.service.AccountService;
+import com.softserve.academy.spaced.repetition.service.AccountVerificationByEmailService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,15 +23,15 @@ import java.util.List;
 public class AccountController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AccountController.class);
-    private final AccountServiceImpl accountService;
+    private final AccountService accountService;
 
     @Autowired
-    public AccountController(AccountServiceImpl accountService) {
+    public AccountController(AccountService accountService) {
         this.accountService = accountService;
     }
 
     @Autowired
-    private AccountVerificationByEmailServiceImpl verificationService;
+    private AccountVerificationByEmailService verificationService;
 
     @GetMapping("/api/private/account/learning-regime")
     public ResponseEntity<LearningRegime> getLearningRegime() throws NotAuthorisedUserException {
