@@ -19,9 +19,6 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 @RestController
 public class CourseRatingController {
 
-    public static final int MIN_RATING = 1;
-    public static final int MAX_RATING = 5;
-
     @Autowired
     private CourseRatingService courseRatingService;
 
@@ -35,11 +32,7 @@ public class CourseRatingController {
 
     @PostMapping("/api/private/course/{courseId}")
     public ResponseEntity addCourseRating(@RequestBody RatingDTO ratingDTO, @PathVariable Long courseId) throws NotAuthorisedUserException, UserStatusException {
-        if ((ratingDTO.getRating() >= MIN_RATING) && (ratingDTO.getRating() <= MAX_RATING)) {
-            courseRatingService.addCourseRating(ratingDTO.getRating(), courseId);
-           return new ResponseEntity(HttpStatus.CREATED);
-        } else {
-            throw new IllegalArgumentException("Rating can't be less than 1 and more than 5");
-        }
+        courseRatingService.addCourseRating(ratingDTO.getRating(), courseId);
+        return new ResponseEntity(HttpStatus.CREATED);
     }
 }

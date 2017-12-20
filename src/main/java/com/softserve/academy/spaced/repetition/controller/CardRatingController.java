@@ -20,9 +20,6 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 @RestController
 public class CardRatingController {
 
-    public static final int MIN_RATING = 1;
-    public static final int MAX_RATING = 5;
-
     @Autowired
     private CardRatingService cardRatingService;
 
@@ -54,13 +51,10 @@ public class CardRatingController {
     @PostMapping("/api/private/decks/{deckId}/cards/{cardId}/rate")
     @PreAuthorize(value = "@accessToUrlService.hasAccessToCard(#deckId, #cardId)")
     public ResponseEntity<CardRatingPublicDTO> addCardRating(@RequestBody CardRating cardRating, @PathVariable Long deckId, @PathVariable Long cardId) throws NotAuthorisedUserException {
-        if ((cardRating.getRating() >= MIN_RATING) && (cardRating.getRating() <= MAX_RATING)) {
-            cardRatingService.addCardRating(cardRating, cardId);
-            Link selfLink = linkTo(methodOn(CardRatingController.class).getCardRatingById(cardRating.getId())).withSelfRel();
-            CardRatingPublicDTO cardRatingPublicDTO = DTOBuilder.buildDtoForEntity(cardRating, CardRatingPublicDTO.class, selfLink);
-            return new ResponseEntity<>(cardRatingPublicDTO, HttpStatus.CREATED);
-        } else {
-            throw new IllegalArgumentException("Rating can't be less than 1 and more than 5");
-        }
+        cardRatingService.addCardRating(cardRating, cardId);
+        Link selfLink = linkTo(methodOn(CardRatingController.class).getCardRatingById(cardRating.getId())).withSelfRel();
+        CardRatingPublicDTO cardRatingPublicDTO = DTOBuilder.buildDtoForEntity(cardRating, CardRatingPublicDTO.class, selfLink);
+        return new ResponseEntity<>(cardRatingPublicDTO, HttpStatus.CREATED);
+
     }
 }
