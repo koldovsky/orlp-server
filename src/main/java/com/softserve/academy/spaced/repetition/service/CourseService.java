@@ -1,15 +1,8 @@
 package com.softserve.academy.spaced.repetition.service;
 
 import com.softserve.academy.spaced.repetition.domain.*;
-import com.softserve.academy.spaced.repetition.repository.*;
-import com.softserve.academy.spaced.repetition.domain.Category;
-import com.softserve.academy.spaced.repetition.domain.Course;
-import com.softserve.academy.spaced.repetition.domain.Deck;
-import com.softserve.academy.spaced.repetition.domain.User;
 import com.softserve.academy.spaced.repetition.exceptions.NotAuthorisedUserException;
-import com.softserve.academy.spaced.repetition.repository.CourseRepository;
-import com.softserve.academy.spaced.repetition.repository.DeckRepository;
-import com.softserve.academy.spaced.repetition.repository.UserRepository;
+import com.softserve.academy.spaced.repetition.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -31,7 +24,6 @@ public class CourseService {
     private UserService userService;
 
     private UserRepository userRepository;
-
 
     private ImageService imageService;
 

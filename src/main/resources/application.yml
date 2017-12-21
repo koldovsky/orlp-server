@@ -7,7 +7,7 @@ spring:
   jpa:
     show-sql: false
     hibernate:
-      ddl-auto: update
+      ddl-auto: validate
       naming-strategy: org.hibernate.cfg.ImprovedNamingStrategy
   mail:
     host: smtp.gmail.com
