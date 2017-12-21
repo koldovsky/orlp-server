@@ -28,6 +28,8 @@ public class UserService {
 
     public final static int QUANTITY_USER_IN_PAGE = 20;
 
+    public final static String ANONYMOUS_USER = "anonymousUser";
+
     private UserRepository userRepository;
 
     private DeckRepository deckRepository;
@@ -221,15 +223,17 @@ public class UserService {
     }
 
     public void getUserStatus() throws UserStatusException {
-        JwtUser jwtUser = (JwtUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        User user = userRepository.findUserByAccountEmail(jwtUser.getUsername());
-        if (user.getAccount().getStatus().isNotActive()) {
-            throw new UserStatusException(user.getAccount().getStatus());
+        if (!SecurityContextHolder.getContext().getAuthentication().getPrincipal().equals("anonymousUser")) {
+            JwtUser jwtUser = (JwtUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            User user = userRepository.findUserByAccountEmail(jwtUser.getUsername());
+            if (user.getAccount().getStatus().isNotActive()) {
+                throw new UserStatusException(user.getAccount().getStatus());
+            }
         }
     }
 
     @Transactional
-    public void initializeNewUser(Account account, String email, AccountStatus accountStatus, boolean deactivated,  AuthenticationType
+    public void initializeNewUser(Account account, String email, AccountStatus accountStatus, boolean deactivated, AuthenticationType
             authenticationType) {
         account.setEmail(email);
         if (account.getPassword() != null) {
