@@ -7,7 +7,7 @@ spring:
   jpa:
     show-sql: false
     hibernate:
-      ddl-auto: validate
+      ddl-auto: update
       naming-strategy: org.hibernate.cfg.ImprovedNamingStrategy
   mail:
     host: smtp.gmail.com
@@ -29,7 +29,7 @@ app:
   social:
       google:
         client-id: 109414995516-fftdn22fnpfdh80fgfsvpq1ht97hdkl5.apps.googleusercontent.com
-        client-secret: QyK5tYKCYN9KF40Lv--CWfY7
+        client-secret: se5lxgYcg2xXeghejled31Ge
         path: api/auth/google
       facebook:
         client-id: 439882899718340

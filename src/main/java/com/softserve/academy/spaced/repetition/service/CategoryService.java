@@ -1,68 +1,21 @@
 package com.softserve.academy.spaced.repetition.service;
 
-
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
-import org.springframework.stereotype.Service;
-
-
 import com.softserve.academy.spaced.repetition.domain.Category;
 import com.softserve.academy.spaced.repetition.domain.Image;
-import com.softserve.academy.spaced.repetition.repository.CategoryRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
-@Service
-public class CategoryService {
+public interface CategoryService {
+    List<Category> getAllCategory();
 
-    @Autowired
-    private CategoryRepository categoryRepository;
-    @Autowired
-    private ImageService imageService;
+    Category getCategoryById(Long id);
 
-    private final int QUANTITY_CATEGORIES_IN_PAGE = 8;
+    List<Category> getTopCategory();
 
-    @Transactional
-    public List<Category> getAllCategory() {
-        List<Category> categories = categoryRepository.findAll();
-        return categories;
-    }
+    Category addCategory(String categoryName, String categoryDescription, Image categoryImage);
 
-    @Transactional
-    public Category getCategoryById(Long id) {
-        Category category = categoryRepository.findById(id);
-        return category;
+    Category updateCategory(Category category, Long id);
 
-    }
-
-    public List<Category> getTopCategory() {
-        List<Category> categories = categoryRepository.findTop8ByOrderById();
-        return categories;
-    }
-
-    @Transactional
-    public Category addCategory(String categoryName, String categoryDescription, Image categoryImage) {
-        Category category = new Category(categoryName, categoryDescription, categoryImage);
-        Long imageId = category.getImage().getId();
-        imageService.setImageStatusInUse(imageId);
-        return categoryRepository.save(category);
-    }
-
-    public Category updateCategory(Category category, Long id) {
-        category.setId(id);
-        return categoryRepository.save(category);
-    }
-
-    public Page<Category> getSortedCategories(int pageNumber, String sortBy, boolean ascending) {
-        PageRequest request = new PageRequest(pageNumber - 1, QUANTITY_CATEGORIES_IN_PAGE, ascending ? Sort.Direction.ASC : Sort.Direction.DESC, sortBy);
-        return categoryRepository.findAll(request);
-    }
+    Page<Category> getSortedCategories(int pageNumber, String sortBy, boolean ascending);
 }
-
