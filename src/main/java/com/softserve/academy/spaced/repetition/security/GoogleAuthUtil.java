@@ -87,7 +87,7 @@ public class GoogleAuthUtil {
     public void saveNewGoogleUser(GoogleIdToken googleIdToken) {
         GoogleIdToken.Payload payload = googleIdToken.getPayload();
         Account account = new Account();
-        userService.initializeNewUser(account, payload.getEmail(), AccountStatus.ACTIVE,false, AuthenticationType.GOOGLE);
+        userService.initializeNewUser(account, payload.getEmail(), AccountStatus.ACTIVE, false, AuthenticationType.GOOGLE);
         Person person = new Person((String) payload.get(FIRST_NAME), (String) payload.get(LAST_NAME), ImageType.LINK,
                 (String) payload.get(IMAGE));
         userRepository.save(new User(account, person, new Folder()));
