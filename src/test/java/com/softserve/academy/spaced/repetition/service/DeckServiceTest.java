@@ -56,13 +56,6 @@ public class DeckServiceTest {
     @Before
     public void setUp() throws Exception {
         deckService = new DeckServiceImpl();
-        deckService.setCourseRepository(courseRepository);
-        deckService.setDeckRepository(deckRepository);
-        deckService.setCardRepository(cardRepository);
-        deckService.setCategoryRepository(categoryRepository);
-        deckService.setCourseRepository(courseRepository);
-        deckService.setUserService(userService);
-        deckService.setFolderService(folderServiceImpl);
     }
 
     @Test
