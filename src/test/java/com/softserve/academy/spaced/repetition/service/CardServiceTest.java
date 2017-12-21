@@ -33,7 +33,7 @@ public class CardServiceTest {
     private final String CARD_TITLE = "Title";
 
     @Autowired
-    private CardService cardServiceUnderTest;
+    private CardServiceImpl cardServiceUnderTest;
 
     @Autowired
     private CardRepository cardRepository;

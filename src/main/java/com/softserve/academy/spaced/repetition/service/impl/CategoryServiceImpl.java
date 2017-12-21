@@ -18,12 +18,12 @@ import java.util.List;
 @Service
 public class CategoryServiceImpl implements CategoryService {
 
+    private final int QUANTITY_CATEGORIES_IN_PAGE = 8;
+
     @Autowired
     private CategoryRepository categoryRepository;
     @Autowired
     private ImageService imageService;
-
-    private final int QUANTITY_CATEGORIES_IN_PAGE = 8;
 
     @Override
     @Transactional

@@ -25,22 +25,16 @@ import java.util.Map;
 @Component
 public class FacebookAuthUtil {
 
-    private final AccountRepository accountRepository;
-    private final UserRepository userRepository;
-    private final AuthorityRepository authorityRepository;
-    private final AccountService accountService;
-    private final UserService userService;
-
     @Autowired
-    public FacebookAuthUtil(AccountRepository accountRepository, UserRepository userRepository,
-                            AuthorityRepository authorityRepository,
-                            RememberingLevelRepository rememberingLevelRepository, AccountService accountService, UserService userService) {
-        this.accountRepository = accountRepository;
-        this.userRepository = userRepository;
-        this.authorityRepository = authorityRepository;
-        this.accountService = accountService;
-        this.userService = userService;
-    }
+    private AccountRepository accountRepository;
+    @Autowired
+    private UserRepository userRepository;
+    @Autowired
+    private AuthorityRepository authorityRepository;
+    @Autowired
+    private AccountService accountService;
+    @Autowired
+    private UserService userService;
 
     public String getFBGraph(String accessToken) {
         String graph = null;

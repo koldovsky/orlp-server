@@ -37,7 +37,7 @@ public class CourseRatingController {
     public ResponseEntity addCourseRating(@RequestBody RatingDTO ratingDTO, @PathVariable Long courseId) throws NotAuthorisedUserException, UserStatusException {
         if ((ratingDTO.getRating() >= MIN_RATING) && (ratingDTO.getRating() <= MAX_RATING)) {
             courseRatingService.addCourseRating(ratingDTO.getRating(), courseId);
-           return new ResponseEntity(HttpStatus.CREATED);
+            return new ResponseEntity(HttpStatus.CREATED);
         } else {
             throw new IllegalArgumentException("Rating can't be less than 1 and more than 5");
         }
