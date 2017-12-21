@@ -1,16 +1,7 @@
 package com.softserve.academy.spaced.repetition.controller;
 
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.hamcrest.Matchers.*;
-
 import com.softserve.academy.spaced.repetition.domain.*;
-import com.softserve.academy.spaced.repetition.service.impl.CourseServiceImpl;
+import com.softserve.academy.spaced.repetition.service.CourseService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -29,6 +20,13 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.is;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
 @RunWith(MockitoJUnitRunner.class)
 public class CourseControllerTest {
     private MockMvc mockMvc;
@@ -37,7 +35,7 @@ public class CourseControllerTest {
     private CourseController courseController;
 
     @Mock
-    private CourseServiceImpl courseService;
+    private CourseService courseService;
 
     final int NUMBER_PAGE = 1;
     final String SORT_BY = "name";

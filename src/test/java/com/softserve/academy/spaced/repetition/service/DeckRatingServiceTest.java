@@ -35,11 +35,11 @@ import com.softserve.academy.spaced.repetition.repository.DeckRepository;
 @Import(TestDatabaseConfig.class)
 @Sql("/data/TestData.sql")
 @Transactional
-public class DeckRatingServiceImplTest {
+public class DeckRatingServiceTest {
 
     private static final long DECK_ID = 3L;
 
-    private DeckRatingServiceImpl deckRatingServiceImplUnderTest;
+    private DeckRatingServiceImpl deckRatingServiceUnderTest;
 
     @Autowired
     private DeckRatingRepository deckRatingRepository;
@@ -52,10 +52,10 @@ public class DeckRatingServiceImplTest {
 
     @Before
     public void setUp() throws Exception {
-        deckRatingServiceImplUnderTest = new DeckRatingServiceImpl();
-        deckRatingServiceImplUnderTest.setUserService(mockedUserService);
-        deckRatingServiceImplUnderTest.setDeckRatingRepository(deckRatingRepository);
-        deckRatingServiceImplUnderTest.setDeckRepository(deckRepository);
+        deckRatingServiceUnderTest = new DeckRatingServiceImpl();
+        deckRatingServiceUnderTest.setUserService(mockedUserService);
+        deckRatingServiceUnderTest.setDeckRatingRepository(deckRatingRepository);
+        deckRatingServiceUnderTest.setDeckRepository(deckRepository);
     }
 
     @Test
@@ -63,11 +63,11 @@ public class DeckRatingServiceImplTest {
 
         User mockedUser1 = new User(new Account("","email1@email.com"), new Person("first1", "last1"), new Folder());
         when(mockedUserService.getAuthorizedUser()).thenReturn(mockedUser1);
-        deckRatingServiceImplUnderTest.addDeckRating(2, DECK_ID);
+        deckRatingServiceUnderTest.addDeckRating(2, DECK_ID);
 
         User mockedUser2 = new User(new Account("","email2@email.com"), new Person("first2", "last2"), new Folder());
         when(mockedUserService.getAuthorizedUser()).thenReturn(mockedUser2);
-        deckRatingServiceImplUnderTest.addDeckRating(4, DECK_ID);
+        deckRatingServiceUnderTest.addDeckRating(4, DECK_ID);
 
         Deck deck = deckRepository.getDeckById(DECK_ID);
 
@@ -76,7 +76,7 @@ public class DeckRatingServiceImplTest {
 
     @Test
     public void testGetRating() {
-        DeckRating rating = deckRatingServiceImplUnderTest.getDeckRatingById(-77L);
+        DeckRating rating = deckRatingServiceUnderTest.getDeckRatingById(-77L);
         assertNull("Trying to find.", rating);
     }
 }

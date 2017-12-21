@@ -29,8 +29,8 @@ import static org.mockito.Matchers.eq;
 @Import(TestDatabaseConfig.class)
 @Sql("/data/TestData.sql")
 @Transactional
-public class DeckServiceImplTest {
-    private DeckServiceImpl deckServiceImpl;
+public class DeckServiceTest {
+    private DeckServiceImpl deckService;
 
     @Autowired
     private DeckRepository deckRepository;
@@ -55,28 +55,28 @@ public class DeckServiceImplTest {
 
     @Before
     public void setUp() throws Exception {
-        deckServiceImpl = new DeckServiceImpl();
-        deckServiceImpl.setCourseRepository(courseRepository);
-        deckServiceImpl.setDeckRepository(deckRepository);
-        deckServiceImpl.setCardRepository(cardRepository);
-        deckServiceImpl.setCategoryRepository(categoryRepository);
-        deckServiceImpl.setCourseRepository(courseRepository);
-        deckServiceImpl.setUserService(userService);
-        deckServiceImpl.setFolderService(folderServiceImpl);
+        deckService = new DeckServiceImpl();
+        deckService.setCourseRepository(courseRepository);
+        deckService.setDeckRepository(deckRepository);
+        deckService.setCardRepository(cardRepository);
+        deckService.setCategoryRepository(categoryRepository);
+        deckService.setCourseRepository(courseRepository);
+        deckService.setUserService(userService);
+        deckService.setFolderService(folderServiceImpl);
     }
 
     @Test
     public void testDeckInPage() {
-        assertEquals(SORT_BY + ": ASC", deckServiceImpl.getPageWithAllAdminDecks(PAGE_NUMBER, SORT_BY, true).getSort().toString());
-        assertTrue(deckServiceImpl.getPageWithAllAdminDecks(PAGE_NUMBER, SORT_BY, true).getTotalPages() == 1);
-        assertTrue(deckServiceImpl.getPageWithAllAdminDecks(PAGE_NUMBER, SORT_BY, true).getNumberOfElements() == 11);
+        assertEquals(SORT_BY + ": ASC", deckService.getPageWithAllAdminDecks(PAGE_NUMBER, SORT_BY, true).getSort().toString());
+        assertTrue(deckService.getPageWithAllAdminDecks(PAGE_NUMBER, SORT_BY, true).getTotalPages() == 1);
+        assertTrue(deckService.getPageWithAllAdminDecks(PAGE_NUMBER, SORT_BY, true).getNumberOfElements() == 11);
     }
 
     @Test
     public void testDeckInPageByCategory() {
         final int CATEGORY_ID = 1;
-        assertEquals(SORT_BY + ": ASC", deckServiceImpl.getPageWithDecksByCategory(CATEGORY_ID, PAGE_NUMBER, SORT_BY, true).getSort().toString());
-        assertTrue(deckServiceImpl.getPageWithDecksByCategory(CATEGORY_ID, PAGE_NUMBER, SORT_BY, true).getTotalPages() == 1);
-        assertTrue(deckServiceImpl.getPageWithDecksByCategory(CATEGORY_ID, PAGE_NUMBER, SORT_BY, true).getNumberOfElements() == 4);
+        assertEquals(SORT_BY + ": ASC", deckService.getPageWithDecksByCategory(CATEGORY_ID, PAGE_NUMBER, SORT_BY, true).getSort().toString());
+        assertTrue(deckService.getPageWithDecksByCategory(CATEGORY_ID, PAGE_NUMBER, SORT_BY, true).getTotalPages() == 1);
+        assertTrue(deckService.getPageWithDecksByCategory(CATEGORY_ID, PAGE_NUMBER, SORT_BY, true).getNumberOfElements() == 4);
     }
 }
