@@ -3,7 +3,6 @@ package com.softserve.academy.spaced.repetition.controller;
 import com.softserve.academy.spaced.repetition.dto.DTOBuilder;
 import com.softserve.academy.spaced.repetition.dto.impl.CourseLinkDTO;
 import com.softserve.academy.spaced.repetition.dto.impl.CoursePublicDTO;
-import com.softserve.academy.spaced.repetition.dto.impl.CourseTopDTO;
 import com.softserve.academy.spaced.repetition.audit.Auditable;
 import com.softserve.academy.spaced.repetition.audit.AuditingAction;
 import com.softserve.academy.spaced.repetition.domain.Course;

@@ -6,7 +6,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Annotation for tracking user's activity.
+ * Annotation for tracking user's  activity.
  * Accept enum ActionType.
  *
  */

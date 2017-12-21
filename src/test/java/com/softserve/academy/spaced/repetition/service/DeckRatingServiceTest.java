@@ -5,6 +5,7 @@ import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.when;
 
 import com.softserve.academy.spaced.repetition.exceptions.UserStatusException;
+import com.softserve.academy.spaced.repetition.service.impl.DeckRatingServiceImpl;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -38,7 +39,7 @@ public class DeckRatingServiceTest {
 
     private static final long DECK_ID = 3L;
 
-    private DeckRatingService deckRatingServiceUnderTest;
+    private DeckRatingServiceImpl deckRatingServiceUnderTest;
 
     @Autowired
     private DeckRatingRepository deckRatingRepository;
@@ -51,7 +52,7 @@ public class DeckRatingServiceTest {
 
     @Before
     public void setUp() throws Exception {
-        deckRatingServiceUnderTest = new DeckRatingService();
+        deckRatingServiceUnderTest = new DeckRatingServiceImpl();
         deckRatingServiceUnderTest.setUserService(mockedUserService);
         deckRatingServiceUnderTest.setDeckRatingRepository(deckRatingRepository);
         deckRatingServiceUnderTest.setDeckRepository(deckRepository);
