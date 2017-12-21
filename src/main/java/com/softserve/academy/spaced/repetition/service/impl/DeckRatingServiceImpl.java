@@ -17,10 +17,11 @@ import com.softserve.academy.spaced.repetition.repository.DeckRepository;
 @Service
 public class DeckRatingServiceImpl implements DeckRatingService{
 
+    @Autowired
     private DeckRatingRepository deckRatingRepository;
-
+    @Autowired
     private DeckRepository deckRepository;
-
+    @Autowired
     private UserService userService;
 
     @Override
@@ -46,20 +47,5 @@ public class DeckRatingServiceImpl implements DeckRatingService{
     @Override
     public DeckRating getDeckRatingById(Long id) {
         return deckRatingRepository.findOne(id);
-    }
-
-    @Autowired
-    public void setDeckRatingRepository(DeckRatingRepository deckRatingRepository) {
-        this.deckRatingRepository = deckRatingRepository;
-    }
-
-    @Autowired
-    public void setDeckRepository(DeckRepository deckRepository) {
-        this.deckRepository = deckRepository;
-    }
-
-    @Autowired
-    public void setUserService(UserService userService) {
-        this.userService = userService;
     }
 }

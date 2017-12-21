@@ -47,7 +47,7 @@ public class CourseCommentServiceTest {
 
     @Before
     public void setUp() throws Exception {
-        courseCommentServiceUnderTest = new CourseCommentServiceImpl(courseCommentRepository, courseRepository, mockedUserService);
+        courseCommentServiceUnderTest = new CourseCommentServiceImpl();
     }
 
     private User createMockedUser() {

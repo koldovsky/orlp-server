@@ -55,13 +55,6 @@ public class CourseServiceTest {
     @Before
     public void setUp() throws Exception {
         courseService = new CourseServiceImpl();
-        courseService.setCourseRepository(courseRepository);
-        courseService.setUserService(userService);
-        courseService.setUserRepository(userRepository);
-        courseService.setImageService(imageService);
-        courseService.setImageRepository(imageRepository);
-        courseService.setCategoryRepository(categoryRepository);
-        courseService.setDeckRepository(deckRepository);
     }
 
     @Test
