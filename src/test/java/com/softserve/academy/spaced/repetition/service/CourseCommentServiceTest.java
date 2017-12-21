@@ -21,9 +21,6 @@ import java.util.List;
 
 import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 
 @RunWith(SpringRunner.class)
@@ -54,7 +51,7 @@ public class CourseCommentServiceTest {
     }
 
     private User createMockedUser() {
-        User mockedUser = new User(new Account("","user@email.com"), new Person("Ivan", "Kruk"), new Folder());
+        User mockedUser = new User(new Account("", "user@email.com"), new Person("Ivan", "Kruk"), new Folder());
         mockedUser.getPerson().setId(1l);
         return mockedUser;
     }
@@ -94,7 +91,7 @@ public class CourseCommentServiceTest {
         CourseComment savedComment = courseCommentServiceUnderTest.addCommentForCourse(COURSE_ID, "Very interesting", null);
         courseCommentServiceUnderTest.addCommentForCourse(COURSE_ID, "Very interesting", savedComment.getId());
         courseCommentServiceUnderTest.deleteCommentById(savedComment.getId());
-        assertEquals("Trying to find comment.",0, courseCommentRepository.findCourseCommentsByCourseId(COURSE_ID).size());
+        assertEquals("Trying to find comment.", 0, courseCommentRepository.findCourseCommentsByCourseId(COURSE_ID).size());
     }
 
     @Test
@@ -102,7 +99,7 @@ public class CourseCommentServiceTest {
         when(mockedUserService.getAuthorizedUser()).thenReturn(createMockedUser());
         CourseComment savedComment = courseCommentServiceUnderTest.addCommentForCourse(COURSE_ID, "Very interesting", null);
         CourseComment updatedComment = courseCommentServiceUnderTest.updateCommentById(savedComment.getId(), "New CommentText");
-        assertEquals("Changed comment text.","New CommentText", updatedComment.getCommentText());
+        assertEquals("Changed comment text.", "New CommentText", updatedComment.getCommentText());
     }
 
 }
