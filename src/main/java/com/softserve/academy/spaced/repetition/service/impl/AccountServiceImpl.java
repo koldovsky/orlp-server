@@ -22,24 +22,19 @@ import java.util.List;
 public class AccountServiceImpl implements AccountService {
     private static final Logger LOGGER = LoggerFactory.getLogger(AccountServiceImpl.class);
     public static final int NUMBER_OF_REMEMBERING_LEVELS = 6;
-    private final AccountRepository accountRepository;
-    private final RememberingLevelRepository rememberingLevelRepository;
-    private final UserService userService;
-    private final NumberOfPostponedDaysValidator numberOfPostponedDaysValidator;
-    private final MailService mailService;
-    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public AccountServiceImpl(AccountRepository accountRepository, RememberingLevelRepository rememberingLevelRepository,
-                              UserService userService, NumberOfPostponedDaysValidator numberOfPostponedDaysValidator,
-                              MailService mailService, PasswordEncoder passwordEncoder) {
-        this.accountRepository = accountRepository;
-        this.rememberingLevelRepository = rememberingLevelRepository;
-        this.userService = userService;
-        this.numberOfPostponedDaysValidator = numberOfPostponedDaysValidator;
-        this.mailService = mailService;
-        this.passwordEncoder = passwordEncoder;
-    }
+    private AccountRepository accountRepository;
+    @Autowired
+    private RememberingLevelRepository rememberingLevelRepository;
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private NumberOfPostponedDaysValidator numberOfPostponedDaysValidator;
+    @Autowired
+    private MailService mailService;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Override
     public void updateAccount(Account account) {
