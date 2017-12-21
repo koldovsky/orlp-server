@@ -90,7 +90,7 @@ public class FacebookAuthUtil {
     @Auditable(action = AuditingAction.SIGN_UP_FACEBOOK)
     public void saveNewFacebookUser(Map fbProfileData) {
         Account account = new Account();
-        userService.initializeNewUser(account,(String) fbProfileData.get("email"), AccountStatus.ACTIVE, false,
+        userService.initializeNewUser(account, (String) fbProfileData.get("email"), AccountStatus.ACTIVE, false,
                 AuthenticationType.FACEBOOK);
         Person person = new Person((String) fbProfileData.get("first_name"), (String) fbProfileData.get("last_name"),
                 ImageType.LINK, (String) fbProfileData.get("picture"));

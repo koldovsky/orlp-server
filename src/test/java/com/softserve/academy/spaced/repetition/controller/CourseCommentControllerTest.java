@@ -3,7 +3,7 @@ package com.softserve.academy.spaced.repetition.controller;
 import com.softserve.academy.spaced.repetition.domain.Comment;
 import com.softserve.academy.spaced.repetition.domain.CourseComment;
 import com.softserve.academy.spaced.repetition.domain.Person;
-import com.softserve.academy.spaced.repetition.service.impl.CourseCommentServiceImpl;
+import com.softserve.academy.spaced.repetition.service.CourseCommentService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -37,7 +37,7 @@ public class CourseCommentControllerTest {
     private CourseCommentController courseCommentController;
 
     @Mock
-    private CourseCommentServiceImpl courseCommentService;
+    private CourseCommentService courseCommentService;
 
     @Before
     public void setUp() {
