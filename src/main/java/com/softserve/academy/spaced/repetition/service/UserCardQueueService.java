@@ -5,6 +5,7 @@ import com.softserve.academy.spaced.repetition.exceptions.NotAuthorisedUserExcep
 import com.softserve.academy.spaced.repetition.repository.RememberingLevelRepository;
 import com.softserve.academy.spaced.repetition.repository.UserCardQueueRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,8 +28,23 @@ public class UserCardQueueService {
     }
 
     @Transactional
-    public void updateUserCardQueue(Long deckId, Long cardId, UserCardQueueStatus userCardQueueStatus)
-            throws NotAuthorisedUserException {
+    public void updateUserCardQueue(Long deckId, Long cardId, String status)
+            throws NotAuthorisedUserException, IllegalArgumentException {
+
+        boolean userCardQueueStatusFound = false;
+        for (UserCardQueueStatus userCardQueueStatus : UserCardQueueStatus.values()) {
+            if (userCardQueueStatus.getStatus().equals(status)) {
+                userCardQueueStatusFound = true;
+                break;
+            }
+        }
+
+        if(!userCardQueueStatusFound) {
+            throw new IllegalArgumentException("Value of User Card Queue Status is not valid: " + status);
+        }
+
+        UserCardQueueStatus userCardQueueStatus = UserCardQueueStatus.valueOf(status);
+
         User user = userService.getAuthorizedUser();
         UserCardQueue userCardQueue = userCardQueueRepository.findUserCardQueueByUserIdAndCardId(user.getId(), cardId);
         if (userCardQueue == null) {

@@ -11,6 +11,7 @@ import com.softserve.academy.spaced.repetition.service.validators.NumberOfPostpo
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -54,10 +55,21 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     @Transactional
-    public void updateLearningRegime(LearningRegime learningRegime) throws NotAuthorisedUserException {
-        Account account = accountRepository.findOne(userService.getAuthorizedUser().getAccount().getId());
-        account.setLearningRegime(learningRegime);
-        accountRepository.save(account);
+    public void updateLearningRegime(String learningRegime) throws NotAuthorisedUserException, IllegalArgumentException {
+        boolean learningRegimeFound = false;
+        for (LearningRegime regime : LearningRegime.values()) {
+            if (regime.getRegime().equals(learningRegime)) {
+                learningRegimeFound = true;
+                Account account = accountRepository.findOne(userService.getAuthorizedUser().getAccount().getId());
+                account.setLearningRegime(regime);
+                accountRepository.save(account);
+                break;
+            }
+        }
+
+        if(!learningRegimeFound) {
+            throw new IllegalArgumentException("Value of Learning Regime is not valid: " + learningRegime);
+        }
     }
 
     @Override
