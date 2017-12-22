@@ -145,7 +145,7 @@ public class UserCardQueueServiceTest {
             buildUserCardQueueAndSave(startingStatus, startingRememberingLevel, startingDateToRepeat);
         }
 
-        userCardQueueService.updateUserCardQueue(DECK_ID, CARD_ID, status);
+        userCardQueueService.updateUserCardQueue(DECK_ID, CARD_ID, status.toString());
 
         actualUserCardQueue = userCardQueueRepository.findUserCardQueueByUserIdAndCardId(USER_ID, CARD_ID);
         Date expectedDateToRepeat;
