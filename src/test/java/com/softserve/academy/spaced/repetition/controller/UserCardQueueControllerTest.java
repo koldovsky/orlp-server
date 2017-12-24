@@ -11,6 +11,9 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultHandler;
+import org.springframework.test.web.servlet.ResultMatcher;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import static org.mockito.Matchers.any;
@@ -56,6 +59,8 @@ public class UserCardQueueControllerTest {
 
     @Test
     public void testSetStatusIncorrect() throws Exception {
+        doThrow(IllegalArgumentException.class).when(userCardQueueService).updateUserCardQueue(DECK_ID, CARD_ID,
+                "Incorrect");
         mockMvc.perform(put("/api/private/decks/{deckId}/cards/{cardId}/queue", DECK_ID, CARD_ID)
                 .content("Incorrect")
                 .accept(MediaType.APPLICATION_JSON)
@@ -66,7 +71,7 @@ public class UserCardQueueControllerTest {
     @Test
     public void testUpdateUserCardQueueNotAuthorizedUserException() throws Exception {
         doThrow(NotAuthorisedUserException.class).when(userCardQueueService).updateUserCardQueue(eq(DECK_ID),
-                eq(CARD_ID), any(UserCardQueueStatus.class).getStatus());
+                eq(CARD_ID), eq(UserCardQueueStatus.GOOD.getStatus()));
         mockMvc.perform(put("/api/private/decks/{deckId}/cards/{cardId}/queue", DECK_ID, CARD_ID)
                 .content("GOOD")
                 .accept(MediaType.APPLICATION_JSON)
