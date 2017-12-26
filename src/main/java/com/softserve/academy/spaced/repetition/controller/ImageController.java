@@ -8,7 +8,7 @@ import com.softserve.academy.spaced.repetition.audit.AuditingAction;
 import com.softserve.academy.spaced.repetition.domain.Image;
 import com.softserve.academy.spaced.repetition.exceptions.*;
 import com.softserve.academy.spaced.repetition.repository.ImageRepository;
-import com.softserve.academy.spaced.repetition.service.ImageService;
+import com.softserve.academy.spaced.repetition.service.impl.ImageServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Link;
 import org.springframework.http.HttpStatus;
@@ -26,7 +26,7 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 public class ImageController {
 
     @Autowired
-    private ImageService imageService;
+    private ImageServiceImpl imageService;
     @Autowired
     private ImageRepository imageRepository;
 

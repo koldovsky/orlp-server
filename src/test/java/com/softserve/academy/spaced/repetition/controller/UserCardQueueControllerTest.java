@@ -2,7 +2,6 @@ package com.softserve.academy.spaced.repetition.controller;
 
 import com.softserve.academy.spaced.repetition.domain.UserCardQueueStatus;
 import com.softserve.academy.spaced.repetition.exceptions.NotAuthorisedUserException;
-import com.softserve.academy.spaced.repetition.service.UserCardQueueService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -34,7 +33,7 @@ public class UserCardQueueControllerTest {
     private UserCardQueueController userCardQueueController;
 
     @Mock
-    private UserCardQueueService userCardQueueService;
+    private com.softserve.academy.spaced.repetition.service.UserCardQueueService userCardQueueService;
 
     @Before
     public void setUp() {

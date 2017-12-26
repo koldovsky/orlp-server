@@ -5,6 +5,7 @@ import com.softserve.academy.spaced.repetition.domain.*;
 import com.softserve.academy.spaced.repetition.exceptions.NotAuthorisedUserException;
 import com.softserve.academy.spaced.repetition.repository.RememberingLevelRepository;
 import com.softserve.academy.spaced.repetition.repository.UserCardQueueRepository;
+import com.softserve.academy.spaced.repetition.service.impl.UserCardQueueServiceImpl;
 import org.junit.Before;
 import org.junit.ClassRule;
 import org.junit.Rule;
@@ -51,7 +52,7 @@ public class UserCardQueueServiceTest {
     @Rule
     public final SpringMethodRule springMethodRule = new SpringMethodRule();
 
-    private UserCardQueueService userCardQueueService;
+    private com.softserve.academy.spaced.repetition.service.UserCardQueueService userCardQueueService;
 
     @Autowired
     private UserCardQueueRepository userCardQueueRepository;
@@ -88,7 +89,7 @@ public class UserCardQueueServiceTest {
 
     @Before
     public void setUp() throws Exception {
-        userCardQueueService = new UserCardQueueService(userCardQueueRepository, mockedUserService,
+        userCardQueueService = new UserCardQueueServiceImpl(userCardQueueRepository, mockedUserService,
                 rememberingLevelRepository);
         User mockedUser = createMockedUser(learningRegime);
         when(mockedUserService.getAuthorizedUser()).thenReturn(mockedUser);
