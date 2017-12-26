@@ -52,7 +52,7 @@ public class UserCardQueueServiceTest {
     @Rule
     public final SpringMethodRule springMethodRule = new SpringMethodRule();
 
-    private com.softserve.academy.spaced.repetition.service.UserCardQueueService userCardQueueService;
+    private UserCardQueueService userCardQueueService;
 
     @Autowired
     private UserCardQueueRepository userCardQueueRepository;

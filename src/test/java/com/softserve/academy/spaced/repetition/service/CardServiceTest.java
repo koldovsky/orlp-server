@@ -48,7 +48,7 @@ public class CardServiceTest {
     private AccountService mockedAccountService;
 
     @Mock
-    private com.softserve.academy.spaced.repetition.service.UserCardQueueService userCardQueueService;
+    private UserCardQueueService userCardQueueService;
 
     Card newCard = new Card(CARD_ID, CARD_QUESTION, CARD_ANSWER, CARD_TITLE);
 

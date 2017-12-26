@@ -38,7 +38,7 @@ public class CardServiceImpl implements CardService {
 
     private final AccountService accountService;
 
-    private final com.softserve.academy.spaced.repetition.service.UserCardQueueService userCardQueueService;
+    private final UserCardQueueService userCardQueueService;
 
     private final DeckService deckService;
 
