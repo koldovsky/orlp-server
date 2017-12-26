@@ -22,9 +22,7 @@ public class CardsFileController {
     private CardService cardService;
 
     @PostMapping("api/private/upload/deck/{deckId}/cards")
-    public ResponseEntity uploadFile(@RequestParam("file") MultipartFile cardsFile, @PathVariable Long deckId)
-            throws WrongFormatException, NotOwnerOperationException,
-            NotAuthorisedUserException, EmptyFileException, IOException {
+    public ResponseEntity uploadFile(@RequestParam("file") MultipartFile cardsFile, @PathVariable Long deckId) throws WrongFormatException, NotOwnerOperationException, NotAuthorisedUserException, EmptyFileException, IOException {
         cardService.uploadCards(cardsFile, deckId);
         return new ResponseEntity(HttpStatus.OK);
     }

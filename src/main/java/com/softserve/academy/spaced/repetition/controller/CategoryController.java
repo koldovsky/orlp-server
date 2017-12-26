@@ -61,13 +61,9 @@ public class CategoryController {
     }
 
     @GetMapping("/api/sortedCategoriesByPage/top")
-    public ResponseEntity<Page<CategoryTopDTO>> getTopSortedCategories(@RequestParam(name = "p") int pageNumber,
-                                                                       @RequestParam(name = "sortBy") String sortBy,
-                                                                       @RequestParam(name = "asc") boolean ascending) {
-        Page<CategoryTopDTO> sortedCategoriesDTOS = categoryService.
-                getSortedCategories(pageNumber, sortBy, ascending).map((category) -> {
-            Link selfLink = linkTo(methodOn(CategoryController.class).
-                    getCategoryById(category.getId())).withRel("category");
+    public ResponseEntity<Page<CategoryTopDTO>> getTopSortedCategories(@RequestParam(name = "p") int pageNumber, @RequestParam(name = "sortBy") String sortBy, @RequestParam(name = "asc") boolean ascending) {
+        Page<CategoryTopDTO> sortedCategoriesDTOS = categoryService.getSortedCategories(pageNumber, sortBy, ascending).map((category) -> {
+            Link selfLink = linkTo(methodOn(CategoryController.class).getCategoryById(category.getId())).withRel("category");
             return DTOBuilder.buildDtoForEntity(category, CategoryTopDTO.class, selfLink);
         });
         return new ResponseEntity<>(sortedCategoriesDTOS, HttpStatus.OK);
@@ -76,8 +72,7 @@ public class CategoryController {
     @Auditable(action = AuditingAction.CREATE_CATEGORY)
     @PostMapping("/api/admin/add/category")
     public ResponseEntity<CategoryPublicDTO> addCategory(@Validated(Request.class) @RequestBody CategoryDTO categoryDTO) {
-        Category category = categoryService.
-                addCategory(categoryDTO.getName(), categoryDTO.getDescription(), categoryDTO.getImage());
+        Category category = categoryService.addCategory(categoryDTO.getName(), categoryDTO.getDescription(), categoryDTO.getImage());
         Link selfLink = linkTo(methodOn(CategoryController.class).getCategoryById(category.getId())).withSelfRel();
         CategoryPublicDTO categoryPublicDTO = DTOBuilder.buildDtoForEntity(category, CategoryPublicDTO.class, selfLink);
         return new ResponseEntity<>(categoryPublicDTO, HttpStatus.CREATED);
@@ -86,8 +81,7 @@ public class CategoryController {
     @Auditable(action = AuditingAction.EDIT_CATEGORY)
     @PutMapping("/api/admin/add/category/{id}")
     @PreAuthorize(value = "@accessToUrlService.hasAccessToCategory(#id)")
-    public ResponseEntity<CategoryPublicDTO> updateCategory(@Validated(Request.class) @RequestBody Category category,
-                                                            @PathVariable Long id) {
+    public ResponseEntity<CategoryPublicDTO> updateCategory(@Validated(Request.class) @RequestBody Category category, @PathVariable Long id) {
         category = categoryService.updateCategory(category, id);
         Link selfLink = linkTo(methodOn(CategoryController.class).getCategoryById(category.getId())).withSelfRel();
         CategoryPublicDTO categoryDTO = DTOBuilder.buildDtoForEntity(category, CategoryPublicDTO.class, selfLink);
