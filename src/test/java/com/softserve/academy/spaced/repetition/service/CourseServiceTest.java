@@ -3,6 +3,7 @@ package com.softserve.academy.spaced.repetition.service;
 import com.softserve.academy.spaced.repetition.config.TestDatabaseConfig;
 import com.softserve.academy.spaced.repetition.repository.*;
 import com.softserve.academy.spaced.repetition.service.impl.CourseServiceImpl;
+import com.softserve.academy.spaced.repetition.service.impl.ImageServiceImpl;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -38,7 +39,7 @@ public class CourseServiceTest {
     private UserRepository userRepository;
 
     @Mock
-    private ImageService imageService;
+    private ImageServiceImpl imageService;
 
     @Autowired
     private ImageRepository imageRepository;
