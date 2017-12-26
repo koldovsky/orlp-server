@@ -5,10 +5,10 @@ import com.softserve.academy.spaced.repetition.exceptions.NotAuthorisedUserExcep
 import com.softserve.academy.spaced.repetition.repository.RememberingLevelRepository;
 import com.softserve.academy.spaced.repetition.repository.UserCardQueueRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Arrays;
 import java.util.Date;
 
 import static com.softserve.academy.spaced.repetition.service.impl.AccountServiceImpl.NUMBER_OF_REMEMBERING_LEVELS;
@@ -31,15 +31,10 @@ public class UserCardQueueService {
     public void updateUserCardQueue(Long deckId, Long cardId, String status)
             throws NotAuthorisedUserException, IllegalArgumentException {
 
-        boolean userCardQueueStatusFound = false;
-        for (UserCardQueueStatus userCardQueueStatus : UserCardQueueStatus.values()) {
-            if (userCardQueueStatus.getStatus().equals(status)) {
-                userCardQueueStatusFound = true;
-                break;
-            }
-        }
+        boolean userCardQueueStatusFound = Arrays.stream(UserCardQueueStatus.values())
+                .anyMatch(UserCardQueueStatus.valueOf(status)::equals);
 
-        if(!userCardQueueStatusFound) {
+        if (!userCardQueueStatusFound) {
             throw new IllegalArgumentException("Value of User Card Queue Status is not valid: " + status);
         }
 
