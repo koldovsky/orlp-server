@@ -10,6 +10,7 @@ import com.softserve.academy.spaced.repetition.service.impl.FolderServiceImpl;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -30,18 +31,20 @@ import static org.mockito.Matchers.eq;
 @Sql("/data/TestData.sql")
 @Transactional
 public class DeckServiceTest {
+
+    @InjectMocks
     private DeckServiceImpl deckService;
 
-    @Autowired
+    @Mock
     private DeckRepository deckRepository;
 
-    @Autowired
+    @Mock
     private CategoryRepository categoryRepository;
 
-    @Autowired
+    @Mock
     private CardRepository cardRepository;
 
-    @Autowired
+    @Mock
     private CourseRepository courseRepository;
 
     @Mock
@@ -52,11 +55,6 @@ public class DeckServiceTest {
 
     final int PAGE_NUMBER = 1;
     final String SORT_BY = "id";
-
-    @Before
-    public void setUp() throws Exception {
-        deckService = new DeckServiceImpl();
-    }
 
     @Test
     public void testDeckInPage() {

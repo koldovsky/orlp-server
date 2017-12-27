@@ -6,6 +6,7 @@ import com.softserve.academy.spaced.repetition.service.impl.CourseServiceImpl;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -26,36 +27,32 @@ import static org.junit.Assert.assertTrue;
 @Transactional
 public class CourseServiceTest {
 
+    @InjectMocks
     private CourseServiceImpl courseService;
 
-    @Autowired
+    @Mock
     private CourseRepository courseRepository;
 
     @Mock
     private UserService userService;
 
-    @Autowired
+    @Mock
     private UserRepository userRepository;
 
     @Mock
     private ImageService imageService;
 
-    @Autowired
+    @Mock
     private ImageRepository imageRepository;
 
-    @Autowired
+    @Mock
     private CategoryRepository categoryRepository;
 
-    @Autowired
+    @Mock
     private DeckRepository deckRepository;
 
     private final int PAGE_NUMBER = 1;
     private final String SORT_BY = "name";
-
-    @Before
-    public void setUp() throws Exception {
-        courseService = new CourseServiceImpl();
-    }
 
     @Test
     public void testCoursesInPage() {

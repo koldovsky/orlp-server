@@ -9,6 +9,7 @@ import com.softserve.academy.spaced.repetition.service.impl.DeckRatingServiceImp
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -39,21 +40,17 @@ public class DeckRatingServiceTest {
 
     private static final long DECK_ID = 3L;
 
+    @InjectMocks
     private DeckRatingServiceImpl deckRatingServiceUnderTest;
 
-    @Autowired
+    @Mock
     private DeckRatingRepository deckRatingRepository;
 
-    @Autowired
+    @Mock
     private DeckRepository deckRepository;
 
     @Mock
     private UserService mockedUserService;
-
-    @Before
-    public void setUp() throws Exception {
-        deckRatingServiceUnderTest = new DeckRatingServiceImpl();
-    }
 
     @Test
     public void testAverageDeckRating() throws NotAuthorisedUserException, UserStatusException {

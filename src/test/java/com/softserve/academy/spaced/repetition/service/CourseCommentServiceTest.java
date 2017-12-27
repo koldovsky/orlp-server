@@ -8,6 +8,7 @@ import com.softserve.academy.spaced.repetition.service.impl.CourseCommentService
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -33,22 +34,17 @@ public class CourseCommentServiceTest {
 
     private static final Long COURSE_ID = 1L;
 
-    @Autowired
+    @InjectMocks
     private CourseCommentServiceImpl courseCommentServiceUnderTest;
 
-    @Autowired
+    @Mock
     private CourseCommentRepository courseCommentRepository;
 
-    @Autowired
+    @Mock
     private CourseRepository courseRepository;
 
     @Mock
     private UserService mockedUserService;
-
-    @Before
-    public void setUp() throws Exception {
-        courseCommentServiceUnderTest = new CourseCommentServiceImpl();
-    }
 
     private User createMockedUser() {
         User mockedUser = new User(new Account("", "user@email.com"), new Person("Ivan", "Kruk"), new Folder());
