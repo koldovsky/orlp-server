@@ -5,7 +5,6 @@ import com.softserve.academy.spaced.repetition.audit.AuditingAction;
 import com.softserve.academy.spaced.repetition.domain.*;
 import com.softserve.academy.spaced.repetition.repository.AccountRepository;
 import com.softserve.academy.spaced.repetition.repository.AuthorityRepository;
-import com.softserve.academy.spaced.repetition.repository.RememberingLevelRepository;
 import com.softserve.academy.spaced.repetition.repository.UserRepository;
 import com.softserve.academy.spaced.repetition.service.AccountService;
 import com.softserve.academy.spaced.repetition.service.UserService;
@@ -25,22 +24,16 @@ import java.util.Map;
 @Component
 public class FacebookAuthUtil {
 
-    private final AccountRepository accountRepository;
-    private final UserRepository userRepository;
-    private final AuthorityRepository authorityRepository;
-    private final AccountService accountService;
-    private final UserService userService;
-
     @Autowired
-    public FacebookAuthUtil(AccountRepository accountRepository, UserRepository userRepository,
-                            AuthorityRepository authorityRepository,
-                            RememberingLevelRepository rememberingLevelRepository, AccountService accountService, UserService userService) {
-        this.accountRepository = accountRepository;
-        this.userRepository = userRepository;
-        this.authorityRepository = authorityRepository;
-        this.accountService = accountService;
-        this.userService = userService;
-    }
+    private AccountRepository accountRepository;
+    @Autowired
+    private UserRepository userRepository;
+    @Autowired
+    private AuthorityRepository authorityRepository;
+    @Autowired
+    private AccountService accountService;
+    @Autowired
+    private UserService userService;
 
     public String getFBGraph(String accessToken) {
         String graph = null;
@@ -96,7 +89,7 @@ public class FacebookAuthUtil {
     @Auditable(action = AuditingAction.SIGN_UP_FACEBOOK)
     public void saveNewFacebookUser(Map fbProfileData) {
         Account account = new Account();
-        userService.initializeNewUser(account,(String) fbProfileData.get("email"), AccountStatus.ACTIVE, false,
+        userService.initializeNewUser(account, (String) fbProfileData.get("email"), AccountStatus.ACTIVE, false,
                 AuthenticationType.FACEBOOK);
         Person person = new Person((String) fbProfileData.get("first_name"), (String) fbProfileData.get("last_name"),
                 ImageType.LINK, (String) fbProfileData.get("picture"));

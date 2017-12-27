@@ -23,12 +23,9 @@ import java.util.List;
 public class AccountController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AccountController.class);
-    private final AccountService accountService;
 
     @Autowired
-    public AccountController(AccountService accountService) {
-        this.accountService = accountService;
-    }
+    private AccountService accountService;
 
     @Autowired
     private AccountVerificationByEmailService verificationService;

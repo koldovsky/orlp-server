@@ -11,6 +11,8 @@ import com.softserve.academy.spaced.repetition.exceptions.NotAuthorisedUserExcep
 import com.softserve.academy.spaced.repetition.exceptions.NotOwnerOperationException;
 import com.softserve.academy.spaced.repetition.service.DeckService;
 import com.softserve.academy.spaced.repetition.service.FolderService;
+import com.softserve.academy.spaced.repetition.service.impl.DeckServiceImpl;
+import com.softserve.academy.spaced.repetition.service.impl.FolderServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.hateoas.Link;

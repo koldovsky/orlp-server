@@ -1,12 +1,15 @@
 package com.softserve.academy.spaced.repetition.controller;
 
-import com.softserve.academy.spaced.repetition.dto.DTOBuilder;
-import com.softserve.academy.spaced.repetition.dto.impl.ImageDTO;
-import com.softserve.academy.spaced.repetition.dto.impl.UploadingImageDTO;
 import com.softserve.academy.spaced.repetition.audit.Auditable;
 import com.softserve.academy.spaced.repetition.audit.AuditingAction;
 import com.softserve.academy.spaced.repetition.domain.Image;
-import com.softserve.academy.spaced.repetition.exceptions.*;
+import com.softserve.academy.spaced.repetition.dto.DTOBuilder;
+import com.softserve.academy.spaced.repetition.dto.impl.ImageDTO;
+import com.softserve.academy.spaced.repetition.dto.impl.UploadingImageDTO;
+import com.softserve.academy.spaced.repetition.exceptions.CanNotBeDeletedException;
+import com.softserve.academy.spaced.repetition.exceptions.ImageRepositorySizeQuotaExceededException;
+import com.softserve.academy.spaced.repetition.exceptions.NotAuthorisedUserException;
+import com.softserve.academy.spaced.repetition.exceptions.NotOwnerOperationException;
 import com.softserve.academy.spaced.repetition.repository.ImageRepository;
 import com.softserve.academy.spaced.repetition.service.ImageService;
 import org.springframework.beans.factory.annotation.Autowired;

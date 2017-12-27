@@ -1,11 +1,9 @@
 package com.softserve.academy.spaced.repetition.service;
 
-import static org.junit.Assert.*;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.eq;
-
-import com.softserve.academy.spaced.repetition.domain.*;
+import com.softserve.academy.spaced.repetition.config.TestDatabaseConfig;
 import com.softserve.academy.spaced.repetition.repository.*;
+import com.softserve.academy.spaced.repetition.service.impl.CourseServiceImpl;
+import com.softserve.academy.spaced.repetition.service.impl.ImageServiceImpl;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,17 +11,13 @@ import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.softserve.academy.spaced.repetition.config.TestDatabaseConfig;
-
-import java.util.ArrayList;
-import java.util.List;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringRunner.class)
 @ActiveProfiles("testdatabase")
@@ -33,7 +27,7 @@ import java.util.List;
 @Transactional
 public class CourseServiceTest {
 
-    private CourseService courseService;
+    private CourseServiceImpl courseService;
 
     @Autowired
     private CourseRepository courseRepository;
@@ -45,7 +39,7 @@ public class CourseServiceTest {
     private UserRepository userRepository;
 
     @Mock
-    private ImageService imageService;
+    private ImageServiceImpl imageService;
 
     @Autowired
     private ImageRepository imageRepository;
@@ -61,7 +55,7 @@ public class CourseServiceTest {
 
     @Before
     public void setUp() throws Exception {
-        courseService = new CourseService();
+        courseService = new CourseServiceImpl();
         courseService.setCourseRepository(courseRepository);
         courseService.setUserService(userService);
         courseService.setUserRepository(userRepository);

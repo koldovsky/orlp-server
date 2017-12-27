@@ -1,11 +1,12 @@
 package com.softserve.academy.spaced.repetition.service;
 
 import com.softserve.academy.spaced.repetition.config.TestDatabaseConfig;
-import com.softserve.academy.spaced.repetition.domain.Deck;
 import com.softserve.academy.spaced.repetition.repository.CardRepository;
 import com.softserve.academy.spaced.repetition.repository.CategoryRepository;
 import com.softserve.academy.spaced.repetition.repository.CourseRepository;
 import com.softserve.academy.spaced.repetition.repository.DeckRepository;
+import com.softserve.academy.spaced.repetition.service.impl.DeckServiceImpl;
+import com.softserve.academy.spaced.repetition.service.impl.FolderServiceImpl;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,15 +14,10 @@ import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -34,7 +30,7 @@ import static org.mockito.Matchers.eq;
 @Sql("/data/TestData.sql")
 @Transactional
 public class DeckServiceTest {
-    private DeckService deckService;
+    private DeckServiceImpl deckService;
 
     @Autowired
     private DeckRepository deckRepository;
@@ -52,21 +48,21 @@ public class DeckServiceTest {
     private UserService userService;
 
     @Mock
-    private FolderService folderService;
+    private FolderServiceImpl folderServiceImpl;
 
     final int PAGE_NUMBER = 1;
     final String SORT_BY = "id";
 
     @Before
     public void setUp() throws Exception {
-        deckService = new DeckService();
+        deckService = new DeckServiceImpl();
         deckService.setCourseRepository(courseRepository);
         deckService.setDeckRepository(deckRepository);
         deckService.setCardRepository(cardRepository);
         deckService.setCategoryRepository(categoryRepository);
         deckService.setCourseRepository(courseRepository);
         deckService.setUserService(userService);
-        deckService.setFolderService(folderService);
+        deckService.setFolderService(folderServiceImpl);
     }
 
     @Test

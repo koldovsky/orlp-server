@@ -4,6 +4,7 @@ import com.softserve.academy.spaced.repetition.config.TestDatabaseConfig;
 import com.softserve.academy.spaced.repetition.domain.Card;
 import com.softserve.academy.spaced.repetition.repository.CardRepository;
 import com.softserve.academy.spaced.repetition.repository.DeckRepository;
+import com.softserve.academy.spaced.repetition.service.impl.CardServiceImpl;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -31,7 +32,8 @@ public class CardServiceTest {
     private final String CARD_QUESTION = "Question";
     private final String CARD_TITLE = "Title";
 
-    private CardService cardServiceUnderTest;
+    @Autowired
+    private CardServiceImpl cardServiceUnderTest;
 
     @Autowired
     private CardRepository cardRepository;
@@ -61,7 +63,7 @@ public class CardServiceTest {
 
     @Before
     public void setUp() throws Exception {
-        cardServiceUnderTest = new CardService(cardRepository, deckRepository, mockedAccountService, mockedUserService, userCardQueueService, null);
+        cardServiceUnderTest = new CardServiceImpl(cardRepository, deckRepository, mockedAccountService, mockedUserService, userCardQueueService, null);
     }
 
     @Test

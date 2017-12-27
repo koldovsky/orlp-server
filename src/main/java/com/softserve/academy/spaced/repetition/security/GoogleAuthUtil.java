@@ -9,7 +9,6 @@ import com.softserve.academy.spaced.repetition.audit.AuditingAction;
 import com.softserve.academy.spaced.repetition.domain.*;
 import com.softserve.academy.spaced.repetition.repository.AccountRepository;
 import com.softserve.academy.spaced.repetition.repository.AuthorityRepository;
-import com.softserve.academy.spaced.repetition.repository.RememberingLevelRepository;
 import com.softserve.academy.spaced.repetition.repository.UserRepository;
 import com.softserve.academy.spaced.repetition.service.AccountService;
 import com.softserve.academy.spaced.repetition.service.UserService;
@@ -31,26 +30,20 @@ public class GoogleAuthUtil {
     @Value("${app.social.google.client-id}")
     private String clientId;
 
-    private final AccountRepository accountRepository;
-
-    private final UserRepository userRepository;
-
-    private final AuthorityRepository authorityRepository;
-
-    private final AccountService accountService;
-
-    private final UserService userService;
+    @Autowired
+    private AccountRepository accountRepository;
 
     @Autowired
-    public GoogleAuthUtil(AccountRepository accountRepository, UserRepository userRepository,
-                          AuthorityRepository authorityRepository,
-                          RememberingLevelRepository rememberingLevelRepository, AccountService accountService, UserService userService) {
-        this.accountRepository = accountRepository;
-        this.userRepository = userRepository;
-        this.authorityRepository = authorityRepository;
-        this.accountService = accountService;
-        this.userService = userService;
-    }
+    private UserRepository userRepository;
+
+    @Autowired
+    private AuthorityRepository authorityRepository;
+
+    @Autowired
+    private AccountService accountService;
+
+    @Autowired
+    private UserService userService;
 
     public GoogleIdToken getGoogleIdToken(String idToken) {
         GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(new NetHttpTransport(), new JacksonFactory())
@@ -87,7 +80,7 @@ public class GoogleAuthUtil {
     public void saveNewGoogleUser(GoogleIdToken googleIdToken) {
         GoogleIdToken.Payload payload = googleIdToken.getPayload();
         Account account = new Account();
-        userService.initializeNewUser(account, payload.getEmail(), AccountStatus.ACTIVE,false, AuthenticationType.GOOGLE);
+        userService.initializeNewUser(account, payload.getEmail(), AccountStatus.ACTIVE, false, AuthenticationType.GOOGLE);
         Person person = new Person((String) payload.get(FIRST_NAME), (String) payload.get(LAST_NAME), ImageType.LINK,
                 (String) payload.get(IMAGE));
         userRepository.save(new User(account, person, new Folder()));

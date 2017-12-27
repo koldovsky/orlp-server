@@ -72,4 +72,16 @@ public class JwtUser implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
+    @Override
+    public String toString() {
+        return "JwtUser{" +
+                "id=" + id +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", authorities=" + authorities +
+                ", lastPasswordResetDate=" + lastPasswordResetDate +
+                ", deactivated=" + deactivated +
+                '}';
+    }
 }

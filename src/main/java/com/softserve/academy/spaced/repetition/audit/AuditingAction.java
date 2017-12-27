@@ -85,6 +85,5 @@ public enum AuditingAction {
     CHANGE_PASSWORD,
     CHECK_PASSWORD,
     UPLOAD_IMAGE_PROFILE,
-    DELETE_PROFILE;
-
+    DELETE_PROFILE
 }
