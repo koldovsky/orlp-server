@@ -33,4 +33,5 @@ public interface CardService {
     void downloadCards(Long deckId, OutputStream outputStream);
 
     void downloadCardsTemplate(OutputStream outputStream);
+
 }

@@ -3,6 +3,7 @@ package com.softserve.academy.spaced.repetition.controller;
 import com.softserve.academy.spaced.repetition.domain.CourseRating;
 import com.softserve.academy.spaced.repetition.dto.DTOBuilder;
 import com.softserve.academy.spaced.repetition.dto.RatingDTO;
+import com.softserve.academy.spaced.repetition.dto.Request;
 import com.softserve.academy.spaced.repetition.dto.impl.CourseRatingPublicDTO;
 import com.softserve.academy.spaced.repetition.exceptions.NotAuthorisedUserException;
 import com.softserve.academy.spaced.repetition.exceptions.UserStatusException;
@@ -13,6 +14,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;

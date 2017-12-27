@@ -41,5 +41,5 @@ public interface CourseService {
     Page<Course> getPageWithCourses(int pageNumber, String sortBy, boolean ascending);
 
     Page<Course> getPageWithCoursesByCategory(long categoryId, int pageNumber, String sortBy, boolean ascending);
-
+  
 }

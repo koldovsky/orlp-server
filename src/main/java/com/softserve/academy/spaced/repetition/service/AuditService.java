@@ -29,4 +29,5 @@ public interface AuditService {
     List<Audit> getAuditListSortedByRoleDesc();
 
     Page<Audit> getAuditByPage(int pageNumber, String sortBy, boolean ascending);
+
 }
