@@ -12,7 +12,7 @@ public interface AccountService {
 
     LearningRegime getLearningRegime() throws NotAuthorisedUserException;
 
-    void updateLearningRegime(LearningRegime learningRegime) throws NotAuthorisedUserException;
+    void updateLearningRegime(String learningRegime) throws NotAuthorisedUserException, IllegalArgumentException;
 
     int getCardsNumber() throws NotAuthorisedUserException;
 

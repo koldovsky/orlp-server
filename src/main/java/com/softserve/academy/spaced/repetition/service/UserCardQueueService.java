@@ -5,8 +5,8 @@ import com.softserve.academy.spaced.repetition.domain.UserCardQueueStatus;
 import com.softserve.academy.spaced.repetition.exceptions.NotAuthorisedUserException;
 
 public interface UserCardQueueService {
-    void updateUserCardQueue(Long deckId, Long cardId, UserCardQueueStatus userCardQueueStatus)
-            throws NotAuthorisedUserException;
+    void updateUserCardQueue(Long deckId, Long cardId, String status)
+            throws NotAuthorisedUserException, IllegalArgumentException;
 
     UserCardQueue getUserCardQueueById(long id);
 

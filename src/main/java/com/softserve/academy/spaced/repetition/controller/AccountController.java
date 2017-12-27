@@ -37,14 +37,10 @@ public class AccountController {
     }
 
     @PutMapping("/api/private/account/learning-regime")
-    public ResponseEntity updateLearningRegime(@RequestBody String learningRegime) throws NotAuthorisedUserException {
-        for (LearningRegime regime : LearningRegime.values()) {
-            if (regime.getRegime().equals(learningRegime)) {
-                accountService.updateLearningRegime(regime);
-                return ResponseEntity.ok().build();
-            }
-        }
-        return ResponseEntity.badRequest().build();
+    public ResponseEntity updateLearningRegime(@RequestBody String learningRegime)
+            throws NotAuthorisedUserException, IllegalArgumentException {
+        accountService.updateLearningRegime(learningRegime);
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/api/private/account/cards-number")

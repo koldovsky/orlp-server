@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Arrays;
 import java.util.Date;
 
 import static com.softserve.academy.spaced.repetition.service.impl.AccountServiceImpl.NUMBER_OF_REMEMBERING_LEVELS;
@@ -30,8 +31,18 @@ public class UserCardQueueServiceImpl implements UserCardQueueService {
 
     @Override
     @Transactional
-    public void updateUserCardQueue(Long deckId, Long cardId, UserCardQueueStatus userCardQueueStatus)
-            throws NotAuthorisedUserException {
+    public void updateUserCardQueue(Long deckId, Long cardId, String status)
+            throws NotAuthorisedUserException, IllegalArgumentException {
+
+        boolean userCardQueueStatusFound = Arrays.stream(UserCardQueueStatus.values())
+                .anyMatch(UserCardQueueStatus.valueOf(status)::equals);
+
+        if(!userCardQueueStatusFound) {
+            throw new IllegalArgumentException("Value of User Card Queue Status is not valid: " + status);
+        }
+
+        UserCardQueueStatus userCardQueueStatus = UserCardQueueStatus.valueOf(status);
+
         User user = userService.getAuthorizedUser();
         UserCardQueue userCardQueue = userCardQueueRepository.findUserCardQueueByUserIdAndCardId(user.getId(), cardId);
         if (userCardQueue == null) {
