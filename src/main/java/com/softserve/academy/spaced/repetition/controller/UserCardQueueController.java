@@ -25,13 +25,8 @@ public class UserCardQueueController {
     public ResponseEntity updateUserCardQueue(
             @PathVariable Long deckId, @PathVariable Long cardId, @RequestBody String status)
             throws NotAuthorisedUserException {
-        for (UserCardQueueStatus userCardQueueStatus : UserCardQueueStatus.values()) {
-            if (userCardQueueStatus.getStatus().equals(status)) {
-                userCardQueueService.updateUserCardQueue(deckId, cardId, userCardQueueStatus);
-                return ResponseEntity.ok().build();
-            }
-        }
-        return ResponseEntity.badRequest().build();
+        userCardQueueService.updateUserCardQueue(deckId, cardId, status);
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/api/private/decks/{deckId}/cards-that-need-repeating/count")
