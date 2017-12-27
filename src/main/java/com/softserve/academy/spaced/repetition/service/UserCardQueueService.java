@@ -6,7 +6,7 @@ import com.softserve.academy.spaced.repetition.exceptions.NotAuthorisedUserExcep
 
 public interface UserCardQueueService {
     void updateUserCardQueue(Long deckId, Long cardId, String status)
-            throws NotAuthorisedUserException;
+            throws NotAuthorisedUserException, IllegalArgumentException;
 
     UserCardQueue getUserCardQueueById(long id);
 
