@@ -55,6 +55,8 @@ public class UserCardQueueControllerTest {
 
     @Test
     public void testSetStatusIncorrect() throws Exception {
+        doThrow(IllegalArgumentException.class).when(userCardQueueService)
+                .updateUserCardQueue(DECK_ID, CARD_ID, "Incorrect");
         mockMvc.perform(put("/api/private/decks/{deckId}/cards/{cardId}/queue", DECK_ID, CARD_ID)
                 .content("Incorrect")
                 .accept(MediaType.APPLICATION_JSON)
