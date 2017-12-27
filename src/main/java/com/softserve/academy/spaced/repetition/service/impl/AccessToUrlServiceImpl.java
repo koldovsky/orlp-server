@@ -7,7 +7,6 @@ import com.softserve.academy.spaced.repetition.repository.*;
 import com.softserve.academy.spaced.repetition.service.AccessToUrlService;
 import com.softserve.academy.spaced.repetition.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;

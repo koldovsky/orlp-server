@@ -6,6 +6,7 @@ import com.softserve.academy.spaced.repetition.exceptions.NotAuthorisedUserExcep
 import com.softserve.academy.spaced.repetition.exceptions.NotOwnerOperationException;
 import com.softserve.academy.spaced.repetition.repository.*;
 import com.softserve.academy.spaced.repetition.service.DeckService;
+import com.softserve.academy.spaced.repetition.service.FolderService;
 import com.softserve.academy.spaced.repetition.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -33,7 +34,7 @@ public class DeckServiceImpl implements DeckService {
 
     private UserService userService;
 
-    private FolderServiceImpl folderService;
+    private FolderService folderService;
 
     @Autowired
     public void setDeckRepository(DeckRepository deckRepository) {
@@ -61,7 +62,7 @@ public class DeckServiceImpl implements DeckService {
     }
 
     @Autowired
-    public void setFolderService(FolderServiceImpl folderService) {
+    public void setFolderService(FolderService folderService) {
         this.folderService = folderService;
     }
 
