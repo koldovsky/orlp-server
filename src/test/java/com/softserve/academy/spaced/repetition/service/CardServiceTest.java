@@ -8,6 +8,7 @@ import com.softserve.academy.spaced.repetition.service.impl.CardServiceImpl;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -32,13 +33,13 @@ public class CardServiceTest {
     private final String CARD_QUESTION = "Question";
     private final String CARD_TITLE = "Title";
 
-    @Autowired
+    @InjectMocks
     private CardServiceImpl cardServiceUnderTest;
 
-    @Autowired
+    @Mock
     private CardRepository cardRepository;
 
-    @Autowired
+    @Mock
     private DeckRepository deckRepository;
 
     @Mock
@@ -59,11 +60,6 @@ public class CardServiceTest {
         String title = cardRepository.getOne(id).getTitle();
 
         return new Card(newId, question, answer, title);
-    }
-
-    @Before
-    public void setUp() throws Exception {
-        cardServiceUnderTest = new CardServiceImpl();
     }
 
     @Test
