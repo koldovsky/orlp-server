@@ -160,8 +160,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Set<Course> getAllCoursesByUserId(Long user_id) {
-        User user = userRepository.findOne(user_id);
+    public Set<Course> getAllCoursesByUserId(Long userId) {
+        User user = userRepository.findOne(userId);
         return user.getCourses();
     }
 

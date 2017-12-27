@@ -50,7 +50,7 @@ public interface UserService {
 
     User getAuthorizedUser() throws NotAuthorisedUserException;
 
-    Set<Course> getAllCoursesByUserId(Long user_id);
+    Set<Course> getAllCoursesByUserId(Long userId);
 
     User removeDeckFromUsersFolder(Long userId, Long deckId);
 

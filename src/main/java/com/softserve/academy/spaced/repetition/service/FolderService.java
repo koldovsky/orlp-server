@@ -7,11 +7,11 @@ import java.util.List;
 public interface FolderService {
     Deck addDeck(Long deckId) throws NotAuthorisedUserException;
 
-    List<Deck> getAllDecksByFolderId(Long folder_id);
+    List<Deck> getAllDecksByFolderId(Long folderId);
 
     List<Long> getAllDecksIdWithFolder() throws NotAuthorisedUserException;
 
-    void deleteDeck(Long deck_id) throws NotAuthorisedUserException;
+    void deleteDeck(Long deckId) throws NotAuthorisedUserException;
 
-    void deleteDeckFromAllUsers(Long deck_id) throws NotAuthorisedUserException;
+    void deleteDeckFromAllUsers(Long deckId) throws NotAuthorisedUserException;
 }

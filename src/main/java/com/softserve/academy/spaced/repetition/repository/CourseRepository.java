@@ -17,15 +17,15 @@ public interface CourseRepository extends JpaRepository<Course, Long> {
 
     List<Course> getAllCoursesByCategoryIdAndPublishedTrue(Long id);
 
-    Course getCourseByCategoryIdAndId(Long category_id, Long course_id);
+    Course getCourseByCategoryIdAndId(Long categoryId, Long courseId);
 
     List<Course> findTop4ByOrderByRating();
 
     @Query(value = "SELECT c FROM Course c WHERE c.category.id = :category_id AND c.id = :course_id")
-    List<Course> getAccessToCourse(@Param("category_id") Long category_id, @Param("course_id") Long course_id);
+    List<Course> getAccessToCourse(@Param("category_id") Long categoryId, @Param("course_id") Long courseId);
 
     @Query(value = "SELECT c FROM Course c where c.category.id = :category_id")
-    List<Course> getAccessToCourse(@Param("category_id") Long category_id);
+    List<Course> getAccessToCourse(@Param("category_id") Long categoryId);
 
     List<Course> findAllByPublishedTrueOrderByRatingDesc();
 

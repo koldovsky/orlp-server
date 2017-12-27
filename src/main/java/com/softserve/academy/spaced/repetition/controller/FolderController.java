@@ -45,12 +45,12 @@ public class FolderController {
     }
 
     @Auditable(action = AuditingAction.VIEW_DECK_IN_FOLDER)
-    @GetMapping("/api/private/user/folder/{folder_id}/decks")
-    @PreAuthorize(value = "@accessToUrlService.hasAccessToFolder(#folder_id)")
-    public ResponseEntity<List<DeckLinkByFolderDTO>> getAllDecksWithFolder(@PathVariable Long folder_id) {
-        List<Deck> deckList = folderService.getAllDecksByFolderId(folder_id);
+    @GetMapping("/api/private/user/folder/{folderId}/decks")
+    @PreAuthorize(value = "@accessToUrlService.hasAccessToFolder(#folderId)")
+    public ResponseEntity<List<DeckLinkByFolderDTO>> getAllDecksWithFolder(@PathVariable Long folderId) {
+        List<Deck> deckList = folderService.getAllDecksByFolderId(folderId);
 
-        Link collectionLink = linkTo(methodOn(FolderController.class).getAllDecksWithFolder(folder_id)).withSelfRel();
+        Link collectionLink = linkTo(methodOn(FolderController.class).getAllDecksWithFolder(folderId)).withSelfRel();
         List<DeckLinkByFolderDTO> decks = DTOBuilder.buildDtoListForCollection(deckList, DeckLinkByFolderDTO.class, collectionLink);
 
         return new ResponseEntity<>(decks, HttpStatus.OK);
@@ -63,30 +63,30 @@ public class FolderController {
         return new ResponseEntity<>(id, HttpStatus.OK);
     }
 
-    @GetMapping("/api/private/user/folder/{folder_id}/decks/{deck_id}")
-    @PreAuthorize(value = "@accessToUrlService.hasAccessToDeckFromFolder(#folder_id, #deck_id)")
-    public ResponseEntity<DeckLinkByFolderDTO> getDeckByFolderId(@PathVariable Long folder_id, @PathVariable Long deck_id) {
-        Deck deck = deckService.getDeck(deck_id);
-        Link selfLink = linkTo(methodOn(FolderController.class).getDeckByFolderId(folder_id, deck_id)).withSelfRel();
+    @GetMapping("/api/private/user/folder/{folderId}/decks/{deckId}")
+    @PreAuthorize(value = "@accessToUrlService.hasAccessToDeckFromFolder(#folderId, #deckId)")
+    public ResponseEntity<DeckLinkByFolderDTO> getDeckByFolderId(@PathVariable Long folderId, @PathVariable Long deckId) {
+        Deck deck = deckService.getDeck(deckId);
+        Link selfLink = linkTo(methodOn(FolderController.class).getDeckByFolderId(folderId, deckId)).withSelfRel();
         DeckLinkByFolderDTO linkDTO = DTOBuilder.buildDtoForEntity(deck, DeckLinkByFolderDTO.class, selfLink);
 
         return new ResponseEntity<>(linkDTO, HttpStatus.OK);
     }
 
     @Auditable(action = AuditingAction.START_LEARNING_VIA_FOLDER)
-    @GetMapping("/api/private/user/folder/{folder_id}/decks/{deck_id}/cards")
-    @PreAuthorize(value = "@accessToUrlService.hasAccessToDeckFromFolder(#folder_id, #deck_id)")
-    public ResponseEntity<List<CardPublicDTO>> getCardsByFolderAndDeck(@PathVariable Long folder_id, @PathVariable Long deck_id) {
-        List<Card> cards = deckService.getAllCardsByDeckId(deck_id);
-        Link collectionLink = linkTo(methodOn(FolderController.class).getCardsByFolderAndDeck(folder_id, deck_id)).withSelfRel();
+    @GetMapping("/api/private/user/folder/{folderId}/decks/{deckId}/cards")
+    @PreAuthorize(value = "@accessToUrlService.hasAccessToDeckFromFolder(#folderId, #deckId)")
+    public ResponseEntity<List<CardPublicDTO>> getCardsByFolderAndDeck(@PathVariable Long folderId, @PathVariable Long deckId) {
+        List<Card> cards = deckService.getAllCardsByDeckId(deckId);
+        Link collectionLink = linkTo(methodOn(FolderController.class).getCardsByFolderAndDeck(folderId, deckId)).withSelfRel();
         List<CardPublicDTO> cardsPublic = DTOBuilder.buildDtoListForCollection(cards, CardPublicDTO.class, collectionLink);
 
         return new ResponseEntity<>(cardsPublic, HttpStatus.OK);
     }
 
     @Auditable(action = AuditingAction.DELETE_DECK)
-    @DeleteMapping(value = "/api/user/folder/decks/{deck_id}")
-    public void deleteUserDeck(@PathVariable Long deck_id) throws NotAuthorisedUserException {
-        folderService.deleteDeck(deck_id);
+    @DeleteMapping(value = "/api/user/folder/decks/{deckId}")
+    public void deleteUserDeck(@PathVariable Long deckId) throws NotAuthorisedUserException {
+        folderService.deleteDeck(deckId);
     }
 }

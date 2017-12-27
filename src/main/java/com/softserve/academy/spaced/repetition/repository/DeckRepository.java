@@ -17,7 +17,7 @@ public interface DeckRepository extends JpaRepository<Deck, Long> {
 
     Deck getDeckById(Long id);
 
-    Deck getDeckByCategoryIdAndId(Long category_id, Long deck_id);
+    Deck getDeckByCategoryIdAndId(Long categoryId, Long deckId);
 
     List<Deck> findTop4ByOrderById();
 
@@ -27,18 +27,18 @@ public interface DeckRepository extends JpaRepository<Deck, Long> {
 
     @Query(value = "SELECT d.id, d.name, d.description, d.rating, d.category, d.deckOwner FROM Course c  INNER JOIN c.decks AS d WHERE "
             + "c.id = :course_id and d.id = :deck_id")
-    List<Deck> hasAccessToDeck(@Param("course_id") Long course_id, @Param("deck_id") Long deck_id);
+    List<Deck> hasAccessToDeck(@Param("course_id") Long courseId, @Param("deck_id") Long deckId);
 
     @Query(value = "SELECT d FROM Category c INNER JOIN c.decks AS d WHERE c.id = :category_id AND d.id = :deck_id")
-    List<Deck> hasAccessToDeckFromCategory(@Param("category_id") Long category_id, @Param("deck_id") Long deck_id);
+    List<Deck> hasAccessToDeckFromCategory(@Param("category_id") Long categoryId, @Param("deck_id") Long deckId);
 
     @Query(value = "SELECT d FROM Deck d WHERE d.category.id = :category_id")
-    List<Deck> hasAccessToDeckFromCategory(@Param("category_id") Long category_id);
+    List<Deck> hasAccessToDeckFromCategory(@Param("category_id") Long categoryId);
 
     @Query(value = "SELECT d FROM Deck d INNER JOIN d.deckOwner u  WHERE d.id = :deck_id AND u.id = :user_id")
-    Deck getDeckByItsIdAndOwnerOfDeck(@Param("deck_id") Long deck_id, @Param("user_id") Long user_id);
+    Deck getDeckByItsIdAndOwnerOfDeck(@Param("deck_id") Long deckId, @Param("user_id") Long userId);
 
-    List<Deck> findAllByDeckOwner_IdEquals(Long user_id);
+    List<Deck> findAllByDeckOwnerIdEquals(Long userId);
 
     Page<Deck> findAllByCategoryEquals(Category category, Pageable pageable);
 }
