@@ -24,7 +24,7 @@ public class UserCardQueueController {
     @PreAuthorize(value = "@accessToUrlService.hasAccessToCard(#deckId, #cardId)")
     public ResponseEntity updateUserCardQueue(
             @PathVariable Long deckId, @PathVariable Long cardId, @RequestBody String status)
-            throws NotAuthorisedUserException {
+            throws NotAuthorisedUserException, IllegalArgumentException {
         userCardQueueService.updateUserCardQueue(deckId, cardId, status);
         return ResponseEntity.ok().build();
     }
