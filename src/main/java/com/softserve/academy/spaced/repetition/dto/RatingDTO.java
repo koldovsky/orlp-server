@@ -4,16 +4,12 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 
 public class RatingDTO {
+    @Min(value = 1, message = "<1")    //
+    @Max(value = 5, message = ">5")  // TODO will be replaced
 
-    @Min(value = 1)
-    @Max(value = 5)
     private int rating;
 
     public RatingDTO() {
-    }
-
-    public RatingDTO(int rating) {
-        this.rating = rating;
     }
 
     public int getRating() {
