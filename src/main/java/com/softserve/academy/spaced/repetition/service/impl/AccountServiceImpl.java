@@ -15,6 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -54,9 +55,18 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     @Transactional
-    public void updateLearningRegime(LearningRegime learningRegime) throws NotAuthorisedUserException {
+    public void updateLearningRegime(String learningRegime) throws NotAuthorisedUserException, IllegalArgumentException {
+        boolean learningRegimeFound = Arrays.stream(LearningRegime.values())
+                .anyMatch(LearningRegime.valueOf(learningRegime)::equals);
+
+        if (!learningRegimeFound) {
+            throw new IllegalArgumentException("Value of Learning Regime is not valid: " + learningRegime);
+        }
+
+        LearningRegime regime = LearningRegime.valueOf(learningRegime);
+
         Account account = accountRepository.findOne(userService.getAuthorizedUser().getAccount().getId());
-        account.setLearningRegime(learningRegime);
+        account.setLearningRegime(regime);
         accountRepository.save(account);
     }
 

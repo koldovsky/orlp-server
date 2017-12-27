@@ -164,16 +164,8 @@ public class CardController {
      */
     @PostMapping("/api/cardsUpload")
     public ResponseEntity uploadCard(@RequestParam("file") MultipartFile file, Long deckId)
-            throws WrongFormatException{
-        try {
-            cardLoadService.loadCard(file, deckId);
-        } catch (IOException e) {
-            throw new NoSuchElementException("Such file not found");
-        } catch (SQLException e) {
-            throw new WrongFormatException();
-        } catch (ClassNotFoundException e) {
-            throw new NoSuchElementException("Can't read data from uploaded file");
-        }
+            throws IOException, SQLException, ClassNotFoundException, WrongFormatException{
+        cardLoadService.loadCard(file, deckId);
         return new ResponseEntity <>(HttpStatus.OK);
     }
 
