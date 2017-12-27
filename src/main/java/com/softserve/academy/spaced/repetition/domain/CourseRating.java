@@ -1,7 +1,14 @@
 package com.softserve.academy.spaced.repetition.domain;
 
 import com.softserve.academy.spaced.repetition.dto.EntityInterface;
+import com.softserve.academy.spaced.repetition.dto.Request;
+
 import javax.persistence.*;
+import javax.validation.constraints.Size;
+
+import static com.softserve.academy.spaced.repetition.service.validators.ValidationConstants.COURSE_AND_CARD_RATING_ERROR_MESSAGE;
+import static com.softserve.academy.spaced.repetition.service.validators.ValidationConstants.MAX_COURSE_AND_CARD_RATING;
+import static com.softserve.academy.spaced.repetition.service.validators.ValidationConstants.MIN_COURSE_AND_CARD_RATING;
 
 @Entity
 @Table(name = "course_rating")
@@ -20,6 +27,8 @@ public class CourseRating implements EntityInterface {
     private Course course;
 
     @Column(name = "rating", nullable = false)
+    @Size(min = MIN_COURSE_AND_CARD_RATING, max = MAX_COURSE_AND_CARD_RATING,
+            message = COURSE_AND_CARD_RATING_ERROR_MESSAGE, groups = Request.class)
     private int rating;
 
     public CourseRating() {

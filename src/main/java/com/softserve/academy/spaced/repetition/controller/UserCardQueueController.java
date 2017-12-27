@@ -17,12 +17,8 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
 @RestController
 public class UserCardQueueController {
-    private final UserCardQueueService userCardQueueService;
-
     @Autowired
-    public UserCardQueueController(UserCardQueueService userCardQueueService) {
-        this.userCardQueueService = userCardQueueService;
-    }
+    private UserCardQueueService userCardQueueService;
 
     @PutMapping("/api/private/decks/{deckId}/cards/{cardId}/queue")
     @PreAuthorize(value = "@accessToUrlService.hasAccessToCard(#deckId, #cardId)")

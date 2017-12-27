@@ -1,108 +1,35 @@
 package com.softserve.academy.spaced.repetition.service;
 
-import com.softserve.academy.spaced.repetition.domain.AuthorityName;
-import com.softserve.academy.spaced.repetition.domain.Person;
 import com.softserve.academy.spaced.repetition.exceptions.NotAuthorisedUserException;
-import com.softserve.academy.spaced.repetition.repository.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
-import java.util.Objects;
+public interface AccessToUrlService {
+    boolean hasAccessToCategory(Long category_id);
 
+    boolean hasAccessToCourse(Long category_id, Long course_id);
 
-@Component("accessToUrlService")
-public class AccessToUrlService {
+    boolean hasAccessToDeckFromFolder(Long folder_id, Long deckId);
 
-    private final CategoryRepository categoryRepository;
-    private final UserService userService;
-    private final CourseRepository courseRepository;
-    private final FolderRepository folderRepository;
-    private final DeckRepository deckRepository;
-    private final CardRepository cardRepository;
-    private final DeckCommentRepository deckCommentRepository;
-    private final CourseCommentRepository courseCommentRepository;
+    boolean hasAccessToCourse(Long category_id);
 
-    @Autowired
-    public AccessToUrlService(CategoryRepository categoryRepository, UserService userService, CourseRepository courseRepository, FolderRepository folderRepository, DeckRepository deckRepository, CardRepository cardRepository, DeckCommentRepository deckCommentRepository, CourseCommentRepository courseCommentRepository) {
-        this.categoryRepository = categoryRepository;
-        this.userService = userService;
-        this.courseRepository = courseRepository;
-        this.folderRepository = folderRepository;
-        this.deckRepository = deckRepository;
-        this.cardRepository = cardRepository;
-        this.deckCommentRepository = deckCommentRepository;
-        this.courseCommentRepository = courseCommentRepository;
-    }
+    boolean hasAccessToDeck(Long category_id, Long course_id, Long deck_id);
 
-    public boolean hasAccessToCategory(Long category_id) {
-        return categoryRepository.hasAccessToCategory(category_id).size() > 0;
-    }
+    boolean hasAccessToDeckFromCategory(Long category_id, Long deck_id);
 
-    public boolean hasAccessToCourse(Long category_id, Long course_id) {
-        return courseRepository.getAccessToCourse(category_id, course_id).size() > 0;
-    }
+    boolean hasAccessToDeck(Long category_id);
 
-    public boolean hasAccessToDeckFromFolder(Long folder_id, Long deckId) {
-        return folderRepository.getAccessToDeckFromFolder(folder_id, deckId).size() > 0;
-    }
+    boolean hasAccessToCard(Long deck_id, Long card_id);
 
-    public boolean hasAccessToCourse(Long category_id) {
-        return courseRepository.getAccessToCourse(category_id).size() > 0;
-    }
+    boolean hasAccessToCard(Long category_id, Long deck_id, Long card_id);
 
-    public boolean hasAccessToDeck(Long category_id, Long course_id, Long deck_id) {
-        return hasAccessToCourse(category_id, course_id) & (deckRepository.hasAccessToDeck(course_id, deck_id).size() > 0);
-    }
+    boolean hasAccessToCard(Long category_id, Long course_id, Long deck_id, Long card_id);
 
-    public boolean hasAccessToDeckFromCategory(Long category_id, Long deck_id) {
-        return deckRepository.hasAccessToDeckFromCategory(category_id, deck_id).size() > 0;
-    }
+    boolean hasAccessToFolder(Long folder_id) throws NotAuthorisedUserException;
 
-    public boolean hasAccessToDeck(Long category_id) {
-        return deckRepository.hasAccessToDeckFromCategory(category_id).size() > 0;
-    }
+    boolean hasAccessToDeleteCommentForCourse(Long commentId) throws NotAuthorisedUserException;
 
-    public boolean hasAccessToCard(Long deck_id, Long card_id) {
-        return (cardRepository.hasAccessToCard(deck_id, card_id).size() > 0);
-    }
+    boolean hasAccessToDeleteCommentForDeck(Long commentId) throws NotAuthorisedUserException;
 
-    public boolean hasAccessToCard(Long category_id, Long deck_id, Long card_id) {
-        return hasAccessToDeckFromCategory(category_id, deck_id) & (cardRepository.hasAccessToCard(deck_id, card_id).size() > 0);
-    }
+    boolean hasAccessToUpdateCommentForDeck(Long commentId) throws NotAuthorisedUserException;
 
-    public boolean hasAccessToCard(Long category_id, Long course_id, Long deck_id, Long card_id) {
-        return hasAccessToDeck(category_id, course_id, deck_id) & (cardRepository.hasAccessToCard(deck_id, card_id).size() > 0);
-    }
-
-    public boolean hasAccessToFolder(Long folder_id) throws NotAuthorisedUserException {
-        Long authorizedUserFolderId = userService.getAuthorizedUser().getFolder().getId();
-
-        return Objects.equals(authorizedUserFolderId, folder_id);
-    }
-
-    public boolean hasAccessToDeleteCommentForCourse(Long commentId) throws NotAuthorisedUserException {
-        boolean hasRoleAdmin = userService.getAuthorizedUser().getAccount().getAuthorities().stream()
-                .anyMatch(authority -> authority.getName().equals(AuthorityName.ROLE_ADMIN));
-        return hasAccessToUpdateCommentForCourse(commentId) || hasRoleAdmin;
-    }
-
-    public boolean hasAccessToDeleteCommentForDeck(Long commentId) throws NotAuthorisedUserException {
-        boolean hasRoleAdmin = userService.getAuthorizedUser().getAccount().getAuthorities().stream()
-                .anyMatch(authority -> authority.getName().equals(AuthorityName.ROLE_ADMIN));
-        return hasAccessToUpdateCommentForDeck(commentId) || hasRoleAdmin;
-    }
-
-    public boolean hasAccessToUpdateCommentForDeck(Long commentId) throws NotAuthorisedUserException {
-        Person authorizedPerson = userService.getAuthorizedUser().getPerson();
-        Person createdCommentPerson = deckCommentRepository.findOne(commentId).getPerson();
-        return authorizedPerson.equals(createdCommentPerson);
-    }
-
-    public boolean hasAccessToUpdateCommentForCourse(Long commentId) throws NotAuthorisedUserException {
-        Person authorizedPerson = userService.getAuthorizedUser().getPerson();
-        Person createdCommentPerson = courseCommentRepository.findOne(commentId).getPerson();
-        return authorizedPerson.equals(createdCommentPerson);
-    }
-
-
+    boolean hasAccessToUpdateCommentForCourse(Long commentId) throws NotAuthorisedUserException;
 }

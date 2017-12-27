@@ -3,65 +3,17 @@ package com.softserve.academy.spaced.repetition.service;
 import com.softserve.academy.spaced.repetition.domain.Comment;
 import com.softserve.academy.spaced.repetition.domain.DeckComment;
 import com.softserve.academy.spaced.repetition.exceptions.NotAuthorisedUserException;
-import com.softserve.academy.spaced.repetition.repository.DeckCommentRepository;
-import com.softserve.academy.spaced.repetition.repository.DeckRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Date;
 import java.util.List;
 
-@Service
-public class DeckCommentService {
+public interface DeckCommentService {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(DeckCommentService.class);
+    DeckComment addCommentForDeck(Long deckId, String commentText, Long parentCommentId) throws NotAuthorisedUserException;
 
-    @Autowired
-    private DeckCommentRepository commentRepository;
+    DeckComment getCommentById(Long commentId);
 
-    @Autowired
-    private DeckRepository deckRepository;
+    List<Comment> getAllCommentsForDeck(Long deckId);
 
-    @Autowired
-    private UserService userService;
+    DeckComment updateCommentById(Long commentId, String commentText);
 
-    @Transactional
-    public DeckComment addCommentForDeck(Long deckId, String commentText, Long parentCommentId) throws NotAuthorisedUserException {
-        LOGGER.debug("Added comment to deck with id: {}", deckId);
-        DeckComment comment = new DeckComment(commentText, new Date());
-        comment.setPerson(userService.getAuthorizedUser().getPerson());
-        comment.setDeck(deckRepository.findOne(deckId));
-        if (parentCommentId != null) {
-            comment.setParentCommentId(parentCommentId);
-        }
-        return commentRepository.save(comment);
-    }
-
-    public DeckComment getCommentById(Long commentId) {
-        LOGGER.debug("View comment with id {}", commentId);
-        return commentRepository.findOne(commentId);
-    }
-
-    public List<Comment> getAllCommentsForDeck(Long deckId) {
-        LOGGER.debug("View all comments for deck with id: {}", deckId);
-        return commentRepository.findDeckCommentsByDeckId(deckId);
-    }
-
-    @Transactional
-    public DeckComment updateCommentById(Long commentId, String commentText) {
-        LOGGER.debug("Updated comment with id: {}", commentId);
-        DeckComment updatedComment = commentRepository.findOne(commentId);
-        updatedComment.setCommentDate(new Date());
-        updatedComment.setCommentText(commentText);
-        return updatedComment;
-    }
-
-    @Transactional
-    public void deleteCommentById(Long commentId) {
-        LOGGER.debug("Deleted comment with id:{}", commentId);
-        commentRepository.deleteComment(commentId);
-    }
+    void deleteCommentById(Long commentId);
 }

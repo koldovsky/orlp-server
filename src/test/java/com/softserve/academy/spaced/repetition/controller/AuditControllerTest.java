@@ -1,14 +1,8 @@
 package com.softserve.academy.spaced.repetition.controller;
 
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
+import com.softserve.academy.spaced.repetition.audit.AuditingAction;
+import com.softserve.academy.spaced.repetition.domain.Audit;
+import com.softserve.academy.spaced.repetition.service.AuditService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,9 +14,12 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import com.softserve.academy.spaced.repetition.audit.AuditingAction;
-import com.softserve.academy.spaced.repetition.domain.Audit;
-import com.softserve.academy.spaced.repetition.service.AuditService;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 @RunWith(MockitoJUnitRunner.class)
 public class AuditControllerTest {

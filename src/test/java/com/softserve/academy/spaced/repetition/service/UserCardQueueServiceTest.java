@@ -5,6 +5,7 @@ import com.softserve.academy.spaced.repetition.domain.*;
 import com.softserve.academy.spaced.repetition.exceptions.NotAuthorisedUserException;
 import com.softserve.academy.spaced.repetition.repository.RememberingLevelRepository;
 import com.softserve.academy.spaced.repetition.repository.UserCardQueueRepository;
+import com.softserve.academy.spaced.repetition.service.impl.UserCardQueueServiceImpl;
 import org.junit.Before;
 import org.junit.ClassRule;
 import org.junit.Rule;
@@ -27,7 +28,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 
-import static com.softserve.academy.spaced.repetition.service.AccountService.NUMBER_OF_REMEMBERING_LEVELS;
+import static com.softserve.academy.spaced.repetition.service.impl.AccountServiceImpl.NUMBER_OF_REMEMBERING_LEVELS;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.when;
@@ -88,7 +89,7 @@ public class UserCardQueueServiceTest {
 
     @Before
     public void setUp() throws Exception {
-        userCardQueueService = new UserCardQueueService(userCardQueueRepository, mockedUserService,
+        userCardQueueService = new UserCardQueueServiceImpl(userCardQueueRepository, mockedUserService,
                 rememberingLevelRepository);
         User mockedUser = createMockedUser(learningRegime);
         when(mockedUserService.getAuthorizedUser()).thenReturn(mockedUser);

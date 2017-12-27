@@ -4,6 +4,7 @@ import com.softserve.academy.spaced.repetition.config.TestDatabaseConfig;
 import com.softserve.academy.spaced.repetition.domain.*;
 import com.softserve.academy.spaced.repetition.repository.CourseCommentRepository;
 import com.softserve.academy.spaced.repetition.repository.CourseRepository;
+import com.softserve.academy.spaced.repetition.service.impl.CourseCommentServiceImpl;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,9 +21,6 @@ import java.util.List;
 
 import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 
 @RunWith(SpringRunner.class)
@@ -35,7 +33,8 @@ public class CourseCommentServiceTest {
 
     private static final Long COURSE_ID = 1L;
 
-    private CourseCommentService courseCommentServiceUnderTest;
+    @Autowired
+    private CourseCommentServiceImpl courseCommentServiceUnderTest;
 
     @Autowired
     private CourseCommentRepository courseCommentRepository;
@@ -48,11 +47,11 @@ public class CourseCommentServiceTest {
 
     @Before
     public void setUp() throws Exception {
-        courseCommentServiceUnderTest = new CourseCommentService(courseCommentRepository, courseRepository, mockedUserService);
+        courseCommentServiceUnderTest = new CourseCommentServiceImpl(courseCommentRepository, courseRepository, mockedUserService);
     }
 
     private User createMockedUser() {
-        User mockedUser = new User(new Account("","user@email.com"), new Person("Ivan", "Kruk"), new Folder());
+        User mockedUser = new User(new Account("", "user@email.com"), new Person("Ivan", "Kruk"), new Folder());
         mockedUser.getPerson().setId(1l);
         return mockedUser;
     }
@@ -92,7 +91,7 @@ public class CourseCommentServiceTest {
         CourseComment savedComment = courseCommentServiceUnderTest.addCommentForCourse(COURSE_ID, "Very interesting", null);
         courseCommentServiceUnderTest.addCommentForCourse(COURSE_ID, "Very interesting", savedComment.getId());
         courseCommentServiceUnderTest.deleteCommentById(savedComment.getId());
-        assertEquals("Trying to find comment.",0, courseCommentRepository.findCourseCommentsByCourseId(COURSE_ID).size());
+        assertEquals("Trying to find comment.", 0, courseCommentRepository.findCourseCommentsByCourseId(COURSE_ID).size());
     }
 
     @Test
@@ -100,7 +99,7 @@ public class CourseCommentServiceTest {
         when(mockedUserService.getAuthorizedUser()).thenReturn(createMockedUser());
         CourseComment savedComment = courseCommentServiceUnderTest.addCommentForCourse(COURSE_ID, "Very interesting", null);
         CourseComment updatedComment = courseCommentServiceUnderTest.updateCommentById(savedComment.getId(), "New CommentText");
-        assertEquals("Changed comment text.","New CommentText", updatedComment.getCommentText());
+        assertEquals("Changed comment text.", "New CommentText", updatedComment.getCommentText());
     }
 
 }
