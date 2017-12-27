@@ -197,7 +197,7 @@ public class DeckServiceImpl implements DeckService {
     @Override
     public List<Deck> getAllDecksByUser() throws NotAuthorisedUserException {
         User user = userService.getAuthorizedUser();
-        return deckRepository.findAllByDeckOwner_IdEquals(user.getId());
+        return deckRepository.findAllByDeckOwnerIdEquals(user.getId());
     }
 
     @Override

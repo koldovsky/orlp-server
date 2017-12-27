@@ -29,7 +29,7 @@ public class DeckRatingServiceImpl implements DeckRatingService{
         User user = userService.getAuthorizedUser();
         userService.isUserStatusActive(user);
         String email = user.getAccount().getEmail();
-        DeckRating deckRating = deckRatingRepository.findAllByAccountEmailAndDeck_Id(email, deckId);
+        DeckRating deckRating = deckRatingRepository.findAllByAccountEmailAndDeckId(email, deckId);
         if (deckRating == null) {
             deckRating = new DeckRating();
         }
