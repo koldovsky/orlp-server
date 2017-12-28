@@ -25,7 +25,8 @@ public class UserCardQueueServiceImpl implements UserCardQueueService {
     private final RememberingLevelRepository rememberingLevelRepository;
 
     @Autowired
-    public UserCardQueueServiceImpl(UserCardQueueRepository userCardQueueRepository, UserService userService, RememberingLevelRepository rememberingLevelRepository) {
+    public UserCardQueueServiceImpl(UserCardQueueRepository userCardQueueRepository, UserService userService,
+                                    RememberingLevelRepository rememberingLevelRepository) {
         this.userCardQueueRepository = userCardQueueRepository;
         this.userService = userService;
         this.rememberingLevelRepository = rememberingLevelRepository;

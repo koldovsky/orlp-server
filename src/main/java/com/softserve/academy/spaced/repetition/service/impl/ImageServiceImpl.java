@@ -38,11 +38,14 @@ public class ImageServiceImpl implements ImageService {
      *
      * @param file - image uploaded by User
      * @return
-     * @throws ImageRepositorySizeQuotaExceededException - is dropping when user has exceeded the quote of disk-space for his own images
-     * @throws NotAuthorisedUserException                - is dropping when the user which wants to add the image is not authorised
+     * @throws ImageRepositorySizeQuotaExceededException
+     * - is dropping when user has exceeded the quote of disk-space for his own images
+     * @throws NotAuthorisedUserException
+     * - is dropping when the user which wants to add the image is not authorised
      */
     @Override
-    public Image addImageToDB(MultipartFile file) throws ImageRepositorySizeQuotaExceededException, NotAuthorisedUserException {
+    public Image addImageToDB(MultipartFile file)
+            throws ImageRepositorySizeQuotaExceededException, NotAuthorisedUserException {
         checkImageExtention(file);
         Image image = new Image(encodeToBase64(file), file.getContentType(),
                 userService.getAuthorizedUser(), file.getSize());
@@ -149,7 +152,8 @@ public class ImageServiceImpl implements ImageService {
      * @throws NotAuthorisedUserException - is dropping when the user which wants to delete the image is not authorised
      */
     @Override
-    public void deleteImage(Long id) throws CanNotBeDeletedException, NotOwnerOperationException, NotAuthorisedUserException {
+    public void deleteImage(Long id)
+            throws CanNotBeDeletedException, NotOwnerOperationException, NotAuthorisedUserException {
         Image image = imageRepository.findImageById(id);
         Long imageOwnerId = image.getCreatedBy().getId();
         Long userId = 0L;

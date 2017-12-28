@@ -32,7 +32,8 @@ public class DeckCommentServiceImpl implements DeckCommentService {
 
     @Override
     @Transactional
-    public DeckComment addCommentForDeck(Long deckId, String commentText, Long parentCommentId) throws NotAuthorisedUserException {
+    public DeckComment addCommentForDeck(Long deckId, String commentText, Long parentCommentId)
+            throws NotAuthorisedUserException {
         LOGGER.debug("Added comment to deck with id: {}", deckId);
         DeckComment comment = new DeckComment(commentText, new Date());
         comment.setPerson(userService.getAuthorizedUser().getPerson());

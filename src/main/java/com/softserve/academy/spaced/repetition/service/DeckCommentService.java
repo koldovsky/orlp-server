@@ -7,7 +7,8 @@ import java.util.List;
 
 public interface DeckCommentService {
 
-    DeckComment addCommentForDeck(Long deckId, String commentText, Long parentCommentId) throws NotAuthorisedUserException;
+    DeckComment addCommentForDeck(Long deckId, String commentText, Long parentCommentId)
+            throws NotAuthorisedUserException;
 
     DeckComment getCommentById(Long commentId);
 

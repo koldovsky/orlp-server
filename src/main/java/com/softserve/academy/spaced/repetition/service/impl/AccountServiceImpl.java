@@ -34,7 +34,8 @@ public class AccountServiceImpl implements AccountService {
     private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public AccountServiceImpl(AccountRepository accountRepository, RememberingLevelRepository rememberingLevelRepository,
+    public AccountServiceImpl(AccountRepository accountRepository,
+                              RememberingLevelRepository rememberingLevelRepository,
                               UserService userService, NumberOfPostponedDaysValidator numberOfPostponedDaysValidator,
                               MailService mailService, PasswordEncoder passwordEncoder) {
         this.accountRepository = accountRepository;
@@ -58,7 +59,8 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     @Transactional
-    public void updateLearningRegime(String learningRegime) throws NotAuthorisedUserException, IllegalArgumentException {
+    public void updateLearningRegime(String learningRegime) throws NotAuthorisedUserException,
+            IllegalArgumentException {
         boolean learningRegimeFound = Arrays.stream(LearningRegime.values())
                 .anyMatch(LearningRegime.valueOf(learningRegime)::equals);
 

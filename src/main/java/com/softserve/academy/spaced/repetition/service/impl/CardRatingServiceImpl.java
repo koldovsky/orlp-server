@@ -31,7 +31,8 @@ public class CardRatingServiceImpl implements CardRatingService {
     public void addCardRating(CardRating cardRating, Long cardId) throws NotAuthorisedUserException {
         User user = userService.getAuthorizedUser();
         String email = user.getAccount().getEmail();
-        CardRating cardRatingByAccountEmail = cardRatingRepository.findCardRatingByAccountEmailAndCard_Id(email, cardId);
+        CardRating cardRatingByAccountEmail = cardRatingRepository
+                .findCardRatingByAccountEmailAndCard_Id(email, cardId);
         if (cardRatingByAccountEmail != null) {
             cardRating.setId(cardRatingByAccountEmail.getId());
         }

@@ -75,8 +75,8 @@ public interface UserService {
 
     void getUserStatus() throws UserStatusException;
 
-    void initializeNewUser(Account account, String email, AccountStatus accountStatus, boolean deactivated, AuthenticationType
-            authenticationType);
+    void initializeNewUser(Account account, String email, AccountStatus accountStatus,
+                           boolean deactivated, AuthenticationType authenticationType);
 
     void isUserStatusActive(User user) throws UserStatusException;
 }
