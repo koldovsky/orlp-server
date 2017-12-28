@@ -11,7 +11,7 @@ public class Image implements EntityInterface {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "image_id")
-    private long id;
+    private Long id;
 
     @Column(name = "imagebase64", columnDefinition = "LONGTEXT")
     private String imagebase64;
@@ -68,7 +68,7 @@ public class Image implements EntityInterface {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

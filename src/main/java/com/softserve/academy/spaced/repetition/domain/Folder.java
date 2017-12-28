@@ -12,7 +12,7 @@ public class Folder implements EntityInterface {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "folder_id")
-    private long id;
+    private Long id;
 
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "folder_decks", joinColumns = {
@@ -27,7 +27,7 @@ public class Folder implements EntityInterface {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
