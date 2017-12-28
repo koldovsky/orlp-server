@@ -7,7 +7,8 @@ import com.softserve.academy.spaced.repetition.exceptions.NotAuthorisedUserExcep
 import java.util.List;
 
 public interface CourseCommentService {
-    CourseComment addCommentForCourse(Long courseId, String commentText, Long parentCommentId) throws NotAuthorisedUserException;
+    CourseComment addCommentForCourse(Long courseId, String commentText, Long parentCommentId)
+            throws NotAuthorisedUserException;
 
     CourseComment getCommentById(Long commentId);
 

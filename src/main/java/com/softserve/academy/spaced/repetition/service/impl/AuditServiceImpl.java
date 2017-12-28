@@ -87,7 +87,8 @@ public class AuditServiceImpl implements AuditService {
 
     @Override
     public Page<Audit> getAuditByPage(int pageNumber, String sortBy, boolean ascending) {
-        PageRequest request = new PageRequest(pageNumber - 1, QUANTITY_AUDIT_IN_PAGE, ascending ? Sort.Direction.ASC : Sort.Direction.DESC, sortBy);
+        PageRequest request = new PageRequest(pageNumber - 1, QUANTITY_AUDIT_IN_PAGE,
+                ascending ? Sort.Direction.ASC : Sort.Direction.DESC, sortBy);
         return auditRepository.findAll(request);
     }
 }

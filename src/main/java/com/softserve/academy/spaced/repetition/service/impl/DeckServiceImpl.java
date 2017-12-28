@@ -216,13 +216,15 @@ public class DeckServiceImpl implements DeckService {
 
     @Override
     public Page<Deck> getPageWithDecksByCategory(long categoryId, int pageNumber, String sortBy, boolean ascending) {
-        PageRequest request = new PageRequest(pageNumber - 1, QUANTITY_DECKS_IN_PAGE, ascending ? Sort.Direction.ASC : Sort.Direction.DESC, sortBy);
+        PageRequest request = new PageRequest(pageNumber - 1, QUANTITY_DECKS_IN_PAGE,
+                ascending ? Sort.Direction.ASC : Sort.Direction.DESC, sortBy);
         return deckRepository.findAllByCategoryEquals(categoryRepository.findOne(categoryId), request);
     }
 
     @Override
     public Page<Deck> getPageWithAllAdminDecks(int pageNumber, String sortBy, boolean ascending) {
-        PageRequest request = new PageRequest(pageNumber - 1, QUANTITY_ADMIN_DECKS_IN_PAGE, ascending ? Sort.Direction.ASC : Sort.Direction.DESC, sortBy);
+        PageRequest request = new PageRequest(pageNumber - 1, QUANTITY_ADMIN_DECKS_IN_PAGE,
+                ascending ? Sort.Direction.ASC : Sort.Direction.DESC, sortBy);
         return deckRepository.findAll(request);
     }
 

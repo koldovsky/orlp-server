@@ -38,7 +38,8 @@ public class CourseCommentServiceImpl implements CourseCommentService {
 
     @Override
     @Transactional
-    public CourseComment addCommentForCourse(Long courseId, String commentText, Long parentCommentId) throws NotAuthorisedUserException {
+    public CourseComment addCommentForCourse(Long courseId, String commentText, Long parentCommentId)
+            throws NotAuthorisedUserException {
         LOGGER.debug("Added new comment for course with id: {}", courseId);
         CourseComment comment = new CourseComment(commentText, new Date());
         comment.setPerson(userService.getAuthorizedUser().getPerson());

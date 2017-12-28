@@ -28,7 +28,9 @@ public interface CardService {
 
     boolean areThereNotPostponedCardsAvailable(Long deckId) throws NotAuthorisedUserException;
 
-    void uploadCards(MultipartFile cardsFile, Long deckId) throws WrongFormatException, EmptyFileException, NotOwnerOperationException, NotAuthorisedUserException, IOException;
+    void uploadCards(MultipartFile cardsFile, Long deckId)
+            throws WrongFormatException, EmptyFileException, NotOwnerOperationException,
+            NotAuthorisedUserException, IOException;
 
     void downloadCards(Long deckId, OutputStream outputStream);
 
