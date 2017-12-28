@@ -15,9 +15,10 @@ import java.util.List;
 @Service
 public class AuditServiceImpl implements AuditService {
 
+    public final static int QUANTITY_AUDIT_IN_PAGE = 10;
+
     @Autowired
     private AuditRepository auditRepository;
-    public final static int QUANTITY_AUDIT_IN_PAGE = 10;
 
     @Override
     public List<Audit> getFullAuditList() {

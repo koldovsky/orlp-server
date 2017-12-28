@@ -9,14 +9,4 @@ public interface RegistrationService {
     User registerNewUser(User user);
 
     void sendConfirmationEmailMessage(User user) throws MailException;
-
-    void setAuthorityRepository(AuthorityRepository authorityRepository);
-
-    void setUserService(UserService userService);
-
-    void setPasswordEncoder(PasswordEncoder passwordEncoder);
-
-    void setMailService(MailService mailService);
-
-    void setAccountService(AccountService accountService);
 }

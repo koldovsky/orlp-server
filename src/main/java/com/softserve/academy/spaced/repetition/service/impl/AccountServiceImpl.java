@@ -1,15 +1,16 @@
 package com.softserve.academy.spaced.repetition.service.impl;
 
-import com.softserve.academy.spaced.repetition.domain.*;
+import com.softserve.academy.spaced.repetition.domain.Account;
+import com.softserve.academy.spaced.repetition.domain.RememberingLevel;
 import com.softserve.academy.spaced.repetition.domain.enums.AccountStatus;
 import com.softserve.academy.spaced.repetition.domain.enums.AuthenticationType;
 import com.softserve.academy.spaced.repetition.domain.enums.LearningRegime;
-import com.softserve.academy.spaced.repetition.utils.exceptions.NotAuthorisedUserException;
 import com.softserve.academy.spaced.repetition.repository.AccountRepository;
 import com.softserve.academy.spaced.repetition.repository.RememberingLevelRepository;
 import com.softserve.academy.spaced.repetition.service.AccountService;
 import com.softserve.academy.spaced.repetition.service.MailService;
 import com.softserve.academy.spaced.repetition.service.UserService;
+import com.softserve.academy.spaced.repetition.utils.exceptions.NotAuthorisedUserException;
 import com.softserve.academy.spaced.repetition.utils.validators.NumberOfPostponedDaysValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,27 +25,22 @@ import java.util.List;
 
 @Service
 public class AccountServiceImpl implements AccountService {
+
     private static final Logger LOGGER = LoggerFactory.getLogger(AccountServiceImpl.class);
     public static final int NUMBER_OF_REMEMBERING_LEVELS = 6;
-    private final AccountRepository accountRepository;
-    private final RememberingLevelRepository rememberingLevelRepository;
-    private final UserService userService;
-    private final NumberOfPostponedDaysValidator numberOfPostponedDaysValidator;
-    private final MailService mailService;
-    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public AccountServiceImpl(AccountRepository accountRepository,
-                              RememberingLevelRepository rememberingLevelRepository,
-                              UserService userService, NumberOfPostponedDaysValidator numberOfPostponedDaysValidator,
-                              MailService mailService, PasswordEncoder passwordEncoder) {
-        this.accountRepository = accountRepository;
-        this.rememberingLevelRepository = rememberingLevelRepository;
-        this.userService = userService;
-        this.numberOfPostponedDaysValidator = numberOfPostponedDaysValidator;
-        this.mailService = mailService;
-        this.passwordEncoder = passwordEncoder;
-    }
+    private AccountRepository accountRepository;
+    @Autowired
+    private RememberingLevelRepository rememberingLevelRepository;
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private NumberOfPostponedDaysValidator numberOfPostponedDaysValidator;
+    @Autowired
+    private MailService mailService;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Override
     public void updateAccount(Account account) {
@@ -64,7 +60,7 @@ public class AccountServiceImpl implements AccountService {
         boolean learningRegimeFound = Arrays.stream(LearningRegime.values())
                 .anyMatch(LearningRegime.valueOf(learningRegime)::equals);
 
-        if(!learningRegimeFound) {
+        if (!learningRegimeFound) {
             throw new IllegalArgumentException("Value of Learning Regime is not valid: " + learningRegime);
         }
 

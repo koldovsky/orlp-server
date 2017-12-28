@@ -19,18 +19,15 @@ import static com.softserve.academy.spaced.repetition.service.impl.AccountServic
 
 @Service
 public class UserCardQueueServiceImpl implements UserCardQueueService {
+
     private static final int DAY_IN_MILLISECONDS = 24 * 60 * 60 * 1000;
-    private final UserCardQueueRepository userCardQueueRepository;
-    private final UserService userService;
-    private final RememberingLevelRepository rememberingLevelRepository;
 
     @Autowired
-    public UserCardQueueServiceImpl(UserCardQueueRepository userCardQueueRepository, UserService userService,
-                                    RememberingLevelRepository rememberingLevelRepository) {
-        this.userCardQueueRepository = userCardQueueRepository;
-        this.userService = userService;
-        this.rememberingLevelRepository = rememberingLevelRepository;
-    }
+    private UserCardQueueRepository userCardQueueRepository;
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private RememberingLevelRepository rememberingLevelRepository;
 
     @Override
     @Transactional
