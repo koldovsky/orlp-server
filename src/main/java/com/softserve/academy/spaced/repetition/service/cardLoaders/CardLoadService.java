@@ -1,6 +1,6 @@
 package com.softserve.academy.spaced.repetition.service.cardLoaders;
 
-import com.softserve.academy.spaced.repetition.exceptions.WrongFormatException;
+import com.softserve.academy.spaced.repetition.utils.exceptions.WrongFormatException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;

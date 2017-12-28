@@ -1,10 +1,11 @@
 package com.softserve.academy.spaced.repetition.service.impl;
 
 import com.softserve.academy.spaced.repetition.domain.*;
-import com.softserve.academy.spaced.repetition.dto.impl.PasswordDTO;
-import com.softserve.academy.spaced.repetition.exceptions.ImageRepositorySizeQuotaExceededException;
-import com.softserve.academy.spaced.repetition.exceptions.NotAuthorisedUserException;
-import com.softserve.academy.spaced.repetition.exceptions.UserStatusException;
+import com.softserve.academy.spaced.repetition.domain.enums.*;
+import com.softserve.academy.spaced.repetition.controller.utils.dto.impl.PasswordDTO;
+import com.softserve.academy.spaced.repetition.utils.exceptions.ImageRepositorySizeQuotaExceededException;
+import com.softserve.academy.spaced.repetition.utils.exceptions.NotAuthorisedUserException;
+import com.softserve.academy.spaced.repetition.utils.exceptions.UserStatusException;
 import com.softserve.academy.spaced.repetition.repository.AuthorityRepository;
 import com.softserve.academy.spaced.repetition.repository.DeckRepository;
 import com.softserve.academy.spaced.repetition.repository.UserRepository;

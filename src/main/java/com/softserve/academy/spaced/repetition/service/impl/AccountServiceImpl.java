@@ -1,13 +1,16 @@
 package com.softserve.academy.spaced.repetition.service.impl;
 
 import com.softserve.academy.spaced.repetition.domain.*;
-import com.softserve.academy.spaced.repetition.exceptions.NotAuthorisedUserException;
+import com.softserve.academy.spaced.repetition.domain.enums.AccountStatus;
+import com.softserve.academy.spaced.repetition.domain.enums.AuthenticationType;
+import com.softserve.academy.spaced.repetition.domain.enums.LearningRegime;
+import com.softserve.academy.spaced.repetition.utils.exceptions.NotAuthorisedUserException;
 import com.softserve.academy.spaced.repetition.repository.AccountRepository;
 import com.softserve.academy.spaced.repetition.repository.RememberingLevelRepository;
 import com.softserve.academy.spaced.repetition.service.AccountService;
 import com.softserve.academy.spaced.repetition.service.MailService;
 import com.softserve.academy.spaced.repetition.service.UserService;
-import com.softserve.academy.spaced.repetition.service.validators.NumberOfPostponedDaysValidator;
+import com.softserve.academy.spaced.repetition.utils.validators.NumberOfPostponedDaysValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
