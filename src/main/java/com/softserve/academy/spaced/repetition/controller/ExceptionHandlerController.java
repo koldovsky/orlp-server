@@ -28,11 +28,14 @@ import java.util.stream.Collectors;
 @ControllerAdvice
 public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
 
-    private static final EnumMap<AccountStatus, ResponseEntity<MessageDTO>> USER_STATUS_ERROR_RESPONSE = new EnumMap<>(AccountStatus.class);
+    private static final EnumMap<AccountStatus, ResponseEntity<MessageDTO>> USER_STATUS_ERROR_RESPONSE =
+            new EnumMap<>(AccountStatus.class);
 
     static {
-        USER_STATUS_ERROR_RESPONSE.put(AccountStatus.DELETED, new ResponseEntity<>(new MessageDTO("Account with this email is deleted"), HttpStatus.LOCKED));
-        USER_STATUS_ERROR_RESPONSE.put(AccountStatus.BLOCKED, new ResponseEntity<>(new MessageDTO("Account with this email is blocked"), HttpStatus.FORBIDDEN));
+        USER_STATUS_ERROR_RESPONSE.put(AccountStatus.DELETED, new ResponseEntity<>(
+                new MessageDTO("Account with this email is deleted"), HttpStatus.LOCKED));
+        USER_STATUS_ERROR_RESPONSE.put(AccountStatus.BLOCKED, new ResponseEntity<>(
+                new MessageDTO("Account with this email is blocked"), HttpStatus.FORBIDDEN));
     }
 
     @ExceptionHandler(MultipartException.class)
@@ -47,7 +50,8 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
     @ResponseStatus(HttpStatus.FORBIDDEN)
     @ResponseBody
     MessageDTO handleImageRepositorySizeQuotaExceededException() {
-        return new MessageDTO("You have exceeded your quota for uploading images. You should delete some images before new upload.");
+        return new MessageDTO("You have exceeded your quota for uploading images. " +
+                "You should delete some images before new upload.");
     }
 
     @ExceptionHandler(CanNotBeDeletedException.class)
@@ -114,7 +118,8 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
     }
 
     @Override
-    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
+    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers,
+                                                                  HttpStatus status, WebRequest request) {
         List<FieldErrorDTO> errors = ex.getBindingResult().getFieldErrors().stream()
                 .map(p -> new FieldErrorDTO(p.getField(), p.getDefaultMessage())).collect(Collectors.toList());
         ValidationMessageDTO messageDTO = new ValidationMessageDTO(errors);
