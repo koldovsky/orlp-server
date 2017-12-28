@@ -39,8 +39,10 @@ public class DeckController {
     @GetMapping(value = "/api/category/{categoryId}/decks")
     @PreAuthorize(value = "@accessToUrlService.hasAccessToDeck(#categoryId)")
     public ResponseEntity<Page<DeckLinkByCategoryDTO>> getAllDecksByCategoryId(
-            @PathVariable Long categoryId, @RequestParam(name = "p", defaultValue = "1") int pageNumber,
-            @RequestParam(name = "sortBy") String sortBy, @RequestParam(name = "asc") boolean ascending) {
+            @PathVariable Long categoryId,
+            @RequestParam(name = "p", defaultValue = "1") int pageNumber,
+            @RequestParam(name = "sortBy") String sortBy,
+            @RequestParam(name = "asc") boolean ascending) {
         Page<DeckLinkByCategoryDTO> deckByCategoryDTOS = deckService
                 .getPageWithDecksByCategory(categoryId, pageNumber, sortBy, ascending).map((deck) -> {
                     Link selfLink = linkTo(methodOn(DeckController.class)
@@ -142,7 +144,8 @@ public class DeckController {
     @PostMapping(value = "/api/category/{categoryId}/courses/{courseId}/decks")
     @PreAuthorize(value = "@accessToUrlService.hasAccessToCourse(#categoryId, #courseId)")
     public ResponseEntity<DeckPublicDTO> addDeckToCourse(@Validated(Request.class) @RequestBody Deck deck,
-                                                         @PathVariable Long categoryId, @PathVariable Long courseId) {
+                                                         @PathVariable Long categoryId,
+                                                         @PathVariable Long courseId) {
         deckService.addDeckToCourse(deck, categoryId, courseId);
         Link selfLink = linkTo(methodOn(DeckController.class)
                 .getDeckByCourseId(categoryId, courseId, deck.getId())).withSelfRel();
@@ -152,7 +155,8 @@ public class DeckController {
 
     @Auditable(action = AuditingAction.EDIT_DECK)
     @PutMapping(value = "/api/user/{userId}/decks/{deckId}/{categoryId}")
-    public void updateDeck(@Validated(Request.class) @RequestBody Deck deck, @PathVariable Long deckId,
+    public void updateDeck(@Validated(Request.class) @RequestBody Deck deck,
+                           @PathVariable Long deckId,
                            @PathVariable Long categoryId) {
         deckService.updateDeck(deck, deckId, categoryId);
     }
@@ -166,7 +170,8 @@ public class DeckController {
     @Auditable(action = AuditingAction.VIEW_DECKS_ADMIN)
     @GetMapping(value = "/api/admin/decks")
     public ResponseEntity<Page<DeckOfUserManagedByAdminDTO>> getAllDecksForAdmin(
-            @RequestParam(name = "p", defaultValue = "1") int pageNumber, @RequestParam(name = "sortBy") String sortBy,
+            @RequestParam(name = "p", defaultValue = "1") int pageNumber,
+            @RequestParam(name = "sortBy") String sortBy,
             @RequestParam(name = "asc") boolean ascending) {
         Page<DeckOfUserManagedByAdminDTO> deckOfUserManagedByAdminDTO = deckService
                 .getPageWithAllAdminDecks(pageNumber, sortBy, ascending).map((deck) -> {
@@ -243,7 +248,8 @@ public class DeckController {
     @Auditable(action = AuditingAction.EDIT_DECK_USER)
     @PutMapping(value = "/api/private/category/{categoryId}/deck/{deckId}")
     public ResponseEntity<DeckPrivateDTO> updateDeckForUser(
-            @Validated(Request.class) @RequestBody Deck deck, @PathVariable Long deckId,
+            @Validated(Request.class) @RequestBody Deck deck,
+            @PathVariable Long deckId,
             @PathVariable Long categoryId) throws NotAuthorisedUserException, NotOwnerOperationException {
         Deck updatedDeck = deckService.updateOwnDeck(deck, deckId, categoryId);
         Link selfLink = linkTo(methodOn(DeckController.class).getOneDeckForUser(updatedDeck.getId())).withSelfRel();

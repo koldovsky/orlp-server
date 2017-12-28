@@ -35,8 +35,10 @@ public class CourseController {
     @GetMapping(value = "/api/category/{category_id}/courses")
     @PreAuthorize(value = "@accessToUrlService.hasAccessToCategory(#category_id)")
     public ResponseEntity<Page<CourseLinkDTO>> getAllCoursesByCategoryId(
-            @PathVariable Long category_id, @RequestParam(name = "p", defaultValue = "1") int pageNumber,
-            @RequestParam(name = "sortBy") String sortBy, @RequestParam(name = "asc") boolean ascending) {
+            @PathVariable Long category_id,
+            @RequestParam(name = "p", defaultValue = "1") int pageNumber,
+            @RequestParam(name = "sortBy") String sortBy,
+            @RequestParam(name = "asc") boolean ascending) {
         Page<CourseLinkDTO> courseLinkDTOS = courseService
                 .getPageWithCoursesByCategory(category_id, pageNumber, sortBy, ascending).map((course) -> {
                     Link selfLink = linkTo(methodOn(CourseController.class)
@@ -49,9 +51,11 @@ public class CourseController {
     @Auditable(action = AuditingAction.VIEW_COURSES)
     @GetMapping(value = "/api/courses")
     public ResponseEntity<Page<CourseLinkDTO>> getAllCourses(
-            @RequestParam(name = "p", defaultValue = "1") int pageNumber, @RequestParam(name = "sortBy") String sortBy,
+            @RequestParam(name = "p", defaultValue = "1") int pageNumber,
+            @RequestParam(name = "sortBy") String sortBy,
             @RequestParam(name = "asc") boolean ascending) {
-        Page<CourseLinkDTO> courseLinkDTOS = courseService.getPageWithCourses(pageNumber, sortBy, ascending).map((course) -> {
+        Page<CourseLinkDTO> courseLinkDTOS = courseService
+                .getPageWithCourses(pageNumber, sortBy, ascending).map((course) -> {
             Link selfLink = linkTo(methodOn(CourseController.class)
                     .getCourseById(course.getCategory().getId(), course.getId())).withSelfRel();
             return DTOBuilder.buildDtoForEntity(course, CourseLinkDTO.class, selfLink);
@@ -135,7 +139,8 @@ public class CourseController {
     @Auditable(action = AuditingAction.ADD_COURSE)
     @PutMapping("/api/category/courses/{courseId}/decks/{deckId}")
     public ResponseEntity addDeckToCourse(@Validated(Request.class) @PathVariable Long courseId,
-                                          @PathVariable Long deckId, @RequestBody Course course) {
+                                          @PathVariable Long deckId,
+                                          @RequestBody Course course) {
         courseService.addDeckToCourse(courseId, deckId);
         return new ResponseEntity(HttpStatus.OK);
     }
