@@ -1,10 +1,12 @@
 package com.softserve.academy.spaced.repetition.service;
 
 import com.softserve.academy.spaced.repetition.domain.*;
-import com.softserve.academy.spaced.repetition.dto.impl.PasswordDTO;
-import com.softserve.academy.spaced.repetition.exceptions.ImageRepositorySizeQuotaExceededException;
-import com.softserve.academy.spaced.repetition.exceptions.NotAuthorisedUserException;
-import com.softserve.academy.spaced.repetition.exceptions.UserStatusException;
+import com.softserve.academy.spaced.repetition.domain.enums.AccountStatus;
+import com.softserve.academy.spaced.repetition.domain.enums.AuthenticationType;
+import com.softserve.academy.spaced.repetition.controller.utils.dto.impl.PasswordDTO;
+import com.softserve.academy.spaced.repetition.utils.exceptions.ImageRepositorySizeQuotaExceededException;
+import com.softserve.academy.spaced.repetition.utils.exceptions.NotAuthorisedUserException;
+import com.softserve.academy.spaced.repetition.utils.exceptions.UserStatusException;
 import com.softserve.academy.spaced.repetition.repository.AuthorityRepository;
 import com.softserve.academy.spaced.repetition.repository.DeckRepository;
 import com.softserve.academy.spaced.repetition.repository.UserRepository;
@@ -73,8 +75,8 @@ public interface UserService {
 
     void getUserStatus() throws UserStatusException;
 
-    void initializeNewUser(Account account, String email, AccountStatus accountStatus, boolean deactivated, AuthenticationType
-            authenticationType);
+    void initializeNewUser(Account account, String email, AccountStatus accountStatus,
+                           boolean deactivated, AuthenticationType authenticationType);
 
     void isUserStatusActive(User user) throws UserStatusException;
 }

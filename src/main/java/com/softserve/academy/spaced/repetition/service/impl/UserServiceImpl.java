@@ -1,10 +1,11 @@
 package com.softserve.academy.spaced.repetition.service.impl;
 
 import com.softserve.academy.spaced.repetition.domain.*;
-import com.softserve.academy.spaced.repetition.dto.impl.PasswordDTO;
-import com.softserve.academy.spaced.repetition.exceptions.ImageRepositorySizeQuotaExceededException;
-import com.softserve.academy.spaced.repetition.exceptions.NotAuthorisedUserException;
-import com.softserve.academy.spaced.repetition.exceptions.UserStatusException;
+import com.softserve.academy.spaced.repetition.domain.enums.*;
+import com.softserve.academy.spaced.repetition.controller.utils.dto.impl.PasswordDTO;
+import com.softserve.academy.spaced.repetition.utils.exceptions.ImageRepositorySizeQuotaExceededException;
+import com.softserve.academy.spaced.repetition.utils.exceptions.NotAuthorisedUserException;
+import com.softserve.academy.spaced.repetition.utils.exceptions.UserStatusException;
 import com.softserve.academy.spaced.repetition.repository.AuthorityRepository;
 import com.softserve.academy.spaced.repetition.repository.DeckRepository;
 import com.softserve.academy.spaced.repetition.repository.UserRepository;
@@ -197,7 +198,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Page<User> getUsersByPage(int pageNumber, String sortBy, boolean ascending) {
-        PageRequest request = new PageRequest(pageNumber - 1, QUANTITY_USER_IN_PAGE, ascending ? Sort.Direction.ASC : Sort.Direction.DESC, sortBy);
+        PageRequest request = new PageRequest(pageNumber - 1, QUANTITY_USER_IN_PAGE,
+                ascending ? Sort.Direction.ASC : Sort.Direction.DESC, sortBy);
         return userRepository.findAll(request);
     }
 
@@ -259,8 +261,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public void initializeNewUser(Account account, String email, AccountStatus accountStatus, boolean deactivated, AuthenticationType
-            authenticationType) {
+    public void initializeNewUser(Account account, String email, AccountStatus accountStatus,
+                                  boolean deactivated, AuthenticationType authenticationType) {
         account.setEmail(email);
         if (account.getPassword() != null) {
             account.setPassword(passwordEncoder.encode(account.getPassword()));

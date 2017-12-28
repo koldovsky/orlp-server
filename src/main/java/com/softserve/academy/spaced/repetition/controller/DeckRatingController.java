@@ -1,11 +1,12 @@
 package com.softserve.academy.spaced.repetition.controller;
 
+import com.softserve.academy.spaced.repetition.controller.utils.dto.Request;
 import com.softserve.academy.spaced.repetition.domain.DeckRating;
-import com.softserve.academy.spaced.repetition.dto.DTOBuilder;
-import com.softserve.academy.spaced.repetition.dto.RatingDTO;
-import com.softserve.academy.spaced.repetition.dto.impl.DeckRatingPublicDTO;
-import com.softserve.academy.spaced.repetition.exceptions.NotAuthorisedUserException;
-import com.softserve.academy.spaced.repetition.exceptions.UserStatusException;
+import com.softserve.academy.spaced.repetition.controller.utils.dto.DTOBuilder;
+import com.softserve.academy.spaced.repetition.controller.utils.dto.RatingDTO;
+import com.softserve.academy.spaced.repetition.controller.utils.dto.impl.DeckRatingPublicDTO;
+import com.softserve.academy.spaced.repetition.utils.exceptions.NotAuthorisedUserException;
+import com.softserve.academy.spaced.repetition.utils.exceptions.UserStatusException;
 import com.softserve.academy.spaced.repetition.service.DeckRatingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Link;
@@ -34,8 +35,10 @@ public class DeckRatingController {
     }
 
     @PostMapping("/api/private/deck/{deckId}")
-    public ResponseEntity addDeckRating(@Validated @RequestBody RatingDTO ratingDTO,
+
+    public ResponseEntity addDeckRating(@Validated(Request.class) @RequestBody RatingDTO ratingDTO, 
                                         @PathVariable Long deckId) throws NotAuthorisedUserException, UserStatusException {
+
         deckRatingService.addDeckRating(ratingDTO.getRating(), deckId);
         return new ResponseEntity(HttpStatus.CREATED);
     }

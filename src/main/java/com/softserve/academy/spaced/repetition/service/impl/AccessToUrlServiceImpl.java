@@ -1,9 +1,9 @@
 package com.softserve.academy.spaced.repetition.service.impl;
 
-import com.softserve.academy.spaced.repetition.domain.AuthorityName;
+import com.softserve.academy.spaced.repetition.domain.enums.AuthorityName;
 import com.softserve.academy.spaced.repetition.domain.Person;
-import com.softserve.academy.spaced.repetition.exceptions.NotAuthorisedUserException;
 import com.softserve.academy.spaced.repetition.repository.*;
+import com.softserve.academy.spaced.repetition.utils.exceptions.NotAuthorisedUserException;
 import com.softserve.academy.spaced.repetition.service.AccessToUrlService;
 import com.softserve.academy.spaced.repetition.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +24,11 @@ public class AccessToUrlServiceImpl implements AccessToUrlService {
     private final CourseCommentRepository courseCommentRepository;
 
     @Autowired
-    public AccessToUrlServiceImpl(CategoryRepository categoryRepository, UserService userService, CourseRepository courseRepository, FolderRepository folderRepository, DeckRepository deckRepository, CardRepository cardRepository, DeckCommentRepository deckCommentRepository, CourseCommentRepository courseCommentRepository) {
+    public AccessToUrlServiceImpl(CategoryRepository categoryRepository, UserService userService,
+                                  CourseRepository courseRepository, FolderRepository folderRepository,
+                                  DeckRepository deckRepository, CardRepository cardRepository,
+                                  DeckCommentRepository deckCommentRepository,
+                                  CourseCommentRepository courseCommentRepository) {
         this.categoryRepository = categoryRepository;
         this.userService = userService;
         this.courseRepository = courseRepository;
@@ -58,7 +62,8 @@ public class AccessToUrlServiceImpl implements AccessToUrlService {
 
     @Override
     public boolean hasAccessToDeck(Long category_id, Long course_id, Long deck_id) {
-        return hasAccessToCourse(category_id, course_id) & (deckRepository.hasAccessToDeck(course_id, deck_id).size() > 0);
+        return hasAccessToCourse(category_id, course_id)
+                & (deckRepository.hasAccessToDeck(course_id, deck_id).size() > 0);
     }
 
     @Override
@@ -78,12 +83,14 @@ public class AccessToUrlServiceImpl implements AccessToUrlService {
 
     @Override
     public boolean hasAccessToCard(Long category_id, Long deck_id, Long card_id) {
-        return hasAccessToDeckFromCategory(category_id, deck_id) & (cardRepository.hasAccessToCard(deck_id, card_id).size() > 0);
+        return hasAccessToDeckFromCategory(category_id, deck_id)
+                & (cardRepository.hasAccessToCard(deck_id, card_id).size() > 0);
     }
 
     @Override
     public boolean hasAccessToCard(Long category_id, Long course_id, Long deck_id, Long card_id) {
-        return hasAccessToDeck(category_id, course_id, deck_id) & (cardRepository.hasAccessToCard(deck_id, card_id).size() > 0);
+        return hasAccessToDeck(category_id, course_id, deck_id)
+                & (cardRepository.hasAccessToCard(deck_id, card_id).size() > 0);
     }
 
     @Override

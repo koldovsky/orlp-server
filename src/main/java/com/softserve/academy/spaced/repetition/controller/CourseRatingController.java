@@ -1,12 +1,12 @@
 package com.softserve.academy.spaced.repetition.controller;
 
+import com.softserve.academy.spaced.repetition.controller.utils.dto.Request;
 import com.softserve.academy.spaced.repetition.domain.CourseRating;
-import com.softserve.academy.spaced.repetition.dto.DTOBuilder;
-import com.softserve.academy.spaced.repetition.dto.RatingDTO;
-import com.softserve.academy.spaced.repetition.dto.Request;
-import com.softserve.academy.spaced.repetition.dto.impl.CourseRatingPublicDTO;
-import com.softserve.academy.spaced.repetition.exceptions.NotAuthorisedUserException;
-import com.softserve.academy.spaced.repetition.exceptions.UserStatusException;
+import com.softserve.academy.spaced.repetition.controller.utils.dto.DTOBuilder;
+import com.softserve.academy.spaced.repetition.controller.utils.dto.RatingDTO;
+import com.softserve.academy.spaced.repetition.controller.utils.dto.impl.CourseRatingPublicDTO;
+import com.softserve.academy.spaced.repetition.utils.exceptions.NotAuthorisedUserException;
+import com.softserve.academy.spaced.repetition.utils.exceptions.UserStatusException;
 import com.softserve.academy.spaced.repetition.service.CourseRatingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Link;
@@ -14,8 +14,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
@@ -37,8 +35,10 @@ public class CourseRatingController {
     }
 
     @PostMapping("/api/private/course/{courseId}")
-    public ResponseEntity addCourseRating(@Validated @RequestBody RatingDTO ratingDTO,
+  
+    public ResponseEntity addCourseRating(@Validated(Request.class) @RequestBody RatingDTO ratingDTO, 
                                           @PathVariable Long courseId) throws NotAuthorisedUserException, UserStatusException {
+
         courseRatingService.addCourseRating(ratingDTO.getRating(), courseId);
         return new ResponseEntity(HttpStatus.CREATED);
     }

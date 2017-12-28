@@ -1,14 +1,14 @@
 package com.softserve.academy.spaced.repetition.controller;
 
-import com.softserve.academy.spaced.repetition.audit.Auditable;
-import com.softserve.academy.spaced.repetition.audit.AuditingAction;
+import com.softserve.academy.spaced.repetition.utils.audit.Auditable;
+import com.softserve.academy.spaced.repetition.utils.audit.AuditingAction;
 import com.softserve.academy.spaced.repetition.domain.Category;
-import com.softserve.academy.spaced.repetition.dto.DTOBuilder;
-import com.softserve.academy.spaced.repetition.dto.Request;
-import com.softserve.academy.spaced.repetition.dto.impl.CategoryDTO;
-import com.softserve.academy.spaced.repetition.dto.impl.CategoryLinkDTO;
-import com.softserve.academy.spaced.repetition.dto.impl.CategoryPublicDTO;
-import com.softserve.academy.spaced.repetition.dto.impl.CategoryTopDTO;
+import com.softserve.academy.spaced.repetition.controller.utils.dto.DTOBuilder;
+import com.softserve.academy.spaced.repetition.controller.utils.dto.Request;
+import com.softserve.academy.spaced.repetition.controller.utils.dto.impl.CategoryDTO;
+import com.softserve.academy.spaced.repetition.controller.utils.dto.impl.CategoryLinkDTO;
+import com.softserve.academy.spaced.repetition.controller.utils.dto.impl.CategoryPublicDTO;
+import com.softserve.academy.spaced.repetition.controller.utils.dto.impl.CategoryTopDTO;
 import com.softserve.academy.spaced.repetition.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

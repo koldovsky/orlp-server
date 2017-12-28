@@ -2,7 +2,7 @@ package com.softserve.academy.spaced.repetition.service.impl;
 
 import com.softserve.academy.spaced.repetition.domain.Comment;
 import com.softserve.academy.spaced.repetition.domain.CourseComment;
-import com.softserve.academy.spaced.repetition.exceptions.NotAuthorisedUserException;
+import com.softserve.academy.spaced.repetition.utils.exceptions.NotAuthorisedUserException;
 import com.softserve.academy.spaced.repetition.repository.CourseCommentRepository;
 import com.softserve.academy.spaced.repetition.repository.CourseRepository;
 import com.softserve.academy.spaced.repetition.service.CourseCommentService;
@@ -38,7 +38,8 @@ public class CourseCommentServiceImpl implements CourseCommentService {
 
     @Override
     @Transactional
-    public CourseComment addCommentForCourse(Long courseId, String commentText, Long parentCommentId) throws NotAuthorisedUserException {
+    public CourseComment addCommentForCourse(Long courseId, String commentText, Long parentCommentId)
+            throws NotAuthorisedUserException {
         LOGGER.debug("Added new comment for course with id: {}", courseId);
         CourseComment comment = new CourseComment(commentText, new Date());
         comment.setPerson(userService.getAuthorizedUser().getPerson());
