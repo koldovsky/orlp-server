@@ -223,7 +223,7 @@ public class UserService {
         userRepository.save(user);
     }
 
-    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
+    @PreAuthorize("!isAnonymous()")
     public void getUserStatus() throws UserStatusException {
         JwtUser jwtUser = (JwtUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User user = userRepository.findUserByAccountEmail(jwtUser.getUsername());
