@@ -1,5 +1,6 @@
 package com.softserve.academy.spaced.repetition.controller;
 
+import com.softserve.academy.spaced.repetition.controller.utils.dto.Request;
 import com.softserve.academy.spaced.repetition.domain.CourseRating;
 import com.softserve.academy.spaced.repetition.controller.utils.dto.DTOBuilder;
 import com.softserve.academy.spaced.repetition.controller.utils.dto.RatingDTO;
@@ -32,7 +33,7 @@ public class CourseRatingController {
     }
 
     @PostMapping("/api/private/course/{courseId}")
-    public ResponseEntity addCourseRating(@Validated @RequestBody RatingDTO ratingDTO, @PathVariable Long courseId) throws NotAuthorisedUserException, UserStatusException {
+    public ResponseEntity addCourseRating(@Validated(Request.class) @RequestBody RatingDTO ratingDTO, @PathVariable Long courseId) throws NotAuthorisedUserException, UserStatusException {
         courseRatingService.addCourseRating(ratingDTO.getRating(), courseId);
         return new ResponseEntity(HttpStatus.CREATED);
     }

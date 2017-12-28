@@ -1,5 +1,6 @@
 package com.softserve.academy.spaced.repetition.controller;
 
+import com.softserve.academy.spaced.repetition.controller.utils.dto.Request;
 import com.softserve.academy.spaced.repetition.domain.DeckRating;
 import com.softserve.academy.spaced.repetition.controller.utils.dto.DTOBuilder;
 import com.softserve.academy.spaced.repetition.controller.utils.dto.RatingDTO;
@@ -33,7 +34,7 @@ public class DeckRatingController {
     }
 
     @PostMapping("/api/private/deck/{deckId}")
-    public ResponseEntity addDeckRating(@Validated @RequestBody RatingDTO ratingDTO, @PathVariable Long deckId) throws NotAuthorisedUserException, UserStatusException {
+    public ResponseEntity addDeckRating(@Validated(Request.class) @RequestBody RatingDTO ratingDTO, @PathVariable Long deckId) throws NotAuthorisedUserException, UserStatusException {
         deckRatingService.addDeckRating(ratingDTO.getRating(), deckId);
         return new ResponseEntity(HttpStatus.CREATED);
     }
