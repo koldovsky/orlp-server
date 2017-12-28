@@ -18,10 +18,12 @@ public interface ImageRepository extends JpaRepository<Image, Long> {
     @Query("SELECT new com.softserve.academy.spaced.repetition.domain.Image(i.id) FROM Image i")
     public List<Image> getImagesWithoutContent();
 
-    @Query("SELECT new com.softserve.academy.spaced.repetition.domain.Image(i.id, i.isImageUsed) FROM Image i JOIN i.createdBy u WHERE u.id = ?1")
+    @Query("SELECT new com.softserve.academy.spaced.repetition.domain.Image(i.id, i.isImageUsed) FROM Image i " +
+            "JOIN i.createdBy u WHERE u.id = ?1")
     public List<Image> getImagesWithoutContentById(Long id);
 
-    @Query("SELECT new com.softserve.academy.spaced.repetition.domain.Image(i.id, i.createdBy) FROM Image i WHERE i.id = ?1")
+    @Query("SELECT new com.softserve.academy.spaced.repetition.domain.Image(i.id, i.createdBy) FROM Image i " +
+            "WHERE i.id = ?1")
     public Image getImageWithoutContent(Long id);
 
     @Query("SELECT SUM(size) FROM Image WHERE user_id = ?1")

@@ -121,20 +121,23 @@ public class AuthenticationRestService {
 
     private HttpHeaders addTokenToHeaderCookie(String token) {
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Set-Cookie", tokenHeader + "=" + token + "; Path=/" + "; Expires=" + jwtTokenUtil.getExpirationDateFromToken(token));
+        headers.add("Set-Cookie", tokenHeader + "=" +
+                token + "; Path=/" + "; Expires=" + jwtTokenUtil.getExpirationDateFromToken(token));
         return headers;
     }
 
     private Authentication getAuthenticationToken(String email, String password) {
         final Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(email, password, Collections.singletonList(new SimpleGrantedAuthority(AuthorityName.ROLE_USER.toString())))
+                new UsernamePasswordAuthenticationToken(email, password,
+                        Collections.singletonList(new SimpleGrantedAuthority(AuthorityName.ROLE_USER.toString())))
         );
         return authentication;
     }
 
     private Authentication getAuthenticationTokenWithoutVerify(String email) {
         final UsernamePasswordAuthenticationToken authentication =
-                new UsernamePasswordAuthenticationToken(email, null, Collections.singletonList(new SimpleGrantedAuthority(AuthorityName.ROLE_USER.toString())));
+                new UsernamePasswordAuthenticationToken(email, null,
+                        Collections.singletonList(new SimpleGrantedAuthority(AuthorityName.ROLE_USER.toString())));
         return authentication;
     }
 
