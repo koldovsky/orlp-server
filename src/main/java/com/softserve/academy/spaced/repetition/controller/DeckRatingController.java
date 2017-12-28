@@ -27,13 +27,15 @@ public class DeckRatingController {
     @GetMapping("api/deck/{deckId}/rating/{id}")
     public ResponseEntity<DeckRatingPublicDTO> getDeckRatingById(@PathVariable Long deckId, @PathVariable Long id) {
         DeckRating deckRating = deckRatingService.getDeckRatingById(id);
-        Link selfLink = linkTo(methodOn(DeckRatingController.class).getDeckRatingById(deckRating.getDeck().getId(), deckRating.getId())).withRel("deckRating");
+        Link selfLink = linkTo(methodOn(DeckRatingController.class)
+                .getDeckRatingById(deckRating.getDeck().getId(), deckRating.getId())).withRel("deckRating");
         DeckRatingPublicDTO deckRatingDTO = DTOBuilder.buildDtoForEntity(deckRating, DeckRatingPublicDTO.class, selfLink);
         return new ResponseEntity<>(deckRatingDTO, HttpStatus.OK);
     }
 
     @PostMapping("/api/private/deck/{deckId}")
-    public ResponseEntity addDeckRating(@Validated @RequestBody RatingDTO ratingDTO, @PathVariable Long deckId) throws NotAuthorisedUserException, UserStatusException {
+    public ResponseEntity addDeckRating(@Validated @RequestBody RatingDTO ratingDTO,
+                                        @PathVariable Long deckId) throws NotAuthorisedUserException, UserStatusException {
         deckRatingService.addDeckRating(ratingDTO.getRating(), deckId);
         return new ResponseEntity(HttpStatus.CREATED);
     }

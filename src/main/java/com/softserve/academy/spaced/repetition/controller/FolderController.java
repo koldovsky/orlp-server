@@ -38,7 +38,8 @@ public class FolderController {
     @PutMapping("/api/user/folder/add/deck/{deckId}")
     public ResponseEntity<DeckPublicDTO> addDeckToFolder(@PathVariable Long deckId) throws NotAuthorisedUserException {
         Deck deck = folderService.addDeck(deckId);
-        Link selfLink = linkTo(methodOn(DeckController.class).getDeckByCategoryId(deck.getCategory().getId(), deckId)).withSelfRel();
+        Link selfLink = linkTo(methodOn(DeckController.class)
+                .getDeckByCategoryId(deck.getCategory().getId(), deckId)).withSelfRel();
         DeckPublicDTO deckPublicDTO = DTOBuilder.buildDtoForEntity(deck, DeckPublicDTO.class, selfLink);
 
         return new ResponseEntity<>(deckPublicDTO, HttpStatus.OK);
@@ -51,7 +52,8 @@ public class FolderController {
         List<Deck> deckList = folderService.getAllDecksByFolderId(folderId);
 
         Link collectionLink = linkTo(methodOn(FolderController.class).getAllDecksWithFolder(folderId)).withSelfRel();
-        List<DeckLinkByFolderDTO> decks = DTOBuilder.buildDtoListForCollection(deckList, DeckLinkByFolderDTO.class, collectionLink);
+        List<DeckLinkByFolderDTO> decks = DTOBuilder.buildDtoListForCollection(deckList, DeckLinkByFolderDTO.class,
+                collectionLink);
 
         return new ResponseEntity<>(decks, HttpStatus.OK);
     }
@@ -76,9 +78,11 @@ public class FolderController {
     @Auditable(action = AuditingAction.START_LEARNING_VIA_FOLDER)
     @GetMapping("/api/private/user/folder/{folderId}/decks/{deckId}/cards")
     @PreAuthorize(value = "@accessToUrlService.hasAccessToDeckFromFolder(#folderId, #deckId)")
-    public ResponseEntity<List<CardPublicDTO>> getCardsByFolderAndDeck(@PathVariable Long folderId, @PathVariable Long deckId) {
+    public ResponseEntity<List<CardPublicDTO>> getCardsByFolderAndDeck(@PathVariable Long folderId,
+                                                                       @PathVariable Long deckId) {
         List<Card> cards = deckService.getAllCardsByDeckId(deckId);
-        Link collectionLink = linkTo(methodOn(FolderController.class).getCardsByFolderAndDeck(folderId, deckId)).withSelfRel();
+        Link collectionLink = linkTo(methodOn(FolderController.class)
+                .getCardsByFolderAndDeck(folderId, deckId)).withSelfRel();
         List<CardPublicDTO> cardsPublic = DTOBuilder.buildDtoListForCollection(cards, CardPublicDTO.class, collectionLink);
 
         return new ResponseEntity<>(cardsPublic, HttpStatus.OK);

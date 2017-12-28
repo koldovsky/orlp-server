@@ -53,7 +53,10 @@ public class CardRatingController {
     @Auditable(action = AuditingAction.RATE_CARD)
     @PostMapping("/api/private/decks/{deckId}/cards/{cardId}/rate")
     @PreAuthorize(value = "@accessToUrlService.hasAccessToCard(#deckId, #cardId)")
-    public ResponseEntity<CardRatingPublicDTO> addCardRating(@Validated(Request.class) @RequestBody CardRating cardRating, @PathVariable Long deckId, @PathVariable Long cardId) throws NotAuthorisedUserException {
+    public ResponseEntity<CardRatingPublicDTO> addCardRating(@Validated(Request.class)
+                                                                 @RequestBody CardRating cardRating,
+                                                             @PathVariable Long deckId,
+                                                             @PathVariable Long cardId) throws NotAuthorisedUserException {
         cardRatingService.addCardRating(cardRating, cardId);
         Link selfLink = linkTo(methodOn(CardRatingController.class).getCardRatingById(cardRating.getId())).withSelfRel();
         CardRatingPublicDTO cardRatingPublicDTO = DTOBuilder.buildDtoForEntity(cardRating, CardRatingPublicDTO.class, selfLink);

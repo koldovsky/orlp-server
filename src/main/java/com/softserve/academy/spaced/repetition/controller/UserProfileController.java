@@ -23,24 +23,26 @@ public class UserProfileController {
 
     @Auditable(action = AuditingAction.EDIT_PERSONAL_DATA)
     @PutMapping(value = "/api/private/user/data")
-    public ResponseEntity editPersonalData(@Validated(Request.class) @RequestBody Person person)throws NotAuthorisedUserException {
+    public ResponseEntity editPersonalData(@Validated(Request.class)
+                                           @RequestBody Person person) throws NotAuthorisedUserException {
         userService.editPersonalData(person);
         return new ResponseEntity(HttpStatus.OK);
     }
 
-    @Auditable(action =  AuditingAction.CHANGE_PASSWORD)
+    @Auditable(action = AuditingAction.CHANGE_PASSWORD)
     @PutMapping(value = "/api/private/user/password-change")
-    public ResponseEntity changePassword (@Validated(Request.class) @RequestBody PasswordDTO passwordDTO) throws NotAuthorisedUserException {
+    public ResponseEntity changePassword(@Validated(Request.class)
+                                         @RequestBody PasswordDTO passwordDTO) throws NotAuthorisedUserException {
         userService.changePassword(passwordDTO);
         return new ResponseEntity(HttpStatus.OK);
     }
 
     @Auditable(action = AuditingAction.UPLOAD_IMAGE_PROFILE)
     @PostMapping("/api/private/user/image")
-    public ResponseEntity uploadImageProfile(@RequestParam("file")MultipartFile file)
-            throws ImageRepositorySizeQuotaExceededException, NotAuthorisedUserException{
+    public ResponseEntity uploadImageProfile(@RequestParam("file") MultipartFile file)
+            throws ImageRepositorySizeQuotaExceededException, NotAuthorisedUserException {
         userService.uploadImage(file);
-        return new ResponseEntity( HttpStatus.OK);
+        return new ResponseEntity(HttpStatus.OK);
     }
 
     @GetMapping(value = "/api/private/user/image", produces = {MediaType.IMAGE_JPEG_VALUE})
@@ -54,7 +56,7 @@ public class UserProfileController {
 
     @Auditable(action = AuditingAction.DELETE_PROFILE)
     @GetMapping("/api/private/user/delete")
-    public ResponseEntity deleteProfile() throws NotAuthorisedUserException{
+    public ResponseEntity deleteProfile() throws NotAuthorisedUserException {
         userService.deleteAccount();
         return new ResponseEntity(HttpStatus.OK);
     }

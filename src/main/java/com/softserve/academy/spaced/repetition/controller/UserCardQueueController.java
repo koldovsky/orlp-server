@@ -39,7 +39,8 @@ public class UserCardQueueController {
     public ResponseEntity<UserCardQueuePublicDTO> getUserCardQueueById(@PathVariable Long userCardQueueId) {
         UserCardQueue userCardQueue = userCardQueueService.getUserCardQueueById(userCardQueueId);
         Link selfLink = linkTo(methodOn(UserCardQueueController.class).getUserCardQueueById(userCardQueueId)).withSelfRel();
-        UserCardQueuePublicDTO userCardQueuePublicDTO = DTOBuilder.buildDtoForEntity(userCardQueue, UserCardQueuePublicDTO.class, selfLink);
+        UserCardQueuePublicDTO userCardQueuePublicDTO = DTOBuilder.buildDtoForEntity(userCardQueue,
+                UserCardQueuePublicDTO.class, selfLink);
         return ResponseEntity.ok(userCardQueuePublicDTO);
     }
 }

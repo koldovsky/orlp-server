@@ -38,12 +38,15 @@ public class ImageController {
      *
      * @param file - image-file
      * @return - uploaded image dto,
-     * @throws ImageRepositorySizeQuotaExceededException - is dropping when user has exceeded the quote of disk-space for his own images
-     * @throws NotAuthorisedUserException                - is dropping when the user which wants to add the image is not authorised
+     * @throws ImageRepositorySizeQuotaExceededException - is dropping when user has exceeded the quote of disk-space
+     *                                                   for his own images
+     * @throws NotAuthorisedUserException                - is dropping when the user which wants to add the image is
+     *                                                   not authorised
      */
     @Auditable(action = AuditingAction.UPLOAD_IMAGE)
     @PostMapping("/api/service/image")
-    public ResponseEntity<UploadingImageDTO> addImageToDB(@RequestParam("file") MultipartFile file) throws ImageRepositorySizeQuotaExceededException, NotAuthorisedUserException {
+    public ResponseEntity<UploadingImageDTO> addImageToDB(@RequestParam("file") MultipartFile file)
+            throws ImageRepositorySizeQuotaExceededException, NotAuthorisedUserException {
         Image image = imageService.addImageToDB(file);
         Long imageId = image.getId();
         Link link = linkTo(methodOn(ImageController.class).getImageById(imageId)).withSelfRel();
@@ -106,7 +109,8 @@ public class ImageController {
      */
     @Auditable(action = AuditingAction.DELETE_IMAGE)
     @DeleteMapping(value = "/api/service/image/{id}")
-    public ResponseEntity<?> deleteImage(@PathVariable("id") Long id) throws CanNotBeDeletedException, NotOwnerOperationException, NotAuthorisedUserException {
+    public ResponseEntity<?> deleteImage(@PathVariable("id") Long id) throws CanNotBeDeletedException,
+            NotOwnerOperationException, NotAuthorisedUserException {
         imageService.deleteImage(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
