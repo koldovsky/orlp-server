@@ -19,7 +19,7 @@ public class CardRating implements EntityInterface {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "rating_id")
-    private long id;
+    private Long id;
 
     @Column(name = "account_email", nullable = false)
     private String accountEmail;
@@ -49,7 +49,7 @@ public class CardRating implements EntityInterface {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
