@@ -1,12 +1,12 @@
 package com.softserve.academy.spaced.repetition.controller;
 
-import com.softserve.academy.spaced.repetition.domain.LearningRegime;
+import com.softserve.academy.spaced.repetition.domain.enums.LearningRegime;
 import com.softserve.academy.spaced.repetition.domain.RememberingLevel;
-import com.softserve.academy.spaced.repetition.dto.DTOBuilder;
-import com.softserve.academy.spaced.repetition.dto.Request;
-import com.softserve.academy.spaced.repetition.dto.impl.NewAccountPasswordDTO;
-import com.softserve.academy.spaced.repetition.dto.impl.RememberingLevelDTO;
-import com.softserve.academy.spaced.repetition.exceptions.NotAuthorisedUserException;
+import com.softserve.academy.spaced.repetition.controller.utils.dto.DTOBuilder;
+import com.softserve.academy.spaced.repetition.controller.utils.dto.Request;
+import com.softserve.academy.spaced.repetition.controller.utils.dto.impl.NewAccountPasswordDTO;
+import com.softserve.academy.spaced.repetition.controller.utils.dto.impl.RememberingLevelDTO;
+import com.softserve.academy.spaced.repetition.utils.exceptions.NotAuthorisedUserException;
 import com.softserve.academy.spaced.repetition.service.AccountService;
 import com.softserve.academy.spaced.repetition.service.AccountVerificationByEmailService;
 import org.slf4j.Logger;
@@ -37,14 +37,10 @@ public class AccountController {
     }
 
     @PutMapping("/api/private/account/learning-regime")
-    public ResponseEntity updateLearningRegime(@RequestBody String learningRegime) throws NotAuthorisedUserException {
-        for (LearningRegime regime : LearningRegime.values()) {
-            if (regime.getRegime().equals(learningRegime)) {
-                accountService.updateLearningRegime(regime);
-                return ResponseEntity.ok().build();
-            }
-        }
-        return ResponseEntity.badRequest().build();
+    public ResponseEntity updateLearningRegime(@RequestBody String learningRegime)
+            throws NotAuthorisedUserException, IllegalArgumentException {
+        accountService.updateLearningRegime(learningRegime);
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/api/private/account/cards-number")

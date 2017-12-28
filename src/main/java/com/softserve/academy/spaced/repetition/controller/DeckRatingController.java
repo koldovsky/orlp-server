@@ -1,15 +1,18 @@
 package com.softserve.academy.spaced.repetition.controller;
-import com.softserve.academy.spaced.repetition.dto.DTOBuilder;
-import com.softserve.academy.spaced.repetition.dto.RatingDTO;
-import com.softserve.academy.spaced.repetition.dto.impl.DeckRatingPublicDTO;
+
+import com.softserve.academy.spaced.repetition.controller.utils.dto.Request;
 import com.softserve.academy.spaced.repetition.domain.DeckRating;
-import com.softserve.academy.spaced.repetition.exceptions.NotAuthorisedUserException;
-import com.softserve.academy.spaced.repetition.exceptions.UserStatusException;
+import com.softserve.academy.spaced.repetition.controller.utils.dto.DTOBuilder;
+import com.softserve.academy.spaced.repetition.controller.utils.dto.RatingDTO;
+import com.softserve.academy.spaced.repetition.controller.utils.dto.impl.DeckRatingPublicDTO;
+import com.softserve.academy.spaced.repetition.utils.exceptions.NotAuthorisedUserException;
+import com.softserve.academy.spaced.repetition.utils.exceptions.UserStatusException;
 import com.softserve.academy.spaced.repetition.service.DeckRatingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Link;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
@@ -18,8 +21,6 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 @RestController
 public class DeckRatingController {
 
-    public static final int MIN_RATING = 1;
-    public static final int MAX_RATING = 5;
 
     @Autowired
     private DeckRatingService deckRatingService;
@@ -33,12 +34,8 @@ public class DeckRatingController {
     }
 
     @PostMapping("/api/private/deck/{deckId}")
-    public ResponseEntity addDeckRating(@RequestBody RatingDTO ratingDTO, @PathVariable Long deckId) throws NotAuthorisedUserException, UserStatusException {
-        if ((ratingDTO.getRating() >= MIN_RATING) && (ratingDTO.getRating() <= MAX_RATING)) {
-            deckRatingService.addDeckRating(ratingDTO.getRating(), deckId);
-            return new ResponseEntity(HttpStatus.CREATED);
-        } else {
-            throw new IllegalArgumentException("Rating can't be less than 1 and more than 5");
-        }
+    public ResponseEntity addDeckRating(@Validated(Request.class) @RequestBody RatingDTO ratingDTO, @PathVariable Long deckId) throws NotAuthorisedUserException, UserStatusException {
+        deckRatingService.addDeckRating(ratingDTO.getRating(), deckId);
+        return new ResponseEntity(HttpStatus.CREATED);
     }
 }

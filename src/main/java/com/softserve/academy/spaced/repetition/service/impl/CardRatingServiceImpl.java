@@ -3,7 +3,7 @@ package com.softserve.academy.spaced.repetition.service.impl;
 import com.softserve.academy.spaced.repetition.domain.Card;
 import com.softserve.academy.spaced.repetition.domain.CardRating;
 import com.softserve.academy.spaced.repetition.domain.User;
-import com.softserve.academy.spaced.repetition.exceptions.NotAuthorisedUserException;
+import com.softserve.academy.spaced.repetition.utils.exceptions.NotAuthorisedUserException;
 import com.softserve.academy.spaced.repetition.repository.CardRatingRepository;
 import com.softserve.academy.spaced.repetition.repository.CardRepository;
 import com.softserve.academy.spaced.repetition.repository.DeckRepository;
@@ -31,7 +31,8 @@ public class CardRatingServiceImpl implements CardRatingService {
     public void addCardRating(CardRating cardRating, Long cardId) throws NotAuthorisedUserException {
         User user = userService.getAuthorizedUser();
         String email = user.getAccount().getEmail();
-        CardRating cardRatingByAccountEmail = cardRatingRepository.findCardRatingByAccountEmailAndCard_Id(email, cardId);
+        CardRating cardRatingByAccountEmail = cardRatingRepository
+                .findCardRatingByAccountEmailAndCard_Id(email, cardId);
         if (cardRatingByAccountEmail != null) {
             cardRating.setId(cardRatingByAccountEmail.getId());
         }

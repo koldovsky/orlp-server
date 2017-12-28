@@ -1,10 +1,10 @@
 package com.softserve.academy.spaced.repetition.service;
 
 import com.softserve.academy.spaced.repetition.domain.Card;
-import com.softserve.academy.spaced.repetition.exceptions.EmptyFileException;
-import com.softserve.academy.spaced.repetition.exceptions.NotAuthorisedUserException;
-import com.softserve.academy.spaced.repetition.exceptions.NotOwnerOperationException;
-import com.softserve.academy.spaced.repetition.exceptions.WrongFormatException;
+import com.softserve.academy.spaced.repetition.utils.exceptions.EmptyFileException;
+import com.softserve.academy.spaced.repetition.utils.exceptions.NotAuthorisedUserException;
+import com.softserve.academy.spaced.repetition.utils.exceptions.NotOwnerOperationException;
+import com.softserve.academy.spaced.repetition.utils.exceptions.WrongFormatException;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -28,9 +28,12 @@ public interface CardService {
 
     boolean areThereNotPostponedCardsAvailable(Long deckId) throws NotAuthorisedUserException;
 
-    void uploadCards(MultipartFile cardsFile, Long deckId) throws WrongFormatException, EmptyFileException, NotOwnerOperationException, NotAuthorisedUserException, IOException;
+    void uploadCards(MultipartFile cardsFile, Long deckId)
+            throws WrongFormatException, EmptyFileException, NotOwnerOperationException,
+            NotAuthorisedUserException, IOException;
 
     void downloadCards(Long deckId, OutputStream outputStream);
 
     void downloadCardsTemplate(OutputStream outputStream);
+
 }

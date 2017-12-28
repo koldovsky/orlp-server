@@ -2,12 +2,13 @@ package com.softserve.academy.spaced.repetition.service;
 
 import com.softserve.academy.spaced.repetition.domain.Comment;
 import com.softserve.academy.spaced.repetition.domain.CourseComment;
-import com.softserve.academy.spaced.repetition.exceptions.NotAuthorisedUserException;
+import com.softserve.academy.spaced.repetition.utils.exceptions.NotAuthorisedUserException;
 
 import java.util.List;
 
 public interface CourseCommentService {
-    CourseComment addCommentForCourse(Long courseId, String commentText, Long parentCommentId) throws NotAuthorisedUserException;
+    CourseComment addCommentForCourse(Long courseId, String commentText, Long parentCommentId)
+            throws NotAuthorisedUserException;
 
     CourseComment getCommentById(Long commentId);
 

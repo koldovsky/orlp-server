@@ -1,10 +1,9 @@
 package com.softserve.academy.spaced.repetition.controller;
 
-import com.softserve.academy.spaced.repetition.dto.DTOBuilder;
-import com.softserve.academy.spaced.repetition.dto.impl.UserCardQueuePublicDTO;
+import com.softserve.academy.spaced.repetition.controller.utils.dto.DTOBuilder;
+import com.softserve.academy.spaced.repetition.controller.utils.dto.impl.UserCardQueuePublicDTO;
 import com.softserve.academy.spaced.repetition.domain.UserCardQueue;
-import com.softserve.academy.spaced.repetition.domain.UserCardQueueStatus;
-import com.softserve.academy.spaced.repetition.exceptions.NotAuthorisedUserException;
+import com.softserve.academy.spaced.repetition.utils.exceptions.NotAuthorisedUserException;
 import com.softserve.academy.spaced.repetition.service.UserCardQueueService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Link;
@@ -24,14 +23,9 @@ public class UserCardQueueController {
     @PreAuthorize(value = "@accessToUrlService.hasAccessToCard(#deckId, #cardId)")
     public ResponseEntity updateUserCardQueue(
             @PathVariable Long deckId, @PathVariable Long cardId, @RequestBody String status)
-            throws NotAuthorisedUserException {
-        for (UserCardQueueStatus userCardQueueStatus : UserCardQueueStatus.values()) {
-            if (userCardQueueStatus.getStatus().equals(status)) {
-                userCardQueueService.updateUserCardQueue(deckId, cardId, userCardQueueStatus);
-                return ResponseEntity.ok().build();
-            }
-        }
-        return ResponseEntity.badRequest().build();
+            throws NotAuthorisedUserException, IllegalArgumentException {
+        userCardQueueService.updateUserCardQueue(deckId, cardId, status);
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/api/private/decks/{deckId}/cards-that-need-repeating/count")

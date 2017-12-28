@@ -1,6 +1,7 @@
 package com.softserve.academy.spaced.repetition.domain;
 
-import com.softserve.academy.spaced.repetition.dto.Request;
+import com.softserve.academy.spaced.repetition.domain.enums.ImageType;
+import com.softserve.academy.spaced.repetition.controller.utils.dto.Request;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -8,7 +9,7 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.util.Objects;
 
-import static com.softserve.academy.spaced.repetition.service.validators.ValidationConstants.*;
+import static com.softserve.academy.spaced.repetition.utils.validators.ValidationConstants.*;
 
 
 @Entity

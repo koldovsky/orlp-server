@@ -2,10 +2,14 @@ package com.softserve.academy.spaced.repetition.service.impl;
 
 import com.softserve.academy.spaced.repetition.domain.*;
 
-import com.softserve.academy.spaced.repetition.exceptions.NotAuthorisedUserException;
-import com.softserve.academy.spaced.repetition.exceptions.NotOwnerOperationException;
-import com.softserve.academy.spaced.repetition.repository.*;
+import com.softserve.academy.spaced.repetition.repository.CardRepository;
+import com.softserve.academy.spaced.repetition.repository.CategoryRepository;
+import com.softserve.academy.spaced.repetition.repository.CourseRepository;
+import com.softserve.academy.spaced.repetition.repository.DeckRepository;
+import com.softserve.academy.spaced.repetition.utils.exceptions.NotAuthorisedUserException;
+import com.softserve.academy.spaced.repetition.utils.exceptions.NotOwnerOperationException;
 import com.softserve.academy.spaced.repetition.service.DeckService;
+import com.softserve.academy.spaced.repetition.service.FolderService;
 import com.softserve.academy.spaced.repetition.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -33,7 +37,7 @@ public class DeckServiceImpl implements DeckService {
 
     private UserService userService;
 
-    private FolderServiceImpl folderService;
+    private FolderService folderService;
 
     @Autowired
     public void setDeckRepository(DeckRepository deckRepository) {
@@ -61,7 +65,7 @@ public class DeckServiceImpl implements DeckService {
     }
 
     @Autowired
-    public void setFolderService(FolderServiceImpl folderService) {
+    public void setFolderService(FolderService folderService) {
         this.folderService = folderService;
     }
 
@@ -196,7 +200,7 @@ public class DeckServiceImpl implements DeckService {
     @Override
     public List<Deck> getAllDecksByUser() throws NotAuthorisedUserException {
         User user = userService.getAuthorizedUser();
-        return deckRepository.findAllByDeckOwner_IdEquals(user.getId());
+        return deckRepository.findAllByDeckOwnerIdEquals(user.getId());
     }
 
     @Override
@@ -215,13 +219,15 @@ public class DeckServiceImpl implements DeckService {
 
     @Override
     public Page<Deck> getPageWithDecksByCategory(long categoryId, int pageNumber, String sortBy, boolean ascending) {
-        PageRequest request = new PageRequest(pageNumber - 1, QUANTITY_DECKS_IN_PAGE, ascending ? Sort.Direction.ASC : Sort.Direction.DESC, sortBy);
+        PageRequest request = new PageRequest(pageNumber - 1, QUANTITY_DECKS_IN_PAGE,
+                ascending ? Sort.Direction.ASC : Sort.Direction.DESC, sortBy);
         return deckRepository.findAllByCategoryEquals(categoryRepository.findOne(categoryId), request);
     }
 
     @Override
     public Page<Deck> getPageWithAllAdminDecks(int pageNumber, String sortBy, boolean ascending) {
-        PageRequest request = new PageRequest(pageNumber - 1, QUANTITY_ADMIN_DECKS_IN_PAGE, ascending ? Sort.Direction.ASC : Sort.Direction.DESC, sortBy);
+        PageRequest request = new PageRequest(pageNumber - 1, QUANTITY_ADMIN_DECKS_IN_PAGE,
+                ascending ? Sort.Direction.ASC : Sort.Direction.DESC, sortBy);
         return deckRepository.findAll(request);
     }
 

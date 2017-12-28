@@ -1,7 +1,7 @@
 package com.softserve.academy.spaced.repetition.controller;
 
-import com.softserve.academy.spaced.repetition.domain.UserCardQueueStatus;
-import com.softserve.academy.spaced.repetition.exceptions.NotAuthorisedUserException;
+import com.softserve.academy.spaced.repetition.domain.enums.UserCardQueueStatus;
+import com.softserve.academy.spaced.repetition.utils.exceptions.NotAuthorisedUserException;
 import com.softserve.academy.spaced.repetition.service.UserCardQueueService;
 import org.junit.Before;
 import org.junit.Test;
@@ -18,7 +18,6 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -51,11 +50,13 @@ public class UserCardQueueControllerTest {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
-        verify(userCardQueueService).updateUserCardQueue(DECK_ID, CARD_ID, UserCardQueueStatus.GOOD);
+        verify(userCardQueueService).updateUserCardQueue(DECK_ID, CARD_ID, UserCardQueueStatus.GOOD.getStatus());
     }
 
     @Test
     public void testSetStatusIncorrect() throws Exception {
+        doThrow(IllegalArgumentException.class).when(userCardQueueService)
+                .updateUserCardQueue(DECK_ID, CARD_ID, "Incorrect");
         mockMvc.perform(put("/api/private/decks/{deckId}/cards/{cardId}/queue", DECK_ID, CARD_ID)
                 .content("Incorrect")
                 .accept(MediaType.APPLICATION_JSON)
@@ -66,7 +67,7 @@ public class UserCardQueueControllerTest {
     @Test
     public void testUpdateUserCardQueueNotAuthorizedUserException() throws Exception {
         doThrow(NotAuthorisedUserException.class).when(userCardQueueService).updateUserCardQueue(eq(DECK_ID),
-                eq(CARD_ID), any(UserCardQueueStatus.class));
+                eq(CARD_ID), eq(UserCardQueueStatus.GOOD.getStatus()));
         mockMvc.perform(put("/api/private/decks/{deckId}/cards/{cardId}/queue", DECK_ID, CARD_ID)
                 .content("GOOD")
                 .accept(MediaType.APPLICATION_JSON)

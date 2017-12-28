@@ -3,7 +3,7 @@ package com.softserve.academy.spaced.repetition.service.impl;
 import com.softserve.academy.spaced.repetition.domain.Deck;
 import com.softserve.academy.spaced.repetition.domain.Folder;
 import com.softserve.academy.spaced.repetition.domain.User;
-import com.softserve.academy.spaced.repetition.exceptions.NotAuthorisedUserException;
+import com.softserve.academy.spaced.repetition.utils.exceptions.NotAuthorisedUserException;
 import com.softserve.academy.spaced.repetition.repository.DeckRepository;
 import com.softserve.academy.spaced.repetition.repository.FolderRepository;
 import com.softserve.academy.spaced.repetition.service.FolderService;
@@ -44,8 +44,8 @@ public class FolderServiceImpl implements FolderService{
     }
 
     @Override
-    public List<Deck> getAllDecksByFolderId(Long folder_id) {
-        Folder folder = folderRepository.findOne(folder_id);
+    public List<Deck> getAllDecksByFolderId(Long folderId) {
+        Folder folder = folderRepository.findOne(folderId);
         List<Deck> decks = new ArrayList<>(folder.getDecks());
 
         return decks;
@@ -60,12 +60,12 @@ public class FolderServiceImpl implements FolderService{
     }
 
     @Override
-    public void deleteDeck(Long deck_id) throws NotAuthorisedUserException {
+    public void deleteDeck(Long deckId) throws NotAuthorisedUserException {
         User user = userService.getAuthorizedUser();
         Folder folder = user.getFolder();
         Collection<Deck> userDecks = folder.getDecks();
         for (Deck deck: userDecks) {
-            if (deck.getId() == deck_id) {
+            if (deck.getId() == deckId) {
                 userDecks.remove(deck);
                 break;
             }
@@ -75,13 +75,13 @@ public class FolderServiceImpl implements FolderService{
 
     @Override
     @Transactional
-    public void deleteDeckFromAllUsers(Long deck_id) throws NotAuthorisedUserException {
-        List<Folder> folders = folderRepository.getAllFolderWhereIdDecksEquals(deck_id);
+    public void deleteDeckFromAllUsers(Long deckId) throws NotAuthorisedUserException {
+        List<Folder> folders = folderRepository.getAllFolderWhereIdDecksEquals(deckId);
         if(folders.size()!=0) {
             for (Folder folder : folders) {
                 Collection<Deck> folderDecks = folder.getDecks();
                 for (Deck deck : folderDecks) {
-                    if (deck.getId().equals(deck_id)) {
+                    if (deck.getId().equals(deckId)) {
                         folderDecks.remove(deck);
                         break;
                     }

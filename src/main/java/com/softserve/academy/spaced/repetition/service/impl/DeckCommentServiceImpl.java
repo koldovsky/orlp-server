@@ -2,7 +2,7 @@ package com.softserve.academy.spaced.repetition.service.impl;
 
 import com.softserve.academy.spaced.repetition.domain.Comment;
 import com.softserve.academy.spaced.repetition.domain.DeckComment;
-import com.softserve.academy.spaced.repetition.exceptions.NotAuthorisedUserException;
+import com.softserve.academy.spaced.repetition.utils.exceptions.NotAuthorisedUserException;
 import com.softserve.academy.spaced.repetition.repository.DeckCommentRepository;
 import com.softserve.academy.spaced.repetition.repository.DeckRepository;
 import com.softserve.academy.spaced.repetition.service.DeckCommentService;
@@ -32,7 +32,8 @@ public class DeckCommentServiceImpl implements DeckCommentService {
 
     @Override
     @Transactional
-    public DeckComment addCommentForDeck(Long deckId, String commentText, Long parentCommentId) throws NotAuthorisedUserException {
+    public DeckComment addCommentForDeck(Long deckId, String commentText, Long parentCommentId)
+            throws NotAuthorisedUserException {
         LOGGER.debug("Added comment to deck with id: {}", deckId);
         DeckComment comment = new DeckComment(commentText, new Date());
         comment.setPerson(userService.getAuthorizedUser().getPerson());

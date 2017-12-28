@@ -2,9 +2,12 @@ package com.softserve.academy.spaced.repetition.service;
 
 import com.softserve.academy.spaced.repetition.config.TestDatabaseConfig;
 import com.softserve.academy.spaced.repetition.domain.*;
-import com.softserve.academy.spaced.repetition.exceptions.NotAuthorisedUserException;
+import com.softserve.academy.spaced.repetition.domain.enums.LearningRegime;
+import com.softserve.academy.spaced.repetition.domain.enums.UserCardQueueStatus;
+import com.softserve.academy.spaced.repetition.utils.exceptions.NotAuthorisedUserException;
 import com.softserve.academy.spaced.repetition.repository.RememberingLevelRepository;
 import com.softserve.academy.spaced.repetition.repository.UserCardQueueRepository;
+import com.softserve.academy.spaced.repetition.service.impl.UserCardQueueServiceImpl;
 import org.junit.Before;
 import org.junit.ClassRule;
 import org.junit.Rule;
@@ -88,7 +91,7 @@ public class UserCardQueueServiceTest {
 
     @Before
     public void setUp() throws Exception {
-        userCardQueueService = new UserCardQueueService(userCardQueueRepository, mockedUserService,
+        userCardQueueService = new UserCardQueueServiceImpl(userCardQueueRepository, mockedUserService,
                 rememberingLevelRepository);
         User mockedUser = createMockedUser(learningRegime);
         when(mockedUserService.getAuthorizedUser()).thenReturn(mockedUser);
@@ -145,7 +148,7 @@ public class UserCardQueueServiceTest {
             buildUserCardQueueAndSave(startingStatus, startingRememberingLevel, startingDateToRepeat);
         }
 
-        userCardQueueService.updateUserCardQueue(DECK_ID, CARD_ID, status);
+        userCardQueueService.updateUserCardQueue(DECK_ID, CARD_ID, status.getStatus());
 
         actualUserCardQueue = userCardQueueRepository.findUserCardQueueByUserIdAndCardId(USER_ID, CARD_ID);
         Date expectedDateToRepeat;

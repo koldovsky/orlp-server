@@ -1,9 +1,9 @@
 package com.softserve.academy.spaced.repetition.service;
 
 import com.softserve.academy.spaced.repetition.domain.Account;
-import com.softserve.academy.spaced.repetition.domain.LearningRegime;
+import com.softserve.academy.spaced.repetition.domain.enums.LearningRegime;
 import com.softserve.academy.spaced.repetition.domain.RememberingLevel;
-import com.softserve.academy.spaced.repetition.exceptions.NotAuthorisedUserException;
+import com.softserve.academy.spaced.repetition.utils.exceptions.NotAuthorisedUserException;
 
 import java.util.List;
 
@@ -12,7 +12,7 @@ public interface AccountService {
 
     LearningRegime getLearningRegime() throws NotAuthorisedUserException;
 
-    void updateLearningRegime(LearningRegime learningRegime) throws NotAuthorisedUserException;
+    void updateLearningRegime(String learningRegime) throws NotAuthorisedUserException, IllegalArgumentException;
 
     int getCardsNumber() throws NotAuthorisedUserException;
 

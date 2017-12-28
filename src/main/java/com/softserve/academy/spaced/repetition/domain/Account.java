@@ -1,8 +1,11 @@
 package com.softserve.academy.spaced.repetition.domain;
 
-import com.softserve.academy.spaced.repetition.dto.EntityInterface;
-import com.softserve.academy.spaced.repetition.dto.Request;
-import com.softserve.academy.spaced.repetition.service.validators.EmailNotExist;
+import com.softserve.academy.spaced.repetition.domain.enums.AccountStatus;
+import com.softserve.academy.spaced.repetition.domain.enums.AuthenticationType;
+import com.softserve.academy.spaced.repetition.domain.enums.LearningRegime;
+import com.softserve.academy.spaced.repetition.controller.utils.dto.EntityInterface;
+import com.softserve.academy.spaced.repetition.controller.utils.dto.Request;
+import com.softserve.academy.spaced.repetition.utils.validators.EmailNotExist;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -12,7 +15,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
-import static com.softserve.academy.spaced.repetition.service.validators.ValidationConstants.*;
+import static com.softserve.academy.spaced.repetition.utils.validators.ValidationConstants.*;
 
 @Entity
 @Table(name = "account")

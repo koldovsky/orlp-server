@@ -1,13 +1,14 @@
 package com.softserve.academy.spaced.repetition.controller;
 
-import com.softserve.academy.spaced.repetition.audit.Auditable;
-import com.softserve.academy.spaced.repetition.audit.AuditingAction;
+import com.softserve.academy.spaced.repetition.utils.audit.Auditable;
+import com.softserve.academy.spaced.repetition.utils.audit.AuditingAction;
 import com.softserve.academy.spaced.repetition.domain.Category;
-import com.softserve.academy.spaced.repetition.dto.DTOBuilder;
-import com.softserve.academy.spaced.repetition.dto.impl.CategoryDTO;
-import com.softserve.academy.spaced.repetition.dto.impl.CategoryLinkDTO;
-import com.softserve.academy.spaced.repetition.dto.impl.CategoryPublicDTO;
-import com.softserve.academy.spaced.repetition.dto.impl.CategoryTopDTO;
+import com.softserve.academy.spaced.repetition.controller.utils.dto.DTOBuilder;
+import com.softserve.academy.spaced.repetition.controller.utils.dto.Request;
+import com.softserve.academy.spaced.repetition.controller.utils.dto.impl.CategoryDTO;
+import com.softserve.academy.spaced.repetition.controller.utils.dto.impl.CategoryLinkDTO;
+import com.softserve.academy.spaced.repetition.controller.utils.dto.impl.CategoryPublicDTO;
+import com.softserve.academy.spaced.repetition.controller.utils.dto.impl.CategoryTopDTO;
 import com.softserve.academy.spaced.repetition.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -15,6 +16,7 @@ import org.springframework.hateoas.Link;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -69,7 +71,7 @@ public class CategoryController {
 
     @Auditable(action = AuditingAction.CREATE_CATEGORY)
     @PostMapping("/api/admin/add/category")
-    public ResponseEntity<CategoryPublicDTO> addCategory(@RequestBody CategoryDTO categoryDTO) {
+    public ResponseEntity<CategoryPublicDTO> addCategory(@Validated(Request.class) @RequestBody CategoryDTO categoryDTO) {
         Category category = categoryService.addCategory(categoryDTO.getName(), categoryDTO.getDescription(), categoryDTO.getImage());
         Link selfLink = linkTo(methodOn(CategoryController.class).getCategoryById(category.getId())).withSelfRel();
         CategoryPublicDTO categoryPublicDTO = DTOBuilder.buildDtoForEntity(category, CategoryPublicDTO.class, selfLink);
@@ -79,7 +81,7 @@ public class CategoryController {
     @Auditable(action = AuditingAction.EDIT_CATEGORY)
     @PutMapping("/api/admin/add/category/{id}")
     @PreAuthorize(value = "@accessToUrlService.hasAccessToCategory(#id)")
-    public ResponseEntity<CategoryPublicDTO> updateCategory(@RequestBody Category category, @PathVariable Long id) {
+    public ResponseEntity<CategoryPublicDTO> updateCategory(@Validated(Request.class) @RequestBody Category category, @PathVariable Long id) {
         category = categoryService.updateCategory(category, id);
         Link selfLink = linkTo(methodOn(CategoryController.class).getCategoryById(category.getId())).withSelfRel();
         CategoryPublicDTO categoryDTO = DTOBuilder.buildDtoForEntity(category, CategoryPublicDTO.class, selfLink);

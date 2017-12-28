@@ -1,11 +1,13 @@
 package com.softserve.academy.spaced.repetition.service;
 
-import com.softserve.academy.spaced.repetition.dto.impl.PasswordDTO;
+import com.softserve.academy.spaced.repetition.controller.utils.dto.impl.PasswordDTO;
 import com.softserve.academy.spaced.repetition.config.TestDatabaseConfig;
 import com.softserve.academy.spaced.repetition.domain.*;
-import com.softserve.academy.spaced.repetition.exceptions.NotAuthorisedUserException;
+import com.softserve.academy.spaced.repetition.utils.exceptions.NotAuthorisedUserException;
 import com.softserve.academy.spaced.repetition.repository.DeckRepository;
 import com.softserve.academy.spaced.repetition.repository.UserRepository;
+import com.softserve.academy.spaced.repetition.service.impl.ImageServiceImpl;
+import com.softserve.academy.spaced.repetition.service.impl.UserServiceImpl;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,7 +23,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
@@ -45,7 +46,7 @@ public class UserServiceTest {
     @Mock
     private PasswordEncoder mockedPasswordEncoder;
 
-    private ImageService mockedImageService;
+    private ImageServiceImpl mockedImageService;
     @Mock
     private MailService mockedMailService;
 
@@ -55,11 +56,11 @@ public class UserServiceTest {
 
     @Before
     public void setUp() throws Exception {
-        userServiceUnderTest = PowerMockito.spy(new UserService());
+        userServiceUnderTest = PowerMockito.spy(new UserServiceImpl());
         userServiceUnderTest.setUserRepository(userRepository);
         userServiceUnderTest.setDeckRepository(deckRepository);
         userServiceUnderTest.setPasswordEncoder(mockedPasswordEncoder);
-        mockedImageService = PowerMockito.spy(new ImageService());
+        mockedImageService = PowerMockito.spy(new ImageServiceImpl());
         userServiceUnderTest.setImageService(mockedImageService);
         userServiceUnderTest.setMailService(mockedMailService);
     }

@@ -1,12 +1,14 @@
 package com.softserve.academy.spaced.repetition.controller;
 
-import com.softserve.academy.spaced.repetition.dto.DTOBuilder;
-import com.softserve.academy.spaced.repetition.dto.impl.CourseLinkDTO;
-import com.softserve.academy.spaced.repetition.dto.impl.CoursePublicDTO;
-import com.softserve.academy.spaced.repetition.audit.Auditable;
-import com.softserve.academy.spaced.repetition.audit.AuditingAction;
+
+import com.softserve.academy.spaced.repetition.utils.audit.Auditable;
+import com.softserve.academy.spaced.repetition.utils.audit.AuditingAction;
 import com.softserve.academy.spaced.repetition.domain.Course;
-import com.softserve.academy.spaced.repetition.exceptions.NotAuthorisedUserException;
+import com.softserve.academy.spaced.repetition.controller.utils.dto.DTOBuilder;
+import com.softserve.academy.spaced.repetition.controller.utils.dto.Request;
+import com.softserve.academy.spaced.repetition.controller.utils.dto.impl.CourseLinkDTO;
+import com.softserve.academy.spaced.repetition.controller.utils.dto.impl.CoursePublicDTO;
+import com.softserve.academy.spaced.repetition.utils.exceptions.NotAuthorisedUserException;
 import com.softserve.academy.spaced.repetition.service.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -14,6 +16,7 @@ import org.springframework.hateoas.Link;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -92,7 +95,7 @@ public class CourseController {
 
     @Auditable(action = AuditingAction.CREATE_COURSE)
     @PutMapping(value = "/api/user/{user_id}/courses/{course_id}")
-    public void updateCourse(@PathVariable Long course_id, @RequestBody Course course) {
+    public void updateCourse(@PathVariable Long course_id,@Validated(Request.class) @RequestBody Course course) {
         courseService.updateCourse(course_id, course);
     }
 
@@ -116,14 +119,14 @@ public class CourseController {
 
     @Auditable(action = AuditingAction.ADD_COURSE)
     @PutMapping("/api/user/courses/{course_id}/update/access")
-    public ResponseEntity updateCourseAccess(@PathVariable Long course_id, @RequestBody Course course) {
+    public ResponseEntity updateCourseAccess(@PathVariable Long course_id, @Validated(Request.class) @RequestBody Course course) {
         courseService.updateCourseAccess(course_id, course);
         return new ResponseEntity(HttpStatus.OK);
     }
 
     @Auditable(action = AuditingAction.ADD_COURSE)
     @PutMapping("/api/category/courses/{courseId}/decks/{deckId}")
-    public ResponseEntity addDeckToCourse(@PathVariable Long courseId, @PathVariable Long deckId, @RequestBody Course course) {
+    public ResponseEntity addDeckToCourse(@Validated(Request.class) @PathVariable Long courseId, @PathVariable Long deckId, @RequestBody Course course) {
         courseService.addDeckToCourse(courseId, deckId);
         return new ResponseEntity(HttpStatus.OK);
     }
@@ -131,12 +134,12 @@ public class CourseController {
     @GetMapping("/api/private/user/courses")
     public ResponseEntity<List<Long>> getIdAllCoursesOfTheCurrentUser() throws NotAuthorisedUserException {
         List<Long> id = courseService.getAllCoursesIdOfTheCurrentUser();
-        return new ResponseEntity<List<Long>>(id, HttpStatus.OK);
+        return new ResponseEntity<>(id, HttpStatus.OK);
     }
 
     @Auditable(action = AuditingAction.CREATE_PRIVATE_COURSE)
     @PostMapping("/api/category/{category_id}/private/user/create/course")
-    public ResponseEntity<Course> createPrivateCourse(@RequestBody Course privateCourse, @PathVariable Long category_id) throws NotAuthorisedUserException {
+    public ResponseEntity<Course> createPrivateCourse(@Validated(Request.class) @RequestBody Course privateCourse, @PathVariable Long category_id) throws NotAuthorisedUserException {
         courseService.createPrivateCourse(privateCourse, category_id);
         return new ResponseEntity<>(privateCourse, HttpStatus.OK);
     }
