@@ -1,7 +1,7 @@
 package com.softserve.academy.spaced.repetition.domain;
 
-import com.softserve.academy.spaced.repetition.dto.EntityInterface;
-import com.softserve.academy.spaced.repetition.dto.Request;
+import com.softserve.academy.spaced.repetition.controller.utils.dto.EntityInterface;
+import com.softserve.academy.spaced.repetition.controller.utils.dto.Request;
 
 import javax.persistence.*;
 import javax.validation.Valid;
@@ -9,7 +9,7 @@ import javax.validation.constraints.NotNull;
 import java.util.Objects;
 import java.util.Set;
 
-import static com.softserve.academy.spaced.repetition.service.validators.ValidationConstants.NULL_MESSAGE;
+import static com.softserve.academy.spaced.repetition.utils.validators.ValidationConstants.NULL_MESSAGE;
 
 @Entity
 @Table(name = "User")

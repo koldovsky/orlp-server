@@ -1,14 +1,14 @@
 package com.softserve.academy.spaced.repetition.domain;
 
-import com.softserve.academy.spaced.repetition.dto.EntityInterface;
-import com.softserve.academy.spaced.repetition.dto.Request;
+import com.softserve.academy.spaced.repetition.controller.utils.dto.EntityInterface;
+import com.softserve.academy.spaced.repetition.controller.utils.dto.Request;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.persistence.*;
 import java.util.Date;
 import java.util.Objects;
 
-import static com.softserve.academy.spaced.repetition.service.validators.ValidationConstants.EMPTY_MESSAGE;
+import static com.softserve.academy.spaced.repetition.utils.validators.ValidationConstants.EMPTY_MESSAGE;
 
 @Entity
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
