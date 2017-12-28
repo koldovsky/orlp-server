@@ -4,6 +4,8 @@ import com.softserve.academy.spaced.repetition.controller.utils.dto.EntityInterf
 import com.softserve.academy.spaced.repetition.controller.utils.dto.Request;
 
 import javax.persistence.*;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.Size;
 
 import static com.softserve.academy.spaced.repetition.utils.validators.ValidationConstants.COURSE_AND_CARD_RATING_ERROR_MESSAGE;
@@ -27,8 +29,8 @@ public class CourseRating implements EntityInterface {
     private Course course;
 
     @Column(name = "rating", nullable = false)
-    @Size(min = MIN_COURSE_AND_CARD_RATING, max = MAX_COURSE_AND_CARD_RATING,
-            message = COURSE_AND_CARD_RATING_ERROR_MESSAGE, groups = Request.class)
+    @Min(value = MIN_COURSE_AND_CARD_RATING, message = COURSE_AND_CARD_RATING_ERROR_MESSAGE, groups = Request.class)
+    @Max(value = MAX_COURSE_AND_CARD_RATING, message = COURSE_AND_CARD_RATING_ERROR_MESSAGE, groups = Request.class)
     private int rating;
 
     public CourseRating() {
