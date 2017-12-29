@@ -63,10 +63,10 @@ public class CourseCommentController {
     @Auditable(action = AuditingAction.CREATE_COMMENT_FOR_COURSE)
     @PostMapping(value = "/api/category/{categoryId}/courses/{courseId}/comments")
     @PreAuthorize(value = "@accessToUrlService.hasAccessToCourse(#categoryId, #courseId)")
-    public ResponseEntity<CommentDTO> addCommentByCourse(
-            @Validated(Request.class) @RequestBody ReplyToCommentDTO replyToCommentDTO,
-            @PathVariable Long categoryId,
-            @PathVariable Long courseId) throws NotAuthorisedUserException {
+    public ResponseEntity<CommentDTO> addCommentByCourse(@Validated(Request.class) @RequestBody
+                                                                 ReplyToCommentDTO replyToCommentDTO,
+                                                         @PathVariable Long categoryId,
+                                                         @PathVariable Long courseId) throws NotAuthorisedUserException {
         LOGGER.debug("Added comment to course with id: {}", courseId);
         CourseComment courseComment = courseCommentService
                 .addCommentForCourse(courseId, replyToCommentDTO.getCommentText(), replyToCommentDTO.getParentCommentId());

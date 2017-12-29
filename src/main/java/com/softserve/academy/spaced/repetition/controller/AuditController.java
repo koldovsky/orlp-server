@@ -30,10 +30,9 @@ public class AuditController {
      * @return - list of audit
      */
     @GetMapping("api/admin/audit")
-    public ResponseEntity<Page<AuditPublicDTO>> getFullAuditList(
-            @RequestParam(name = "p", defaultValue = "1") int pageNumber,
-            @RequestParam(name = "sortBy") String sortBy,
-            @RequestParam(name = "asc") boolean ascending) {
+    public ResponseEntity<Page<AuditPublicDTO>> getFullAuditList(@RequestParam(name = "p", defaultValue = "1") int pageNumber,
+                                                                 @RequestParam(name = "sortBy") String sortBy,
+                                                                 @RequestParam(name = "asc") boolean ascending) {
         Page<AuditPublicDTO> auditPublicDTOS = auditService.getAuditByPage(pageNumber, sortBy, ascending).map((audit) -> {
             Link selfLink = linkTo(methodOn(AuditController.class)
                     .getFullAuditList(pageNumber, sortBy, ascending)).withSelfRel();

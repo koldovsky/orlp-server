@@ -33,10 +33,10 @@ public class ManageUserController {
      */
     @Auditable(action = AuditingAction.VIEW_ALL_USERS_ADMIN)
     @GetMapping("/api/admin/users")
-    public ResponseEntity<Page<UserManagedByAdminDTO>> getAllUsers(
-            @RequestParam(name = "p", defaultValue = "1") int pageNumber,
-            @RequestParam(name = "sortBy") String sortBy,
-            @RequestParam(name = "asc") boolean ascending) {
+    public ResponseEntity<Page<UserManagedByAdminDTO>> getAllUsers(@RequestParam(name = "p", defaultValue = "1")
+                                                                           int pageNumber,
+                                                                   @RequestParam(name = "sortBy") String sortBy,
+                                                                   @RequestParam(name = "asc") boolean ascending) {
         Page<UserManagedByAdminDTO> userManagedByAdminDTOS = userService
                 .getUsersByPage(pageNumber, sortBy, ascending).map((user) -> {
                     Link selfLink = linkTo(methodOn(ManageUserController.class).getUserById(user.getId())).withSelfRel();
