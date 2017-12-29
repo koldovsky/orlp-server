@@ -22,18 +22,16 @@ public class UserCardQueueController {
 
     @PutMapping("/api/private/decks/{deckId}/cards/{cardId}/queue")
     @PreAuthorize(value = "@accessToUrlService.hasAccessToCard(#deckId, #cardId)")
-    public ResponseEntity updateUserCardQueue(
-            @PathVariable Long deckId,
-            @PathVariable Long cardId,
-            @RequestBody String status)
+    public ResponseEntity updateUserCardQueue(@PathVariable Long deckId,
+                                              @PathVariable Long cardId,
+                                              @RequestBody String status)
             throws NotAuthorisedUserException, IllegalArgumentException {
         userCardQueueService.updateUserCardQueue(deckId, cardId, status);
         return ResponseEntity.ok().build();
     }
 
     @GetMapping("/api/private/decks/{deckId}/cards-that-need-repeating/count")
-    public ResponseEntity<Long> countCardsThatNeedRepeating(
-            @PathVariable Long deckId) throws NotAuthorisedUserException {
+    public ResponseEntity<Long> countCardsThatNeedRepeating(@PathVariable Long deckId) throws NotAuthorisedUserException {
         return ResponseEntity.ok(userCardQueueService.countCardsThatNeedRepeating(deckId));
     }
 

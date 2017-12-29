@@ -41,8 +41,8 @@ public class CardController {
     private CardLoadService cardLoadService;
 
     @GetMapping("/api/decks/{deckId}/learn")
-    public ResponseEntity<List<CardPublicDTO>> getLearningCards(
-            @PathVariable Long deckId) throws NotAuthorisedUserException {
+    public ResponseEntity<List<CardPublicDTO>> getLearningCards(@PathVariable Long deckId)
+            throws NotAuthorisedUserException {
         List<Card> learningCards = cardService.getLearningCards(deckId);
         Link collectionLink = linkTo(methodOn(DeckController.class).getCardsByDeck(deckId)).withSelfRel();
         List<CardPublicDTO> cards = DTOBuilder
@@ -61,8 +61,8 @@ public class CardController {
     }
 
     @GetMapping("api/private/decks/{deckId}/not-postponed")
-    public ResponseEntity<Boolean> areThereNotPostponedCardsAvailable(
-            @PathVariable Long deckId) throws NotAuthorisedUserException {
+    public ResponseEntity<Boolean> areThereNotPostponedCardsAvailable(@PathVariable Long deckId)
+            throws NotAuthorisedUserException {
         return ResponseEntity.ok(cardService.areThereNotPostponedCardsAvailable(deckId));
     }
 

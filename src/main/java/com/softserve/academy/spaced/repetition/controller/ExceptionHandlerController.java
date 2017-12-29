@@ -28,14 +28,16 @@ import java.util.stream.Collectors;
 @ControllerAdvice
 public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
 
-    private static final EnumMap<AccountStatus, ResponseEntity<MessageDTO>> USER_STATUS_ERROR_RESPONSE =
-            new EnumMap<>(AccountStatus.class);
+    private static final EnumMap<AccountStatus,
+            ResponseEntity<MessageDTO>> USER_STATUS_ERROR_RESPONSE = new EnumMap<>(AccountStatus.class);
 
     static {
-        USER_STATUS_ERROR_RESPONSE.put(AccountStatus.DELETED, new ResponseEntity<>(
-                new MessageDTO("Account with this email is deleted"), HttpStatus.LOCKED));
-        USER_STATUS_ERROR_RESPONSE.put(AccountStatus.BLOCKED, new ResponseEntity<>(
-                new MessageDTO("Account with this email is blocked"), HttpStatus.FORBIDDEN));
+        USER_STATUS_ERROR_RESPONSE
+                .put(AccountStatus.DELETED, new ResponseEntity<>(new MessageDTO("Account with this email is deleted"),
+                        HttpStatus.LOCKED));
+        USER_STATUS_ERROR_RESPONSE
+                .put(AccountStatus.BLOCKED, new ResponseEntity<>(new MessageDTO("Account with this email is blocked"),
+                        HttpStatus.FORBIDDEN));
     }
 
     @ExceptionHandler(MultipartException.class)
