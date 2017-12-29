@@ -9,13 +9,18 @@ import com.softserve.academy.spaced.repetition.service.impl.DeckRatingServiceImp
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.softserve.academy.spaced.repetition.config.TestDatabaseConfig;
@@ -29,43 +34,47 @@ import com.softserve.academy.spaced.repetition.utils.exceptions.NotAuthorisedUse
 import com.softserve.academy.spaced.repetition.repository.DeckRatingRepository;
 import com.softserve.academy.spaced.repetition.repository.DeckRepository;
 
-@RunWith(SpringRunner.class)
-@ActiveProfiles("testdatabase")
-@SpringBootTest
-@Import(TestDatabaseConfig.class)
-@Sql("/data/TestData.sql")
-@Transactional
+@RunWith(MockitoJUnitRunner.class)
 public class DeckRatingServiceTest {
+    MockMvc mockMvc;
 
     private static final long DECK_ID = 3L;
 
+    @InjectMocks
     private DeckRatingServiceImpl deckRatingServiceUnderTest;
 
-    @Autowired
+    @Mock
     private DeckRatingRepository deckRatingRepository;
 
-    @Autowired
+    @Mock
     private DeckRepository deckRepository;
 
     @Mock
     private UserService mockedUserService;
 
+    //    @Before
+//    public void setUp() throws Exception {
+//        deckRatingServiceUnderTest = new DeckRatingServiceImpl();
+//        deckRatingServiceUnderTest.setUserService(mockedUserService);
+//        deckRatingServiceUnderTest.setDeckRatingRepository(deckRatingRepository);
+//        deckRatingServiceUnderTest.setDeckRepository(deckRepository);
+//    }
     @Before
     public void setUp() throws Exception {
-        deckRatingServiceUnderTest = new DeckRatingServiceImpl();
-        deckRatingServiceUnderTest.setUserService(mockedUserService);
-        deckRatingServiceUnderTest.setDeckRatingRepository(deckRatingRepository);
-        deckRatingServiceUnderTest.setDeckRepository(deckRepository);
+        MockitoAnnotations.initMocks(this);
+        mockMvc = MockMvcBuilders
+                .standaloneSetup(deckRatingServiceUnderTest)
+                .build();
     }
 
     @Test
     public void testAverageDeckRating() throws NotAuthorisedUserException, UserStatusException {
 
-        User mockedUser1 = new User(new Account("","email1@email.com"), new Person("first1", "last1"), new Folder());
+        User mockedUser1 = new User(new Account("", "email1@email.com"), new Person("first1", "last1"), new Folder());
         when(mockedUserService.getAuthorizedUser()).thenReturn(mockedUser1);
         deckRatingServiceUnderTest.addDeckRating(2, DECK_ID);
 
-        User mockedUser2 = new User(new Account("","email2@email.com"), new Person("first2", "last2"), new Folder());
+        User mockedUser2 = new User(new Account("", "email2@email.com"), new Person("first2", "last2"), new Folder());
         when(mockedUserService.getAuthorizedUser()).thenReturn(mockedUser2);
         deckRatingServiceUnderTest.addDeckRating(4, DECK_ID);
 

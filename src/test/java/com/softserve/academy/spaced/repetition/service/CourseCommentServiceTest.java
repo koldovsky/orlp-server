@@ -8,13 +8,18 @@ import com.softserve.academy.spaced.repetition.service.impl.CourseCommentService
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -23,31 +28,34 @@ import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
-@RunWith(SpringRunner.class)
-@ActiveProfiles("testdatabase")
-@SpringBootTest
-@Import(TestDatabaseConfig.class)
-@Sql("/data/TestData.sql")
-@Transactional
+@RunWith(MockitoJUnitRunner.class)
 public class CourseCommentServiceTest {
+    MockMvc mockMvc;
 
     private static final Long COURSE_ID = 1L;
 
-    @Autowired
+    @InjectMocks
     private CourseCommentServiceImpl courseCommentServiceUnderTest;
 
-    @Autowired
+    @Mock
     private CourseCommentRepository courseCommentRepository;
 
-    @Autowired
+    @Mock
     private CourseRepository courseRepository;
 
     @Mock
     private UserService mockedUserService;
 
+    //    @Before
+//    public void setUp() throws Exception {
+//        courseCommentServiceUnderTest = new CourseCommentServiceImpl(courseCommentRepository, courseRepository, mockedUserService);
+//    }
     @Before
     public void setUp() throws Exception {
-        courseCommentServiceUnderTest = new CourseCommentServiceImpl(courseCommentRepository, courseRepository, mockedUserService);
+        MockitoAnnotations.initMocks(this);
+        mockMvc = MockMvcBuilders
+                .standaloneSetup(courseCommentServiceUnderTest)
+                .build();
     }
 
     private User createMockedUser() {

@@ -1,5 +1,6 @@
 package com.softserve.academy.spaced.repetition.service;
 
+import com.softserve.academy.spaced.repetition.controller.ExceptionHandlerController;
 import com.softserve.academy.spaced.repetition.controller.utils.dto.impl.PasswordDTO;
 import com.softserve.academy.spaced.repetition.config.TestDatabaseConfig;
 import com.softserve.academy.spaced.repetition.domain.*;
@@ -11,7 +12,9 @@ import com.softserve.academy.spaced.repetition.service.impl.UserServiceImpl;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
 import org.powermock.api.mockito.PowerMockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +25,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
 import static org.junit.Assert.assertEquals;
@@ -30,18 +35,19 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
 import static org.junit.Assert.*;
 
-@RunWith(SpringRunner.class)
-@ActiveProfiles("testdatabase")
-@SpringBootTest
-@Import(TestDatabaseConfig.class)
-@Sql("/data/TestData.sql")
-@Transactional
+@RunWith(MockitoJUnitRunner.class)
 public class UserServiceTest {
+    MockMvc mockMvc;
 
-    private UserService userServiceUnderTest;
-    @Autowired
+    final int NUMBER_PAGE = 1;
+    final String SORT_BY = "id";
+    final int QUANTITY_USER_IN_PAGE = 20;
+
+    @InjectMocks
+    private UserServiceImpl userServiceUnderTest;
+    @Mock
     private UserRepository userRepository;
-    @Autowired
+    @Mock
     private DeckRepository deckRepository;
     @Mock
     private PasswordEncoder mockedPasswordEncoder;
@@ -50,23 +56,25 @@ public class UserServiceTest {
     @Mock
     private MailService mockedMailService;
 
-    final int NUMBER_PAGE = 1;
-    final String SORT_BY = "id";
-    final int QUANTITY_USER_IN_PAGE = 20;
-
+    //    @Before
+//    public void setUp() throws Exception {
+//        userServiceUnderTest = PowerMockito.spy(new UserServiceImpl());
+//        userServiceUnderTest.setUserRepository(userRepository);
+//        userServiceUnderTest.setDeckRepository(deckRepository);
+//        userServiceUnderTest.setPasswordEncoder(mockedPasswordEncoder);
+//        mockedImageService = PowerMockito.spy(new ImageServiceImpl());
+//        userServiceUnderTest.setImageService(mockedImageService);
+//        userServiceUnderTest.setMailService(mockedMailService);
+//    }
     @Before
-    public void setUp() throws Exception {
-        userServiceUnderTest = PowerMockito.spy(new UserServiceImpl());
-        userServiceUnderTest.setUserRepository(userRepository);
-        userServiceUnderTest.setDeckRepository(deckRepository);
-        userServiceUnderTest.setPasswordEncoder(mockedPasswordEncoder);
-        mockedImageService = PowerMockito.spy(new ImageServiceImpl());
-        userServiceUnderTest.setImageService(mockedImageService);
-        userServiceUnderTest.setMailService(mockedMailService);
+    public void setUp() {
+        mockMvc = MockMvcBuilders.standaloneSetup(userServiceUnderTest)
+                .setControllerAdvice(new ExceptionHandlerController())
+                .build();
     }
 
     Person mockedPerson = new Person("firstName", "lastName");
-    User mockedUser = new User(new Account("","email1@email.com"), mockedPerson, new Folder());
+    User mockedUser = new User(new Account("", "email1@email.com"), mockedPerson, new Folder());
 
     @Test
     public void testEditPersonalData() throws Exception {

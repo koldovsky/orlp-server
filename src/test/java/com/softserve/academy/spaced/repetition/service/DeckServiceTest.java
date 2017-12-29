@@ -10,38 +10,44 @@ import com.softserve.academy.spaced.repetition.service.impl.FolderServiceImpl;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.eq;
 
-@RunWith(SpringRunner.class)
-@ActiveProfiles("testdatabase")
-@SpringBootTest
-@Import(TestDatabaseConfig.class)
-@Sql("/data/TestData.sql")
-@Transactional
+@RunWith(MockitoJUnitRunner.class)
 public class DeckServiceTest {
+    MockMvc mockMvc;
+
+    final int PAGE_NUMBER = 1;
+    final String SORT_BY = "id";
+
+    @InjectMocks
     private DeckServiceImpl deckService;
 
-    @Autowired
+    @Mock
     private DeckRepository deckRepository;
 
-    @Autowired
+    @Mock
     private CategoryRepository categoryRepository;
 
-    @Autowired
+    @Mock
     private CardRepository cardRepository;
 
-    @Autowired
+    @Mock
     private CourseRepository courseRepository;
 
     @Mock
@@ -50,19 +56,23 @@ public class DeckServiceTest {
     @Mock
     private FolderServiceImpl folderServiceImpl;
 
-    final int PAGE_NUMBER = 1;
-    final String SORT_BY = "id";
-
+    //    @Before
+//    public void setUp() throws Exception {
+//        deckService = new DeckServiceImpl();
+//        deckService.setCourseRepository(courseRepository);
+//        deckService.setDeckRepository(deckRepository);
+//        deckService.setCardRepository(cardRepository);
+//        deckService.setCategoryRepository(categoryRepository);
+//        deckService.setCourseRepository(courseRepository);
+//        deckService.setUserService(userService);
+//        deckService.setFolderService(folderServiceImpl);
+//    }
     @Before
     public void setUp() throws Exception {
-        deckService = new DeckServiceImpl();
-        deckService.setCourseRepository(courseRepository);
-        deckService.setDeckRepository(deckRepository);
-        deckService.setCardRepository(cardRepository);
-        deckService.setCategoryRepository(categoryRepository);
-        deckService.setCourseRepository(courseRepository);
-        deckService.setUserService(userService);
-        deckService.setFolderService(folderServiceImpl);
+        MockitoAnnotations.initMocks(this);
+        mockMvc = MockMvcBuilders
+                .standaloneSetup(deckService)
+                .build();
     }
 
     @Test
