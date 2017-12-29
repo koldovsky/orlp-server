@@ -1,12 +1,12 @@
 package com.softserve.academy.spaced.repetition.controller;
 
-import com.softserve.academy.spaced.repetition.domain.LearningRegime;
+import com.softserve.academy.spaced.repetition.domain.enums.LearningRegime;
 import com.softserve.academy.spaced.repetition.domain.RememberingLevel;
-import com.softserve.academy.spaced.repetition.dto.DTOBuilder;
-import com.softserve.academy.spaced.repetition.dto.Request;
-import com.softserve.academy.spaced.repetition.dto.impl.NewAccountPasswordDTO;
-import com.softserve.academy.spaced.repetition.dto.impl.RememberingLevelDTO;
-import com.softserve.academy.spaced.repetition.exceptions.NotAuthorisedUserException;
+import com.softserve.academy.spaced.repetition.controller.utils.dto.DTOBuilder;
+import com.softserve.academy.spaced.repetition.controller.utils.dto.Request;
+import com.softserve.academy.spaced.repetition.controller.utils.dto.impl.NewAccountPasswordDTO;
+import com.softserve.academy.spaced.repetition.controller.utils.dto.impl.RememberingLevelDTO;
+import com.softserve.academy.spaced.repetition.utils.exceptions.NotAuthorisedUserException;
 import com.softserve.academy.spaced.repetition.service.AccountService;
 import com.softserve.academy.spaced.repetition.service.AccountVerificationByEmailService;
 import org.slf4j.Logger;

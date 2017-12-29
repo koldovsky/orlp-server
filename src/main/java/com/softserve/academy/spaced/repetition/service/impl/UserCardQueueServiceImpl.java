@@ -1,7 +1,9 @@
 package com.softserve.academy.spaced.repetition.service.impl;
 
 import com.softserve.academy.spaced.repetition.domain.*;
-import com.softserve.academy.spaced.repetition.exceptions.NotAuthorisedUserException;
+import com.softserve.academy.spaced.repetition.domain.enums.LearningRegime;
+import com.softserve.academy.spaced.repetition.domain.enums.UserCardQueueStatus;
+import com.softserve.academy.spaced.repetition.utils.exceptions.NotAuthorisedUserException;
 import com.softserve.academy.spaced.repetition.repository.RememberingLevelRepository;
 import com.softserve.academy.spaced.repetition.repository.UserCardQueueRepository;
 import com.softserve.academy.spaced.repetition.service.UserCardQueueService;
@@ -23,7 +25,8 @@ public class UserCardQueueServiceImpl implements UserCardQueueService {
     private final RememberingLevelRepository rememberingLevelRepository;
 
     @Autowired
-    public UserCardQueueServiceImpl(UserCardQueueRepository userCardQueueRepository, UserService userService, RememberingLevelRepository rememberingLevelRepository) {
+    public UserCardQueueServiceImpl(UserCardQueueRepository userCardQueueRepository, UserService userService,
+                                    RememberingLevelRepository rememberingLevelRepository) {
         this.userCardQueueRepository = userCardQueueRepository;
         this.userService = userService;
         this.rememberingLevelRepository = rememberingLevelRepository;

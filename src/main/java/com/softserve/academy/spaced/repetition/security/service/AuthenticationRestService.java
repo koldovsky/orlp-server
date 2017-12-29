@@ -1,7 +1,7 @@
 package com.softserve.academy.spaced.repetition.security.service;
 
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
-import com.softserve.academy.spaced.repetition.domain.AuthorityName;
+import com.softserve.academy.spaced.repetition.domain.enums.AuthorityName;
 import com.softserve.academy.spaced.repetition.security.DTO.ReCaptchaResponseDto;
 import com.softserve.academy.spaced.repetition.security.FacebookAuthUtil;
 import com.softserve.academy.spaced.repetition.security.GoogleAuthUtil;

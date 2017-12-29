@@ -1,10 +1,10 @@
 package com.softserve.academy.spaced.repetition.service;
 
 import com.softserve.academy.spaced.repetition.domain.Image;
-import com.softserve.academy.spaced.repetition.exceptions.CanNotBeDeletedException;
-import com.softserve.academy.spaced.repetition.exceptions.ImageRepositorySizeQuotaExceededException;
-import com.softserve.academy.spaced.repetition.exceptions.NotAuthorisedUserException;
-import com.softserve.academy.spaced.repetition.exceptions.NotOwnerOperationException;
+import com.softserve.academy.spaced.repetition.utils.exceptions.CanNotBeDeletedException;
+import com.softserve.academy.spaced.repetition.utils.exceptions.ImageRepositorySizeQuotaExceededException;
+import com.softserve.academy.spaced.repetition.utils.exceptions.NotAuthorisedUserException;
+import com.softserve.academy.spaced.repetition.utils.exceptions.NotOwnerOperationException;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;

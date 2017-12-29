@@ -63,7 +63,8 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public Page<Category> getSortedCategories(int pageNumber, String sortBy, boolean ascending) {
-        PageRequest request = new PageRequest(pageNumber - 1, QUANTITY_CATEGORIES_IN_PAGE, ascending ? Sort.Direction.ASC : Sort.Direction.DESC, sortBy);
+        PageRequest request = new PageRequest(pageNumber - 1, QUANTITY_CATEGORIES_IN_PAGE, ascending
+                ? Sort.Direction.ASC : Sort.Direction.DESC, sortBy);
         return categoryRepository.findAll(request);
     }
 }

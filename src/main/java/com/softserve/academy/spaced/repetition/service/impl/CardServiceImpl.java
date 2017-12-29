@@ -2,14 +2,14 @@ package com.softserve.academy.spaced.repetition.service.impl;
 
 import com.softserve.academy.spaced.repetition.domain.Card;
 import com.softserve.academy.spaced.repetition.domain.Deck;
-import com.softserve.academy.spaced.repetition.domain.LearningRegime;
+import com.softserve.academy.spaced.repetition.domain.enums.LearningRegime;
 import com.softserve.academy.spaced.repetition.domain.User;
-import com.softserve.academy.spaced.repetition.dto.CardFileDTO;
-import com.softserve.academy.spaced.repetition.dto.CardFileDTOList;
-import com.softserve.academy.spaced.repetition.exceptions.EmptyFileException;
-import com.softserve.academy.spaced.repetition.exceptions.NotAuthorisedUserException;
-import com.softserve.academy.spaced.repetition.exceptions.NotOwnerOperationException;
-import com.softserve.academy.spaced.repetition.exceptions.WrongFormatException;
+import com.softserve.academy.spaced.repetition.controller.utils.dto.CardFileDTO;
+import com.softserve.academy.spaced.repetition.controller.utils.dto.CardFileDTOList;
+import com.softserve.academy.spaced.repetition.utils.exceptions.EmptyFileException;
+import com.softserve.academy.spaced.repetition.utils.exceptions.NotAuthorisedUserException;
+import com.softserve.academy.spaced.repetition.utils.exceptions.NotOwnerOperationException;
+import com.softserve.academy.spaced.repetition.utils.exceptions.WrongFormatException;
 import com.softserve.academy.spaced.repetition.repository.CardRepository;
 import com.softserve.academy.spaced.repetition.repository.DeckRepository;
 import com.softserve.academy.spaced.repetition.service.*;
@@ -44,7 +44,8 @@ public class CardServiceImpl implements CardService {
 
     @Autowired
     public CardServiceImpl(CardRepository cardRepository, DeckRepository deckRepository, AccountService accountService,
-                           UserService userService, UserCardQueueService userCardQueueService, DeckService deckService) {
+                           UserService userService, UserCardQueueService userCardQueueService,
+                           DeckService deckService) {
         this.cardRepository = cardRepository;
         this.deckRepository = deckRepository;
         this.userService = userService;
@@ -66,10 +67,12 @@ public class CardServiceImpl implements CardService {
                     learningCards.addAll(cardRepository.cardsQueueForLearningWithStatus(user.getId(), deckId,
                             cardsNumber - learningCards.size()));
                 }
-            } else if (user.getAccount().getLearningRegime().equals(LearningRegime.CARDS_POSTPONING_USING_SPACED_REPETITION)) {
+            } else if (user.getAccount().getLearningRegime()
+                    .equals(LearningRegime.CARDS_POSTPONING_USING_SPACED_REPETITION)) {
                 learningCards = cardRepository.getCardsThatNeedRepeating(deckId, new Date(), user.getId(), cardsNumber);
                 if (learningCards.size() < cardsNumber) {
-                    learningCards.addAll(cardRepository.getNewCards(deckId, user.getId(), cardsNumber - learningCards.size()));
+                    learningCards.addAll(cardRepository
+                            .getNewCards(deckId, user.getId(), cardsNumber - learningCards.size()));
                 }
             }
             return learningCards;
@@ -85,7 +88,8 @@ public class CardServiceImpl implements CardService {
 
     @Override
     public void addCard(Card card, Long deckId) {
-        if (card.getTitle().trim().isEmpty() || card.getAnswer().trim().isEmpty() || card.getQuestion().trim().isEmpty()) {
+        if (card.getTitle().trim().isEmpty() || card.getAnswer().trim().isEmpty()
+                || card.getQuestion().trim().isEmpty()) {
             throw new IllegalArgumentException("All of card fields must be filled");
         }
         Deck deck = deckRepository.findOne(deckId);
@@ -95,7 +99,8 @@ public class CardServiceImpl implements CardService {
 
     @Override
     public void updateCard(Long id, Card card) {
-        if (card.getTitle().trim().isEmpty() || card.getAnswer().trim().isEmpty() || card.getQuestion().trim().isEmpty()) {
+        if (card.getTitle().trim().isEmpty() || card.getAnswer().trim().isEmpty()
+                || card.getQuestion().trim().isEmpty()) {
             throw new IllegalArgumentException("All of card fields must be filled");
         }
         card.setId(id);
@@ -110,8 +115,8 @@ public class CardServiceImpl implements CardService {
         List<Card> cardsQueue = cardRepository.cardsForLearningWithOutStatus(user.getId(), deckId, cardsNumber);
 
         if (cardsQueue.size() < cardsNumber) {
-            cardsQueue.addAll(cardRepository.cardsQueueForLearningWithStatus(user.getId(), deckId, cardsNumber).subList(0,
-                    cardsNumber - cardsQueue.size()));
+            cardsQueue.addAll(cardRepository.cardsQueueForLearningWithStatus(user.getId(), deckId, cardsNumber)
+                    .subList(0, cardsNumber - cardsQueue.size()));
         }
         return cardsQueue;
     }
@@ -140,7 +145,8 @@ public class CardServiceImpl implements CardService {
 
     @Override
     @Transactional
-    public void uploadCards(MultipartFile cardsFile, Long deckId) throws WrongFormatException, EmptyFileException, NotOwnerOperationException, NotAuthorisedUserException, IOException {
+    public void uploadCards(MultipartFile cardsFile, Long deckId) throws WrongFormatException, EmptyFileException,
+            NotOwnerOperationException, NotAuthorisedUserException, IOException {
         if (deckService.getDeckUser(deckId) != null) {
             if (!cardsFile.getContentType().equals("application/octet-stream")) {
                 throw new WrongFormatException();

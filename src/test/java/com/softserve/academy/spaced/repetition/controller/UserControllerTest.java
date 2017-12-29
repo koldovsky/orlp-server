@@ -1,5 +1,6 @@
 package com.softserve.academy.spaced.repetition.controller;
 
+import com.softserve.academy.spaced.repetition.domain.enums.AccountStatus;
 import com.softserve.academy.spaced.repetition.service.UserService;
 import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
