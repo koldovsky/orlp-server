@@ -31,16 +31,6 @@ QUICK START
 1. You should import this project in your IDE as a maven-project;
 2. Wait untill IDE will import all maven dependencies to this project;
 3. Open MySQL Workbench and change the password for user **`root`** to **`123456`**;
-4. Create database **`orlp`** using the next command:
-
-```sql
-    CREATE DATABASE orlp;
-```
-5. Create tables in the database and fill them with data - in the IDE:
--  change the parameter `jpa\hibernate\`**`ddl-auto`** in the `src\main\resources\`**`application.yml`** to **`create`**
--  **Run** the Application
--  **Run** sql script `src\main\resources\data\TestData.sql` - this will fill tables with test-data
--  change the parameter `jpa\hibernate\`**`ddl-auto`** in the `src\main\resources\`**`application.yml`** to **`validate`**
 
 Now you can work with the API.
 
