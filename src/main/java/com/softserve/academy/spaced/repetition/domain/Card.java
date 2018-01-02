@@ -40,6 +40,12 @@ public class Card implements EntityInterface {
     public Card() {
     }
 
+    public Card(String title, String question, String answer) {
+        this.title = title;
+        this.question = question;
+        this.answer = answer;
+    }
+
     public Card(String title, String question, String answer, String imageBase64) {
         this.title = title;
         this.question = question;
@@ -47,12 +53,11 @@ public class Card implements EntityInterface {
         this.imageBase64 = imageBase64;
     }
 
-    public Card(Long id, String question, String answer, String title, String imageBase64) {
+    public Card(Long id, String question, String answer, String title) {
         this.id = id;
         this.title = title;
         this.question = question;
         this.answer = answer;
-        this.imageBase64 = imageBase64;
     }
 
     public Long getId() {

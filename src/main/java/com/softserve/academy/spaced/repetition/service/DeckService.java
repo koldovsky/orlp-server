@@ -5,6 +5,7 @@ import com.softserve.academy.spaced.repetition.domain.Deck;
 import com.softserve.academy.spaced.repetition.utils.exceptions.NotAuthorisedUserException;
 import com.softserve.academy.spaced.repetition.utils.exceptions.NotOwnerOperationException;
 import org.springframework.data.domain.Page;
+
 import java.util.List;
 
 public interface DeckService {
@@ -47,4 +48,6 @@ public interface DeckService {
     List<Deck> getAllOrderedDecks();
 
     List<Card> getAllCardsByDeckId(Long deckId);
+
+
 }

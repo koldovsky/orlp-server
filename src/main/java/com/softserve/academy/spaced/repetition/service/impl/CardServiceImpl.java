@@ -1,19 +1,18 @@
 package com.softserve.academy.spaced.repetition.service.impl;
 
-import com.softserve.academy.spaced.repetition.domain.Card;
-import com.softserve.academy.spaced.repetition.domain.Deck;
-import com.softserve.academy.spaced.repetition.domain.enums.LearningRegime;
-import com.softserve.academy.spaced.repetition.domain.User;
 import com.softserve.academy.spaced.repetition.controller.utils.dto.CardFileDTO;
 import com.softserve.academy.spaced.repetition.controller.utils.dto.CardFileDTOList;
+import com.softserve.academy.spaced.repetition.domain.Card;
+import com.softserve.academy.spaced.repetition.domain.Deck;
+import com.softserve.academy.spaced.repetition.domain.User;
+import com.softserve.academy.spaced.repetition.domain.enums.LearningRegime;
+import com.softserve.academy.spaced.repetition.repository.CardRepository;
+import com.softserve.academy.spaced.repetition.repository.DeckRepository;
+import com.softserve.academy.spaced.repetition.service.*;
 import com.softserve.academy.spaced.repetition.utils.exceptions.EmptyFileException;
 import com.softserve.academy.spaced.repetition.utils.exceptions.NotAuthorisedUserException;
 import com.softserve.academy.spaced.repetition.utils.exceptions.NotOwnerOperationException;
 import com.softserve.academy.spaced.repetition.utils.exceptions.WrongFormatException;
-import com.softserve.academy.spaced.repetition.repository.CardRepository;
-import com.softserve.academy.spaced.repetition.repository.DeckRepository;
-import com.softserve.academy.spaced.repetition.service.*;
-import com.softserve.academy.spaced.repetition.service.UserCardQueueService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,6 +28,9 @@ import java.util.*;
 
 @Service
 public class CardServiceImpl implements CardService {
+
+    @Autowired
+    private ImageService imageService;
 
     private final CardRepository cardRepository;
 
@@ -87,6 +89,18 @@ public class CardServiceImpl implements CardService {
     }
 
     @Override
+    public void addCard(Card card, Long deckId, MultipartFile multipartFile) {
+        if (card.getTitle().trim().isEmpty() || card.getAnswer().trim().isEmpty()
+                || card.getQuestion().trim().isEmpty()) {
+            throw new IllegalArgumentException("All of card fields must be filled");
+        }
+        card.setImageBase64(imageService.encodeToBase64(multipartFile));
+        Deck deck = deckRepository.findOne(deckId);
+        card.setDeck(deck);
+        deck.getCards().add(cardRepository.save(card));
+    }
+
+    @Override
     public void addCard(Card card, Long deckId) {
         if (card.getTitle().trim().isEmpty() || card.getAnswer().trim().isEmpty()
                 || card.getQuestion().trim().isEmpty()) {
@@ -98,13 +112,25 @@ public class CardServiceImpl implements CardService {
     }
 
     @Override
-    public void updateCard(Long id, Card card) {
+    public void updateCard(Card card, Long deckId, MultipartFile multipartFile) {
         if (card.getTitle().trim().isEmpty() || card.getAnswer().trim().isEmpty()
                 || card.getQuestion().trim().isEmpty()) {
             throw new IllegalArgumentException("All of card fields must be filled");
         }
-        card.setId(id);
-        card.setDeck(cardRepository.findOne(id).getDeck());
+        card.setImageBase64(imageService.encodeToBase64(multipartFile));
+        card.setId(deckId);
+        card.setDeck(cardRepository.findOne(deckId).getDeck());
+        cardRepository.save(card);
+    }
+
+    @Override
+    public void updateCard(Card card, Long deckId) {
+        if (card.getTitle().trim().isEmpty() || card.getAnswer().trim().isEmpty()
+                || card.getQuestion().trim().isEmpty()) {
+            throw new IllegalArgumentException("All of card fields must be filled");
+        }
+        card.setId(deckId);
+        card.setDeck(cardRepository.findOne(deckId).getDeck());
         cardRepository.save(card);
     }
 
