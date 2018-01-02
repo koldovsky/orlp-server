@@ -26,6 +26,10 @@ public class Card implements EntityInterface {
     @Column(name = "rating")
     private double rating;
 
+    @Column(name = "imagebase64", columnDefinition = "LONGTEXT")
+    @Basic(fetch = FetchType.LAZY)
+    private String imageBase64;
+
     @ManyToOne
     @JoinColumn(name = "deck_id")
     private Deck deck;
@@ -36,17 +40,19 @@ public class Card implements EntityInterface {
     public Card() {
     }
 
-    public Card(String question, String answer, String title) {
+    public Card(String title, String question, String answer, String imageBase64) {
         this.title = title;
         this.question = question;
         this.answer = answer;
+        this.imageBase64 = imageBase64;
     }
 
-    public Card(Long id, String question, String answer, String title) {
+    public Card(Long id, String question, String answer, String title, String imageBase64) {
         this.id = id;
         this.title = title;
         this.question = question;
         this.answer = answer;
+        this.imageBase64 = imageBase64;
     }
 
     public Long getId() {
@@ -103,6 +109,14 @@ public class Card implements EntityInterface {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public String getImageBase64() {
+        return imageBase64;
+    }
+
+    public void setImageBase64(String imageBase64) {
+        this.imageBase64 = imageBase64;
     }
 
     @Override
