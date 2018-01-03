@@ -1,8 +1,9 @@
 package com.softserve.academy.spaced.repetition.security;
 
-import com.softserve.academy.spaced.repetition.utils.audit.Auditable;
-import com.softserve.academy.spaced.repetition.utils.audit.AuditingAction;
-import com.softserve.academy.spaced.repetition.domain.*;
+import com.softserve.academy.spaced.repetition.domain.Account;
+import com.softserve.academy.spaced.repetition.domain.Folder;
+import com.softserve.academy.spaced.repetition.domain.Person;
+import com.softserve.academy.spaced.repetition.domain.User;
 import com.softserve.academy.spaced.repetition.domain.enums.AccountStatus;
 import com.softserve.academy.spaced.repetition.domain.enums.AuthenticationType;
 import com.softserve.academy.spaced.repetition.domain.enums.ImageType;
@@ -11,6 +12,8 @@ import com.softserve.academy.spaced.repetition.repository.AuthorityRepository;
 import com.softserve.academy.spaced.repetition.repository.UserRepository;
 import com.softserve.academy.spaced.repetition.service.AccountService;
 import com.softserve.academy.spaced.repetition.service.UserService;
+import com.softserve.academy.spaced.repetition.utils.audit.Auditable;
+import com.softserve.academy.spaced.repetition.utils.audit.AuditingAction;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,9 +45,10 @@ public class FacebookAuthUtil {
         String graph = null;
 
         try {
-            String g = "https://graph.facebook.com/me?fields=id,first_name,last_name,email,picture&access_token=" + accessToken;
+            String facebookGraph = "https://graph.facebook.com/me?fields=id,first_name,last_name,email,picture&access_token="
+                    + accessToken;
 
-            URL url = new URL(g);
+            URL url = new URL(facebookGraph);
 
             URLConnection urlConnection = url.openConnection();
 
@@ -92,8 +96,8 @@ public class FacebookAuthUtil {
     @Auditable(action = AuditingAction.SIGN_UP_FACEBOOK)
     public void saveNewFacebookUser(Map fbProfileData) {
         Account account = new Account();
-        userService.initializeNewUser(account, (String) fbProfileData.get("email"), AccountStatus.ACTIVE, false,
-                AuthenticationType.FACEBOOK);
+        userService.initializeNewUser(account, (String) fbProfileData.get("email"), AccountStatus.ACTIVE,
+                false, AuthenticationType.FACEBOOK);
         Person person = new Person((String) fbProfileData.get("first_name"), (String) fbProfileData.get("last_name"),
                 ImageType.LINK, (String) fbProfileData.get("picture"));
         userRepository.save(new User(account, person, new Folder()));
