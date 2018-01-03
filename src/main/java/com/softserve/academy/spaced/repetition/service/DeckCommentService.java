@@ -47,7 +47,6 @@ public interface DeckCommentService {
      * Delete comments to the deck with the given identifier
      *
      * @param commentId must not be {@literal null}
-     * @return true if operation is successful
      */
 
     void deleteCommentById(Long commentId);
