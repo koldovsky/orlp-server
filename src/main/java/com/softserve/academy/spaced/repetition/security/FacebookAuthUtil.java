@@ -45,10 +45,10 @@ public class FacebookAuthUtil {
         String graph = null;
 
         try {
-            String g = "https://graph.facebook.com/me?fields=id,first_name,last_name,email,picture&access_token="
+            String facebookGraph = "https://graph.facebook.com/me?fields=id,first_name,last_name,email,picture&access_token="
                     + accessToken;
 
-            URL url = new URL(g);
+            URL url = new URL(facebookGraph);
 
             URLConnection urlConnection = url.openConnection();
 
