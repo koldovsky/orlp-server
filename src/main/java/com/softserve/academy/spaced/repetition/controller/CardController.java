@@ -1,5 +1,6 @@
 package com.softserve.academy.spaced.repetition.controller;
 
+import com.softserve.academy.spaced.repetition.controller.utils.dto.impl.CardDTO;
 import com.softserve.academy.spaced.repetition.utils.audit.Auditable;
 import com.softserve.academy.spaced.repetition.utils.audit.AuditingAction;
 import com.softserve.academy.spaced.repetition.domain.Card;
@@ -103,8 +104,16 @@ public class CardController {
     @Auditable(action = AuditingAction.CREATE_CARD_VIA_CATEGORY_AND_DECK)
     @PostMapping(value = "/api/category/{categoryId}/decks/{deckId}/cards")
     @PreAuthorize(value = "@accessToUrlService.hasAccessToDeckFromCategory(#categoryId, #deckId)")
-    public ResponseEntity<CardPublicDTO> addCardByCategoryAndDeck(@Validated(Request.class) @RequestBody Card card, @PathVariable Long categoryId, @PathVariable Long deckId, @RequestParam MultipartFile image) {
+    public ResponseEntity<CardPublicDTO> addCardByCategoryAndDeck(@RequestParam MultipartFile image,
+                                                                  @RequestParam String title,
+                                                                  @RequestParam String question,
+                                                                  @RequestParam String answer,
+                                                                  @PathVariable Long categoryId, @PathVariable Long deckId) {
         LOGGER.debug("Add card to categoryId: {}, deckId: {}", categoryId, deckId);
+        Card card = new Card();
+        card.setTitle(title);
+        card.setAnswer(answer);
+        card.setQuestion(question);
         cardService.addCard(card, deckId, image);
         Link selfLink = linkTo(methodOn(CardController.class).getCardByCategoryAndDeck(categoryId, deckId, card.getId())).withSelfRel();
         CardPublicDTO cardPublicDTO = DTOBuilder.buildDtoForEntity(card, CardPublicDTO.class, selfLink);

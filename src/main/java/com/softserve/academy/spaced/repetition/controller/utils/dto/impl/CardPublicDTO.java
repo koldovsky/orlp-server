@@ -11,18 +11,28 @@ public class CardPublicDTO extends DTO<Card> {
         super(card, link);
     }
 
-    public Long getCardId() { return getEntity().getId(); }
+    public Long getCardId() {
+        return getEntity().getId();
+    }
 
     public String getAnswer() {
         return getEntity().getAnswer();
     }
 
-    public String getQuestion() { return getEntity().getQuestion();}
+    public String getQuestion() {
+        return getEntity().getQuestion();
+    }
 
-    public String getTitle() { return getEntity().getTitle(); }
+    public String getTitle() {
+        return getEntity().getTitle();
+    }
 
-    public double getRating(){
+    public double getRating() {
         return getEntity().getRating();
+    }
+
+    public String getImage() {
+        return getEntity().getImageBase64();
     }
 
 }
