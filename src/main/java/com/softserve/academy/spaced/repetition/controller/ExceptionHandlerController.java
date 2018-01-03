@@ -1,9 +1,9 @@
 package com.softserve.academy.spaced.repetition.controller;
 
-import com.softserve.academy.spaced.repetition.domain.enums.AccountStatus;
 import com.softserve.academy.spaced.repetition.controller.utils.dto.FieldErrorDTO;
 import com.softserve.academy.spaced.repetition.controller.utils.dto.ValidationMessageDTO;
 import com.softserve.academy.spaced.repetition.controller.utils.dto.impl.MessageDTO;
+import com.softserve.academy.spaced.repetition.domain.enums.AccountStatus;
 import com.softserve.academy.spaced.repetition.utils.exceptions.*;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;

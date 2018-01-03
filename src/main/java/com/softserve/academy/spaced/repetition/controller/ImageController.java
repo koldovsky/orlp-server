@@ -1,17 +1,17 @@
 package com.softserve.academy.spaced.repetition.controller;
 
-import com.softserve.academy.spaced.repetition.utils.audit.Auditable;
-import com.softserve.academy.spaced.repetition.utils.audit.AuditingAction;
-import com.softserve.academy.spaced.repetition.domain.Image;
 import com.softserve.academy.spaced.repetition.controller.utils.dto.DTOBuilder;
 import com.softserve.academy.spaced.repetition.controller.utils.dto.impl.ImageDTO;
 import com.softserve.academy.spaced.repetition.controller.utils.dto.impl.UploadingImageDTO;
+import com.softserve.academy.spaced.repetition.domain.Image;
+import com.softserve.academy.spaced.repetition.repository.ImageRepository;
+import com.softserve.academy.spaced.repetition.service.ImageService;
+import com.softserve.academy.spaced.repetition.utils.audit.Auditable;
+import com.softserve.academy.spaced.repetition.utils.audit.AuditingAction;
 import com.softserve.academy.spaced.repetition.utils.exceptions.CanNotBeDeletedException;
 import com.softserve.academy.spaced.repetition.utils.exceptions.ImageRepositorySizeQuotaExceededException;
 import com.softserve.academy.spaced.repetition.utils.exceptions.NotAuthorisedUserException;
 import com.softserve.academy.spaced.repetition.utils.exceptions.NotOwnerOperationException;
-import com.softserve.academy.spaced.repetition.repository.ImageRepository;
-import com.softserve.academy.spaced.repetition.service.ImageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Link;
 import org.springframework.http.HttpStatus;
@@ -105,7 +105,8 @@ public class ImageController {
      * @return - HttpStatus.OK if the operation of deleting was made successfull
      * @throws NotAuthorisedUserException - is dropping when the user which wants to delete the image is not authorised
      * @throws CanNotBeDeletedException   - is dropping when the image which we want to delete is already in use
-     * @throws NotOwnerOperationException - is dropping when the the image which we want to delete not belongs to us as to owner
+     * @throws NotOwnerOperationException - is dropping when the the image which we want to delete not belongs to us as
+     *                                    to owner
      */
     @Auditable(action = AuditingAction.DELETE_IMAGE)
     @DeleteMapping(value = "/api/service/image/{id}")
