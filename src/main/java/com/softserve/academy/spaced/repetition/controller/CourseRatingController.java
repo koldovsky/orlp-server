@@ -1,21 +1,19 @@
 package com.softserve.academy.spaced.repetition.controller;
 
-import com.softserve.academy.spaced.repetition.controller.utils.dto.Request;
-import com.softserve.academy.spaced.repetition.domain.CourseRating;
 import com.softserve.academy.spaced.repetition.controller.utils.dto.DTOBuilder;
 import com.softserve.academy.spaced.repetition.controller.utils.dto.RatingDTO;
+import com.softserve.academy.spaced.repetition.controller.utils.dto.Request;
 import com.softserve.academy.spaced.repetition.controller.utils.dto.impl.CourseRatingPublicDTO;
+import com.softserve.academy.spaced.repetition.domain.CourseRating;
+import com.softserve.academy.spaced.repetition.service.CourseRatingService;
 import com.softserve.academy.spaced.repetition.utils.exceptions.NotAuthorisedUserException;
 import com.softserve.academy.spaced.repetition.utils.exceptions.UserStatusException;
-import com.softserve.academy.spaced.repetition.service.CourseRatingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Link;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;

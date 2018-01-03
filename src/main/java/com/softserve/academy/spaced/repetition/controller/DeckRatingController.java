@@ -1,13 +1,13 @@
 package com.softserve.academy.spaced.repetition.controller;
 
-import com.softserve.academy.spaced.repetition.controller.utils.dto.Request;
-import com.softserve.academy.spaced.repetition.domain.DeckRating;
 import com.softserve.academy.spaced.repetition.controller.utils.dto.DTOBuilder;
 import com.softserve.academy.spaced.repetition.controller.utils.dto.RatingDTO;
+import com.softserve.academy.spaced.repetition.controller.utils.dto.Request;
 import com.softserve.academy.spaced.repetition.controller.utils.dto.impl.DeckRatingPublicDTO;
+import com.softserve.academy.spaced.repetition.domain.DeckRating;
+import com.softserve.academy.spaced.repetition.service.DeckRatingService;
 import com.softserve.academy.spaced.repetition.utils.exceptions.NotAuthorisedUserException;
 import com.softserve.academy.spaced.repetition.utils.exceptions.UserStatusException;
-import com.softserve.academy.spaced.repetition.service.DeckRatingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Link;
 import org.springframework.http.HttpStatus;

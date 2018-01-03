@@ -179,8 +179,8 @@ public class CardController {
     }
 
     @GetMapping("/api/category/{categoryId}/decks/{deckId}/learn/cards")
-    public ResponseEntity<List<CardPublicDTO>> getLearningCards(@PathVariable long categoryId,
-                                                                @PathVariable long deckId) throws NotAuthorisedUserException {
+    public ResponseEntity<List<CardPublicDTO>> getLearningCards(@PathVariable long categoryId, @PathVariable long deckId)
+            throws NotAuthorisedUserException {
         List<Card> learningCards = cardService.getCardsQueue(deckId);
         Link collectionLink = linkTo(methodOn(DeckController.class)
                 .getCardsByCategoryAndDeck(categoryId, deckId)).withSelfRel();

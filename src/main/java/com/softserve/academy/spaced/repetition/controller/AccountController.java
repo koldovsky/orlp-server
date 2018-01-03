@@ -61,8 +61,8 @@ public class AccountController {
     }
 
     @PutMapping("api/private/account/remembering-levels/{levelId}")
-    public ResponseEntity updateRememberingLevel(@PathVariable Long levelId,
-                                                 @RequestBody String numberOfPostponedDays) throws NotAuthorisedUserException {
+    public ResponseEntity updateRememberingLevel(@PathVariable Long levelId, @RequestBody String numberOfPostponedDays)
+            throws NotAuthorisedUserException {
         accountService.updateRememberingLevel(levelId, Integer.parseInt(numberOfPostponedDays));
         return ResponseEntity.ok().build();
     }

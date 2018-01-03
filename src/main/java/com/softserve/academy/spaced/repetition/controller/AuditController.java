@@ -1,8 +1,8 @@
 package com.softserve.academy.spaced.repetition.controller;
 
-import com.softserve.academy.spaced.repetition.domain.Audit;
 import com.softserve.academy.spaced.repetition.controller.utils.dto.DTOBuilder;
 import com.softserve.academy.spaced.repetition.controller.utils.dto.impl.AuditPublicDTO;
+import com.softserve.academy.spaced.repetition.domain.Audit;
 import com.softserve.academy.spaced.repetition.service.AuditService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -30,7 +30,8 @@ public class AuditController {
      * @return - list of audit
      */
     @GetMapping("api/admin/audit")
-    public ResponseEntity<Page<AuditPublicDTO>> getFullAuditList(@RequestParam(name = "p", defaultValue = "1") int pageNumber,
+    public ResponseEntity<Page<AuditPublicDTO>> getFullAuditList(@RequestParam(name = "p", defaultValue = "1")
+                                                                         int pageNumber,
                                                                  @RequestParam(name = "sortBy") String sortBy,
                                                                  @RequestParam(name = "asc") boolean ascending) {
         Page<AuditPublicDTO> auditPublicDTOS = auditService.getAuditByPage(pageNumber, sortBy, ascending).map((audit) -> {

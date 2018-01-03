@@ -36,11 +36,11 @@ public class DeckController {
     @Auditable(action = AuditingAction.VIEW_DECKS_VIA_CATEGORY)
     @GetMapping(value = "/api/category/{categoryId}/decks")
     @PreAuthorize(value = "@accessToUrlService.hasAccessToDeck(#categoryId)")
-    public ResponseEntity<Page<DeckLinkByCategoryDTO>> getAllDecksByCategoryId(
-            @PathVariable Long categoryId,
-            @RequestParam(name = "p", defaultValue = "1") int pageNumber,
-            @RequestParam(name = "sortBy") String sortBy,
-            @RequestParam(name = "asc") boolean ascending) {
+    public ResponseEntity<Page<DeckLinkByCategoryDTO>> getAllDecksByCategoryId(@PathVariable Long categoryId,
+                                                                               @RequestParam(name = "p", defaultValue = "1")
+                                                                                       int pageNumber,
+                                                                               @RequestParam(name = "sortBy") String sortBy,
+                                                                               @RequestParam(name = "asc") boolean ascending) {
         Page<DeckLinkByCategoryDTO> deckByCategoryDTOS = deckService
                 .getPageWithDecksByCategory(categoryId, pageNumber, sortBy, ascending).map((deck) -> {
                     Link selfLink = linkTo(methodOn(DeckController.class)
@@ -167,10 +167,10 @@ public class DeckController {
 
     @Auditable(action = AuditingAction.VIEW_DECKS_ADMIN)
     @GetMapping(value = "/api/admin/decks")
-    public ResponseEntity<Page<DeckOfUserManagedByAdminDTO>> getAllDecksForAdmin(
-            @RequestParam(name = "p", defaultValue = "1") int pageNumber,
-            @RequestParam(name = "sortBy") String sortBy,
-            @RequestParam(name = "asc") boolean ascending) {
+    public ResponseEntity<Page<DeckOfUserManagedByAdminDTO>> getAllDecksForAdmin(@RequestParam(name = "p", defaultValue = "1")
+                                                                                         int pageNumber,
+                                                                                 @RequestParam(name = "sortBy") String sortBy,
+                                                                                 @RequestParam(name = "asc") boolean ascending) {
         Page<DeckOfUserManagedByAdminDTO> deckOfUserManagedByAdminDTO = deckService
                 .getPageWithAllAdminDecks(pageNumber, sortBy, ascending).map((deck) -> {
                     Link selfLink = linkTo(methodOn(DeckController.class).getOneDeckForAdmin(deck.getId())).withSelfRel();
@@ -191,8 +191,8 @@ public class DeckController {
 
     @Auditable(action = AuditingAction.CREATE_DECK_ADMIN)
     @PostMapping(value = "/api/admin/decks")
-    public ResponseEntity<DeckOfUserManagedByAdminDTO> addDeckForAdmin(
-            @Validated(Request.class) @RequestBody Deck deck) throws NotAuthorisedUserException {
+    public ResponseEntity<DeckOfUserManagedByAdminDTO> addDeckForAdmin(@Validated(Request.class) @RequestBody Deck deck)
+            throws NotAuthorisedUserException {
         Deck deckNew = deckService.createNewDeckAdmin(deck);
         folderService.addDeck(deckNew.getId());
         Link selfLink = linkTo(methodOn(DeckController.class).getOneDeckForAdmin(deckNew.getId())).withSelfRel();
@@ -233,9 +233,9 @@ public class DeckController {
 
     @Auditable(action = AuditingAction.CREATE_DECK_USER)
     @PostMapping(value = "/api/private/category/{categoryId}/decks")
-    public ResponseEntity<DeckPrivateDTO> addDeckForUser(
-            @Validated(Request.class) @RequestBody Deck deck,
-            @PathVariable Long categoryId) throws NotAuthorisedUserException, NotOwnerOperationException {
+    public ResponseEntity<DeckPrivateDTO> addDeckForUser(@Validated(Request.class) @RequestBody Deck deck,
+                                                         @PathVariable Long categoryId)
+            throws NotAuthorisedUserException, NotOwnerOperationException {
         deckService.createNewDeck(deck, categoryId);
         folderService.addDeck(deck.getId());
         Link selfLink = linkTo(methodOn(DeckController.class).getOneDeckForUser(deck.getId())).withSelfRel();
@@ -245,10 +245,10 @@ public class DeckController {
 
     @Auditable(action = AuditingAction.EDIT_DECK_USER)
     @PutMapping(value = "/api/private/category/{categoryId}/deck/{deckId}")
-    public ResponseEntity<DeckPrivateDTO> updateDeckForUser(
-            @Validated(Request.class) @RequestBody Deck deck,
-            @PathVariable Long deckId,
-            @PathVariable Long categoryId) throws NotAuthorisedUserException, NotOwnerOperationException {
+    public ResponseEntity<DeckPrivateDTO> updateDeckForUser(@Validated(Request.class) @RequestBody Deck deck,
+                                                            @PathVariable Long deckId,
+                                                            @PathVariable Long categoryId)
+            throws NotAuthorisedUserException, NotOwnerOperationException {
         Deck updatedDeck = deckService.updateOwnDeck(deck, deckId, categoryId);
         Link selfLink = linkTo(methodOn(DeckController.class).getOneDeckForUser(updatedDeck.getId())).withSelfRel();
         DeckPrivateDTO deckDTO = DTOBuilder.buildDtoForEntity(updatedDeck, DeckPrivateDTO.class, selfLink);
