@@ -50,8 +50,8 @@ public class FolderController {
         List<Deck> deckList = folderService.getAllDecksByFolderId(folderId);
 
         Link collectionLink = linkTo(methodOn(FolderController.class).getAllDecksWithFolder(folderId)).withSelfRel();
-        List<DeckLinkByFolderDTO> decks = DTOBuilder.buildDtoListForCollection(deckList, DeckLinkByFolderDTO.class,
-                collectionLink);
+        List<DeckLinkByFolderDTO> decks = DTOBuilder
+                .buildDtoListForCollection(deckList, DeckLinkByFolderDTO.class, collectionLink);
 
         return new ResponseEntity<>(decks, HttpStatus.OK);
     }

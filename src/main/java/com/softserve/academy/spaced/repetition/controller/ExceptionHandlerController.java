@@ -32,11 +32,11 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
             ResponseEntity<MessageDTO>> USER_STATUS_ERROR_RESPONSE = new EnumMap<>(AccountStatus.class);
 
     static {
-        USER_STATUS_ERROR_RESPONSE
-                .put(AccountStatus.DELETED, new ResponseEntity<>(new MessageDTO("Account with this email is deleted"),
+        USER_STATUS_ERROR_RESPONSE.put(AccountStatus.DELETED,
+                new ResponseEntity<>(new MessageDTO("Account with this email is deleted"),
                         HttpStatus.LOCKED));
-        USER_STATUS_ERROR_RESPONSE
-                .put(AccountStatus.BLOCKED, new ResponseEntity<>(new MessageDTO("Account with this email is blocked"),
+        USER_STATUS_ERROR_RESPONSE.put(AccountStatus.BLOCKED,
+                new ResponseEntity<>(new MessageDTO("Account with this email is blocked"),
                         HttpStatus.FORBIDDEN));
     }
 

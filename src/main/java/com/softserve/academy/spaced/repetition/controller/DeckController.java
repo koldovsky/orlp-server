@@ -67,8 +67,8 @@ public class DeckController {
         List<Deck> decksList = deckService.getAllDecks(courseId);
         Link collectionLink = linkTo(methodOn(DeckController.class)
                 .getAllDecksByCourseId(categoryId, courseId)).withRel("course");
-        List<DeckLinkByCourseDTO> decks = DTOBuilder.buildDtoListForCollection(decksList,
-                DeckLinkByCourseDTO.class, collectionLink);
+        List<DeckLinkByCourseDTO> decks = DTOBuilder
+                .buildDtoListForCollection(decksList, DeckLinkByCourseDTO.class, collectionLink);
         return new ResponseEntity<>(decks, HttpStatus.OK);
     }
 
@@ -184,8 +184,8 @@ public class DeckController {
     public ResponseEntity<DeckOfUserManagedByAdminDTO> getOneDeckForAdmin(@PathVariable Long deckId) {
         Deck deck = deckService.getDeck(deckId);
         Link selfLink = linkTo(methodOn(DeckController.class).getOneDeckForAdmin(deckId)).withSelfRel();
-        DeckOfUserManagedByAdminDTO deckOfUserManagedByAdminDTO = DTOBuilder.buildDtoForEntity(deck,
-                DeckOfUserManagedByAdminDTO.class, selfLink);
+        DeckOfUserManagedByAdminDTO deckOfUserManagedByAdminDTO = DTOBuilder
+                .buildDtoForEntity(deck, DeckOfUserManagedByAdminDTO.class, selfLink);
         return new ResponseEntity<>(deckOfUserManagedByAdminDTO, HttpStatus.OK);
     }
 
@@ -196,8 +196,8 @@ public class DeckController {
         Deck deckNew = deckService.createNewDeckAdmin(deck);
         folderService.addDeck(deckNew.getId());
         Link selfLink = linkTo(methodOn(DeckController.class).getOneDeckForAdmin(deckNew.getId())).withSelfRel();
-        DeckOfUserManagedByAdminDTO deckOfUserManagedByAdminDTO = DTOBuilder.buildDtoForEntity(deckNew,
-                DeckOfUserManagedByAdminDTO.class, selfLink);
+        DeckOfUserManagedByAdminDTO deckOfUserManagedByAdminDTO = DTOBuilder
+                .buildDtoForEntity(deckNew, DeckOfUserManagedByAdminDTO.class, selfLink);
         return new ResponseEntity<>(deckOfUserManagedByAdminDTO, HttpStatus.CREATED);
     }
 
@@ -207,8 +207,8 @@ public class DeckController {
                                              @PathVariable Long deckId) {
         Deck updatedDeck = deckService.updateDeckAdmin(deck, deckId);
         Link selfLink = linkTo(methodOn(DeckController.class).getOneDeckForAdmin(updatedDeck.getId())).withSelfRel();
-        DeckOfUserManagedByAdminDTO deckOfUserManagedByAdminDTO = DTOBuilder.buildDtoForEntity(updatedDeck,
-                DeckOfUserManagedByAdminDTO.class, selfLink);
+        DeckOfUserManagedByAdminDTO deckOfUserManagedByAdminDTO = DTOBuilder
+                .buildDtoForEntity(updatedDeck, DeckOfUserManagedByAdminDTO.class, selfLink);
         return new ResponseEntity<>(deckOfUserManagedByAdminDTO, HttpStatus.OK);
     }
 
@@ -227,8 +227,8 @@ public class DeckController {
         deckService.deleteOwnDeck(deckId);
         List<Deck> decksList = deckService.getAllDecksByUser();
         Link collectionLink = linkTo(methodOn(DeckController.class).getAllDecksForUser()).withSelfRel();
-        List<DeckPrivateDTO> decks = DTOBuilder.buildDtoListForCollection(decksList,
-                DeckPrivateDTO.class, collectionLink);
+        List<DeckPrivateDTO> decks = DTOBuilder
+                .buildDtoListForCollection(decksList, DeckPrivateDTO.class, collectionLink);
         return new ResponseEntity<>(decks, HttpStatus.OK);
     }
 
@@ -261,8 +261,8 @@ public class DeckController {
     public ResponseEntity<List<DeckPrivateDTO>> getAllDecksForUser() throws NotAuthorisedUserException {
         List<Deck> decksList = deckService.getAllDecksByUser();
         Link collectionLink = linkTo(methodOn(DeckController.class).getAllDecksForUser()).withSelfRel();
-        List<DeckPrivateDTO> decks = DTOBuilder.buildDtoListForCollection(decksList,
-                DeckPrivateDTO.class, collectionLink);
+        List<DeckPrivateDTO> decks = DTOBuilder
+                .buildDtoListForCollection(decksList, DeckPrivateDTO.class, collectionLink);
         return new ResponseEntity<>(decks, HttpStatus.OK);
     }
 

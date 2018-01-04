@@ -66,8 +66,8 @@ public class CourseController {
     public ResponseEntity<List<CourseLinkDTO>> getAllCoursesOrderByRating() {
         List<Course> courseList = courseService.getAllOrderedCourses();
         Link collectionLink = linkTo(methodOn(CourseController.class).getAllCoursesOrderByRating()).withRel("course");
-        List<CourseLinkDTO> decks = DTOBuilder.buildDtoListForCollection(courseList,
-                CourseLinkDTO.class, collectionLink);
+        List<CourseLinkDTO> decks = DTOBuilder
+                .buildDtoListForCollection(courseList, CourseLinkDTO.class, collectionLink);
         return new ResponseEntity<>(decks, HttpStatus.OK);
     }
 
@@ -77,8 +77,8 @@ public class CourseController {
         List<Course> courseList = courseService.getTopCourse();
         List<CourseLinkDTO> courses = new ArrayList<>();
         for (Course course : courseList) {
-            Link selfLink = linkTo(methodOn(CourseController.class).getCourseById(course.getCategory().getId(),
-                    course.getId())).withSelfRel();
+            Link selfLink = linkTo(methodOn(CourseController.class)
+                    .getCourseById(course.getCategory().getId(), course.getId())).withSelfRel();
             courses.add(DTOBuilder.buildDtoForEntity(course, CourseLinkDTO.class, selfLink));
         }
         return new ResponseEntity<>(courses, HttpStatus.OK);

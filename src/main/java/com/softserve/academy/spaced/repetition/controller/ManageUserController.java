@@ -71,8 +71,8 @@ public class ManageUserController {
     public ResponseEntity<UserManagedByAdminDTO> setUsersStatusBlocked(@PathVariable Long id) {
         User userWithChangedStatus = userService.setUsersStatusBlocked(id);
         Link link = linkTo(methodOn(ManageUserController.class).setUsersStatusBlocked(id)).withSelfRel();
-        UserManagedByAdminDTO userManagedByAdminDTO = DTOBuilder.buildDtoForEntity(userWithChangedStatus,
-                UserManagedByAdminDTO.class, link);
+        UserManagedByAdminDTO userManagedByAdminDTO = DTOBuilder
+                .buildDtoForEntity(userWithChangedStatus, UserManagedByAdminDTO.class, link);
         return new ResponseEntity<>(userManagedByAdminDTO, HttpStatus.OK);
     }
 
@@ -87,8 +87,8 @@ public class ManageUserController {
     public ResponseEntity<UserManagedByAdminDTO> setUsersStatusDeleted(@PathVariable Long id) {
         User userWithChangedStatus = userService.setUsersStatusDeleted(id);
         Link link = linkTo(methodOn(ManageUserController.class).setUsersStatusDeleted(id)).withSelfRel();
-        UserManagedByAdminDTO userManagedByAdminDTO = DTOBuilder.buildDtoForEntity(userWithChangedStatus,
-                UserManagedByAdminDTO.class, link);
+        UserManagedByAdminDTO userManagedByAdminDTO = DTOBuilder
+                .buildDtoForEntity(userWithChangedStatus, UserManagedByAdminDTO.class, link);
         return new ResponseEntity<>(userManagedByAdminDTO, HttpStatus.OK);
     }
 
@@ -103,8 +103,8 @@ public class ManageUserController {
     public ResponseEntity<UserManagedByAdminDTO> setUsersStatusActive(@PathVariable Long id) {
         User userWithChangedStatus = userService.setUsersStatusActive(id);
         Link link = linkTo(methodOn(ManageUserController.class).setUsersStatusActive(id)).withSelfRel();
-        UserManagedByAdminDTO userManagedByAdminDTO = DTOBuilder.buildDtoForEntity(userWithChangedStatus,
-                UserManagedByAdminDTO.class, link);
+        UserManagedByAdminDTO userManagedByAdminDTO = DTOBuilder
+                .buildDtoForEntity(userWithChangedStatus, UserManagedByAdminDTO.class, link);
         return new ResponseEntity<>(userManagedByAdminDTO, HttpStatus.OK);
     }
 

@@ -35,8 +35,8 @@ public class CategoryController {
     public ResponseEntity<List<CategoryLinkDTO>> getAllCategories() {
         List<Category> categoryList = categoryService.getAllCategory();
         Link collectionLink = linkTo(methodOn(CategoryController.class).getAllCategories()).withRel("category");
-        List<CategoryLinkDTO> categories = DTOBuilder.buildDtoListForCollection(categoryList,
-                CategoryLinkDTO.class, collectionLink);
+        List<CategoryLinkDTO> categories = DTOBuilder
+                .buildDtoListForCollection(categoryList, CategoryLinkDTO.class, collectionLink);
         return new ResponseEntity<>(categories, HttpStatus.OK);
     }
 
@@ -55,8 +55,8 @@ public class CategoryController {
     public ResponseEntity<List<CategoryTopDTO>> getTopCategories() {
         List<Category> categoryList = categoryService.getTopCategory();
         Link collectionLink = linkTo(methodOn(CategoryController.class).getAllCategories()).withSelfRel();
-        List<CategoryTopDTO> categories = DTOBuilder.buildDtoListForCollection(categoryList,
-                CategoryTopDTO.class, collectionLink);
+        List<CategoryTopDTO> categories = DTOBuilder
+                .buildDtoListForCollection(categoryList, CategoryTopDTO.class, collectionLink);
         return new ResponseEntity<>(categories, HttpStatus.OK);
     }
 
