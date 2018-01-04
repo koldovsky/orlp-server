@@ -1,14 +1,14 @@
 package com.softserve.academy.spaced.repetition.controller;
 
-import com.softserve.academy.spaced.repetition.domain.enums.LearningRegime;
-import com.softserve.academy.spaced.repetition.domain.RememberingLevel;
 import com.softserve.academy.spaced.repetition.controller.utils.dto.DTOBuilder;
 import com.softserve.academy.spaced.repetition.controller.utils.dto.Request;
 import com.softserve.academy.spaced.repetition.controller.utils.dto.impl.NewAccountPasswordDTO;
 import com.softserve.academy.spaced.repetition.controller.utils.dto.impl.RememberingLevelDTO;
-import com.softserve.academy.spaced.repetition.utils.exceptions.NotAuthorisedUserException;
+import com.softserve.academy.spaced.repetition.domain.RememberingLevel;
+import com.softserve.academy.spaced.repetition.domain.enums.LearningRegime;
 import com.softserve.academy.spaced.repetition.service.AccountService;
 import com.softserve.academy.spaced.repetition.service.AccountVerificationByEmailService;
+import com.softserve.academy.spaced.repetition.utils.exceptions.NotAuthorisedUserException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,8 +61,8 @@ public class AccountController {
     }
 
     @PutMapping("api/private/account/remembering-levels/{levelId}")
-    public ResponseEntity updateRememberingLevel(@PathVariable Long levelId,
-                                                 @RequestBody String numberOfPostponedDays) throws NotAuthorisedUserException {
+    public ResponseEntity updateRememberingLevel(@PathVariable Long levelId, @RequestBody String numberOfPostponedDays)
+            throws NotAuthorisedUserException {
         accountService.updateRememberingLevel(levelId, Integer.parseInt(numberOfPostponedDays));
         return ResponseEntity.ok().build();
     }
@@ -82,7 +82,8 @@ public class AccountController {
     }
 
     @PutMapping(value = "api/create/password")
-    public ResponseEntity createNewPasswordForUser(@Validated(Request.class) @RequestBody NewAccountPasswordDTO newAccountPasswordDTO) {
+    public ResponseEntity createNewPasswordForUser(@Validated(Request.class) @RequestBody
+                                                               NewAccountPasswordDTO newAccountPasswordDTO) {
         LOGGER.debug("Created new password for: {}", newAccountPasswordDTO.getEmail());
         accountService.createNewAccountPassword(newAccountPasswordDTO.getEmail(), newAccountPasswordDTO.getPassword());
         return ResponseEntity.ok().build();
