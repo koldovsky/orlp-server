@@ -11,11 +11,11 @@ import java.util.List;
  */
 public interface DeckCommentService {
     /**
-     * Adds the comment to decks or answer to comment if @param parentCommentId is null.
+     * Adds the comment to decks or answer to comment if @param parentCommentId is not null.
      *
      * @param deckId          - decks id, must not be {@literal null}.
      * @param commentText     - text of the comment, must not be {null}.
-     * @param parentCommentId -  id of the comment on which the answer is given.
+     * @param parentCommentId - id of the comment on which the answer is given.
      * @return the comment or answer to comment.
      * @throws NotAuthorisedUserException - if unauthorized user writes comments.
      */
@@ -39,7 +39,7 @@ public interface DeckCommentService {
     List<Comment> getAllCommentsForDeck(Long deckId);
 
     /**
-     * Updates comment with the given identifier with the new text
+     * Updates comment with the given identifier with the new text.
      *
      * @param commentId   - comments id which will be update, must not be {@literal null}.
      * @param commentText - new text which will be set, must not be {null}.
@@ -49,7 +49,7 @@ public interface DeckCommentService {
     DeckComment updateCommentById(Long commentId, String commentText);
 
     /**
-     * Deletes comment to the deck with the given identifier
+     * Deletes comment to the deck with the given identifier.
      *
      * @param commentId - comments id which will be delete, must not be {@literal null}
      */
