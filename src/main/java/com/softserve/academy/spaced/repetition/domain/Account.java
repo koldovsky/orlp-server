@@ -1,10 +1,10 @@
 package com.softserve.academy.spaced.repetition.domain;
 
+import com.softserve.academy.spaced.repetition.controller.utils.dto.EntityInterface;
+import com.softserve.academy.spaced.repetition.controller.utils.dto.Request;
 import com.softserve.academy.spaced.repetition.domain.enums.AccountStatus;
 import com.softserve.academy.spaced.repetition.domain.enums.AuthenticationType;
 import com.softserve.academy.spaced.repetition.domain.enums.LearningRegime;
-import com.softserve.academy.spaced.repetition.controller.utils.dto.EntityInterface;
-import com.softserve.academy.spaced.repetition.controller.utils.dto.Request;
 import com.softserve.academy.spaced.repetition.utils.validators.EmailNotExist;
 
 import javax.persistence.*;
@@ -84,7 +84,8 @@ public class Account implements EntityInterface {
         this.email = email;
     }
 
-    public Account(String password, String email, Date lastPasswordResetDate, Set<Authority> authorities, AccountStatus accountStatus) {
+    public Account(String password, String email, Date lastPasswordResetDate,
+                   Set<Authority> authorities, AccountStatus accountStatus) {
         this.password = password;
         this.email = email;
         this.lastPasswordResetDate = lastPasswordResetDate;

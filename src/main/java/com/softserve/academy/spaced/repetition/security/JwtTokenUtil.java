@@ -49,7 +49,8 @@ public class JwtTokenUtil {
                     .setSigningKey(secret)
                     .parseClaimsJws(token)
                     .getBody();
-        } catch (ExpiredJwtException | MalformedJwtException | SignatureException | IllegalArgumentException | UnsupportedJwtException e) {
+        } catch (ExpiredJwtException | MalformedJwtException |
+                SignatureException | IllegalArgumentException | UnsupportedJwtException e) {
             claims = null;
         }
         return claims;
