@@ -83,7 +83,7 @@ public class AccountController {
 
     @PutMapping(value = "api/create/password")
     public ResponseEntity createNewPasswordForUser(@Validated(Request.class) @RequestBody
-                                                           NewAccountPasswordDTO newAccountPasswordDTO) {
+                                                               NewAccountPasswordDTO newAccountPasswordDTO) {
         LOGGER.debug("Created new password for: {}", newAccountPasswordDTO.getEmail());
         accountService.createNewAccountPassword(newAccountPasswordDTO.getEmail(), newAccountPasswordDTO.getPassword());
         return ResponseEntity.ok().build();
