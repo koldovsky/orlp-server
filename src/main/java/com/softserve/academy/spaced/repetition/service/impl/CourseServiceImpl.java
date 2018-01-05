@@ -11,6 +11,8 @@ import com.softserve.academy.spaced.repetition.service.CourseService;
 import com.softserve.academy.spaced.repetition.service.ImageService;
 import com.softserve.academy.spaced.repetition.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -18,6 +20,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
 @Service
@@ -40,6 +43,10 @@ public class CourseServiceImpl implements CourseService {
     private CategoryRepository categoryRepository;
 
     private DeckRepository deckRepository;
+
+    @Autowired
+    private MessageSource messageSource;
+    private final Locale locale = LocaleContextHolder.getLocale();
 
     @Autowired
     public void setCourseRepository(CourseRepository courseRepository) {
@@ -203,7 +210,8 @@ public class CourseServiceImpl implements CourseService {
     public void addDeckToCourse(Long courseId, Long deckId) {
         Course course = courseRepository.findOne(courseId);
         if (course.getDecks().stream().anyMatch(deck -> deck.getId().equals(deckId))) {
-            throw new IllegalArgumentException("Such deck already exists");
+            throw new IllegalArgumentException(messageSource.getMessage("exception.message.deck.already.exists",
+                    new Object[]{}, locale));
         }
         course.getDecks().add(deckRepository.getDeckById(deckId));
         courseRepository.save(course);

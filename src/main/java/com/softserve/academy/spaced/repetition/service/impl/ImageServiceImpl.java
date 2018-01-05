@@ -12,12 +12,16 @@ import com.softserve.academy.spaced.repetition.service.ImageService;
 import com.softserve.academy.spaced.repetition.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartException;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Service for processing images
@@ -32,6 +36,10 @@ public class ImageServiceImpl implements ImageService {
     private Long maxFileSize;
     @Value("${app.images.userQuote}")
     private Long userQuote;
+
+    @Autowired
+    private MessageSource messageSource;
+    private final Locale locale = LocaleContextHolder.getLocale();
 
     /**
      * Adds image to the database
@@ -64,11 +72,13 @@ public class ImageServiceImpl implements ImageService {
             throw new ImageRepositorySizeQuotaExceededException();
         }
         if (fileSize > maxFileSize) {
-            throw new MultipartException("File upload error: file is too large.");
+            throw new MultipartException(messageSource.getMessage("exception.message.image.file.size.too.large",
+                    new Object[]{}, locale));
         } else {
             String imageType = file.getContentType();
             if (imageType == null || !imageType.split("/")[0].equalsIgnoreCase("image")) {
-                throw new IllegalArgumentException("File upload error: file is not an image");
+                throw new IllegalArgumentException(messageSource.getMessage("exception.message.image.file.wrong.format",
+                        new Object[]{}, locale));
             }
         }
     }

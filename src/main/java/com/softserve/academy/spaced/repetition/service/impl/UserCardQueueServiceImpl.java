@@ -9,11 +9,14 @@ import com.softserve.academy.spaced.repetition.repository.UserCardQueueRepositor
 import com.softserve.academy.spaced.repetition.service.UserCardQueueService;
 import com.softserve.academy.spaced.repetition.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
 import java.util.Date;
+import java.util.Locale;
 
 import static com.softserve.academy.spaced.repetition.service.impl.AccountServiceImpl.NUMBER_OF_REMEMBERING_LEVELS;
 
@@ -23,6 +26,10 @@ public class UserCardQueueServiceImpl implements UserCardQueueService {
     private final UserCardQueueRepository userCardQueueRepository;
     private final UserService userService;
     private final RememberingLevelRepository rememberingLevelRepository;
+
+    @Autowired
+    private MessageSource messageSource;
+    private final Locale locale = LocaleContextHolder.getLocale();
 
     @Autowired
     public UserCardQueueServiceImpl(UserCardQueueRepository userCardQueueRepository, UserService userService,
@@ -41,7 +48,8 @@ public class UserCardQueueServiceImpl implements UserCardQueueService {
                 .anyMatch(UserCardQueueStatus.valueOf(status)::equals);
 
         if(!userCardQueueStatusFound) {
-            throw new IllegalArgumentException("Value of User Card Queue Status is not valid: " + status);
+            throw new IllegalArgumentException(messageSource.getMessage("exception.message.user.card.queue.status.not.valid",
+                    new Object[]{status}, locale));
         }
 
         UserCardQueueStatus userCardQueueStatus = UserCardQueueStatus.valueOf(status);
