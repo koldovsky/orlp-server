@@ -33,14 +33,14 @@ import java.util.stream.Collectors;
 public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
 
     @Autowired
-    private static MessageSource messageSource;
-    private static final Locale locale = LocaleContextHolder.getLocale();
+    private MessageSource messageSource;
+    private final Locale locale = LocaleContextHolder.getLocale();
 
     private static final EnumMap<AccountStatus, ResponseEntity<MessageDTO>> USER_STATUS_ERROR_RESPONSE = new EnumMap<>(AccountStatus.class);
 
     static {
-        USER_STATUS_ERROR_RESPONSE.put(AccountStatus.DELETED, new ResponseEntity<>(new MessageDTO(messageSource.getMessage("exception.message.userstatus.deleted", new Object[]{}, locale)), HttpStatus.LOCKED));
-        USER_STATUS_ERROR_RESPONSE.put(AccountStatus.BLOCKED, new ResponseEntity<>(new MessageDTO(messageSource.getMessage("exception.message.userstatus.block", new Object[]{}, locale)), HttpStatus.FORBIDDEN));
+        USER_STATUS_ERROR_RESPONSE.put(AccountStatus.DELETED, new ResponseEntity<>(new MessageDTO("Account with this email is deleted"), HttpStatus.LOCKED));
+        USER_STATUS_ERROR_RESPONSE.put(AccountStatus.BLOCKED, new ResponseEntity<>(new MessageDTO("Account with this email is blocked"), HttpStatus.FORBIDDEN));
     }
 
     @ExceptionHandler(MultipartException.class)
@@ -77,7 +77,7 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     @ResponseBody
     MessageDTO handleNotAuthorisedUserException() {
-        return new MessageDTO(messageSource.getMessage("exception.message.unauthorized.user", new Object[]{}, locale));
+        return new MessageDTO("Operation is unavailable for unauthorized users!");
     }
 
     @ExceptionHandler(UnknownHostException.class)
