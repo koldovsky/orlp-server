@@ -17,6 +17,8 @@ import com.softserve.academy.spaced.repetition.utils.audit.AuditingAction;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Component;
 
 import java.io.BufferedReader;
@@ -25,11 +27,15 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 @Component
 public class FacebookAuthUtil {
 
+    @Autowired
+    private MessageSource messageSource;
+    private final Locale locale = LocaleContextHolder.getLocale();
     @Autowired
     private AccountRepository accountRepository;
     @Autowired
@@ -65,7 +71,7 @@ public class FacebookAuthUtil {
 
         } catch (IOException e) {
             e.printStackTrace();
-            throw new RuntimeException("ERROR in getting FB graph data. " + e);
+            throw new RuntimeException(messageSource.getMessage("exception.message.getting.FB.data", new Object[]{e}, locale));
         }
 
         return graph;
@@ -82,7 +88,7 @@ public class FacebookAuthUtil {
             fbProfile.put("picture", json.getJSONObject("picture").getJSONObject("data").getString("url"));
         } catch (JSONException e) {
             e.printStackTrace();
-            throw new RuntimeException("ERROR in parsing FB graph data. " + e);
+            throw new RuntimeException(messageSource.getMessage("exception.message.parsing.FB.data", new Object[]{e}, locale));
         }
 
         return fbProfile;

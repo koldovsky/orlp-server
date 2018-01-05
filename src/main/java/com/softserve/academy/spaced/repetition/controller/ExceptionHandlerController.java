@@ -5,6 +5,9 @@ import com.softserve.academy.spaced.repetition.controller.utils.dto.FieldErrorDT
 import com.softserve.academy.spaced.repetition.controller.utils.dto.ValidationMessageDTO;
 import com.softserve.academy.spaced.repetition.controller.utils.dto.impl.MessageDTO;
 import com.softserve.academy.spaced.repetition.utils.exceptions.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,24 +25,29 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 import java.net.UnknownHostException;
 import java.util.EnumMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 @ControllerAdvice
 public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
 
+    @Autowired
+    private static MessageSource messageSource;
+    private static final Locale locale = LocaleContextHolder.getLocale();
+
     private static final EnumMap<AccountStatus, ResponseEntity<MessageDTO>> USER_STATUS_ERROR_RESPONSE = new EnumMap<>(AccountStatus.class);
 
     static {
-        USER_STATUS_ERROR_RESPONSE.put(AccountStatus.DELETED, new ResponseEntity<>(new MessageDTO("Account with this email is deleted"), HttpStatus.LOCKED));
-        USER_STATUS_ERROR_RESPONSE.put(AccountStatus.BLOCKED, new ResponseEntity<>(new MessageDTO("Account with this email is blocked"), HttpStatus.FORBIDDEN));
+        USER_STATUS_ERROR_RESPONSE.put(AccountStatus.DELETED, new ResponseEntity<>(new MessageDTO(messageSource.getMessage("exception.message.userstatus.deleted", new Object[]{}, locale)), HttpStatus.LOCKED));
+        USER_STATUS_ERROR_RESPONSE.put(AccountStatus.BLOCKED, new ResponseEntity<>(new MessageDTO(messageSource.getMessage("exception.message.userstatus.block", new Object[]{}, locale)), HttpStatus.FORBIDDEN));
     }
 
     @ExceptionHandler(MultipartException.class)
     @ResponseStatus(HttpStatus.FORBIDDEN)
     @ResponseBody
     MessageDTO handleLargeFileException() {
-        return new MessageDTO("File upload error: file is too large.");
+        return new MessageDTO(messageSource.getMessage("exception.message.file.large", new Object[]{}, locale));
     }
 
 
@@ -47,21 +55,21 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
     @ResponseStatus(HttpStatus.FORBIDDEN)
     @ResponseBody
     MessageDTO handleImageRepositorySizeQuotaExceededException() {
-        return new MessageDTO("You have exceeded your quota for uploading images. You should delete some images before new upload.");
+        return new MessageDTO(messageSource.getMessage("exception.message.delete.image", new Object[]{}, locale));
     }
 
     @ExceptionHandler(CanNotBeDeletedException.class)
     @ResponseStatus(HttpStatus.FORBIDDEN)
     @ResponseBody
     MessageDTO handleCanNotBeDeletedException() {
-        return new MessageDTO("Current image is already in use!");
+        return new MessageDTO(messageSource.getMessage("exception.message.image.in.use", new Object[]{}, locale));
     }
 
     @ExceptionHandler(NotOwnerOperationException.class)
     @ResponseStatus(HttpStatus.FORBIDDEN)
     @ResponseBody
     MessageDTO handleNotOwnerOperationException() {
-        return new MessageDTO("Operation is not allowed for current user!");
+        return new MessageDTO(messageSource.getMessage("exception.message.for.this.user.not.allowed", new Object[]{}, locale));
     }
 
 
@@ -69,28 +77,28 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     @ResponseBody
     MessageDTO handleNotAuthorisedUserException() {
-        return new MessageDTO("Operation is unavailable for unauthorized users!");
+        return new MessageDTO(messageSource.getMessage("exception.message.unauthorized.user", new Object[]{}, locale));
     }
 
     @ExceptionHandler(UnknownHostException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
     @ResponseBody
     MessageDTO handleUnknownHostException() {
-        return new MessageDTO("The IP address of a host could not be determined");
+        return new MessageDTO(messageSource.getMessage("exception.message.ipadress.couldnt.determined", new Object[]{}, locale));
     }
 
     @ExceptionHandler(MailException.class)
     @ResponseStatus(HttpStatus.SERVICE_UNAVAILABLE)
     @ResponseBody
     MessageDTO handleMailException() {
-        return new MessageDTO("Mail not sent");
+        return new MessageDTO(messageSource.getMessage("exception.message.mail.not.sent", new Object[]{}, locale));
     }
 
     @ExceptionHandler(WrongFormatException.class)
     @ResponseStatus(HttpStatus.NOT_ACCEPTABLE)
     @ResponseBody
     MessageDTO handleWrongFormatException() {
-        return new MessageDTO("Not valid file format");
+        return new MessageDTO(messageSource.getMessage("exception.message.notvalid.file.format", new Object[]{}, locale));
     }
 
     @ExceptionHandler(UserStatusException.class)
