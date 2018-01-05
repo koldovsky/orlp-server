@@ -9,143 +9,181 @@ import org.springframework.data.domain.Page;
 import java.util.List;
 
 /**
- * This interface processes all operations with decks.
+ * This interface proceeds all operations with decks.
  */
 public interface DeckService {
     /**
      * Adds a new deck to the category
      *
-     * @param deck       - the deck which will be add to the category.
-     * @param categoryId - category id for which the deck will be added.
+     * @param deck       the deck which will be added to the category.
+     * @param categoryId category`s id for which the deck will be added.
      */
     void addDeckToCategory(Deck deck, Long categoryId);
 
     /**
      * Adds a new deck to the course
      *
-     * @param deck       - the deck which will be add to the category.
-     * @param categoryId - id of the category for which belongs the course.
-     * @param courseId   - course id for which will add the deck.
+     * @param deck       the deck which will be added to the category.
+     * @param categoryId id of the category for which belongs the course.
+     * @param courseId   course`s id to which the deck will be added.
      */
     void addDeckToCourse(Deck deck, Long categoryId, Long courseId);
 
     /**
      * Updates the deck
-     * @param updatedDeck - the new deck which will be set.
-     * @param deckId      - id of the deck which will be updated.
-     * @param categoryId  - category id for which the deck will be updated.
+     *
+     * @param updatedDeck the new deck which will be set.
+     * @param deckId      id of the deck which will be updated.
+     * @param categoryId  category`s id for which the deck will be updated.
      */
     void updateDeck(Deck updatedDeck, Long deckId, Long categoryId);
 
     /**
+     * Updates the deck by using the admin account
      *
-     * @param updatedDeck
-     * @param deckId
-     * @return
+     * @param updatedDeck the new deck which will be set.
+     * @param deckId      id of the deck which will be updated.
+     * @return the updated deck.
      */
     Deck updateDeckAdmin(Deck updatedDeck, Long deckId);
 
     /**
-     * @param deckId
+     * Deletes the deck
+     *
+     * @param deckId id of the deck which will be deleted.
      */
     void deleteDeck(Long deckId);
 
     /**
-     * @param newDeck
-     * @param categoryId
-     * @throws NotAuthorisedUserException
+     * Creates new deck
+     *
+     * @param newDeck    new deck which will be added.
+     * @param categoryId category`s id for which the deck will be created.
+     * @throws NotAuthorisedUserException if unauthorized user creates new deck.
      */
     void createNewDeck(Deck newDeck, Long categoryId) throws NotAuthorisedUserException;
 
     /**
-     * @param newDeck
-     * @return
-     * @throws NotAuthorisedUserException
+     * Creates the deck by using the admin account.
+     *
+     * @param newDeck new deck which will be added.
+     * @return the created deck.
+     * @throws NotAuthorisedUserException if unauthorized user creates new deck.
      */
     Deck createNewDeckAdmin(Deck newDeck) throws NotAuthorisedUserException;
 
     /**
-     * @param deckId
-     * @throws NotAuthorisedUserException
-     * @throws NotOwnerOperationException
+     * Deletes the deck which was created by the user.
+     *
+     * @param deckId id of the deck which will be deleted.
+     * @throws NotAuthorisedUserException if unauthorized user deletes the deck.
+     * @throws NotOwnerOperationException if the user is not owner of the deck deletes the deck.
      */
     void deleteOwnDeck(Long deckId)
             throws NotAuthorisedUserException, NotOwnerOperationException;
 
     /**
-     * @param updatedDeck
-     * @param deckId
-     * @param categoryId
-     * @return
-     * @throws NotAuthorisedUserException
-     * @throws NotOwnerOperationException
+     * Updates the deck which was created by the user.
+     *
+     * @param updatedDeck the new deck which will be set.
+     * @param deckId      id of the deck which will be updated.
+     * @param categoryId  category`s id for which the deck will be updated.
+     * @return updated deck.
+     * @throws NotAuthorisedUserException if unauthorized user creates new deck.
+     * @throws NotOwnerOperationException if the user is not owner of the deck updates the deck.
      */
     Deck updateOwnDeck(Deck updatedDeck, Long deckId, Long categoryId)
             throws NotAuthorisedUserException, NotOwnerOperationException;
 
     /**
-     * @return
-     * @throws NotAuthorisedUserException
+     * Gives all of the decks witch was created by the user.
+     *
+     * @return list of the decks witch was created by the user.
+     * @throws NotAuthorisedUserException if unauthorized user gets the decks.
      */
     List<Deck> getAllDecksByUser() throws NotAuthorisedUserException;
 
     /**
-     * @param deckId
-     * @return
-     * @throws NotAuthorisedUserException
-     * @throws NotOwnerOperationException
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     *
      */
     Deck getDeckUser(Long deckId) throws NotAuthorisedUserException, NotOwnerOperationException;
 
     /**
-     * @param categoryId
-     * @param pageNumber
-     * @param sortBy
-     * @param ascending
-     * @return
+     * Gives the page with decks which are sorted by category.
+     *
+     * @param categoryId category id for which the decks will be given.
+     * @param pageNumber the pages number on which there is the category.
+     * @param sortBy     the properties to sort by, must not be null or empty.
+     * @param ascending  the value that determines how the elements must be sorted on the page.
+     * @return the page with decks which are sorted by category.
      */
     Page<Deck> getPageWithDecksByCategory(long categoryId, int pageNumber, String sortBy, boolean ascending);
 
     /**
-     * @param pageNumber
+     * Gives the page with decks which are created by admin.
+     *
+     * @param pageNumber the pages number on which there is the category.
      * @param sortBy
-     * @param ascending
-     * @return
+     * @param ascending  the value that determines how the elements must be sorted on the page.
+     * @return the page with decks which are created by admin.
      */
     Page<Deck> getPageWithAllAdminDecks(int pageNumber, String sortBy, boolean ascending);
 
     /**
-     * @param deckId
-     * @return
+     * Highlights syntax of the deck with the given identifier.
+     *
+     * @param deckId deck`s id for which syntax will highlight.
+     * @return highlighted syntax. Perhaps...
      */
     String getSynthaxToHightlight(long deckId);
 
     /**
-     * @param deckId
-     * @return
+     * Gets the deck with the given identifier.
+     *
+     * @param deckId the deck which will searched.
+     * @return the deck with the given identifier.
      */
     Deck getDeck(Long deckId);
 
     /**
-     * @param courseId
-     * @return
+     * Gets the list of the decks which belongs to course with given identifier.
+     *
+     * @param courseId course`s id for which the decks will be searched.
+     * @return the list of the decks which belongs to course with given identifier.
      */
     List<Deck> getAllDecks(Long courseId);
 
     /**
-     * @param categoryId
-     * @return
+     * Gets the list of the decks which belongs to category with given identifier.
+     *
+     * @param categoryId category`s id for which the decks will be searched.
+     * @return the list of the decks which belongs to category with given identifier.
      */
     List<Deck> getAllDecksByCategory(Long categoryId);
 
     /**
-     * @return
+     *
+     *
+     *
+     *
+     *
      */
     List<Deck> getAllOrderedDecks();
 
     /**
-     * @param deckId
-     * @return
+     *
+     *
+     *
+     *
+     *
      */
     List<Card> getAllCardsByDeckId(Long deckId);
 }
