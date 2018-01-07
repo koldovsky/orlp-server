@@ -123,7 +123,8 @@ public class CardController {
     @Auditable(action = AuditingAction.EDIT_CARD_VIA_COURSE_AND_DECK)
     @PutMapping(value = "/api/category/{categoryId}/courses/{courseId}/decks/{deckId}/cards/{cardId}")
     @PreAuthorize(value = "@accessToUrlService.hasAccessToCard(#categoryId, #courseId, #deckId, #cardId)")
-    public ResponseEntity<CardPublicDTO> updateCardByCourseAndDeck(@PathVariable Long categoryId, @PathVariable Long courseId, @PathVariable Long deckId, @PathVariable Long cardId, @Validated(Request.class) @RequestBody Card card, @RequestParam MultipartFile image) {
+    public ResponseEntity<CardPublicDTO> updateCardByCourseAndDeck(@PathVariable Long categoryId, @PathVariable Long courseId, @PathVariable Long deckId, @PathVariable Long cardId, @Validated(Request.class) @RequestBody Card card, @RequestParam(required = false) MultipartFile image) {
+        System.out.println(1);
         cardService.updateCard(card, deckId, image);
         Link selfLink = linkTo(methodOn(CardController.class).getCardByCourseAndDeck(categoryId, courseId, deckId, card.getId())).withSelfRel();
         CardPublicDTO cardPublicDTO = DTOBuilder.buildDtoForEntity(card, CardPublicDTO.class, selfLink);
@@ -133,7 +134,8 @@ public class CardController {
     @Auditable(action = AuditingAction.EDIT_CARD_VIA_CATEGORY_AND_DECK)
     @PutMapping(value = "/api/category/{categoryId}/decks/{deckId}/cards/{cardId}")
     @PreAuthorize(value = "@accessToUrlService.hasAccessToCard(#categoryId, #deckId, #cardId)")
-    public ResponseEntity<CardPublicDTO> updateCardByCategoryAndDeck(@PathVariable Long categoryId, @PathVariable Long deckId, @PathVariable Long cardId, @Validated(Request.class) @RequestBody Card card, @RequestParam MultipartFile image) {
+    public ResponseEntity<CardPublicDTO> updateCardByCategoryAndDeck(@PathVariable Long categoryId, @PathVariable Long deckId, @PathVariable Long cardId, @Validated(Request.class) @RequestBody Card card, @RequestParam(required = false) MultipartFile image) {
+        System.out.println("2");
         cardService.updateCard(card, deckId, image);
         Link selfLink = linkTo(methodOn(CardController.class).getCardByCategoryAndDeck(categoryId, deckId, card.getId())).withSelfRel();
         CardPublicDTO cardPublicDTO = DTOBuilder.buildDtoForEntity(card, CardPublicDTO.class, selfLink);

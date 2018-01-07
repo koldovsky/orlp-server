@@ -18,11 +18,7 @@ public interface CardService {
 
     void addCard(Card card, Long deckId, MultipartFile multipartFile);
 
-    void addCard(Card card, Long deckId);// TODO fix code repeating
-
     void updateCard(Card card, Long deckId, MultipartFile multipartFile);
-
-    void updateCard(Card card, Long deckId);// TODO fix code repeating
 
     List<Card> getCardsQueue(long deckId) throws NotAuthorisedUserException;
 

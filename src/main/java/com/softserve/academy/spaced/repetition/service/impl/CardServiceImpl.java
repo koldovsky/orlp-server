@@ -26,23 +26,19 @@ import org.yaml.snakeyaml.parser.ParserException;
 import java.io.*;
 import java.util.*;
 
+import static java.util.Optional.ofNullable;
+
 @Service
 public class CardServiceImpl implements CardService {
 
+    private final CardRepository cardRepository;
+    private final DeckRepository deckRepository;
+    private final UserService userService;
+    private final AccountService accountService;
+    private final UserCardQueueService userCardQueueService;
+    private final DeckService deckService;
     @Autowired
     private ImageService imageService;
-
-    private final CardRepository cardRepository;
-
-    private final DeckRepository deckRepository;
-
-    private final UserService userService;
-
-    private final AccountService accountService;
-
-    private final UserCardQueueService userCardQueueService;
-
-    private final DeckService deckService;
 
     @Autowired
     public CardServiceImpl(CardRepository cardRepository, DeckRepository deckRepository, AccountService accountService,
@@ -94,18 +90,9 @@ public class CardServiceImpl implements CardService {
                 || card.getQuestion().trim().isEmpty()) {
             throw new IllegalArgumentException("All of card fields must be filled");
         }
-        card.setImageBase64(imageService.encodeToBase64(multipartFile));
-        Deck deck = deckRepository.findOne(deckId);
-        card.setDeck(deck);
-        deck.getCards().add(cardRepository.save(card));
-    }
+        if(multipartFile != null)
+            card.setImageBase64(imageService.encodeToBase64(multipartFile));
 
-    @Override
-    public void addCard(Card card, Long deckId) {
-        if (card.getTitle().trim().isEmpty() || card.getAnswer().trim().isEmpty()
-                || card.getQuestion().trim().isEmpty()) {
-            throw new IllegalArgumentException("All of card fields must be filled");
-        }
         Deck deck = deckRepository.findOne(deckId);
         card.setDeck(deck);
         deck.getCards().add(cardRepository.save(card));
@@ -124,17 +111,6 @@ public class CardServiceImpl implements CardService {
     }
 
     @Override
-    public void updateCard(Card card, Long deckId) {
-        if (card.getTitle().trim().isEmpty() || card.getAnswer().trim().isEmpty()
-                || card.getQuestion().trim().isEmpty()) {
-            throw new IllegalArgumentException("All of card fields must be filled");
-        }
-        card.setId(deckId);
-        card.setDeck(cardRepository.findOne(deckId).getDeck());
-        cardRepository.save(card);
-    }
-
-    @Override
     public List<Card> getCardsQueue(long deckId) throws NotAuthorisedUserException {
         User user = userService.getAuthorizedUser();
         final int cardsNumber = accountService.getCardsNumber();
@@ -146,7 +122,6 @@ public class CardServiceImpl implements CardService {
         }
         return cardsQueue;
     }
-
 
     @Override
     @Transactional
@@ -184,7 +159,8 @@ public class CardServiceImpl implements CardService {
             try {
                 CardFileDTOList cards = yaml.loadAs(in, CardFileDTOList.class);
                 for (CardFileDTO card : cards.getCards()) {
-                    addCard(new Card(card.getQuestion(), card.getAnswer(), card.getTitle()), deckId);
+                    addCard(new Card(card.getQuestion(), card.getAnswer(),
+                            card.getTitle()), deckId, null); //TODO something do with this
                 }
             } catch (ParserException | ConstructorException ex) {
                 throw new IllegalArgumentException("Invalid format of file!");
@@ -200,6 +176,8 @@ public class CardServiceImpl implements CardService {
             cardMap.put("title", card.getTitle());
             cardMap.put("question", card.getQuestion());
             cardMap.put("answer", card.getAnswer());
+            if (card.getImageBase64() != null && card.getImageBase64().equals(""))
+                cardMap.put("image", card.getImageBase64());
             list.add(cardMap);
         });
         DumperOptions options = new DumperOptions();
