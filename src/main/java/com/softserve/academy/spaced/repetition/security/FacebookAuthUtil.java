@@ -71,7 +71,7 @@ public class FacebookAuthUtil {
 
         } catch (IOException e) {
             e.printStackTrace();
-            throw new RuntimeException(messageSource.getMessage("exception.message.getting.FB.data", new Object[]{e}, locale));
+            throw new RuntimeException(messageSource.getMessage("exception.message.gettingFBData", new Object[]{e}, locale));
         }
 
         return graph;
@@ -88,7 +88,7 @@ public class FacebookAuthUtil {
             fbProfile.put("picture", json.getJSONObject("picture").getJSONObject("data").getString("url"));
         } catch (JSONException e) {
             e.printStackTrace();
-            throw new RuntimeException(messageSource.getMessage("exception.message.parsing.FB.data", new Object[]{e}, locale));
+            throw new RuntimeException(messageSource.getMessage("exception.message.parsingFBData", new Object[]{e}, locale));
         }
 
         return fbProfile;
