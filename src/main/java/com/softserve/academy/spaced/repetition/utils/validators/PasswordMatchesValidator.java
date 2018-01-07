@@ -3,6 +3,7 @@ package com.softserve.academy.spaced.repetition.utils.validators;
 
 import com.softserve.academy.spaced.repetition.utils.exceptions.NotAuthorisedUserException;
 import com.softserve.academy.spaced.repetition.service.UserService;
+import com.softserve.academy.spaced.repetition.utils.validators.annotations.PasswordMatches;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

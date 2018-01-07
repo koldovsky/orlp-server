@@ -1,8 +1,8 @@
 package com.softserve.academy.spaced.repetition.controller;
 
-import com.softserve.academy.spaced.repetition.controller.utils.dto.DTOBuilder;
-import com.softserve.academy.spaced.repetition.controller.utils.dto.impl.ImageDTO;
-import com.softserve.academy.spaced.repetition.controller.utils.dto.impl.UploadingImageDTO;
+import com.softserve.academy.spaced.repetition.controller.dto.DTOBuilder;
+import com.softserve.academy.spaced.repetition.controller.dto.impl.ImageDTO;
+import com.softserve.academy.spaced.repetition.controller.dto.impl.UploadingImageDTO;
 import com.softserve.academy.spaced.repetition.domain.Image;
 import com.softserve.academy.spaced.repetition.repository.ImageRepository;
 import com.softserve.academy.spaced.repetition.service.ImageService;

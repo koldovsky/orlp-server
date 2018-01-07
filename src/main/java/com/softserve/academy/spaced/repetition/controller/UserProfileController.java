@@ -1,7 +1,7 @@
 package com.softserve.academy.spaced.repetition.controller;
 
-import com.softserve.academy.spaced.repetition.controller.utils.dto.Request;
-import com.softserve.academy.spaced.repetition.controller.utils.dto.impl.PasswordDTO;
+import com.softserve.academy.spaced.repetition.controller.dto.Request;
+import com.softserve.academy.spaced.repetition.controller.dto.impl.PasswordDTO;
 import com.softserve.academy.spaced.repetition.domain.Person;
 import com.softserve.academy.spaced.repetition.service.UserService;
 import com.softserve.academy.spaced.repetition.utils.audit.Auditable;

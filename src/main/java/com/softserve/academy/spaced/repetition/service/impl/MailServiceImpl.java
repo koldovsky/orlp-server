@@ -1,7 +1,7 @@
 package com.softserve.academy.spaced.repetition.service.impl;
 
 import com.softserve.academy.spaced.repetition.domain.User;
-import com.softserve.academy.spaced.repetition.security.JwtTokenForMail;
+import com.softserve.academy.spaced.repetition.security.service.JwtTokenForMailService;
 import com.softserve.academy.spaced.repetition.service.MailService;
 import freemarker.template.Configuration;
 import freemarker.template.TemplateException;
@@ -28,7 +28,7 @@ public class MailServiceImpl implements MailService {
     @Autowired
     private JavaMailSender mailSender;
     @Autowired
-    private JwtTokenForMail jwtTokenForMail;
+    private JwtTokenForMailService jwtTokenForMailService;
     @Autowired
     @Qualifier("freemarkerConf")
     private Configuration freemarkerConfiguration;
@@ -42,7 +42,7 @@ public class MailServiceImpl implements MailService {
             helper.setSubject("Confirmation registration");
             helper.setTo(user.getAccount().getEmail());
             Map<String, Object> model = new HashMap<>();
-            String token = jwtTokenForMail.generateTokenForMail(user.getAccount().getEmail());
+            String token = jwtTokenForMailService.generateTokenForMail(user.getAccount().getEmail());
             model.put("person", user.getPerson());
             model.put("token", token);
             model.put("url", url);
@@ -59,7 +59,7 @@ public class MailServiceImpl implements MailService {
             helper.setSubject("Activation account");
             helper.setTo(email);
             Map<String, Object> model = new HashMap<>();
-            String token = jwtTokenForMail.generateTokenForMail(email);
+            String token = jwtTokenForMailService.generateTokenForMail(email);
             model.put("token", token);
             model.put("url", url);
             String text = getActivationAccountTemplateContent(model);
@@ -92,7 +92,7 @@ public class MailServiceImpl implements MailService {
             helper.setSubject("Password restore");
             helper.setTo(accountEmail);
             Map<String, Object> model = new HashMap<>();
-            String token = jwtTokenForMail.generateTokenForMail(accountEmail);
+            String token = jwtTokenForMailService.generateTokenForMail(accountEmail);
             model.put("token", token);
             model.put("url", url);
             String text = getRestorePasswordTemplateContent(model);

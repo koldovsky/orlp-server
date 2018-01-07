@@ -1,9 +1,9 @@
 package com.softserve.academy.spaced.repetition.controller;
 
-import com.softserve.academy.spaced.repetition.controller.utils.dto.DTOBuilder;
-import com.softserve.academy.spaced.repetition.controller.utils.dto.RatingDTO;
-import com.softserve.academy.spaced.repetition.controller.utils.dto.Request;
-import com.softserve.academy.spaced.repetition.controller.utils.dto.impl.CourseRatingPublicDTO;
+import com.softserve.academy.spaced.repetition.controller.dto.DTOBuilder;
+import com.softserve.academy.spaced.repetition.controller.dto.RatingDTO;
+import com.softserve.academy.spaced.repetition.controller.dto.Request;
+import com.softserve.academy.spaced.repetition.controller.dto.impl.CourseRatingPublicDTO;
 import com.softserve.academy.spaced.repetition.domain.CourseRating;
 import com.softserve.academy.spaced.repetition.service.CourseRatingService;
 import com.softserve.academy.spaced.repetition.utils.exceptions.NotAuthorisedUserException;

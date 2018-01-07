@@ -1,8 +1,8 @@
 package com.softserve.academy.spaced.repetition.controller;
 
-import com.softserve.academy.spaced.repetition.controller.utils.dto.DTOBuilder;
-import com.softserve.academy.spaced.repetition.controller.utils.dto.Request;
-import com.softserve.academy.spaced.repetition.controller.utils.dto.impl.CardPublicDTO;
+import com.softserve.academy.spaced.repetition.controller.dto.DTOBuilder;
+import com.softserve.academy.spaced.repetition.controller.dto.Request;
+import com.softserve.academy.spaced.repetition.controller.dto.impl.CardPublicDTO;
 import com.softserve.academy.spaced.repetition.domain.Card;
 import com.softserve.academy.spaced.repetition.service.CardService;
 import com.softserve.academy.spaced.repetition.service.cardLoaders.CardLoadService;

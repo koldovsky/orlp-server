@@ -1,6 +1,6 @@
 package com.softserve.academy.spaced.repetition.service;
 
-import com.softserve.academy.spaced.repetition.controller.utils.dto.impl.PasswordDTO;
+import com.softserve.academy.spaced.repetition.controller.dto.impl.PasswordDTO;
 import com.softserve.academy.spaced.repetition.config.TestDatabaseConfig;
 import com.softserve.academy.spaced.repetition.domain.*;
 import com.softserve.academy.spaced.repetition.utils.exceptions.NotAuthorisedUserException;

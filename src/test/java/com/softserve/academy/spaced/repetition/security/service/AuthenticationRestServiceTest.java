@@ -25,10 +25,10 @@ import org.springframework.test.annotation.Rollback;
 import com.softserve.academy.spaced.repetition.domain.Account;
 import com.softserve.academy.spaced.repetition.domain.Authority;
 import com.softserve.academy.spaced.repetition.domain.enums.AuthorityName;
-import com.softserve.academy.spaced.repetition.security.DTO.ReCaptchaResponseDto;
-import com.softserve.academy.spaced.repetition.security.JwtTokenUtil;
-import com.softserve.academy.spaced.repetition.security.JwtUser;
-import com.softserve.academy.spaced.repetition.security.JwtUserFactory;
+import com.softserve.academy.spaced.repetition.security.dto.ReCaptchaResponseDto;
+import com.softserve.academy.spaced.repetition.security.utils.JwtTokenUtil;
+import com.softserve.academy.spaced.repetition.security.authentification.JwtUser;
+import com.softserve.academy.spaced.repetition.security.authentification.JwtUserFactory;
 
 @RunWith(MockitoJUnitRunner.class)
 @PrepareForTest(AuthenticationRestService.class)

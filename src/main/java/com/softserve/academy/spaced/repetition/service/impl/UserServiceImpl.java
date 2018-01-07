@@ -2,14 +2,14 @@ package com.softserve.academy.spaced.repetition.service.impl;
 
 import com.softserve.academy.spaced.repetition.domain.*;
 import com.softserve.academy.spaced.repetition.domain.enums.*;
-import com.softserve.academy.spaced.repetition.controller.utils.dto.impl.PasswordDTO;
+import com.softserve.academy.spaced.repetition.controller.dto.impl.PasswordDTO;
 import com.softserve.academy.spaced.repetition.utils.exceptions.ImageRepositorySizeQuotaExceededException;
 import com.softserve.academy.spaced.repetition.utils.exceptions.NotAuthorisedUserException;
 import com.softserve.academy.spaced.repetition.utils.exceptions.UserStatusException;
 import com.softserve.academy.spaced.repetition.repository.AuthorityRepository;
 import com.softserve.academy.spaced.repetition.repository.DeckRepository;
 import com.softserve.academy.spaced.repetition.repository.UserRepository;
-import com.softserve.academy.spaced.repetition.security.JwtUser;
+import com.softserve.academy.spaced.repetition.security.authentification.JwtUser;
 import com.softserve.academy.spaced.repetition.service.MailService;
 import com.softserve.academy.spaced.repetition.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;

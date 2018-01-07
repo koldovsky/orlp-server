@@ -1,11 +1,11 @@
 package com.softserve.academy.spaced.repetition.domain;
 
-import com.softserve.academy.spaced.repetition.controller.utils.dto.EntityInterface;
-import com.softserve.academy.spaced.repetition.controller.utils.dto.Request;
+import com.softserve.academy.spaced.repetition.controller.dto.EntityInterface;
+import com.softserve.academy.spaced.repetition.controller.dto.Request;
 import com.softserve.academy.spaced.repetition.domain.enums.AccountStatus;
 import com.softserve.academy.spaced.repetition.domain.enums.AuthenticationType;
 import com.softserve.academy.spaced.repetition.domain.enums.LearningRegime;
-import com.softserve.academy.spaced.repetition.utils.validators.EmailNotExist;
+import com.softserve.academy.spaced.repetition.utils.validators.annotations.EmailNotExist;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;

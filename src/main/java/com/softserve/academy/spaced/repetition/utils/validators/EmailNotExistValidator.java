@@ -1,6 +1,7 @@
 package com.softserve.academy.spaced.repetition.utils.validators;
 
 import com.softserve.academy.spaced.repetition.repository.AccountRepository;
+import com.softserve.academy.spaced.repetition.utils.validators.annotations.EmailNotExist;
 import org.springframework.beans.factory.annotation.Autowired;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
