@@ -2,9 +2,17 @@ package com.softserve.academy.spaced.repetition.service;
 
 import com.softserve.academy.spaced.repetition.domain.Deck;
 import com.softserve.academy.spaced.repetition.utils.exceptions.NotAuthorisedUserException;
+
 import java.util.List;
 
 public interface FolderService {
+    /**
+     * Adds a new deck.
+     *
+     * @param deckId deck
+     * @return
+     * @throws NotAuthorisedUserException
+     */
     Deck addDeck(Long deckId) throws NotAuthorisedUserException;
 
     List<Deck> getAllDecksByFolderId(Long folderId);

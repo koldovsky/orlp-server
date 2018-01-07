@@ -202,14 +202,17 @@ public interface UserService {
 
     /**
      * Gets the status of the authorised user
+     *
      * @throws UserStatusException
      */
     void getUserStatus() throws UserStatusException;
 
     /**
-     * @param account
-     * @param email
-     * @param accountStatus
+     * Initializes a new user.
+     *
+     * @param account            user`s account.
+     * @param email              user`s email.
+     * @param accountStatus      user`s status.
      * @param deactivated
      * @param authenticationType
      */
@@ -217,8 +220,10 @@ public interface UserService {
                            boolean deactivated, AuthenticationType authenticationType);
 
     /**
-     * @param user
-     * @throws UserStatusException
+     * Checks user`s status.
+     *
+     * @param user user which will be checked.
+     * @throws UserStatusException if user is no active.
      */
     void isUserStatusActive(User user) throws UserStatusException;
 }

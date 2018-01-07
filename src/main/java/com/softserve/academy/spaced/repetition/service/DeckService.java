@@ -141,7 +141,7 @@ public interface DeckService {
      * Highlights syntax of the deck with the given identifier.
      *
      * @param deckId deck`s id for which syntax will highlight.
-     * @return highlighted syntax. Perhaps...
+     * @return highlighted syntax.
      */
     String getSynthaxToHightlight(long deckId);
 

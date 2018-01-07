@@ -20,7 +20,9 @@ public interface DeckRatingService {
     void addDeckRating(int rating, Long deckId) throws NotAuthorisedUserException, UserStatusException;
 
     /**
-     * I don`t know what does this method do, it`s your turn to investigate it
+     * Gets deck`s rating from entity
+     * @param id rating`s id
+     * @return deck`s rating
      */
     DeckRating getDeckRatingById(Long id);
 }

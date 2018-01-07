@@ -5,7 +5,17 @@ import com.softserve.academy.spaced.repetition.repository.AuthorityRepository;
 import org.springframework.mail.MailException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+/**
+ * This interface supports the registration of the new user
+ */
 public interface RegistrationService {
+    /**
+     * Registers new users
+     *
+     * @param user user which is registering.
+     * @return managed by admin user.
+     */
+
     User registerNewUser(User user);
 
     void sendConfirmationEmailMessage(User user) throws MailException;
