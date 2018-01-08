@@ -2,7 +2,7 @@ Open Repetition Learning Platform API-Server (ORLP)
 ==================================================
 
 
-Thank you for choosing ORLP - a high-performance platform for spased repetition learning.
+Thank you for choosing ORLP - a high-performance platform for spaced repetition learning.
 
 
 INSTALLATION
@@ -29,11 +29,18 @@ QUICK START
 -----------
 
 1. You should import this project in your IDE as a maven-project;
-2. Wait untill IDE will import all maven dependencies to this project;
+2. Wait until IDE will import all maven dependencies to this project;
 3. Open MySQL Workbench and change the password for user **`root`** to **`123456`**;
 
 Now you can work with the API.
 
+DB Migration Tool
+-----------------
+
+This project uses [Flyway DB Migration Tool](https://flywaydb.org/).
+All migrations are located in the package **`resource/db/migrations`**.
+Manual how to use migrations:
+[https://flywaydb.org/documentation/migrations](https://flywaydb.org/documentation/migrations#sql-based-migrationsx)
 
 WHAT'S NEXT
 -----------
