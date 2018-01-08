@@ -104,7 +104,9 @@ public class CardServiceImpl implements CardService {
                 || card.getQuestion().trim().isEmpty()) {
             throw new IllegalArgumentException("All of card fields must be filled");
         }
-        card.setImageBase64(imageService.encodeToBase64(multipartFile));
+        if(multipartFile != null)
+            card.setImageBase64(imageService.encodeToBase64(multipartFile));
+
         card.setId(deckId);
         card.setDeck(cardRepository.findOne(deckId).getDeck());
         cardRepository.save(card);
