@@ -1,9 +1,9 @@
 package com.softserve.academy.spaced.repetition.controller;
 
-import com.softserve.academy.spaced.repetition.domain.enums.AccountStatus;
 import com.softserve.academy.spaced.repetition.controller.utils.dto.FieldErrorDTO;
 import com.softserve.academy.spaced.repetition.controller.utils.dto.ValidationMessageDTO;
 import com.softserve.academy.spaced.repetition.controller.utils.dto.impl.MessageDTO;
+import com.softserve.academy.spaced.repetition.domain.enums.AccountStatus;
 import com.softserve.academy.spaced.repetition.utils.exceptions.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -127,7 +127,8 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
     }
 
     @Override
-    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
+    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers,
+                                                                  HttpStatus status, WebRequest request) {
         List<FieldErrorDTO> errors = ex.getBindingResult().getFieldErrors().stream()
                 .map(p -> new FieldErrorDTO(p.getField(), p.getDefaultMessage())).collect(Collectors.toList());
         ValidationMessageDTO messageDTO = new ValidationMessageDTO(errors);
