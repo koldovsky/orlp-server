@@ -104,12 +104,12 @@ public interface DeckService {
     List<Deck> getAllDecksByUser() throws NotAuthorisedUserException;
 
     /**
+     * Gets the deck of the user.
      *
-     *
-     *
-     *
-     *
-     *
+     * @param deckId deck`s id which will be got.
+     * @return the deck of the user.
+     * @throws NotAuthorisedUserException if unauthorized user gets the decks.
+     * @throws NotOwnerOperationException if the user is not owner of the deck gets the deck.
      */
     Deck getDeckUser(Long deckId) throws NotAuthorisedUserException, NotOwnerOperationException;
 
@@ -128,7 +128,7 @@ public interface DeckService {
      * Gives the page with decks which are created by admin.
      *
      * @param pageNumber the pages number on which there is the category.
-     * @param sortBy
+     * @param sortBy     the properties to sort by, must not be null or empty.
      * @param ascending  the value that determines how the elements must be sorted on the page.
      * @return the page with decks which are created by admin.
      */
@@ -167,20 +167,17 @@ public interface DeckService {
     List<Deck> getAllDecksByCategory(Long categoryId);
 
     /**
+     * Gets the list of decks that are ordered.
      *
-     *
-     *
-     *
-     *
+     * @return the list of decks that are ordered.
      */
     List<Deck> getAllOrderedDecks();
 
     /**
+     * Gets the list of cards that are in the deck by given identifier.
      *
-     *
-     *
-     *
-     *
+     * @param deckId deck`s id from which the cards will be get.
+     * @return list of cards that are in the deck by given identifier.
      */
     List<Card> getAllCardsByDeckId(Long deckId);
 }

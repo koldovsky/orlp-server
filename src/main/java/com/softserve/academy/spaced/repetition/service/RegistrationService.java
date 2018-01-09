@@ -10,13 +10,20 @@ import org.springframework.security.crypto.password.PasswordEncoder;
  */
 public interface RegistrationService {
     /**
-     * Registers new users
+     * Registers new user
      *
      * @param user user which is registering.
      * @return managed by admin user.
      */
 
     User registerNewUser(User user);
+
+    /**
+     * Sends Email with confirmation of registration.
+     *
+     * @param user user to which email will be sent.
+     * @throws MailException if Email is incorrect.
+     */
 
     void sendConfirmationEmailMessage(User user) throws MailException;
 

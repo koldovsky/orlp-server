@@ -37,9 +37,6 @@ public interface MailService {
      */
     void sendPasswordRestoreMail(String accountEmail);
 
-    /**
-     *
-     */
     String getFreeMarkerTemplateContent(Map<String, Object> model);
 
     String getActivationAccountTemplateContent(Map<String, Object> model);

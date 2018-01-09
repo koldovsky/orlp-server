@@ -35,6 +35,11 @@ public interface UserService {
 
     void setMailService(MailService mailService);
 
+    /**
+     * Adds new user
+     *
+     * @param user which will be saved.
+     */
     void addUser(User user);
 
     /**
