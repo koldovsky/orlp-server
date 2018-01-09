@@ -36,13 +36,23 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
     private MessageSource messageSource;
     private final Locale locale = LocaleContextHolder.getLocale();
 
-    private static final EnumMap<AccountStatus, ResponseEntity<MessageDTO>> USER_STATUS_ERROR_RESPONSE = new EnumMap<>(AccountStatus.class);
+    private static final EnumMap<AccountStatus,
+            ResponseEntity<MessageDTO>> USER_STATUS_ERROR_RESPONSE = new EnumMap<>(AccountStatus.class);
+
+    static {
+        USER_STATUS_ERROR_RESPONSE.put(AccountStatus.DELETED,
+                new ResponseEntity<>(new MessageDTO("Account with this email is deleted"),
+                        HttpStatus.LOCKED));
+        USER_STATUS_ERROR_RESPONSE.put(AccountStatus.BLOCKED,
+                new ResponseEntity<>(new MessageDTO("Account with this email is blocked"),
+                        HttpStatus.FORBIDDEN));
+    }
 
     @ExceptionHandler(MultipartException.class)
     @ResponseStatus(HttpStatus.FORBIDDEN)
     @ResponseBody
     MessageDTO handleLargeFileException() {
-        return new MessageDTO(messageSource.getMessage("exception.message.tooLargeFile", new Object[]{}, locale));
+        return new MessageDTO(messageSource.getMessage("message.exception.tooLargeFile", new Object[]{}, locale));
     }
 
 
@@ -50,21 +60,21 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
     @ResponseStatus(HttpStatus.FORBIDDEN)
     @ResponseBody
     MessageDTO handleImageRepositorySizeQuotaExceededException() {
-        return new MessageDTO(messageSource.getMessage("exception.message.exceededQuotaDeleteImage", new Object[]{}, locale));
+        return new MessageDTO(messageSource.getMessage("message.exception.exceededQuotaDeleteImage", new Object[]{}, locale));
     }
 
     @ExceptionHandler(CanNotBeDeletedException.class)
     @ResponseStatus(HttpStatus.FORBIDDEN)
     @ResponseBody
     MessageDTO handleCanNotBeDeletedException() {
-        return new MessageDTO(messageSource.getMessage("exception.message.imageInUse", new Object[]{}, locale));
+        return new MessageDTO(messageSource.getMessage("message.exception.imageInUse", new Object[]{}, locale));
     }
 
     @ExceptionHandler(NotOwnerOperationException.class)
     @ResponseStatus(HttpStatus.FORBIDDEN)
     @ResponseBody
     MessageDTO handleNotOwnerOperationException() {
-        return new MessageDTO(messageSource.getMessage("exception.message.forCurrentUserNotAllowed.message", new Object[]{}, locale));
+        return new MessageDTO(messageSource.getMessage("message.exception.forCurrentUserNotAllowed", new Object[]{}, locale));
     }
 
 
@@ -79,21 +89,21 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
     @ResponseStatus(HttpStatus.CONFLICT)
     @ResponseBody
     MessageDTO handleUnknownHostException() {
-        return new MessageDTO(messageSource.getMessage("exception.message.ipAdressCouldntBeDetermined", new Object[]{}, locale));
+        return new MessageDTO(messageSource.getMessage("message.exception.ipAdressCouldntBeDetermined", new Object[]{}, locale));
     }
 
     @ExceptionHandler(MailException.class)
     @ResponseStatus(HttpStatus.SERVICE_UNAVAILABLE)
     @ResponseBody
     MessageDTO handleMailException() {
-        return new MessageDTO(messageSource.getMessage("exception.message.mailNotSent", new Object[]{}, locale));
+        return new MessageDTO(messageSource.getMessage("message.exception.mailNotSent", new Object[]{}, locale));
     }
 
     @ExceptionHandler(WrongFormatException.class)
     @ResponseStatus(HttpStatus.NOT_ACCEPTABLE)
     @ResponseBody
     MessageDTO handleWrongFormatException() {
-        return new MessageDTO(messageSource.getMessage("exception.message.notValidFileFormat", new Object[]{}, locale));
+        return new MessageDTO(messageSource.getMessage("message.exception.notValidFileFormat", new Object[]{}, locale));
     }
 
     @ExceptionHandler(UserStatusException.class)
