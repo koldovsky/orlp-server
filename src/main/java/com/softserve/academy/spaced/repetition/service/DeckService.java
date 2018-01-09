@@ -110,9 +110,6 @@ public interface DeckService {
      *
      *
      *
-     *
-     *
-     *
      */
     Deck getDeckUser(Long deckId) throws NotAuthorisedUserException, NotOwnerOperationException;
 

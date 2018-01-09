@@ -11,7 +11,7 @@ import java.util.List;
  */
 public interface DeckCommentService {
     /**
-     * Adds the comment to decks or answer to comment if @param parentCommentId is not null.
+     * Adds the comment to deck or answer to comment if @param parentCommentId is not null.
      *
      * @param deckId          deck`s id, must not be {@literal null}.
      * @param commentText     text of the comment, must not be {null}.
