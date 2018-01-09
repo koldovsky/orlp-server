@@ -9,6 +9,8 @@ import com.softserve.academy.spaced.repetition.security.JwtTokenUtil;
 import com.softserve.academy.spaced.repetition.security.JwtUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpHeaders;
 import org.springframework.mobile.device.Device;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -25,11 +27,15 @@ import org.springframework.stereotype.Service;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Collections;
+import java.util.Locale;
 import java.util.Map;
 
 @Service
 public class AuthenticationRestService {
 
+    @Autowired
+    private MessageSource messageSource;
+    private final Locale locale = LocaleContextHolder.getLocale();
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
     @Autowired
@@ -98,7 +104,7 @@ public class AuthenticationRestService {
             String refreshedToken = jwtTokenUtil.refreshToken(token);
             return addTokenToHeaderCookie(refreshedToken);
         } else {
-            throw new BadCredentialsException("Token is not valid");
+            throw new BadCredentialsException(messageSource.getMessage("message.exception.notValidToken", new Object[]{}, locale));
         }
     }
 
@@ -115,7 +121,7 @@ public class AuthenticationRestService {
         if (token != null) {
             return token;
         } else {
-            throw new BadCredentialsException("No token");
+            throw new BadCredentialsException(messageSource.getMessage("message.exception.noToken", new Object[]{}, locale));
         }
     }
 
@@ -143,7 +149,7 @@ public class AuthenticationRestService {
 
     private void validateUser(UserDetails userDetails){
         if(!userDetails.isAccountNonLocked()){
-            throw new LockedException("Account is deactivated");
+            throw new LockedException(messageSource.getMessage("message.exception.deactivatedAccount", new Object[]{}, locale));
         }
     }
 }

@@ -5,6 +5,9 @@ import com.softserve.academy.spaced.repetition.controller.utils.dto.ValidationMe
 import com.softserve.academy.spaced.repetition.controller.utils.dto.impl.MessageDTO;
 import com.softserve.academy.spaced.repetition.domain.enums.AccountStatus;
 import com.softserve.academy.spaced.repetition.utils.exceptions.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,11 +25,16 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 import java.net.UnknownHostException;
 import java.util.EnumMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 @ControllerAdvice
 public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
+
+    @Autowired
+    private MessageSource messageSource;
+    private final Locale locale = LocaleContextHolder.getLocale();
 
     private static final EnumMap<AccountStatus,
             ResponseEntity<MessageDTO>> USER_STATUS_ERROR_RESPONSE = new EnumMap<>(AccountStatus.class);
@@ -44,7 +52,7 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
     @ResponseStatus(HttpStatus.FORBIDDEN)
     @ResponseBody
     MessageDTO handleLargeFileException() {
-        return new MessageDTO("File upload error: file is too large.");
+        return new MessageDTO(messageSource.getMessage("message.exception.tooLargeFile", new Object[]{}, locale));
     }
 
 
@@ -52,22 +60,21 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
     @ResponseStatus(HttpStatus.FORBIDDEN)
     @ResponseBody
     MessageDTO handleImageRepositorySizeQuotaExceededException() {
-        return new MessageDTO("You have exceeded your quota for uploading images. " +
-                "You should delete some images before new upload.");
+        return new MessageDTO(messageSource.getMessage("message.exception.exceededQuotaDeleteImage", new Object[]{}, locale));
     }
 
     @ExceptionHandler(CanNotBeDeletedException.class)
     @ResponseStatus(HttpStatus.FORBIDDEN)
     @ResponseBody
     MessageDTO handleCanNotBeDeletedException() {
-        return new MessageDTO("Current image is already in use!");
+        return new MessageDTO(messageSource.getMessage("message.exception.imageInUse", new Object[]{}, locale));
     }
 
     @ExceptionHandler(NotOwnerOperationException.class)
     @ResponseStatus(HttpStatus.FORBIDDEN)
     @ResponseBody
     MessageDTO handleNotOwnerOperationException() {
-        return new MessageDTO("Operation is not allowed for current user!");
+        return new MessageDTO(messageSource.getMessage("message.exception.forCurrentUserNotAllowed", new Object[]{}, locale));
     }
 
 
@@ -82,21 +89,21 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
     @ResponseStatus(HttpStatus.CONFLICT)
     @ResponseBody
     MessageDTO handleUnknownHostException() {
-        return new MessageDTO("The IP address of a host could not be determined");
+        return new MessageDTO(messageSource.getMessage("message.exception.ipAdressCouldntBeDetermined", new Object[]{}, locale));
     }
 
     @ExceptionHandler(MailException.class)
     @ResponseStatus(HttpStatus.SERVICE_UNAVAILABLE)
     @ResponseBody
     MessageDTO handleMailException() {
-        return new MessageDTO("Mail not sent");
+        return new MessageDTO(messageSource.getMessage("message.exception.mailNotSent", new Object[]{}, locale));
     }
 
     @ExceptionHandler(WrongFormatException.class)
     @ResponseStatus(HttpStatus.NOT_ACCEPTABLE)
     @ResponseBody
     MessageDTO handleWrongFormatException() {
-        return new MessageDTO("Not valid file format");
+        return new MessageDTO(messageSource.getMessage("message.exception.notValidFileFormat", new Object[]{}, locale));
     }
 
     @ExceptionHandler(UserStatusException.class)
