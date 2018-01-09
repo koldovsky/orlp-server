@@ -39,7 +39,7 @@ public interface CourseCommentService {
     List<Comment> getAllCommentsForCourse(Long courseId);
 
     /**
-     * Updates comment with the given identifier on the new text
+     * Updates text of comment with the given identifier.
      *
      * @param commentId   - must not be {@literal null}.
      * @param commentText - new text which will be set, must not be {null}.

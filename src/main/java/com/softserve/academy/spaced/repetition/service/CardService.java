@@ -25,7 +25,7 @@ public interface CardService {
     List<Card> getLearningCards(Long deckId) throws NotAuthorisedUserException;
 
     /**
-     * Retrieves an card by its id.
+     * Retrieves an card with the given identifier.
      *
      * @param id must not be {@literal null}.
      * @return the card with the given id or {@literal null} if none found.
@@ -44,7 +44,7 @@ public interface CardService {
      * Updates card with the given identifier.
      *
      * @param id   must not be {@literal null}.
-     * @param card must not be {null}.
+     * @param card added card, must not be {null}.
      */
     void updateCard(Long id, Card card);
 

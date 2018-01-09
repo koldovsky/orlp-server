@@ -9,27 +9,91 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
-
+/**
+ * Works with processing images.
+ */
 public interface ImageService {
 
+    /**
+     * Adds image to the database.
+     *
+     * @param file image uploaded by User.
+     * @return saved image
+     * @throws ImageRepositorySizeQuotaExceededException
+     * @throws NotAuthorisedUserException
+     */
     Image addImageToDB(MultipartFile file) throws ImageRepositorySizeQuotaExceededException, NotAuthorisedUserException;
 
-    void checkImageExtention(MultipartFile file) throws ImageRepositorySizeQuotaExceededException,
+    /**
+     * Just check image extension.
+     *
+     * @param file file uploaded by User.
+     * @throws ImageRepositorySizeQuotaExceededException
+     * @throws NotAuthorisedUserException
+     */
+    void checkImageExtension(MultipartFile file) throws ImageRepositorySizeQuotaExceededException,
             NotAuthorisedUserException;
 
-    byte[] getDecodedImageContentByImageId(Long id);
+    /**
+     * Gets decoded from Base64 image content for image with the given identifier.
+     *
+     * @param imageId must not be {@literal null}.
+     * @return string, which contains decoded image content
+     */
+    byte[] getDecodedImageContentByImageId(Long imageId);
 
+    /**
+     * Encodes file content to Base64 format
+     *
+     * @param file image file
+     * @return encoded file content
+     */
     String encodeToBase64(MultipartFile file);
 
+    /**
+     * Decodes String from Base64 format
+     *
+     * @param encodedFileContent string with encoded file content
+     * @return decoded file content
+     */
     byte[] decodeFromBase64(String encodedFileContent);
 
+    /**
+     * Gets value (in bytes) of personal user's limit for uploading files to the DB.
+     *
+     * @param userId must not be {@literal null}.
+     * @return number of bytes that left for uploading
+     */
     Long getUsersLimitInBytesForImagesLeft(Long userId);
 
-    void deleteImage(Long id) throws CanNotBeDeletedException, NotOwnerOperationException, NotAuthorisedUserException;
+    /**
+     * Deletes the image with with the given identifier.
+     *
+     * @param imageId must not be {@literal null}.
+     * @throws CanNotBeDeletedException
+     * @throws NotOwnerOperationException
+     * @throws NotAuthorisedUserException
+     */
+    void deleteImage(Long imageId) throws CanNotBeDeletedException, NotOwnerOperationException, NotAuthorisedUserException;
 
+    /**
+     * Sets field 'isImageUsed' on true.
+     *
+     * @param imageId must not be {@literal null}.
+     */
     void setImageStatusInUse(Long imageId);
 
+    /**
+     * Sets field 'isImageUsed' on false.
+     *
+     * @param imageId must not be {@literal null}.
+     */
     void setImageStatusNotInUse(Long imageId);
 
+    /**
+     * Gets images for authorized user.
+     *
+     * @return list of images
+     */
     List<Image> getImagesForCurrentUser() throws NotAuthorisedUserException;
 }
