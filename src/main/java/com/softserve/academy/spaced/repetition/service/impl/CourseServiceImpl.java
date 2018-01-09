@@ -210,7 +210,7 @@ public class CourseServiceImpl implements CourseService {
     public void addDeckToCourse(Long courseId, Long deckId) {
         Course course = courseRepository.findOne(courseId);
         if (course.getDecks().stream().anyMatch(deck -> deck.getId().equals(deckId))) {
-            throw new IllegalArgumentException(messageSource.getMessage("exception.message.deck.already.exists",
+            throw new IllegalArgumentException(messageSource.getMessage("message.exception.deckAlreadyExists",
                     new Object[]{}, locale));
         }
         course.getDecks().add(deckRepository.getDeckById(deckId));

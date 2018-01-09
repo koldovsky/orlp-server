@@ -35,12 +35,12 @@ public class CardLoadService {
             Map <String, String> map = cardDataExtractor.extractData(relativePath);
             dataSaver.save(map, deckId);
         } catch (IOException e) {
-            throw new NoSuchElementException(messageSource.getMessage("exception.message.file.not.found",
+            throw new NoSuchElementException(messageSource.getMessage("message.exception.fileNotFound",
                     new Object[]{}, locale));
         } catch (SQLException e) {
             throw new WrongFormatException();
         } catch (ClassNotFoundException e) {
-            throw new NoSuchElementException(messageSource.getMessage("exception.message.card.file.not.readable",
+            throw new NoSuchElementException(messageSource.getMessage("message.exception.cardFileNotReadable",
                     new Object[]{}, locale));
         }
 

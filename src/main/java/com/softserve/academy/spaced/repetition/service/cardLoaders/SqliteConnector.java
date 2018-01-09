@@ -38,7 +38,7 @@ public class SqliteConnector implements DbConnector {
         Connection conn = null;
         Class.forName(DRIVER);
         conn = DriverManager.getConnection(PATH + relativePath);
-        System.out.println(messageSource.getMessage("connection.message.successful",
+        System.out.println(messageSource.getMessage("message.database.connectionSuccessful",
                 new Object[]{"SQLite"}, locale));
         return conn;
     }

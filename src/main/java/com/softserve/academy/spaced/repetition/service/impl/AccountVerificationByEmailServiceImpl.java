@@ -34,7 +34,7 @@ public class AccountVerificationByEmailServiceImpl implements AccountVerificatio
         String email;
         email = jwtTokenForMail.decryptToken(token);
         if (userRepository.findUserByAccountEmail(email) == null) {
-            throw new NoSuchElementException(messageSource.getMessage("exception.message.email.not.exists",
+            throw new NoSuchElementException(messageSource.getMessage("message.exception.emailNotExists",
                     new Object[]{}, locale));
         }
         Account editedAcc = userRepository.findUserByAccountEmail(email).getAccount();

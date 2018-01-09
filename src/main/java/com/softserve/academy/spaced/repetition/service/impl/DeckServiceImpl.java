@@ -174,7 +174,7 @@ public class DeckServiceImpl implements DeckService {
         User user = userService.getAuthorizedUser();
         Deck deck = deckRepository.findOne(deckId);
         if (deck == null) {
-            throw new NoSuchElementException(messageSource.getMessage("exception.message.deck.not.found",
+            throw new NoSuchElementException(messageSource.getMessage("message.exception.deckNotFound",
                     new Object[]{}, locale));
         }
         if (deck.getDeckOwner().getId().equals(user.getId())) {
@@ -191,7 +191,7 @@ public class DeckServiceImpl implements DeckService {
         User user = userService.getAuthorizedUser();
         Deck deck = deckRepository.findOne(deckId);
         if (deck == null) {
-            throw new NoSuchElementException(messageSource.getMessage("exception.message.deck.not.found",
+            throw new NoSuchElementException(messageSource.getMessage("message.exception.deckNotFound",
                     new Object[]{}, locale));
         }
         if (deck.getDeckOwner().getId().equals(user.getId())) {
@@ -216,7 +216,7 @@ public class DeckServiceImpl implements DeckService {
         User user = userService.getAuthorizedUser();
         Deck deck = deckRepository.findOne(deckId);
         if (deck == null) {
-            throw new NoSuchElementException(messageSource.getMessage("exception.message.deck.not.found",
+            throw new NoSuchElementException(messageSource.getMessage("message.exception.deckNotFound",
                     new Object[]{}, locale));
         }
         if (deck.getDeckOwner().getId().equals(user.getId())) {

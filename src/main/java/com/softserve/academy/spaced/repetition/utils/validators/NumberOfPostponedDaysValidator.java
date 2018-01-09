@@ -31,14 +31,14 @@ public class NumberOfPostponedDaysValidator {
     public void validate(RememberingLevel level, int numberOfPostponedDays) throws NotAuthorisedUserException {
         Account account = userService.getAuthorizedUser().getAccount();
         if (numberOfPostponedDays < 1) {
-            throw new IllegalArgumentException(messageSource.getMessage("exception.message.number.of.cards.negative",
+            throw new IllegalArgumentException(messageSource.getMessage("message.exception.numbersOfCardsNegative",
                     new Object[]{}, locale));
         }
         if (level.getOrderNumber() > 1) {
             RememberingLevel previousLevel = rememberingLevelRepository
                     .findRememberingLevelByAccountEqualsAndOrderNumber(account, level.getOrderNumber() - 1);
             if (numberOfPostponedDays <= previousLevel.getNumberOfPostponedDays()) {
-                throw new IllegalArgumentException(messageSource.getMessage("exception.message.number.of.postponed.days.less.than.previous.level",
+                throw new IllegalArgumentException(messageSource.getMessage("message.exception.numberOfPostponedDaysLessThanPreviousLevel",
                         new Object[]{}, locale));
             }
         }
@@ -46,7 +46,7 @@ public class NumberOfPostponedDaysValidator {
             RememberingLevel nextLevel = rememberingLevelRepository
                     .findRememberingLevelByAccountEqualsAndOrderNumber(account, level.getOrderNumber() + 1);
             if (numberOfPostponedDays >= nextLevel.getNumberOfPostponedDays()) {
-                throw new IllegalArgumentException(messageSource.getMessage("exception.message.number.of.postponed.days.more.than.next.level",
+                throw new IllegalArgumentException(messageSource.getMessage("message.exception.numberOfPostponedDaysMoreThanNextLevel",
                         new Object[]{}, locale));
             }
         }

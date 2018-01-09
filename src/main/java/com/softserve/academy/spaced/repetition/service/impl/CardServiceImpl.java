@@ -96,7 +96,7 @@ public class CardServiceImpl implements CardService {
     public void addCard(Card card, Long deckId) {
         if (card.getTitle().trim().isEmpty() || card.getAnswer().trim().isEmpty()
                 || card.getQuestion().trim().isEmpty()) {
-            throw new IllegalArgumentException(messageSource.getMessage("exception.message.card.fields.not.empty",
+            throw new IllegalArgumentException(messageSource.getMessage("message.exception.cardFieldsNotEmpty",
                     new Object[]{}, locale));
         }
         Deck deck = deckRepository.findOne(deckId);
@@ -108,7 +108,7 @@ public class CardServiceImpl implements CardService {
     public void updateCard(Long id, Card card) {
         if (card.getTitle().trim().isEmpty() || card.getAnswer().trim().isEmpty()
                 || card.getQuestion().trim().isEmpty()) {
-            throw new IllegalArgumentException(messageSource.getMessage("exception.message.card.fields.not.empty",
+            throw new IllegalArgumentException(messageSource.getMessage("message.exception.cardFieldsNotEmpty",
                     new Object[]{}, locale));
         }
         card.setId(id);
@@ -159,7 +159,7 @@ public class CardServiceImpl implements CardService {
             if (!cardsFile.getContentType().equals("application/octet-stream")) {
                 throw new WrongFormatException();
             } else if (cardsFile.isEmpty()) {
-                throw new EmptyFileException(messageSource.getMessage("exception.message.file.empty",
+                throw new EmptyFileException(messageSource.getMessage("message.exception.fileEmpty",
                         new Object[]{}, locale));
             }
             Yaml yaml = new Yaml();
@@ -170,7 +170,7 @@ public class CardServiceImpl implements CardService {
                     addCard(new Card(card.getQuestion(), card.getAnswer(), card.getTitle()), deckId);
                 }
             } catch (ParserException | ConstructorException ex) {
-                throw new IllegalArgumentException(messageSource.getMessage("exception.message.file.wrong.format",
+                throw new IllegalArgumentException(messageSource.getMessage("message.exception.fileWrongFormat",
                         new Object[]{}, locale));
             }
         }
@@ -195,7 +195,7 @@ public class CardServiceImpl implements CardService {
         try (Writer out = new BufferedWriter(new OutputStreamWriter(outputStream))) {
             yaml.dump(cardsMap, out);
         } catch (IOException ex) {
-            throw new IllegalArgumentException(messageSource.getMessage("exception.message.file.dumping",
+            throw new IllegalArgumentException(messageSource.getMessage("message.exception.fileDumpingFailed",
                     new Object[]{}, locale));
         }
 
@@ -206,7 +206,7 @@ public class CardServiceImpl implements CardService {
         try (InputStream in = CardServiceImpl.class.getResourceAsStream("/data/CardsTemplate.yml")) {
             FileCopyUtils.copy(in, outputStream);
         } catch (IOException ex) {
-            throw new IllegalArgumentException(messageSource.getMessage("exception.message.file.copy",
+            throw new IllegalArgumentException(messageSource.getMessage("message.exception.fileCopyFailed",
                     new Object[]{}, locale));
         }
     }

@@ -48,7 +48,7 @@ public class UserCardQueueServiceImpl implements UserCardQueueService {
                 .anyMatch(UserCardQueueStatus.valueOf(status)::equals);
 
         if(!userCardQueueStatusFound) {
-            throw new IllegalArgumentException(messageSource.getMessage("exception.message.user.card.queue.status.not.valid",
+            throw new IllegalArgumentException(messageSource.getMessage("message.exception.userCardQueueStatusNotValid",
                     new Object[]{status}, locale));
         }
 

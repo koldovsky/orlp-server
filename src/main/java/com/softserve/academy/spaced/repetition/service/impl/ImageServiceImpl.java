@@ -19,7 +19,6 @@ import org.springframework.web.multipart.MultipartException;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Locale;
 
@@ -72,12 +71,12 @@ public class ImageServiceImpl implements ImageService {
             throw new ImageRepositorySizeQuotaExceededException();
         }
         if (fileSize > maxFileSize) {
-            throw new MultipartException(messageSource.getMessage("exception.message.image.file.size.too.large",
+            throw new MultipartException(messageSource.getMessage("message.exception.imageFileSizeTooLarge",
                     new Object[]{}, locale));
         } else {
             String imageType = file.getContentType();
             if (imageType == null || !imageType.split("/")[0].equalsIgnoreCase("image")) {
-                throw new IllegalArgumentException(messageSource.getMessage("exception.message.image.file.wrong.format",
+                throw new IllegalArgumentException(messageSource.getMessage("message.exception.imageFileWrongFormat",
                         new Object[]{}, locale));
             }
         }

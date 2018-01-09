@@ -14,7 +14,6 @@ import com.softserve.academy.spaced.repetition.utils.validators.NumberOfPostpone
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.AutoConfigureOrder;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -73,7 +72,7 @@ public class AccountServiceImpl implements AccountService {
                 .anyMatch(LearningRegime.valueOf(learningRegime)::equals);
 
         if(!learningRegimeFound) {
-            throw new IllegalArgumentException(messageSource.getMessage("exception.message.learning.regime.not.valid",
+            throw new IllegalArgumentException(messageSource.getMessage("message.exception.learningRegimeNotValid",
                     new Object[]{learningRegime}, locale));
         }
 
@@ -95,7 +94,7 @@ public class AccountServiceImpl implements AccountService {
     public void updateCardsNumber(Integer cardsNumber) throws NotAuthorisedUserException {
         Account account = userService.getAuthorizedUser().getAccount();
         if (cardsNumber < 1) {
-            throw new IllegalArgumentException(messageSource.getMessage("exception.message.number.of.cards.negative",
+            throw new IllegalArgumentException(messageSource.getMessage("message.exception.numbersOfCardsNegative",
                     new Object[]{}, locale));
         }
         account.setCardsNumber(cardsNumber);
