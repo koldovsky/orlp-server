@@ -6,7 +6,7 @@ import javax.persistence.*;
 import java.util.List;
 
 @Entity
-@Table(name = "Category")
+@Table(name = "category")
 public class Category implements EntityInterface {
 
     @Id

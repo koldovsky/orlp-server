@@ -7,7 +7,7 @@ import javax.persistence.*;
 import java.util.List;
 
 @Entity
-@Table(name = "Course")
+@Table(name = "course")
 public class Course implements EntityInterface {
 
     @Id

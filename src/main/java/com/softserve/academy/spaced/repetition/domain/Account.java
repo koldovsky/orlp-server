@@ -27,18 +27,18 @@ public class Account implements EntityInterface {
     @Column(name = "account_id", nullable = false)
     private Long id;
 
-    @Column(name = "password")
+    @Column(name = "password", length = PASS_MAX_SIZE)
     @Size(message = PASS_SIZE_MESSAGE, min = PASS_MIN_SIZE, max = PASS_MAX_SIZE, groups = Request.class)
     private String password;
 
-    @Column(name = "email", unique = true, nullable = false)
+    @Column(name = "email", unique = true, nullable = false, length = EMAIL_MAX_SIZE)
     @NotNull(message = NULL_MESSAGE, groups = Request.class)
     @Size(min = EMAIL_MIN_SIZE, max = EMAIL_MAX_SIZE, message = EMAIL_SIZE_MESSAGE, groups = Request.class)
     @Pattern(regexp = EMAIL_PATTERN, message = EMAIL_PATTERN_MESSAGE, groups = Request.class)
     @EmailNotExist(groups = Request.class)
     private String email;
 
-    @Column(name = "AUTHENTICATIONTYPE", length = 8)
+    @Column(name = "authenticationtype", length = AUTH_TYPE_MAX_SIZE)
     @NotNull
     @Enumerated(EnumType.STRING)
     private AuthenticationType authenticationType;
@@ -52,7 +52,7 @@ public class Account implements EntityInterface {
     @NotNull
     private boolean deactivated;
 
-    @Column(name = "LASTPASSWORDRESETDATE")
+    @Column(name = "lastpasswordresetdate")
     @Temporal(TemporalType.TIMESTAMP)
     @NotNull
     private Date lastPasswordResetDate;

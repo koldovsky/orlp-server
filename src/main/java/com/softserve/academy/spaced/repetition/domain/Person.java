@@ -13,7 +13,7 @@ import static com.softserve.academy.spaced.repetition.utils.validators.Validatio
 
 
 @Entity
-@Table(name = "Person")
+@Table(name = "person")
 public class Person {
 
     @Id
@@ -21,20 +21,20 @@ public class Person {
     @Column(name = "person_id")
     private Long id;
 
-    @Column(name = "first_name")
+    @Column(name = "first_name", length = PERSON_FIELD_MAX_SIZE)
     @NotNull(message = NULL_MESSAGE, groups = Request.class)
     @Size(min = PERSON_FIELD_MIN_SIZE, max = PERSON_FIELD_MAX_SIZE, message = PERSON_FIELD_SIZE_MESSAGE, groups = Request.class)
     @Pattern(regexp = SPECIAL_SYMBOLS_PATTERN, message = SPECIAL_SYMBOLS_PATTERN_MESSAGE, groups = Request.class)
     private String firstName;
 
-    @Column(name = "last_name")
+    @Column(name = "last_name", length = PERSON_FIELD_MAX_SIZE)
     @NotNull(message = NULL_MESSAGE, groups = Request.class)
     @Size(min = PERSON_FIELD_MIN_SIZE, max = PERSON_FIELD_MAX_SIZE, message = PERSON_FIELD_SIZE_MESSAGE, groups = Request.class)
     @Pattern(regexp = SPECIAL_SYMBOLS_PATTERN, message = SPECIAL_SYMBOLS_PATTERN_MESSAGE, groups = Request.class)
     private String lastName;
 
 
-    @Column(name = "IMAGETYPE", length = 6)
+    @Column(name = "IMAGETYPE", length = IMAGE_TYPE_MAX_SIZE)
     @NotNull
     @Enumerated(EnumType.STRING)
     private ImageType typeImage;

@@ -11,6 +11,8 @@ import javax.validation.constraints.Size;
 import static com.softserve.academy.spaced.repetition.utils.validators.ValidationConstants.COURSE_AND_CARD_RATING_ERROR_MESSAGE;
 import static com.softserve.academy.spaced.repetition.utils.validators.ValidationConstants.MAX_COURSE_AND_CARD_RATING;
 import static com.softserve.academy.spaced.repetition.utils.validators.ValidationConstants.MIN_COURSE_AND_CARD_RATING;
+import static com.softserve.academy.spaced.repetition.utils.validators.ValidationConstants.EMAIL_MAX_SIZE;
+
 
 @Entity
 @Table(name = "card_rating")
@@ -21,7 +23,7 @@ public class CardRating implements EntityInterface {
     @Column(name = "rating_id")
     private Long id;
 
-    @Column(name = "account_email", nullable = false)
+    @Column(name = "account_email", nullable = false, length = EMAIL_MAX_SIZE)
     private String accountEmail;
 
     @ManyToOne(fetch = FetchType.LAZY)

@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Set;
 
 @Entity
-@Table(name = "Deck")
+@Table(name = "deck")
 public class Deck implements EntityInterface {
 
     @Id

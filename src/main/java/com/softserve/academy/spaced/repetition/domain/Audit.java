@@ -6,6 +6,9 @@ import com.softserve.academy.spaced.repetition.utils.audit.AuditingAction;
 import javax.persistence.*;
 import java.util.Date;
 
+import static com.softserve.academy.spaced.repetition.utils.validators.ValidationConstants.*;
+
+
 @Entity
 @Table(name = "audit")
 public class Audit implements EntityInterface {
@@ -15,7 +18,7 @@ public class Audit implements EntityInterface {
     @Column(name = "audit_id")
     private long id;
 
-    @Column(name = "accountEmail", nullable = false)
+    @Column(name = "account_email", nullable = false, length = EMAIL_MAX_SIZE)
     private String accountEmail;
 
     @Column(name = "action", nullable = false)

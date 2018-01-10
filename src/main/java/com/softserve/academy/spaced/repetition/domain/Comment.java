@@ -20,7 +20,7 @@ public abstract class Comment implements EntityInterface {
     private Long id;
 
     @NotBlank(message = EMPTY_MESSAGE, groups = Request.class)
-    @Column(name = "commentText", nullable = false, columnDefinition = "LONGTEXT")
+    @Column(name = "comment_text", nullable = false, columnDefinition = "LONGTEXT")
     private String commentText;
 
     @Column(name = "comment_date", nullable = false)
@@ -31,7 +31,7 @@ public abstract class Comment implements EntityInterface {
     @JoinColumn(name = "person_id")
     private Person person;
 
-    @Column(name = "parentCommentId")
+    @Column(name = "parent_comment_id")
     private Long parentCommentId;
 
     public Comment() {

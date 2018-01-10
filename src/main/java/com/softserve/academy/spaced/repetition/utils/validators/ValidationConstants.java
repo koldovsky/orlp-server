@@ -48,6 +48,12 @@ public class ValidationConstants {
 
     public static final int PASS_MAX_SIZE = 20;
 
+    public static final int AUTH_TYPE_MAX_SIZE = 8;
+
+    public static final int AUTH_NAME_MAX_SIZE = 50;
+
+    public static final int IMAGE_TYPE_MAX_SIZE = 6;
+
     public static final String PASS_SIZE_MESSAGE = FIRST_PART_OF_SIZE_MESSAGE + PASS_MIN_SIZE
             + SECOND_PART_OF_SIZE_MESSAGE + PASS_MAX_SIZE + THIRD_PART_OF_SIZE_MESSAGE;
 
