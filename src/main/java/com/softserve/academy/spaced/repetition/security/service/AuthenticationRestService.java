@@ -104,7 +104,7 @@ public class AuthenticationRestService {
             String refreshedToken = jwtTokenUtil.refreshToken(token);
             return addTokenToHeaderCookie(refreshedToken);
         } else {
-            throw new BadCredentialsException(messageSource.getMessage("message.exception.notValidToken", new Object[]{}, locale));
+            throw new BadCredentialsException(messageSource.getMessage("message.exception.tokenNotValid", new Object[]{}, locale));
         }
     }
 
@@ -121,7 +121,7 @@ public class AuthenticationRestService {
         if (token != null) {
             return token;
         } else {
-            throw new BadCredentialsException(messageSource.getMessage("message.exception.noToken", new Object[]{}, locale));
+            throw new BadCredentialsException(messageSource.getMessage("message.exception.tokenIsNull", new Object[]{}, locale));
         }
     }
 
@@ -149,7 +149,7 @@ public class AuthenticationRestService {
 
     private void validateUser(UserDetails userDetails){
         if(!userDetails.isAccountNonLocked()){
-            throw new LockedException(messageSource.getMessage("message.exception.deactivatedAccount", new Object[]{}, locale));
+            throw new LockedException(messageSource.getMessage("message.exception.accountDeactivated", new Object[]{}, locale));
         }
     }
 }

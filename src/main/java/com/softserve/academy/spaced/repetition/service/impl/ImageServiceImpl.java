@@ -71,7 +71,7 @@ public class ImageServiceImpl implements ImageService {
             throw new ImageRepositorySizeQuotaExceededException();
         }
         if (fileSize > maxFileSize) {
-            throw new MultipartException(messageSource.getMessage("message.exception.imageFileSizeTooLarge",
+            throw new MultipartException(messageSource.getMessage("message.exception.fileSizeTooLarge",
                     new Object[]{}, locale));
         } else {
             String imageType = file.getContentType();
