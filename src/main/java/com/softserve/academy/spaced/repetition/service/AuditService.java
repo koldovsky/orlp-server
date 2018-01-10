@@ -87,7 +87,7 @@ public interface AuditService {
     List<Audit> getAuditListSortedByRoleDesc();
 
     /**
-     * Return sorted audits on each page
+     * Return sorted audits on each page.
      *
      * @param pageNumber zero-based page index.
      * @param sortBy     the properties to sort by, must not be null or empty.

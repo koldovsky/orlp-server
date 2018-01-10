@@ -19,8 +19,8 @@ public interface ImageService {
      *
      * @param file image uploaded by User.
      * @return saved image
-     * @throws ImageRepositorySizeQuotaExceededException
-     * @throws NotAuthorisedUserException
+     * @throws ImageRepositorySizeQuotaExceededException if user want to add image that exceed resolved size for images
+     * @throws NotAuthorisedUserException                if user is not authorised
      */
     Image addImageToDB(MultipartFile file) throws ImageRepositorySizeQuotaExceededException, NotAuthorisedUserException;
 
@@ -28,8 +28,8 @@ public interface ImageService {
      * Just check image extension.
      *
      * @param file file uploaded by User.
-     * @throws ImageRepositorySizeQuotaExceededException
-     * @throws NotAuthorisedUserException
+     * @throws ImageRepositorySizeQuotaExceededException if user want to add image that exceed resolved size for images
+     * @throws NotAuthorisedUserException                if user is not authorised
      */
     void checkImageExtension(MultipartFile file) throws ImageRepositorySizeQuotaExceededException,
             NotAuthorisedUserException;
@@ -70,9 +70,9 @@ public interface ImageService {
      * Deletes the image with with the given identifier.
      *
      * @param imageId must not be {@literal null}.
-     * @throws CanNotBeDeletedException
-     * @throws NotOwnerOperationException
-     * @throws NotAuthorisedUserException
+     * @throws CanNotBeDeletedException   if this image is used
+     * @throws NotOwnerOperationException if user can not do this operation because it is not his image
+     * @throws NotAuthorisedUserException if user is not authorised
      */
     void deleteImage(Long imageId) throws CanNotBeDeletedException, NotOwnerOperationException, NotAuthorisedUserException;
 
@@ -90,10 +90,12 @@ public interface ImageService {
      */
     void setImageStatusNotInUse(Long imageId);
 
+
     /**
      * Gets images for authorized user.
      *
      * @return list of images
+     * @throws NotAuthorisedUserException if user is not authorised
      */
     List<Image> getImagesForCurrentUser() throws NotAuthorisedUserException;
 }

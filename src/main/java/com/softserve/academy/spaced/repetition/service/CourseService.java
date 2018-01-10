@@ -22,36 +22,36 @@ public interface CourseService {
     /**
      * Find all published courses in category with given identifier.
      *
-     * @param category_id must not be {@literal null}.
+     * @param categoryId must not be {@literal null}.
      * @return list of courses
      */
-    List<Course> getAllCoursesByCategoryId(Long category_id);
+    List<Course> getAllCoursesByCategoryId(Long categoryId);
 
     /**
-     * Find all decks in
+     * Find all decks in category with the given identifiers of category and course.
      *
-     * @param category_id must not be {@literal null}.
-     * @param course_id   must not be {@literal null}.
+     * @param categoryId must not be {@literal null}.
+     * @param courseId   must not be {@literal null}.
      * @return list of decks
      */
-    List<Deck> getAllDecksByCourseId(Long category_id, Long course_id);
+    List<Deck> getAllDecksByCourseId(Long categoryId, Long courseId);
 
     /**
-     * Find user in certain category with the given identifiers of category and course.
+     * Find user in category with the given identifiers of category and course.
      *
-     * @param category_id category's id, must not be {@literal null}.
-     * @param course_id   must not be {@literal null}.
+     * @param categoryId must not be {@literal null}.
+     * @param courseId   must not be {@literal null}.
      * @return course with given identifiers
      */
-    Course getCourseById(Long category_id, Long course_id);
+    Course getCourseById(Long categoryId, Long courseId);
 
     /**
      * Adds course to category with the given identifier
      *
-     * @param course      added course, must not be {null}.
-     * @param category_id category's id,  must not be {@literal null}.
+     * @param course     added course, must not be {null}.
+     * @param categoryId must not be {@literal null}.
      */
-    void addCourse(Course course, Long category_id);
+    void addCourse(Course course, Long categoryId);
 
     /**
      * Finds top courses by rating.
@@ -70,25 +70,25 @@ public interface CourseService {
     /**
      * Updates course in category with the given identifier.
      *
-     * @param course_id must not be {@literal null}.
-     * @param course    updated course, must not be {null}.
+     * @param courseId must not be {@literal null}.
+     * @param course   updated course, must not be {@literal null}.
      */
-    void updateCourse(Long course_id, Course course);
+    void updateCourse(Long courseId, Course course);
 
     /**
      * Delete course from DB
      *
-     * @param course_id must not be {@literal null}.
-     * @throws NotAuthorisedUserException
+     * @param courseId must not be {@literal null}.
+     * @throws NotAuthorisedUserException if user is not authorised
      */
-    void deleteGlobalCourse(Long course_id) throws NotAuthorisedUserException;
+    void deleteGlobalCourse(Long courseId) throws NotAuthorisedUserException;
 
     /**
      * Add course if not exist and remove otherwise
      *
      * @param courseId must not be {@literal null}.
      * @return updated course
-     * @throws NotAuthorisedUserException
+     * @throws NotAuthorisedUserException if user is not authorised
      */
     Course updateListOfCoursesOfTheAuthorizedUser(Long courseId) throws NotAuthorisedUserException;
 
@@ -96,7 +96,7 @@ public interface CourseService {
      * Find all course's id authorized user
      *
      * @return list of course's id
-     * @throws NotAuthorisedUserException
+     * @throws NotAuthorisedUserException if user is not authorised
      */
     List<Long> getAllCoursesIdOfTheCurrentUser() throws NotAuthorisedUserException;
 
@@ -104,26 +104,26 @@ public interface CourseService {
      * Adds course that is available only for current user.
      *
      * @param privateCourse added course, must not be {null}.
-     * @param category_id   must not be {@literal null}.
-     * @throws NotAuthorisedUserException
+     * @param categoryId    must not be {@literal null}.
+     * @throws NotAuthorisedUserException if user is not authorised
      */
-    void createPrivateCourse(Course privateCourse, Long category_id) throws NotAuthorisedUserException;
+    void createPrivateCourse(Course privateCourse, Long categoryId) throws NotAuthorisedUserException;
 
     /**
      * Updates access to course - change property published in course
      *
-     * @param course_id    must not be {@literal null}.
+     * @param courseId     must not be {@literal null}.
      * @param courseAccess course with changed property published
      */
-    void updateCourseAccess(Long course_id, Course courseAccess);
+    void updateCourseAccess(Long courseId, Course courseAccess);
 
     /**
      * Deletes course from current user, but not from DB
      *
-     * @param course_id must not be {@literal null}.
-     * @throws NotAuthorisedUserException
+     * @param courseId must not be {@literal null}.
+     * @throws NotAuthorisedUserException if user is not authorised
      */
-    void deleteLocalCourse(Long course_id) throws NotAuthorisedUserException;
+    void deleteLocalCourse(Long courseId) throws NotAuthorisedUserException;
 
     /**
      * Adds deck with given identifier to course with given identifier.

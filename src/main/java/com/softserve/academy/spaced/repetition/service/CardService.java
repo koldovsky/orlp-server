@@ -20,22 +20,22 @@ public interface CardService {
      *
      * @param deckId must not be {@literal null}.
      * @return all cards with the given deck's id (by default 10)
-     * @throws NotAuthorisedUserException
+     * @throws NotAuthorisedUserException if user is not authorised
      */
     List<Card> getLearningCards(Long deckId) throws NotAuthorisedUserException;
 
     /**
      * Retrieves an card with the given identifier.
      *
-     * @param id must not be {@literal null}.
-     * @return the card with the given id or {@literal null} if none found.
+     * @param cardId must not be {@literal null}.
+     * @return the card with the given identifier
      */
-    Card getCard(Long id);
+    Card getCard(Long cardId);
 
     /**
      * Adds card to deck with the given identifier.
      *
-     * @param card   must not be {null}.
+     * @param card   added card,must not be {@literal null}.
      * @param deckId must not be {@literal null}.
      */
     void addCard(Card card, Long deckId);
@@ -43,17 +43,17 @@ public interface CardService {
     /**
      * Updates card with the given identifier.
      *
-     * @param id   must not be {@literal null}.
-     * @param card added card, must not be {null}.
+     * @param cardId must not be {@literal null}.
+     * @param card   updated card, must not be {null}.
      */
-    void updateCard(Long id, Card card);
+    void updateCard(Long cardId, Card card);
 
     /**
      * Returns cards for studying from deck with the given identifier.
      *
      * @param deckId must not be {@literal null}.
      * @return cards for studying (by default 10)
-     * @throws NotAuthorisedUserException
+     * @throws NotAuthorisedUserException if user is not authorised
      */
     List<Card> getCardsQueue(long deckId) throws NotAuthorisedUserException;
 
@@ -69,7 +69,7 @@ public interface CardService {
      *
      * @param deckId must not be {@literal null}.
      * @return postponed cards
-     * @throws NotAuthorisedUserException
+     * @throws NotAuthorisedUserException if user is not authorised
      */
     List<Card> getAdditionalLearningCards(Long deckId) throws NotAuthorisedUserException;
 
@@ -78,7 +78,7 @@ public interface CardService {
      *
      * @param deckId must not be {@literal null}.
      * @return true if found
-     * @throws NotAuthorisedUserException
+     * @throws NotAuthorisedUserException if user is not authorised
      */
     boolean areThereNotPostponedCardsAvailable(Long deckId) throws NotAuthorisedUserException;
 
@@ -87,11 +87,11 @@ public interface CardService {
      *
      * @param cardsFile expect .yml file and throw exception otherwise
      * @param deckId    must not be {@literal null}.
-     * @throws WrongFormatException
-     * @throws EmptyFileException
-     * @throws NotOwnerOperationException
-     * @throws NotAuthorisedUserException
-     * @throws IOException
+     * @throws WrongFormatException       if invalid format of file
+     * @throws EmptyFileException         if file is empty
+     * @throws NotOwnerOperationException if user can not do this operation because he has not this deck
+     * @throws NotAuthorisedUserException if user is not authorised
+     * @throws IOException                if failed or interrupted I/O operations
      */
     void uploadCards(MultipartFile cardsFile, Long deckId) throws WrongFormatException, EmptyFileException,
             NotOwnerOperationException, NotAuthorisedUserException, IOException;

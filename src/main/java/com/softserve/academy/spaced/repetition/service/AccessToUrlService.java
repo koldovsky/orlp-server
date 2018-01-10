@@ -9,103 +9,103 @@ public interface AccessToUrlService {
     /**
      * Checks on availability of category with the given identifier in DB.
      *
-     * @param category_id must not be {@literal null}.
+     * @param categoryId must not be {@literal null}.
      * @return true if it exist in DB
      */
-    boolean hasAccessToCategory(Long category_id);
+    boolean hasAccessToCategory(Long categoryId);
 
     /**
      * Checks on availability of course in category with the given identifiers in DB.
      *
-     * @param category_id must not be {@literal null}.
-     * @param course_id   must not be {@literal null}.
+     * @param categoryId must not be {@literal null}.
+     * @param courseId   must not be {@literal null}.
      * @return true if it exist in DB
      */
-    boolean hasAccessToCourse(Long category_id, Long course_id);
+    boolean hasAccessToCourse(Long categoryId, Long courseId);
 
     /**
      * Checks on availability of deck in folder with the given identifiers in DB.
      *
-     * @param folder_id must not be {@literal null}.
-     * @param deckId    must not be {@literal null}.
+     * @param folderId must not be {@literal null}.
+     * @param deckId   must not be {@literal null}.
      * @return true if it exist in DB
      */
-    boolean hasAccessToDeckFromFolder(Long folder_id, Long deckId);
+    boolean hasAccessToDeckFromFolder(Long folderId, Long deckId);
 
     /**
      * Checks on availability of category with the given identifiers in DB.
      *
-     * @param category_id must not be {@literal null}.
+     * @param categoryId must not be {@literal null}.
      * @return true if it exist in DB
      */
-    boolean hasAccessToCourse(Long category_id);
+    boolean hasAccessToCourse(Long categoryId);
 
     /**
      * Checks on availability of deck that belong to course in category with the given identifiers in DB.
      *
-     * @param category_id must not be {@literal null}.
-     * @param course_id   must not be {@literal null}.
-     * @param deck_id     must not be {@literal null}.
+     * @param categoryId must not be {@literal null}.
+     * @param courseId   must not be {@literal null}.
+     * @param deckId     must not be {@literal null}.
      * @return true if it exist in DB
      */
-    boolean hasAccessToDeck(Long category_id, Long course_id, Long deck_id);
+    boolean hasAccessToDeck(Long categoryId, Long courseId, Long deckId);
 
     /**
      * Checks on availability of deck in category with the given identifiers in DB.
      *
-     * @param category_id must not be {@literal null}.
-     * @param deck_id     must not be {@literal null}.
+     * @param categoryId must not be {@literal null}.
+     * @param deckId     must not be {@literal null}.
      * @return true if it exist in DB
      */
-    boolean hasAccessToDeckFromCategory(Long category_id, Long deck_id);
+    boolean hasAccessToDeckFromCategory(Long categoryId, Long deckId);
 
     /**
      * Checks on availability of category with the given identifier in DB.
      *
-     * @param category_id must not be {@literal null}.
-     * @return
+     * @param categoryId must not be {@literal null}.
+     * @return true if it exist in DB
      */
-    boolean hasAccessToDeck(Long category_id);
+    boolean hasAccessToDeck(Long categoryId);
 
     /**
      * Checks on availability of card in deck with the given identifiers in DB.
      *
-     * @param deck_id must not be {@literal null}.
-     * @param card_id must not be {@literal null}.
+     * @param deckId must not be {@literal null}.
+     * @param cardId must not be {@literal null}.
      * @return true if it exist in DB
      */
-    boolean hasAccessToCard(Long deck_id, Long card_id);
+    boolean hasAccessToCard(Long deckId, Long cardId);
 
     /**
      * Checks on availability of card that belong to deck in category with the given identifiers in DB.
      *
-     * @param category_id must not be {@literal null}.
-     * @param deck_id     must not be {@literal null}.
-     * @param card_id     true if it exist in DB
+     * @param categoryId must not be {@literal null}.
+     * @param deckId     must not be {@literal null}.
+     * @param cardId     true if it exist in DB
      * @return true if it exist in DB
      */
-    boolean hasAccessToCard(Long category_id, Long deck_id, Long card_id);
+    boolean hasAccessToCard(Long categoryId, Long deckId, Long cardId);
 
     /**
      * Checks on availability of card that belong to deck in course that belong to category
      * with the given identifiers in DB.
      *
-     * @param category_id must not be {@literal null}.
-     * @param course_id   must not be {@literal null}.
-     * @param deck_id     must not be {@literal null}.
-     * @param card_id     must not be {@literal null}.
+     * @param categoryId must not be {@literal null}.
+     * @param courseId   must not be {@literal null}.
+     * @param deckId     must not be {@literal null}.
+     * @param cardId     must not be {@literal null}.
      * @return true if it exist in DB
      */
-    boolean hasAccessToCard(Long category_id, Long course_id, Long deck_id, Long card_id);
+    boolean hasAccessToCard(Long categoryId, Long courseId, Long deckId, Long cardId);
 
     /**
      * Checks on availability of folder with the given identifiers in DB.
      *
-     * @param folder_id must not be {@literal null}.
+     * @param folderId must not be {@literal null}.
      * @return true if it exist in DB
-     * @throws NotAuthorisedUserException
+     * @throws NotAuthorisedUserException if user is not authorised
      */
-    boolean hasAccessToFolder(Long folder_id) throws NotAuthorisedUserException;
+    boolean hasAccessToFolder(Long folderId) throws NotAuthorisedUserException;
 
     /**
      * Checks on possibility of deleting comment for course.
@@ -113,7 +113,7 @@ public interface AccessToUrlService {
      *
      * @param commentId must not be {@literal null}.
      * @return true if it is possible
-     * @throws NotAuthorisedUserException
+     * @throws NotAuthorisedUserException if user is not authorised
      */
     boolean hasAccessToDeleteCommentForCourse(Long commentId) throws NotAuthorisedUserException;
 
@@ -123,7 +123,7 @@ public interface AccessToUrlService {
      *
      * @param commentId must not be {@literal null}.
      * @return true if it is possible
-     * @throws NotAuthorisedUserException
+     * @throws NotAuthorisedUserException if user is not authorised
      */
     boolean hasAccessToDeleteCommentForDeck(Long commentId) throws NotAuthorisedUserException;
 
@@ -133,7 +133,7 @@ public interface AccessToUrlService {
      *
      * @param commentId must not be {@literal null}.
      * @return true if it is possible
-     * @throws NotAuthorisedUserException
+     * @throws NotAuthorisedUserException if user is not authorised
      */
     boolean hasAccessToUpdateCommentForDeck(Long commentId) throws NotAuthorisedUserException;
 
@@ -143,7 +143,7 @@ public interface AccessToUrlService {
      *
      * @param commentId must not be {@literal null}.
      * @return true if it is possible
-     * @throws NotAuthorisedUserException
+     * @throws NotAuthorisedUserException if user is not authorised
      */
     boolean hasAccessToUpdateCommentForCourse(Long commentId) throws NotAuthorisedUserException;
 }

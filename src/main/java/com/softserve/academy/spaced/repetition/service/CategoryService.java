@@ -20,10 +20,10 @@ public interface CategoryService {
     /**
      * Finds category with the given identifier.
      *
-     * @param id must not be {@literal null}.
+     * @param categoryId must not be {@literal null}.
      * @return category with given id
      */
-    Category getCategoryById(Long id);
+    Category getCategoryById(Long categoryId);
 
     /**
      * Finds first 8 categories in DB
@@ -35,8 +35,8 @@ public interface CategoryService {
     /**
      * Adds category with given parameters.
      *
-     * @param categoryName        must be {@literal} and not {null}.
-     * @param categoryDescription must be {@literal} and not {null}.
+     * @param categoryName        must not be {@literal null}.
+     * @param categoryDescription must not be {@literal null}.
      * @param categoryImage       must be less than {app.images.maxSize}.
      * @return added category
      */
@@ -45,11 +45,11 @@ public interface CategoryService {
     /**
      * Update category with the given identifier on new.
      *
-     * @param category new category must be not {null}.
-     * @param id       must not be {@literal null}.
+     * @param category   new category, must not be {@literal null}.
+     * @param categoryId must not be {@literal null}.
      * @return updated category
      */
-    Category updateCategory(Category category, Long id);
+    Category updateCategory(Category category, Long categoryId);
 
     /**
      * Return sorted categories on each page.
