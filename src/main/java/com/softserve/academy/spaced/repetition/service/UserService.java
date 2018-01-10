@@ -101,12 +101,10 @@ public interface UserService {
     User addExistingDeckToUsersFolder(Long userId, Long deckId);
 
     /**
+     * Gets the user`s email.
      *
-     *
-     *
-     *
-     *
-     *
+     * @return the user`s email.
+     * @throws NotAuthorisedUserException if email of user is not activated.
      */
 
     String getNoAuthenticatedUserEmail() throws NotAuthorisedUserException;
