@@ -32,7 +32,7 @@ public class CardPublicDTO extends DTO<Card> {
     }
 
     public String getImage() {
-        return getEntity().getImageBase64();
+        return getEntity().getImage();
     }
 
 }

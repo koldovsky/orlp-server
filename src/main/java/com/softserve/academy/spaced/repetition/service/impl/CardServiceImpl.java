@@ -89,7 +89,7 @@ public class CardServiceImpl implements CardService {
             throw new IllegalArgumentException("All of card fields must be filled");
         }
         if(multipartFile != null)
-            card.setImageBase64(imageService.encodeToBase64(multipartFile));
+            card.setImage(imageService.encodeToBase64(multipartFile));
 
         Deck deck = deckRepository.findOne(deckId);
         card.setDeck(deck);
@@ -103,7 +103,7 @@ public class CardServiceImpl implements CardService {
             throw new IllegalArgumentException("All of card fields must be filled");
         }
         if(multipartFile != null) {
-            card.setImageBase64(imageService.encodeToBase64(multipartFile));
+            card.setImage(imageService.encodeToBase64(multipartFile));
         }
         card.setId(cardId);
         card.setDeck(cardRepository.findOne(cardId).getDeck());
@@ -176,8 +176,8 @@ public class CardServiceImpl implements CardService {
             cardMap.put("title", card.getTitle());
             cardMap.put("question", card.getQuestion());
             cardMap.put("answer", card.getAnswer());
-            if (card.getImageBase64() != null && card.getImageBase64().equals(""))
-                cardMap.put("image", card.getImageBase64());
+            if (card.getImage() != null && card.getImage().equals(""))
+                cardMap.put("image", card.getImage());
             list.add(cardMap);
         });
         DumperOptions options = new DumperOptions();
