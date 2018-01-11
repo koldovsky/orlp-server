@@ -24,21 +24,22 @@ public class Account implements EntityInterface {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "account_id", nullable = false)
+    @Column(name = "account_id")
     private Long id;
 
-    @Column(name = "password", length = PASS_MAX_SIZE)
+    @Column(name = "password", length = PASS_MAX_SIZE_VAL)
+    @NotNull
     @Size(message = PASS_SIZE_MESSAGE, min = PASS_MIN_SIZE, max = PASS_MAX_SIZE, groups = Request.class)
     private String password;
 
-    @Column(name = "email", unique = true, nullable = false, length = EMAIL_MAX_SIZE)
+    @Column(name = "email", unique = true, length = EMAIL_MAX_SIZE)
     @NotNull(message = NULL_MESSAGE, groups = Request.class)
     @Size(min = EMAIL_MIN_SIZE, max = EMAIL_MAX_SIZE, message = EMAIL_SIZE_MESSAGE, groups = Request.class)
     @Pattern(regexp = EMAIL_PATTERN, message = EMAIL_PATTERN_MESSAGE, groups = Request.class)
     @EmailNotExist(groups = Request.class)
     private String email;
 
-    @Column(name = "authenticationtype", length = AUTH_TYPE_MAX_SIZE)
+    @Column(name = "authentication_type", length = AUTH_TYPE_MAX_SIZE)
     @NotNull
     @Enumerated(EnumType.STRING)
     private AuthenticationType authenticationType;
@@ -52,7 +53,7 @@ public class Account implements EntityInterface {
     @NotNull
     private boolean deactivated;
 
-    @Column(name = "lastpasswordresetdate")
+    @Column(name = "last_password_reset_date")
     @Temporal(TemporalType.TIMESTAMP)
     @NotNull
     private Date lastPasswordResetDate;

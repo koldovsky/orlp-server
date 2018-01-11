@@ -3,6 +3,7 @@ package com.softserve.academy.spaced.repetition.domain;
 import com.softserve.academy.spaced.repetition.controller.utils.dto.EntityInterface;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "image")
@@ -16,14 +17,16 @@ public class Image implements EntityInterface {
     @Column(name = "imagebase64", columnDefinition = "LONGTEXT")
     private String imagebase64;
 
-    @Column(name = "type", nullable = false)
+    @Column(name = "type")
+    @NotNull
     private String type;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User createdBy;
 
-    @Column(name = "size", nullable = false)
+    @Column(name = "size")
+    @NotNull
     private Long size;
 
     @Column(name = "is_used")

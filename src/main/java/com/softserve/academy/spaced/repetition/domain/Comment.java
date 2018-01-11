@@ -5,6 +5,7 @@ import com.softserve.academy.spaced.repetition.controller.utils.dto.Request;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 import java.util.Objects;
 
@@ -16,14 +17,16 @@ public abstract class Comment implements EntityInterface {
 
     @Id
     @GeneratedValue(strategy = GenerationType.TABLE)
-    @Column(name = "comment_id", nullable = false)
+    @Column(name = "comment_id")
     private Long id;
 
     @NotBlank(message = EMPTY_MESSAGE, groups = Request.class)
-    @Column(name = "comment_text", nullable = false, columnDefinition = "LONGTEXT")
+    @Column(name = "comment_text", columnDefinition = "LONGTEXT")
+    @NotNull
     private String commentText;
 
-    @Column(name = "comment_date", nullable = false)
+    @Column(name = "comment_date")
+    @NotNull
     @Temporal(TemporalType.TIMESTAMP)
     private Date commentDate;
 

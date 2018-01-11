@@ -34,7 +34,7 @@ public class Person {
     private String lastName;
 
 
-    @Column(name = "IMAGETYPE", length = IMAGE_TYPE_MAX_SIZE)
+    @Column(name = "imagetype", length = IMAGE_TYPE_MAX_SIZE)
     @NotNull
     @Enumerated(EnumType.STRING)
     private ImageType typeImage;

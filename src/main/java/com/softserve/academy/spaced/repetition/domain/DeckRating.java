@@ -6,6 +6,7 @@ import com.softserve.academy.spaced.repetition.controller.utils.dto.Request;
 import javax.persistence.*;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 
 import static com.softserve.academy.spaced.repetition.utils.validators.ValidationConstants.COURSE_AND_CARD_RATING_ERROR_MESSAGE;
 import static com.softserve.academy.spaced.repetition.utils.validators.ValidationConstants.MAX_COURSE_AND_CARD_RATING;
@@ -21,14 +22,16 @@ public class DeckRating implements EntityInterface {
     @Column(name = "rating_id")
     private Long id;
 
-    @Column(name = "account_email", nullable = false, length = EMAIL_MAX_SIZE)
+    @Column(name = "account_email", length = EMAIL_MAX_SIZE)
+    @NotNull
     private String accountEmail;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "deck_id")
     private Deck deck;
 
-    @Column(name = "rating", nullable = false)
+    @Column(name = "rating")
+    @NotNull
     @Min(value = MIN_COURSE_AND_CARD_RATING, message = COURSE_AND_CARD_RATING_ERROR_MESSAGE, groups = Request.class)
     @Max(value = MAX_COURSE_AND_CARD_RATING, message = COURSE_AND_CARD_RATING_ERROR_MESSAGE, groups = Request.class)
     private int rating;
