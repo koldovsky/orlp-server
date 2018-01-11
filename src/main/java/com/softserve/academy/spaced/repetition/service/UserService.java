@@ -206,7 +206,7 @@ public interface UserService {
     /**
      * Gets the status of the authorised user
      *
-     * @throws UserStatusException
+     * @throws UserStatusException if the user`s status is not active.
      */
     void getUserStatus() throws UserStatusException;
 
@@ -216,8 +216,8 @@ public interface UserService {
      * @param account            user`s account.
      * @param email              user`s email.
      * @param accountStatus      user`s status.
-     * @param deactivated
-     * @param authenticationType
+     * @param deactivated        is true after simple registration and false after registration by facebook or google.
+     * @param authenticationType type of registration (LOCAL, GOOGLE, FACEBOOK).
      */
     void initializeNewUser(Account account, String email, AccountStatus accountStatus,
                            boolean deactivated, AuthenticationType authenticationType);

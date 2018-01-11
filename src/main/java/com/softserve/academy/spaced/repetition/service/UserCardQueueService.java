@@ -11,10 +11,10 @@ public interface UserCardQueueService {
      * Updates the user`s card queue.
      *
      * @param deckId the deck`s id in which the card`s queue will be updated.
-     * @param cardId
-     * @param status
-     * @throws NotAuthorisedUserException
-     * @throws IllegalArgumentException
+     * @param cardId the card`s id which will be updated.
+     * @param status the user`s status.
+     * @throws NotAuthorisedUserException if unauthorized user sets updates the queue.
+     * @throws IllegalArgumentException   if value of User Card Queue Status is not valid.
      */
     void updateUserCardQueue(Long deckId, Long cardId, String status)
             throws NotAuthorisedUserException, IllegalArgumentException;
@@ -30,9 +30,9 @@ public interface UserCardQueueService {
     /**
      * Gets the quantity of cards which user needs to repeat.
      *
-     * @param deckId
+     * @param deckId the deck`s id in which the card`s will be updated repeated.
      * @return the quantity of cards which user needs to repeat.
-     * @throws NotAuthorisedUserException
+     * @throws NotAuthorisedUserException if unauthorized user is tying to make this operation.
      */
     long countCardsThatNeedRepeating(Long deckId) throws NotAuthorisedUserException;
 }

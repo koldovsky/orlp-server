@@ -21,6 +21,7 @@ public interface DeckRatingService {
 
     /**
      * Gets deck`s rating from entity
+     *
      * @param id rating`s id
      * @return deck`s rating
      */
