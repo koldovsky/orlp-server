@@ -46,6 +46,8 @@ public class Card implements EntityInterface {
         this.answer = answer;
     }
 
+    
+
     public Card(String title, String question, String answer, String image) {
         this.title = title;
         this.question = question;
