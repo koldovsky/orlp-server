@@ -26,8 +26,6 @@ import org.yaml.snakeyaml.parser.ParserException;
 import java.io.*;
 import java.util.*;
 
-import static java.util.Optional.ofNullable;
-
 @Service
 public class CardServiceImpl implements CardService {
 
@@ -99,16 +97,16 @@ public class CardServiceImpl implements CardService {
     }
 
     @Override
-    public void updateCard(Card card, Long deckId, MultipartFile multipartFile) {
+    public void updateCard(Card card, Long cardId, MultipartFile multipartFile) {
         if (card.getTitle().trim().isEmpty() || card.getAnswer().trim().isEmpty()
                 || card.getQuestion().trim().isEmpty()) {
             throw new IllegalArgumentException("All of card fields must be filled");
         }
-        if(multipartFile != null)
+        if(multipartFile != null) {
             card.setImageBase64(imageService.encodeToBase64(multipartFile));
-
-        card.setId(deckId);
-        card.setDeck(cardRepository.findOne(deckId).getDeck());
+        }
+        card.setId(cardId);
+        card.setDeck(cardRepository.findOne(cardId).getDeck());
         cardRepository.save(card);
     }
 

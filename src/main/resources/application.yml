@@ -5,7 +5,7 @@ spring:
     password: 1234
     driver-class-name: com.mysql.jdbc.Driver
   jpa:
-    show-sql: false
+    show-sql: true
     hibernate:
       ddl-auto: update
       naming-strategy: org.hibernate.cfg.ImprovedNamingStrategy
