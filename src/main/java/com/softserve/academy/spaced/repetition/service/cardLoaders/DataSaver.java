@@ -25,7 +25,7 @@ public class DataSaver {
                 Card card = new Card();
                 card.setAnswer(elem.getKey());
                 card.setQuestion(elem.getValue());
-                cardService.addCard(card, deckId,null);  //TODO null is not very good thing
+                cardService.addCard(card, deckId,null);
             }
         }
     }
