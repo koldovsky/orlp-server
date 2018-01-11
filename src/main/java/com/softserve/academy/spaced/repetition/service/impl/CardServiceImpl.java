@@ -102,9 +102,9 @@ public class CardServiceImpl implements CardService {
                 || card.getQuestion().trim().isEmpty()) {
             throw new IllegalArgumentException("All of card fields must be filled");
         }
-        if (multipartFile != null) {
+        if (multipartFile != null)
             card.setImage(imageService.encodeToBase64(multipartFile));
-        }
+
         card.setId(cardId);
         card.setDeck(cardRepository.findOne(cardId).getDeck());
         cardRepository.save(card);
@@ -149,18 +149,18 @@ public class CardServiceImpl implements CardService {
     public void uploadCards(MultipartFile cardsFile, Long deckId) throws WrongFormatException, EmptyFileException,
             NotOwnerOperationException, NotAuthorisedUserException, IOException {
         if (deckService.getDeckUser(deckId) != null) {
-            if (cardsFile.isEmpty()) {
+            if (cardsFile.isEmpty())
                 throw new EmptyFileException("File is empty!");
-            }
+
             Yaml yaml = new Yaml();
             InputStream in = cardsFile.getInputStream();
             try {
                 CardFileDTOList cards = yaml.loadAs(in, CardFileDTOList.class);
 
-                for (CardFileDTO card : cards.getCards()) {
+                for (CardFileDTO card : cards.getCards())
                     addCard(new Card(card.getQuestion(), card.getAnswer(),
                             card.getTitle()), deckId, null);
-                }
+
             } catch (ParserException | ConstructorException ex) {
                 throw new IllegalArgumentException("Invalid format of file!");
             }
