@@ -225,7 +225,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User uploadImage(MultipartFile file) throws ImageRepositorySizeQuotaExceededException,
             NotAuthorisedUserException {
-        imageService.checkImageExtention(file);
+        imageService.checkImageExtension(file);
         User user = getAuthorizedUser();
         user.getPerson().setImageBase64(imageService.encodeToBase64(file));
         user.getPerson().setTypeImage(ImageType.BASE64);
