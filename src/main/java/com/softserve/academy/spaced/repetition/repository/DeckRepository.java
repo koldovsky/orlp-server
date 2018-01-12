@@ -1,6 +1,7 @@
 package com.softserve.academy.spaced.repetition.repository;
 
-import com.softserve.academy.spaced.repetition.domain.*;
+import com.softserve.academy.spaced.repetition.domain.Category;
+import com.softserve.academy.spaced.repetition.domain.Deck;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
