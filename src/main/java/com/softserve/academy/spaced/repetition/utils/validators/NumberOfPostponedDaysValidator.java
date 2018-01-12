@@ -31,7 +31,7 @@ public class NumberOfPostponedDaysValidator {
     public void validate(RememberingLevel level, int numberOfPostponedDays) throws NotAuthorisedUserException {
         Account account = userService.getAuthorizedUser().getAccount();
         if (numberOfPostponedDays < 1) {
-            throw new IllegalArgumentException(messageSource.getMessage("message.exception.numbersOfCardsNegative",
+            throw new IllegalArgumentException(messageSource.getMessage("message.exception.numberOfPostponedDaysNegative",
                     new Object[]{}, locale));
         }
         if (level.getOrderNumber() > 1) {

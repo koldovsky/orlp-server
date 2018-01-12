@@ -87,7 +87,7 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
     MessageDTO handleNotAuthorisedUserException() {
         return new MessageDTO(messageSource.getMessage("message.exception.userUnauthorizedOperationNotAllowed",
                 new Object[]{}, locale));
-    }
+    }   
 
     @ExceptionHandler(UnknownHostException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
