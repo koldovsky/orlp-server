@@ -1,6 +1,6 @@
 package com.softserve.academy.spaced.repetition.controller.dto.impl;
 
-import com.softserve.academy.spaced.repetition.controller.dto.DTO;
+import com.softserve.academy.spaced.repetition.controller.dto.builder.DTO;
 import com.softserve.academy.spaced.repetition.domain.Image;
 import org.springframework.hateoas.Link;
 

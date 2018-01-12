@@ -1,6 +1,6 @@
 package com.softserve.academy.spaced.repetition.domain;
 
-import com.softserve.academy.spaced.repetition.controller.dto.EntityInterface;
+import com.softserve.academy.spaced.repetition.controller.dto.annotations.EntityInterface;
 import com.softserve.academy.spaced.repetition.utils.audit.AuditingAction;
 
 import javax.persistence.*;

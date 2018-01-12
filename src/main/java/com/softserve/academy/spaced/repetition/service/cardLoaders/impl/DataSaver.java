@@ -1,4 +1,4 @@
-package com.softserve.academy.spaced.repetition.service.cardLoaders;
+package com.softserve.academy.spaced.repetition.service.cardLoaders.impl;
 
 import com.softserve.academy.spaced.repetition.domain.Card;
 import com.softserve.academy.spaced.repetition.repository.CardRepository;

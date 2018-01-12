@@ -1,5 +1,6 @@
-package com.softserve.academy.spaced.repetition.service.cardLoaders;
+package com.softserve.academy.spaced.repetition.service.cardLoaders.impl;
 
+import com.softserve.academy.spaced.repetition.service.cardLoaders.CardUploader;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 

@@ -1,7 +1,7 @@
 package com.softserve.academy.spaced.repetition.domain;
 
 import com.softserve.academy.spaced.repetition.domain.enums.ImageType;
-import com.softserve.academy.spaced.repetition.controller.dto.Request;
+import com.softserve.academy.spaced.repetition.controller.dto.annotations.Request;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;

@@ -1,4 +1,6 @@
-package com.softserve.academy.spaced.repetition.controller.dto;
+package com.softserve.academy.spaced.repetition.controller.dto.simpleDTO;
+
+import com.softserve.academy.spaced.repetition.controller.dto.annotations.Request;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;

@@ -1,6 +1,7 @@
-package com.softserve.academy.spaced.repetition.controller.dto;
+package com.softserve.academy.spaced.repetition.controller.dto.builder;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.softserve.academy.spaced.repetition.controller.dto.annotations.EntityInterface;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.ResourceSupport;
 

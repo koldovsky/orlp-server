@@ -1,6 +1,6 @@
 package com.softserve.academy.spaced.repetition.domain;
 
-import com.softserve.academy.spaced.repetition.controller.dto.EntityInterface;
+import com.softserve.academy.spaced.repetition.controller.dto.annotations.EntityInterface;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;

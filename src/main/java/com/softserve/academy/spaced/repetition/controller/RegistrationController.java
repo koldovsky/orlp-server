@@ -5,7 +5,7 @@ import com.softserve.academy.spaced.repetition.utils.audit.Auditable;
 import com.softserve.academy.spaced.repetition.utils.audit.AuditingAction;
 import com.softserve.academy.spaced.repetition.domain.Person;
 import com.softserve.academy.spaced.repetition.domain.User;
-import com.softserve.academy.spaced.repetition.controller.dto.Request;
+import com.softserve.academy.spaced.repetition.controller.dto.annotations.Request;
 import com.softserve.academy.spaced.repetition.service.AccountVerificationByEmailService;
 import com.softserve.academy.spaced.repetition.service.RegistrationService;
 import org.springframework.beans.factory.annotation.Autowired;

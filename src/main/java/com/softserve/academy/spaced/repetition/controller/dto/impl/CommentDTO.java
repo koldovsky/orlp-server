@@ -1,6 +1,6 @@
 package com.softserve.academy.spaced.repetition.controller.dto.impl;
 
-import com.softserve.academy.spaced.repetition.controller.dto.DTO;
+import com.softserve.academy.spaced.repetition.controller.dto.builder.DTO;
 import com.softserve.academy.spaced.repetition.domain.Comment;
 import com.softserve.academy.spaced.repetition.domain.CourseComment;
 import com.softserve.academy.spaced.repetition.domain.DeckComment;

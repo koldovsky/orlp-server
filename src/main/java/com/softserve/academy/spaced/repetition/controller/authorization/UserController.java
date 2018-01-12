@@ -1,6 +1,6 @@
 package com.softserve.academy.spaced.repetition.controller.authorization;
 
-import com.softserve.academy.spaced.repetition.controller.dto.DTOBuilder;
+import com.softserve.academy.spaced.repetition.controller.dto.builder.DTOBuilder;
 import com.softserve.academy.spaced.repetition.controller.dto.impl.CourseLinkDTO;
 import com.softserve.academy.spaced.repetition.controller.dto.impl.UserDTO;
 import com.softserve.academy.spaced.repetition.controller.dto.impl.UserLinksDTO;

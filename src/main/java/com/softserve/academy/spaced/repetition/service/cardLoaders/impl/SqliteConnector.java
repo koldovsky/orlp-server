@@ -1,5 +1,7 @@
-package com.softserve.academy.spaced.repetition.service.cardLoaders;
+package com.softserve.academy.spaced.repetition.service.cardLoaders.impl;
 
+import com.softserve.academy.spaced.repetition.service.cardLoaders.DbConnector;
+import com.softserve.academy.spaced.repetition.service.cardLoaders.impl.AnkiCardUploader;
 import org.springframework.stereotype.Service;
 
 import java.sql.Connection;

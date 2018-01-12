@@ -1,4 +1,6 @@
-package com.softserve.academy.spaced.repetition.controller.dto;
+package com.softserve.academy.spaced.repetition.controller.dto.simpleDTO;
+
+import com.softserve.academy.spaced.repetition.controller.dto.simpleDTO.CardFileDTO;
 
 import java.util.List;
 

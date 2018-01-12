@@ -1,6 +1,6 @@
 package com.softserve.academy.spaced.repetition.controller.dto.impl;
 
-import com.softserve.academy.spaced.repetition.controller.dto.Request;
+import com.softserve.academy.spaced.repetition.controller.dto.annotations.Request;
 import com.softserve.academy.spaced.repetition.utils.validators.annotations.PasswordMatches;
 
 import javax.validation.constraints.NotNull;

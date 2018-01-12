@@ -1,5 +1,6 @@
-package com.softserve.academy.spaced.repetition.controller.dto;
+package com.softserve.academy.spaced.repetition.controller.dto.builder;
 
+import com.softserve.academy.spaced.repetition.controller.dto.annotations.EntityInterface;
 import org.springframework.hateoas.Link;
 
 import java.lang.reflect.Constructor;
