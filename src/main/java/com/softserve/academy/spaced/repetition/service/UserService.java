@@ -45,7 +45,7 @@ public interface UserService {
     /**
      * Finds users by email.
      *
-     * @param email user`s email which will be searched.
+     * @param email user`s email by which user will be found.
      * @return user that was found.
      * @deprecated newer used in project.
      */
@@ -70,7 +70,7 @@ public interface UserService {
     /**
      * Sets user-status as deleted.
      *
-     * @param id user`s id which will be set as deleted.
+     * @param id user`s id by which will be set as deleted.
      * @return user tat was set as deleted.
      */
     User setUsersStatusDeleted(Long id);
@@ -79,12 +79,12 @@ public interface UserService {
      * Sets user-status as blocked.
      *
      * @param id user`s id which will be set as blocked.
-     * @return user tat was set as blocked.
+     * @return user that was set as blocked.
      */
     User setUsersStatusBlocked(Long id);
 
     /**
-     * Finds users by identifier.
+     * Finds user by identifier.
      *
      * @param userId user`s id which will be searched.
      * @return user that was found.
@@ -92,11 +92,11 @@ public interface UserService {
     User getUserById(Long userId);
 
     /**
-     * Ads deck to users folder
+     * Adds deck to users folder
      *
      * @param userId user`s id
      * @param deckId deck`s id
-     * @return managed by admin user.
+     * @return user that was found by userId.
      */
     User addExistingDeckToUsersFolder(Long userId, Long deckId);
 
@@ -110,9 +110,9 @@ public interface UserService {
     String getNoAuthenticatedUserEmail() throws NotAuthorisedUserException;
 
     /**
-     * Gets user from authorised user.
+     * Gets authorised user.
      *
-     * @return user from entity.
+     * @return authorised user.
      * @throws NotAuthorisedUserException if user is unauthorised.
      */
     User getAuthorizedUser() throws NotAuthorisedUserException;
@@ -190,7 +190,7 @@ public interface UserService {
     byte[] getDecodedImageContent() throws NotAuthorisedUserException;
 
     /**
-     * Activates new accounts.
+     * Activates new account.
      *
      * @throws NotAuthorisedUserException unauthorized user used this operation.
      */
