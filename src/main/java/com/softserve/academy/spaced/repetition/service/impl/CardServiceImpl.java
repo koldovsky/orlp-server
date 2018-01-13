@@ -30,29 +30,18 @@ import java.util.*;
 @Service
 public class CardServiceImpl implements CardService {
 
-    private final CardRepository cardRepository;
-
-    private final DeckRepository deckRepository;
-
-    private final UserService userService;
-
-    private final AccountService accountService;
-
-    private final UserCardQueueService userCardQueueService;
-
-    private final DeckService deckService;
-
     @Autowired
-    public CardServiceImpl(CardRepository cardRepository, DeckRepository deckRepository, AccountService accountService,
-                           UserService userService, UserCardQueueService userCardQueueService,
-                           DeckService deckService) {
-        this.cardRepository = cardRepository;
-        this.deckRepository = deckRepository;
-        this.userService = userService;
-        this.accountService = accountService;
-        this.userCardQueueService = userCardQueueService;
-        this.deckService = deckService;
-    }
+    private CardRepository cardRepository;
+    @Autowired
+    private DeckRepository deckRepository;
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private AccountService accountService;
+    @Autowired
+    private UserCardQueueService userCardQueueService;
+    @Autowired
+    private DeckService deckService;
 
     @Override
     @Transactional

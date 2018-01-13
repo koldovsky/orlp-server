@@ -20,18 +20,6 @@ import java.util.Set;
 
 public interface UserService {
 
-    void setAuthorityRepository(AuthorityRepository authorityRepository);
-
-    void setUserRepository(UserRepository userRepository);
-
-    void setDeckRepository(DeckRepository deckRepository);
-
-    void setPasswordEncoder(PasswordEncoder passwordEncoder);
-
-    void setImageService(ImageServiceImpl imageService);
-
-    void setMailService(MailService mailService);
-
     void addUser(User user);
 
     User findUserByEmail(String email);

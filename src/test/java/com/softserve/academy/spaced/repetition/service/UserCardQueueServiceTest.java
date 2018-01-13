@@ -16,7 +16,10 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameter;
 import org.junit.runners.Parameterized.Parameters;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
@@ -24,6 +27,8 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.rules.SpringClassRule;
 import org.springframework.test.context.junit4.rules.SpringMethodRule;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
@@ -35,13 +40,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.when;
 
-@RunWith(Parameterized.class)
-@ActiveProfiles("testdatabase")
-@SpringBootTest
-@Import(TestDatabaseConfig.class)
-@Sql("/data/TestData.sql")
-@Transactional
+@RunWith(MockitoJUnitRunner.class)
 public class UserCardQueueServiceTest {
+    MockMvc mockMvc;
     private static final int DAY_IN_MILLISECONDS = 24 * 60 * 60 * 1000;
     private static final Long ACCOUNT_ID = 1L;
     private static final Long CARD_ID = 1L;
@@ -54,12 +55,13 @@ public class UserCardQueueServiceTest {
     @Rule
     public final SpringMethodRule springMethodRule = new SpringMethodRule();
 
-    private UserCardQueueService userCardQueueService;
+    @InjectMocks
+    private UserCardQueueServiceImpl userCardQueueService;
 
-    @Autowired
+    @Mock
     private UserCardQueueRepository userCardQueueRepository;
 
-    @Autowired
+    @Mock
     private RememberingLevelRepository rememberingLevelRepository;
 
     @Mock
@@ -89,23 +91,30 @@ public class UserCardQueueServiceTest {
     private RememberingLevel startingRememberingLevel;
     private RememberingLevel expectedRememberingLevel;
 
+    //    @Before
+//    public void setUp() throws Exception {
+//        userCardQueueService = new UserCardQueueServiceImpl(userCardQueueRepository, mockedUserService,
+//                rememberingLevelRepository);
+//        User mockedUser = createMockedUser(learningRegime);
+//        when(mockedUserService.getAuthorizedUser()).thenReturn(mockedUser);
+//        startingRememberingLevel = rememberingLevelRepository
+//                .findRememberingLevelByAccountEqualsAndOrderNumber(mockedUser.getAccount(), startingOrderNumber);
+//        expectedRememberingLevel = rememberingLevelRepository
+//                .findRememberingLevelByAccountEqualsAndOrderNumber(mockedUser.getAccount(), expectedOrderNumber);
+//    }
     @Before
     public void setUp() throws Exception {
-        userCardQueueService = new UserCardQueueServiceImpl(userCardQueueRepository, mockedUserService,
-                rememberingLevelRepository);
-        User mockedUser = createMockedUser(learningRegime);
-        when(mockedUserService.getAuthorizedUser()).thenReturn(mockedUser);
-        startingRememberingLevel = rememberingLevelRepository
-                .findRememberingLevelByAccountEqualsAndOrderNumber(mockedUser.getAccount(), startingOrderNumber);
-        expectedRememberingLevel = rememberingLevelRepository
-                .findRememberingLevelByAccountEqualsAndOrderNumber(mockedUser.getAccount(), expectedOrderNumber);
+        MockitoAnnotations.initMocks(this);
+        mockMvc = MockMvcBuilders
+                .standaloneSetup(userCardQueueService)
+                .build();
     }
 
     @Parameters
     public static Collection<Object[]> data() throws NotAuthorisedUserException {
         Collection<Object[]> params = new ArrayList<>();
         params.add(new Object[]{false, null, UserCardQueueStatus.GOOD, null, 2, new Date(),
-        LearningRegime.CARDS_POSTPONING_USING_SPACED_REPETITION});
+                LearningRegime.CARDS_POSTPONING_USING_SPACED_REPETITION});
         params.add(new Object[]{false, null, UserCardQueueStatus.NORMAL, null, 1, new Date(),
                 LearningRegime.CARDS_POSTPONING_USING_SPACED_REPETITION});
         params.add(new Object[]{false, null, UserCardQueueStatus.BAD, null, 1, new Date(),
@@ -165,7 +174,7 @@ public class UserCardQueueServiceTest {
     }
 
     private void buildUserCardQueueAndSave(UserCardQueueStatus status, RememberingLevel rememberingLevel,
-                                                    Date dateToRepeat) {
+                                           Date dateToRepeat) {
         UserCardQueue userCardQueue = new UserCardQueue();
         userCardQueue.setCardId(CARD_ID);
         userCardQueue.setDeckId(DECK_ID);

@@ -17,13 +17,10 @@ public class CardRatingServiceImpl implements CardRatingService {
 
     @Autowired
     private CardRatingRepository cardRatingRepository;
-
     @Autowired
     private CardRepository cardRepository;
-
     @Autowired
     private DeckRepository deckRepository;
-
     @Autowired
     private UserService userService;
 

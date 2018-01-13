@@ -19,10 +19,8 @@ public class FolderServiceImpl implements FolderService{
 
     @Autowired
     private FolderRepository folderRepository;
-
     @Autowired
     private UserService userService;
-
     @Autowired
     private DeckRepository deckRepository;
 

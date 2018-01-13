@@ -23,10 +23,8 @@ public class DeckCommentServiceImpl implements DeckCommentService {
 
     @Autowired
     private DeckCommentRepository commentRepository;
-
     @Autowired
     private DeckRepository deckRepository;
-
     @Autowired
     private UserService userService;
 

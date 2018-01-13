@@ -18,10 +18,8 @@ public class CourseRatingServiceImpl implements CourseRatingService {
 
     @Autowired
     private CourseRatingRepository courseRatingRepository;
-
     @Autowired
     private CourseRepository courseRepository;
-
     @Autowired
     private UserService userService;
 

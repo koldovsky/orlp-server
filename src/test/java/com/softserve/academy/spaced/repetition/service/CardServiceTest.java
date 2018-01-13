@@ -8,37 +8,39 @@ import com.softserve.academy.spaced.repetition.service.impl.CardServiceImpl;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
+import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
 import static org.junit.Assert.assertEquals;
 
-@RunWith(SpringRunner.class)
-@ActiveProfiles("testdatabase")
-@SpringBootTest
-@Import(TestDatabaseConfig.class)
-@Sql("/data/TestData.sql")
-@Transactional
+@RunWith(MockitoJUnitRunner.class)
 public class CardServiceTest {
+    MockMvc mockMvc;
 
     private static final long CARD_ID = 1L;
     private final String CARD_ANSWER = "Answer";
     private final String CARD_QUESTION = "Question";
     private final String CARD_TITLE = "Title";
 
-    @Autowired
+    @InjectMocks
     private CardServiceImpl cardServiceUnderTest;
 
-    @Autowired
+    @Mock
     private CardRepository cardRepository;
 
-    @Autowired
+    @Mock
     private DeckRepository deckRepository;
 
     @Mock
@@ -61,11 +63,17 @@ public class CardServiceTest {
         return new Card(newId, question, answer, title);
     }
 
+//    @Before
+//    public void setUp() throws Exception {
+//        cardServiceUnderTest = new CardServiceImpl(cardRepository, deckRepository, mockedAccountService, mockedUserService, userCardQueueService, null);
+//    }
+
     @Before
     public void setUp() throws Exception {
-        cardServiceUnderTest = new CardServiceImpl(cardRepository, deckRepository, mockedAccountService, mockedUserService, userCardQueueService, null);
+        MockitoAnnotations.initMocks(this);
+        Mockito.when(cardRepository.getOne(1L).getId());
+        mockMvc = MockMvcBuilders.standaloneSetup().build();
     }
-
     @Test
     public void getCardTest() {
         Card returnedCard = getCardForTest(1L);
