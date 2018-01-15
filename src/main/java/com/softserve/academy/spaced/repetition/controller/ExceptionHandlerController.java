@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.multipart.MultipartException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+import sun.plugin2.message.Message;
 
 import java.net.UnknownHostException;
 import java.util.EnumMap;
@@ -31,10 +32,6 @@ import java.util.stream.Collectors;
 
 @ControllerAdvice
 public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
-
-    @Autowired
-    private MessageSource messageSource;
-    private final Locale locale = LocaleContextHolder.getLocale();
 
     private static final EnumMap<AccountStatus,
             ResponseEntity<MessageDTO>> USER_STATUS_ERROR_RESPONSE = new EnumMap<>(AccountStatus.class);
@@ -48,6 +45,10 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
                         HttpStatus.FORBIDDEN));
     }
 
+    @Autowired
+    private MessageSource messageSource;
+    private final Locale locale = LocaleContextHolder.getLocale();
+
     @ExceptionHandler(MultipartException.class)
     @ResponseStatus(HttpStatus.FORBIDDEN)
     @ResponseBody
@@ -59,35 +60,30 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
     @ExceptionHandler(ImageRepositorySizeQuotaExceededException.class)
     @ResponseStatus(HttpStatus.FORBIDDEN)
     @ResponseBody
-    MessageDTO handleImageRepositorySizeQuotaExceededException() {
-        return new MessageDTO(messageSource.getMessage("message.exception.quotaExceededForUploadImage",
-                new Object[]{}, locale));
+    MessageDTO handleImageRepositorySizeQuotaExceededException(ImageRepositorySizeQuotaExceededException imageRepositorySizeQuotaExceededException) {
+        return new MessageDTO(imageRepositorySizeQuotaExceededException.getDefaultMessage());
     }
 
     @ExceptionHandler(CanNotBeDeletedException.class)
     @ResponseStatus(HttpStatus.FORBIDDEN)
     @ResponseBody
-    MessageDTO handleCanNotBeDeletedException() {
-        return new MessageDTO(messageSource.getMessage("message.exception.imageInUse",
-                new Object[]{}, locale));
+    MessageDTO handleCanNotBeDeletedException(CanNotBeDeletedException canNotBeDeletedException) {
+        return new MessageDTO(canNotBeDeletedException.getDefaultMessage());
     }
 
     @ExceptionHandler(NotOwnerOperationException.class)
     @ResponseStatus(HttpStatus.FORBIDDEN)
     @ResponseBody
-    MessageDTO handleNotOwnerOperationException() {
-        return new MessageDTO(messageSource.getMessage("message.exception.userOperationNotAllowed",
-                new Object[]{}, locale));
+    MessageDTO handleNotOwnerOperationException(NotOwnerOperationException notOwnerOperationException) {
+        return new MessageDTO(notOwnerOperationException.getDefaultMessage());
     }
-
 
     @ExceptionHandler(NotAuthorisedUserException.class)
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     @ResponseBody
-    MessageDTO handleNotAuthorisedUserException() {
-        return new MessageDTO(messageSource.getMessage("message.exception.userUnauthorizedOperationNotAllowed",
-                new Object[]{}, locale));
-    }   
+    MessageDTO handleNotAuthorisedUserException(NotAuthorisedUserException notAuthorisedUserException) {
+        return new MessageDTO(notAuthorisedUserException.getDefaultMessage());
+    }
 
     @ExceptionHandler(UnknownHostException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
@@ -108,9 +104,8 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
     @ExceptionHandler(WrongFormatException.class)
     @ResponseStatus(HttpStatus.NOT_ACCEPTABLE)
     @ResponseBody
-    MessageDTO handleWrongFormatException() {
-        return new MessageDTO(messageSource.getMessage("message.exception.fileNotValidFormat",
-                new Object[]{}, locale));
+    MessageDTO handleWrongFormatException(WrongFormatException wrongFormatException) {
+        return new MessageDTO(wrongFormatException.getDefaultMessage());
     }
 
     @ExceptionHandler(UserStatusException.class)

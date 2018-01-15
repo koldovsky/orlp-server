@@ -104,7 +104,8 @@ public class AuthenticationRestService {
             String refreshedToken = jwtTokenUtil.refreshToken(token);
             return addTokenToHeaderCookie(refreshedToken);
         } else {
-            throw new BadCredentialsException(messageSource.getMessage("message.exception.tokenNotValid", new Object[]{}, locale));
+            throw new BadCredentialsException(messageSource.getMessage("message.exception.tokenNotValid",
+                    new Object[]{}, locale));
         }
     }
 
@@ -121,7 +122,8 @@ public class AuthenticationRestService {
         if (token != null) {
             return token;
         } else {
-            throw new BadCredentialsException(messageSource.getMessage("message.exception.tokenIsNull", new Object[]{}, locale));
+            throw new BadCredentialsException(messageSource.getMessage("message.exception.tokenNotExist",
+                    new Object[]{}, locale));
         }
     }
 

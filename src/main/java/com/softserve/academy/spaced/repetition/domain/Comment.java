@@ -8,8 +8,6 @@ import javax.persistence.*;
 import java.util.Date;
 import java.util.Objects;
 
-import static com.softserve.academy.spaced.repetition.utils.validators.ValidationConstants.EMPTY_MESSAGE;
-
 @Entity
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public abstract class Comment implements EntityInterface {
@@ -19,7 +17,7 @@ public abstract class Comment implements EntityInterface {
     @Column(name = "comment_id", nullable = false)
     private Long id;
 
-    @NotBlank(message = EMPTY_MESSAGE, groups = Request.class)
+    @NotBlank(message = "{message.fieldNotBeEmpty}", groups = Request.class)
     @Column(name = "commentText", nullable = false, columnDefinition = "LONGTEXT")
     private String commentText;
 

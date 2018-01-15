@@ -24,7 +24,6 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import static com.softserve.academy.spaced.repetition.utils.validators.ValidationConstants.*;
 import static org.junit.Assert.assertEquals;
@@ -61,16 +60,16 @@ public class ValidatorsTest {
         user.getAccount().setPassword("user");
         Set<ConstraintViolation<User>> violations = validator.validate(user, Request.class);
         assertEquals(1, violations.size());
-        assertEquals(PASS_SIZE_MESSAGE, violations.iterator().next().getMessage());
+        assertEquals(TEST_PASS_SIZE_MESSAGE, violations.iterator().next().getMessage());
     }
 
     @Test
     public void testPasswordMatches() throws Exception {
         when(jwtUser.getUsername()).thenReturn("admin@gmail.com");
-        PasswordDTO passwordDTO = new PasswordDTO("admin1", "administrator");
+        PasswordDTO passwordDTO = new PasswordDTO("passIncorrect", "administrator");
         Set<ConstraintViolation<PasswordDTO>> violations = validator.validate(passwordDTO, Request.class);
         assertEquals(1, violations.size());
-        assertEquals(PASS_MATCHES_MESSAGE, violations.iterator().next().getMessage());
+        assertEquals(TEST_PASS_MATCHES_MESSAGE, violations.iterator().next().getMessage());
     }
 
     @Test
@@ -78,16 +77,15 @@ public class ValidatorsTest {
         user.getAccount().setEmail(null);
         Set<ConstraintViolation<User>> violations = validator.validate(user, Request.class);
         assertEquals(1, violations.size());
-        assertEquals(NULL_MESSAGE, violations.iterator().next().getMessage());
+        assertEquals(TEST_NULL_MESSAGE, violations.iterator().next().getMessage());
     }
 
     @Test
     public void testEmailSize() throws Exception {
-        user.getAccount().setPassword("password");
-        user.getAccount().setEmail("");
+        user.getAccount().setEmail("ex");
         Set<ConstraintViolation<User>> violations = validator.validate(user, Request.class);
         assertEquals(2, violations.size());
-        assertTrue(violations.stream().map(p->p.getMessage()).collect(Collectors.toList()).contains(EMAIL_SIZE_MESSAGE));
+        assertTrue(violations.toString().contains(TEST_EMAIL_SIZE_MESSAGE));
     }
 
     @Test
@@ -95,7 +93,7 @@ public class ValidatorsTest {
         user.getAccount().setEmail("userGmail.com");
         Set<ConstraintViolation<User>> violations = validator.validate(user, Request.class);
         assertEquals(1, violations.size());
-        assertEquals(EMAIL_PATTERN_MESSAGE, violations.iterator().next().getMessage());
+        assertEquals(TEST_EMAIL_PATTERN_MESSAGE, violations.iterator().next().getMessage());
     }
 
     @Test
@@ -103,6 +101,6 @@ public class ValidatorsTest {
         user.getAccount().setEmail("admin@gmail.com");
         Set<ConstraintViolation<User>> violations = validator.validate(user, Request.class);
         assertEquals(1, violations.size());
-        assertEquals(EMAIL_NOT_EXIST_MESSAGE, violations.iterator().next().getMessage());
+        assertEquals(TEST_EMAIL_ALREADY_EXIST_MESSAGE, violations.iterator().next().getMessage());
     }
 }
