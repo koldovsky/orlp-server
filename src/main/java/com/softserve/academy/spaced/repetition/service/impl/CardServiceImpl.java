@@ -3,6 +3,7 @@ package com.softserve.academy.spaced.repetition.service.impl;
 import com.softserve.academy.spaced.repetition.controller.utils.dto.CardFileDTO;
 import com.softserve.academy.spaced.repetition.controller.utils.dto.CardFileDTOList;
 import com.softserve.academy.spaced.repetition.domain.Card;
+import com.softserve.academy.spaced.repetition.domain.CardImage;
 import com.softserve.academy.spaced.repetition.domain.Deck;
 import com.softserve.academy.spaced.repetition.domain.User;
 import com.softserve.academy.spaced.repetition.domain.enums.LearningRegime;
@@ -26,8 +27,13 @@ import org.yaml.snakeyaml.parser.ParserException;
 import java.io.*;
 import java.util.*;
 
+import static java.util.stream.Collectors.toList;
+
 @Service
 public class CardServiceImpl implements CardService {
+
+    @Autowired
+    private CardImageService cardImageService;
 
     private final CardRepository cardRepository;
     private final DeckRepository deckRepository;
@@ -83,13 +89,17 @@ public class CardServiceImpl implements CardService {
     }
 
     @Override
-    public void addCard(Card card, Long deckId, MultipartFile multipartFile) {
+    public void addCard(Card card, Long deckId, List<MultipartFile> imageList) {
         if (card.getTitle().trim().isEmpty() || card.getAnswer().trim().isEmpty()
                 || card.getQuestion().trim().isEmpty()) {
             throw new IllegalArgumentException("All of card fields must be filled");
         }
-        if (multipartFile != null)
-            card.setImage(imageService.encodeToBase64(multipartFile));
+        if (imageList != null)
+           card.setCardImages(imageList.stream()
+                   .map(multipartFile ->
+                           cardImageService.save(new CardImage(imageService
+                                   .encodeToBase64(multipartFile))))
+                   .collect(toList()));
 
         Deck deck = deckRepository.findOne(deckId);
         card.setDeck(deck);
@@ -97,13 +107,17 @@ public class CardServiceImpl implements CardService {
     }
 
     @Override
-    public void updateCard(Card card, Long cardId, MultipartFile multipartFile) {
+    public void updateCard(Card card, Long cardId, List<MultipartFile> imageList) {
         if (card.getTitle().trim().isEmpty() || card.getAnswer().trim().isEmpty()
                 || card.getQuestion().trim().isEmpty()) {
             throw new IllegalArgumentException("All of card fields must be filled");
         }
-        if (multipartFile != null)
-            card.setImage(imageService.encodeToBase64(multipartFile));
+        if (imageList != null)
+            card.setCardImages(imageList.stream()
+                    .map(multipartFile ->
+                            cardImageService.save(new CardImage(imageService
+                                    .encodeToBase64(multipartFile))))
+                    .collect(toList()));
 
         card.setId(cardId);
         card.setDeck(cardRepository.findOne(cardId).getDeck());
@@ -148,6 +162,7 @@ public class CardServiceImpl implements CardService {
     @Transactional
     public void uploadCards(MultipartFile cardsFile, Long deckId) throws WrongFormatException, EmptyFileException,
             NotOwnerOperationException, NotAuthorisedUserException, IOException {
+
         if (deckService.getDeckUser(deckId) != null) {
             if (cardsFile.isEmpty())
                 throw new EmptyFileException("File is empty!");
@@ -158,8 +173,7 @@ public class CardServiceImpl implements CardService {
                 CardFileDTOList cards = yaml.loadAs(in, CardFileDTOList.class);
 
                 for (CardFileDTO card : cards.getCards())
-                    addCard(new Card(card.getQuestion(), card.getAnswer(),
-                            card.getTitle()), deckId, null);
+                    addCard(new Card(card.getTitle(),card.getQuestion(), card.getAnswer()), deckId, null);
 
             } catch (ParserException | ConstructorException ex) {
                 throw new IllegalArgumentException("Invalid format of file!");

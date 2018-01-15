@@ -26,16 +26,15 @@ public class Card implements EntityInterface {
     @Column(name = "rating")
     private double rating;
 
-    @Column(name = "imagebase64", columnDefinition = "LONGTEXT")
-    @Basic(fetch = FetchType.LAZY)
-    private String image;
-
     @ManyToOne
     @JoinColumn(name = "deck_id")
     private Deck deck;
 
     @OneToMany(mappedBy = "card", cascade = CascadeType.ALL)
     private List<CardRating> cardRatings;
+
+    @OneToMany(mappedBy = "card", cascade = CascadeType.ALL)
+    private List<CardImage> cardImages;
 
     public Card() {
     }
@@ -46,13 +45,12 @@ public class Card implements EntityInterface {
         this.answer = answer;
     }
 
-    
-
-    public Card(String title, String question, String answer, String image) {
+    public Card(String title, String question, String answer, Deck deck, List<CardImage> cardImages) {
         this.title = title;
         this.question = question;
         this.answer = answer;
-        this.image = image;
+        this.deck = deck;
+        this.cardImages = cardImages;
     }
 
     public Card(Long id, String question, String answer, String title) {
@@ -118,12 +116,12 @@ public class Card implements EntityInterface {
         this.title = title;
     }
 
-    public String getImage() {
-        return image;
+    public List<CardImage> getCardImages() {
+        return cardImages;
     }
 
-    public void setImage(String image) {
-        this.image = image;
+    public void setCardImages(List<CardImage> cardImages) {
+        this.cardImages = cardImages;
     }
 
     @Override

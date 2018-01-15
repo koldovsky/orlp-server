@@ -16,9 +16,9 @@ public interface CardService {
 
     Card getCard(Long id);
 
-    void addCard(Card card, Long deckId, MultipartFile multipartFile);
+    void addCard(Card card, Long deckId, List<MultipartFile> imageList);
 
-    void updateCard(Card card, Long cardId, MultipartFile multipartFile);
+    void updateCard(Card card, Long cardId, List<MultipartFile> imageList);
 
     List<Card> getCardsQueue(long deckId) throws NotAuthorisedUserException;
 
