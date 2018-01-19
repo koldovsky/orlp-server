@@ -120,18 +120,18 @@ public class UserServiceTest {
         doAnswer((Answer<Void>) invocation -> {
             newImage = invocation.getArgumentAt(0, MockMultipartFile.class);
             return null;
-        }).when(mockedImageService).checkImageExtention(any());
+        }).when(mockedImageService).checkImageExtension(any());
         String base64String = mockedImageService.encodeToBase64(image);
         PowerMockito.doReturn(mockedUser).when(userServiceUnderTest, "getAuthorizedUser");
         User userWithUploadImage = userServiceUnderTest.uploadImage(image);
-        assertEquals("checkImageExtention invoked", image, newImage);
+        assertEquals("checkImageExtension invoked", image, newImage);
         assertEquals("Image is uploaded", base64String, userWithUploadImage.getPerson().getImageBase64());
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testUploadImageException() throws Exception {
         MockMultipartFile image = new MockMultipartFile("image", "", "", "".getBytes());
-        doThrow(IllegalArgumentException.class).when(mockedImageService).checkImageExtention(eq(image));
+        doThrow(IllegalArgumentException.class).when(mockedImageService).checkImageExtension(eq(image));
         userServiceUnderTest.uploadImage(image);
     }
 

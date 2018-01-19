@@ -47,6 +47,15 @@
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
         </dependency>
+
+        <!-- Database Migration Tool -->
+
+        <dependency>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-core</artifactId>
+            <version>5.0.3</version>
+        </dependency>
+
         <!--Devtools-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
