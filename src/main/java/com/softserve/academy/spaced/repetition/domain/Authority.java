@@ -12,8 +12,8 @@ import static com.softserve.academy.spaced.repetition.utils.validators.Validatio
 @Table(name = "authority")
 public class Authority {
     @Id
-    @Column(name = "authority_id")
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "authority_id")
     private Long id;
 
     @Column(name = "name", length = AUTH_NAME_MAX_SIZE)

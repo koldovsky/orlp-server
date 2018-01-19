@@ -14,7 +14,7 @@ public class Image implements EntityInterface {
     @Column(name = "image_id")
     private Long id;
 
-    @Column(name = "imagebase64", columnDefinition = "LONGTEXT")
+    @Column(name = "image_base_64", columnDefinition = "LONGTEXT")
     private String imagebase64;
 
     @Column(name = "type")

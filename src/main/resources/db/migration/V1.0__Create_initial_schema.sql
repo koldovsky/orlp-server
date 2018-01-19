@@ -1,12 +1,12 @@
 create table account (
   account_id bigint not null auto_increment,
-  authenticationtype varchar(8) not null,
+  authentication_type varchar(8) not null,
   cards_number int default 10 not null,
   deactivated bit NOT null,
-  email varchar(255) not null,
-  lastpasswordresetdate datetime not null,
+  email varchar(254) not null,
+  last_password_reset_date datetime not null,
   learning_regime varchar(45) default 'CARDS_POSTPONING_USING_SPACED_REPETITION' not null,
-  password varchar(255),
+  password varchar(60),
   status varchar(255) not null,
   primary key (account_id)
 );
@@ -19,7 +19,7 @@ create table account_authority (
 
 create table audit (
   audit_id bigint not null auto_increment,
-  account_email varchar(255) not null,
+  account_email varchar(254) not null,
   action varchar(255) not null,
   ip_address varchar(255) not null,
   role varchar(255) not null,
@@ -43,7 +43,7 @@ create table card (
 
 create table card_rating (
   rating_id bigint not null auto_increment,
-  account_email varchar(255) not null,
+  account_email varchar(254) not null,
   rating integer not null,
   card_id bigint,
   primary key (rating_id)
@@ -76,7 +76,7 @@ create table course_decks (
 
 create table course_rating (
   rating_id bigint not null auto_increment,
-  account_email varchar(255) not null,
+  account_email varchar(254) not null,
   rating integer not null,
   course_id bigint,
   primary key (rating_id)
@@ -97,7 +97,7 @@ create table deck (
   description varchar(255) not null,
   name varchar(255) not null,
   rating double precision,
-  synthax varchar(255),
+  syntax varchar(255),
   category_id bigint,
   user_id bigint,
   primary key (deck_id)
@@ -105,7 +105,7 @@ create table deck (
 
 create table deck_rating (
   rating_id bigint not null auto_increment,
-  account_email varchar(255) not null,
+  account_email varchar(254) not null,
   rating integer not null,
   deck_id bigint,
   primary key (rating_id)
@@ -140,7 +140,7 @@ create table hibernate_sequences (
 
 create table image (
   image_id bigint not null auto_increment,
-  imagebase64 LONGTEXT,
+  image_base_64 LONGTEXT,
   is_used bit,
   size bigint not null,
   type varchar(255) not null,
@@ -152,9 +152,9 @@ create table person (
   person_id bigint not null auto_increment,
   first_name varchar(255),
   image varchar(255),
-  imagebase64 LONGTEXT,
+  image_base_64 LONGTEXT,
   last_name varchar(255),
-  imagetype varchar(6) not null,
+  image_type varchar(6) not null,
   primary key (person_id)
 );
 

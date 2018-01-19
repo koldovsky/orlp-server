@@ -30,7 +30,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         Account account = user.getAccount();
         userService.initializeNewUser(account, account.getEmail().toLowerCase(), AccountStatus.ACTIVE,
                 true, AuthenticationType.LOCAL);
-        user.getPerson().setTypeImage(ImageType.NONE);
+        user.getPerson().setImageType(ImageType.NONE);
         user.setFolder(new Folder());
         userService.addUser(user);
         accountService.initializeLearningRegimeSettingsForAccount(account);

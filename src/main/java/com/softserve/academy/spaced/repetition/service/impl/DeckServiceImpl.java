@@ -190,7 +190,7 @@ public class DeckServiceImpl implements DeckService {
             deck.setName(updatedDeck.getName());
             deck.setDescription(updatedDeck.getDescription());
             deck.setCategory(categoryRepository.findOne(categoryId));
-            deck.setSynthaxToHighlight(updatedDeck.getSynthaxToHighlight());
+            deck.setSyntaxToHighlight(updatedDeck.getSyntaxToHighlight());
             return deckRepository.save(deck);
         } else {
             throw new NotOwnerOperationException();
@@ -233,6 +233,6 @@ public class DeckServiceImpl implements DeckService {
 
     @Override
     public String getSynthaxToHightlight(long deckId){
-        return deckRepository.getDeckById(deckId).getSynthaxToHighlight();
+        return deckRepository.getDeckById(deckId).getSyntaxToHighlight();
     }
 }

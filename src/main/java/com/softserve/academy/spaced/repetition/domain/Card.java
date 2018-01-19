@@ -16,6 +16,7 @@ public class Card implements EntityInterface {
     private Long id;
 
     @Column(name = "title")
+    @NotNull
     private String title;
 
     @Column(name = "question", columnDefinition = "LONGTEXT")

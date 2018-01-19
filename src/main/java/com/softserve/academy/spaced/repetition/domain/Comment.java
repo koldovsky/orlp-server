@@ -20,9 +20,8 @@ public abstract class Comment implements EntityInterface {
     @Column(name = "comment_id")
     private Long id;
 
-    @NotBlank(message = EMPTY_MESSAGE, groups = Request.class)
     @Column(name = "comment_text", columnDefinition = "LONGTEXT")
-    @NotNull
+    @NotBlank(message = EMPTY_MESSAGE, groups = Request.class)
     private String commentText;
 
     @Column(name = "comment_date")
@@ -30,6 +29,7 @@ public abstract class Comment implements EntityInterface {
     @Temporal(TemporalType.TIMESTAMP)
     private Date commentDate;
 
+    @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "person_id")
     private Person person;

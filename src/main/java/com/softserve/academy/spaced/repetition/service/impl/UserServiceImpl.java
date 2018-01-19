@@ -228,7 +228,7 @@ public class UserServiceImpl implements UserService {
         imageService.checkImageExtension(file);
         User user = getAuthorizedUser();
         user.getPerson().setImageBase64(imageService.encodeToBase64(file));
-        user.getPerson().setTypeImage(ImageType.BASE64);
+        user.getPerson().setImageType(ImageType.BASE64);
         return userRepository.save(user);
     }
 

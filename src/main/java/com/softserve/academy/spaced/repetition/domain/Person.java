@@ -34,14 +34,14 @@ public class Person {
     private String lastName;
 
 
-    @Column(name = "imagetype", length = IMAGE_TYPE_MAX_SIZE)
+    @Column(name = "image_type", length = IMAGE_TYPE_MAX_SIZE)
     @NotNull
     @Enumerated(EnumType.STRING)
-    private ImageType typeImage;
+    private ImageType imageType;
 
     private String image;
 
-    @Column(name = "imagebase64", columnDefinition = "LONGTEXT")
+    @Column(name = "image_base_64", columnDefinition = "LONGTEXT")
     @Basic(fetch = FetchType.LAZY)
     private String imageBase64;
 
@@ -53,10 +53,10 @@ public class Person {
         this.lastName = lastName;
     }
 
-    public Person(String firstName, String lastName, ImageType typeImage, String image) {
+    public Person(String firstName, String lastName, ImageType imageType, String image) {
         this.firstName = firstName;
         this.lastName = lastName;
-        this.typeImage = typeImage;
+        this.imageType = imageType;
         this.image = image;
     }
 
@@ -84,12 +84,12 @@ public class Person {
         this.lastName = lastName;
     }
 
-    public ImageType getTypeImage() {
-        return typeImage;
+    public ImageType getImageType() {
+        return imageType;
     }
 
-    public void setTypeImage(ImageType typeImage) {
-        this.typeImage = typeImage;
+    public void setImageType(ImageType imageType) {
+        this.imageType = imageType;
     }
 
     public String getImage() {
