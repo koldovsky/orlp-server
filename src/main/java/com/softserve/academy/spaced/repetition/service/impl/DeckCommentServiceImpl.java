@@ -22,7 +22,7 @@ public class DeckCommentServiceImpl implements DeckCommentService {
     private static final Logger LOGGER = LoggerFactory.getLogger(DeckCommentServiceImpl.class);
 
     @Autowired
-    private DeckCommentRepository commentRepository;
+    private DeckCommentRepository deckCommentRepository;
 
     @Autowired
     private DeckRepository deckRepository;
@@ -32,7 +32,7 @@ public class DeckCommentServiceImpl implements DeckCommentService {
 
     @Override
     @Transactional
-    public DeckComment addCommentForDeck(Long deckId, String commentText, Long parentCommentId)
+    public DeckComment addCommentToDeck(Long deckId, String commentText, Long parentCommentId)
             throws NotAuthorisedUserException {
         LOGGER.debug("Added comment to deck with id: {}", deckId);
         DeckComment comment = new DeckComment(commentText, new Date());
@@ -41,28 +41,29 @@ public class DeckCommentServiceImpl implements DeckCommentService {
         if (parentCommentId != null) {
             comment.setParentCommentId(parentCommentId);
         }
-        return commentRepository.save(comment);
+        return deckCommentRepository.save(comment);
     }
 
     @Override
     public DeckComment getCommentById(Long commentId) {
         LOGGER.debug("View comment with id {}", commentId);
-        return commentRepository.findOne(commentId);
+        return deckCommentRepository.findOne(commentId);
     }
 
     @Override
-    public List<Comment> getAllCommentsForDeck(Long deckId) {
+    public List<Comment> getAllCommentsOfDeck(Long deckId) {
         LOGGER.debug("View all comments for deck with id: {}", deckId);
-        return commentRepository.findDeckCommentsByDeckId(deckId);
+        return deckCommentRepository.findDeckCommentsByDeckId(deckId);
     }
 
     @Override
     @Transactional
     public DeckComment updateCommentById(Long commentId, String commentText) {
         LOGGER.debug("Updated comment with id: {}", commentId);
-        DeckComment updatedComment = commentRepository.findOne(commentId);
+        DeckComment updatedComment = deckCommentRepository.findOne(commentId);
         updatedComment.setCommentDate(new Date());
         updatedComment.setCommentText(commentText);
+        deckCommentRepository.save(updatedComment);
         return updatedComment;
     }
 
@@ -70,6 +71,6 @@ public class DeckCommentServiceImpl implements DeckCommentService {
     @Transactional
     public void deleteCommentById(Long commentId) {
         LOGGER.debug("Deleted comment with id:{}", commentId);
-        commentRepository.deleteComment(commentId);
+        deckCommentRepository.deleteComment(commentId);
     }
 }

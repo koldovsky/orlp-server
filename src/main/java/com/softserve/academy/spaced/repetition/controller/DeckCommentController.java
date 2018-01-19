@@ -36,7 +36,7 @@ public class DeckCommentController {
     public ResponseEntity<List<CommentDTO>> getAllCommentsForDeck(@PathVariable Long categoryId,
                                                                   @PathVariable Long deckId) {
         LOGGER.debug("View all comments for deck with id: {}", deckId);
-        List<Comment> commentsList = commentService.getAllCommentsForDeck(deckId);
+        List<Comment> commentsList = commentService.getAllCommentsOfDeck(deckId);
         Link collectionLink = linkTo(methodOn(DeckCommentController.class)
                 .getAllCommentsForDeck(categoryId, deckId)).withSelfRel();
         List<CommentDTO> listOfComments = DTOBuilder
@@ -67,7 +67,7 @@ public class DeckCommentController {
                                                         @PathVariable Long deckId) throws NotAuthorisedUserException {
         LOGGER.debug("Added comment to deck with id: {}", deckId);
         DeckComment comment = commentService
-                .addCommentForDeck(deckId, replyToCommentDTO.getCommentText(), replyToCommentDTO.getParentCommentId());
+                .addCommentToDeck(deckId, replyToCommentDTO.getCommentText(), replyToCommentDTO.getParentCommentId());
         Link selfLink = linkTo(methodOn(DeckCommentController.class)
                 .getCommentById(categoryId, deckId, comment.getId())).withSelfRel();
         CommentDTO commentDTO = DTOBuilder.buildDtoForEntity(comment, CommentDTO.class, selfLink);

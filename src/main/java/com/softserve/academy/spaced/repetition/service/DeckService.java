@@ -52,7 +52,7 @@ public interface DeckService {
      *
      * @param deckId id of the deck which will be deleted.
      */
-    void deleteDeck(Long deckId);
+    void deleteDeckById(Long deckId);
 
     /**
      * Creates new deck
@@ -148,7 +148,7 @@ public interface DeckService {
      * @param deckId the deck which will searched.
      * @return the deck with the given identifier.
      */
-    Deck getDeck(Long deckId);
+    Deck getDeckById(Long deckId);
 
     /**
      * Gets the list of the decks which belongs to course with given identifier.
@@ -156,7 +156,7 @@ public interface DeckService {
      * @param courseId course`s id for which the decks will be searched.
      * @return the list of the decks which belongs to course with given identifier.
      */
-    List<Deck> getAllDecks(Long courseId);
+    List<Deck> getAllDecksByCourseId(Long courseId);
 
     /**
      * Gets the list of the decks which belongs to category with given identifier.
@@ -164,7 +164,7 @@ public interface DeckService {
      * @param categoryId category`s id for which the decks will be searched.
      * @return the list of the decks which belongs to category with given identifier.
      */
-    List<Deck> getAllDecksByCategory(Long categoryId);
+    List<Deck> getAllDecksByCategoryId(Long categoryId);
 
     /**
      * Gets the list of decks that are ordered.

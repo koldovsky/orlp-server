@@ -27,56 +27,32 @@ public class DeckServiceImpl implements DeckService {
     private final static int QUANTITY_DECKS_IN_PAGE = 12;
     private final static String DECK_EXCEPTION_MESSAGE = "Such deck not found";
 
+    @Autowired
     private DeckRepository deckRepository;
 
+    @Autowired
     private CategoryRepository categoryRepository;
 
+    @Autowired
     private CardRepository cardRepository;
 
+    @Autowired
     private CourseRepository courseRepository;
 
+    @Autowired
     private UserService userService;
 
+    @Autowired
     private FolderService folderService;
 
-    @Autowired
-    public void setDeckRepository(DeckRepository deckRepository) {
-        this.deckRepository = deckRepository;
-    }
-
-    @Autowired
-    public void setCategoryRepository(CategoryRepository categoryRepository) {
-        this.categoryRepository = categoryRepository;
-    }
-
-    @Autowired
-    public void setCardRepository(CardRepository cardRepository) {
-        this.cardRepository = cardRepository;
-    }
-
-    @Autowired
-    public void setCourseRepository(CourseRepository courseRepository) {
-        this.courseRepository = courseRepository;
-    }
-
-    @Autowired
-    public void setUserService(UserService userService) {
-        this.userService = userService;
-    }
-
-    @Autowired
-    public void setFolderService(FolderService folderService) {
-        this.folderService = folderService;
-    }
-
     @Override
-    public List<Deck> getAllDecks(Long courseId) {
+    public List<Deck> getAllDecksByCourseId(Long courseId) {
         Course course = courseRepository.findOne(courseId);
         return course.getDecks();
     }
 
     @Override
-    public List<Deck> getAllDecksByCategory(Long categoryId) {
+    public List<Deck> getAllDecksByCategoryId(Long categoryId) {
         Category category = categoryRepository.findOne(categoryId);
         return category.getDecks();
     }
@@ -88,7 +64,7 @@ public class DeckServiceImpl implements DeckService {
 
     @Override
     @Transactional
-    public Deck getDeck(Long deckId) {
+    public Deck getDeckById(Long deckId) {
         return deckRepository.findOne(deckId);
     }
 
@@ -102,14 +78,16 @@ public class DeckServiceImpl implements DeckService {
     @Transactional
     public void addDeckToCategory(Deck deck, Long categoryId) {
         Category category = categoryRepository.findOne(categoryId);
-        category.getDecks().add(deckRepository.save(deck));
+        category.getDecks().add(deck);
+        categoryRepository.save(category);
     }
 
     @Override
     @Transactional
     public void addDeckToCourse(Deck deck, Long categoryId, Long courseId) {
         Course course = courseRepository.findOne(courseId);
-        course.getDecks().add(deckRepository.save(deck));
+        course.getDecks().add(deck);
+        courseRepository.save(course);
     }
 
     @Override
@@ -134,7 +112,7 @@ public class DeckServiceImpl implements DeckService {
 
     @Override
     @Transactional
-    public void deleteDeck(Long deckId) {
+    public void deleteDeckById(Long deckId) {
         deckRepository.deleteDeckById(deckId);
     }
 

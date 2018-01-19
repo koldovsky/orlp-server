@@ -58,7 +58,7 @@ public class DeckControllerTest {
 
     @Test
     public void getDecksById() throws Exception {
-        when(deckService.getDeck(eq(4L))).thenReturn(createDeck());
+        when(deckService.getDeckById(eq(4L))).thenReturn(createDeck());
         mockMvc.perform(get("/api/admin/decks/{deckId}", 4L)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON))

@@ -18,11 +18,19 @@ import org.springframework.stereotype.Service;
 @Service
 public class RegistrationServiceImpl implements RegistrationService {
 
+    @Autowired
     private AuthorityRepository authorityRepository;
+
+    @Autowired
     private UserService userService;
+
+    @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
     private MailService mailService;
 
+    @Autowired
     private AccountService accountService;
 
     @Override
@@ -42,33 +50,4 @@ public class RegistrationServiceImpl implements RegistrationService {
         mailService.sendConfirmationMail(user);
     }
 
-    @Override
-    @Autowired
-    public void setAuthorityRepository(AuthorityRepository authorityRepository) {
-        this.authorityRepository = authorityRepository;
-    }
-
-    @Override
-    @Autowired
-    public void setUserService(UserService userService) {
-        this.userService = userService;
-    }
-
-    @Override
-    @Autowired
-    public void setPasswordEncoder(PasswordEncoder passwordEncoder) {
-        this.passwordEncoder = passwordEncoder;
-    }
-
-    @Override
-    @Autowired
-    public void setMailService(MailService mailService) {
-        this.mailService = mailService;
-    }
-
-    @Override
-    @Autowired
-    public void setAccountService(AccountService accountService) {
-        this.accountService = accountService;
-    }
 }

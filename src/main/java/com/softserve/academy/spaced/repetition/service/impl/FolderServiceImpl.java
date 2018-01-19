@@ -27,19 +27,13 @@ public class FolderServiceImpl implements FolderService{
     private DeckRepository deckRepository;
 
     @Override
-    public Deck addDeck(Long deckId) throws NotAuthorisedUserException {
-
-        Deck deck = deckRepository.getDeckById(deckId);
-
+    public Deck addDeckToFolderById(Long deckId) throws NotAuthorisedUserException {
         User user = userService.getAuthorizedUser();
-
+        Deck deck = deckRepository.getDeckById(deckId);
         Folder folder = user.getFolder();
         Set<Deck> decks = folder.getDecks();
-        if (!decks.add(deck)) {
-            folder.getDecks().remove(deck);
-        }
+        decks.add(deck);
         folderRepository.save(folder);
-
         return deck;
     }
 
@@ -47,26 +41,24 @@ public class FolderServiceImpl implements FolderService{
     public List<Deck> getAllDecksByFolderId(Long folderId) {
         Folder folder = folderRepository.findOne(folderId);
         List<Deck> decks = new ArrayList<>(folder.getDecks());
-
         return decks;
     }
 
     @Override
-    public List<Long> getAllDecksIdWithFolder() throws NotAuthorisedUserException {
+    public List<Long> getAllDecksIdFromFolder() throws NotAuthorisedUserException {
         User authorizedUser = userService.getAuthorizedUser();
         Long folderId = authorizedUser.getFolder().getId();
-
-        return folderRepository.selectAllDeckIdWithFolder(folderId);
+        return folderRepository.selectAllDecksIdFromFolder(folderId);
     }
 
     @Override
-    public void deleteDeck(Long deckId) throws NotAuthorisedUserException {
+    public void deleteDeckById(Long deckId) throws NotAuthorisedUserException {
         User user = userService.getAuthorizedUser();
         Folder folder = user.getFolder();
-        Collection<Deck> userDecks = folder.getDecks();
-        for (Deck deck: userDecks) {
+        Set<Deck> decks = folder.getDecks();
+        for (Deck deck: decks) {
             if (deck.getId() == deckId) {
-                userDecks.remove(deck);
+                decks.remove(deck);
                 break;
             }
         }

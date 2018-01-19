@@ -35,7 +35,7 @@ public class FolderController {
     @Auditable(action = AuditingAction.ADD_DECK_TO_FOLDER)
     @PutMapping("/api/user/folder/add/deck/{deckId}")
     public ResponseEntity<DeckPublicDTO> addDeckToFolder(@PathVariable Long deckId) throws NotAuthorisedUserException {
-        Deck deck = folderService.addDeck(deckId);
+        Deck deck = folderService.addDeckToFolderById(deckId);
         Link selfLink = linkTo(methodOn(DeckController.class)
                 .getDeckByCategoryId(deck.getCategory().getId(), deckId)).withSelfRel();
         DeckPublicDTO deckPublicDTO = DTOBuilder.buildDtoForEntity(deck, DeckPublicDTO.class, selfLink);
@@ -58,7 +58,7 @@ public class FolderController {
 
     @GetMapping("/api/private/user/folder/decks/id")
     public ResponseEntity<List<Long>> getIdAllDecksInFolder() throws NotAuthorisedUserException {
-        List<Long> id = folderService.getAllDecksIdWithFolder();
+        List<Long> id = folderService.getAllDecksIdFromFolder();
 
         return new ResponseEntity<>(id, HttpStatus.OK);
     }
@@ -66,7 +66,7 @@ public class FolderController {
     @GetMapping("/api/private/user/folder/{folderId}/decks/{deckId}")
     @PreAuthorize(value = "@accessToUrlService.hasAccessToDeckFromFolder(#folderId, #deckId)")
     public ResponseEntity<DeckLinkByFolderDTO> getDeckByFolderId(@PathVariable Long folderId, @PathVariable Long deckId) {
-        Deck deck = deckService.getDeck(deckId);
+        Deck deck = deckService.getDeckById(deckId);
         Link selfLink = linkTo(methodOn(FolderController.class).getDeckByFolderId(folderId, deckId)).withSelfRel();
         DeckLinkByFolderDTO linkDTO = DTOBuilder.buildDtoForEntity(deck, DeckLinkByFolderDTO.class, selfLink);
 
@@ -89,6 +89,6 @@ public class FolderController {
     @Auditable(action = AuditingAction.DELETE_DECK)
     @DeleteMapping(value = "/api/user/folder/decks/{deckId}")
     public void deleteUserDeck(@PathVariable Long deckId) throws NotAuthorisedUserException {
-        folderService.deleteDeck(deckId);
+        folderService.deleteDeckById(deckId);
     }
 }
