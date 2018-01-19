@@ -23,8 +23,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
@@ -97,7 +99,8 @@ public class CardController {
                                                                 @PathVariable Long categoryId,
                                                                 @PathVariable Long courseId,
                                                                 @PathVariable Long deckId,
-                                                                @RequestParam List<MultipartFile> images) {
+                                                                @RequestParam List<String> images) {
+
         cardService.addCard(card, deckId, images);
         Link selfLink = linkTo(methodOn(CardController.class).getCardByCourseAndDeck(categoryId, courseId, deckId, card.getId())).withSelfRel();
         CardPublicDTO cardPublicDTO = DTOBuilder.buildDtoForEntity(card, CardPublicDTO.class, selfLink);
@@ -107,15 +110,15 @@ public class CardController {
     @Auditable(action = AuditingAction.CREATE_CARD_VIA_CATEGORY_AND_DECK)
     @PostMapping(value = "/api/category/{categoryId}/decks/{deckId}/cards")
     @PreAuthorize(value = "@accessToUrlService.hasAccessToDeckFromCategory(#categoryId, #deckId)")
-    public ResponseEntity<CardPublicDTO> addCardByCategoryAndDeck(@RequestParam List<MultipartFile> images,
-                                                                  @RequestParam String title,
+    public ResponseEntity<CardPublicDTO> addCardByCategoryAndDeck(@RequestParam String title,
                                                                   @RequestParam String question,
                                                                   @RequestParam String answer,
                                                                   @PathVariable Long categoryId,
-                                                                  @PathVariable Long deckId) {
+                                                                  @PathVariable Long deckId,
+                                                                  @RequestParam(required = false) List<String> image) {
         LOGGER.debug("Add card to categoryId: {}, deckId: {}", categoryId, deckId);
         Card card = new Card(title,question,answer);
-        cardService.addCard(card, deckId, images);
+        cardService.addCard(card, deckId, image);
         Link selfLink = linkTo(methodOn(CardController.class).getCardByCategoryAndDeck(categoryId, deckId, card.getId())).withSelfRel();
         CardPublicDTO cardPublicDTO = DTOBuilder.buildDtoForEntity(card, CardPublicDTO.class, selfLink);
         return new ResponseEntity<>(cardPublicDTO, HttpStatus.CREATED);
@@ -129,8 +132,8 @@ public class CardController {
                                                                    @PathVariable Long deckId,
                                                                    @PathVariable Long cardId,
                                                                    @Validated(Request.class) @RequestBody Card card,
-                                                                   @RequestParam(required = false) List<MultipartFile> images) {
-        System.out.println(1);
+                                                                   @RequestParam(required = false) List<String> images) {
+
         cardService.updateCard(card, deckId, images);
         Link selfLink = linkTo(methodOn(CardController.class).getCardByCourseAndDeck(categoryId, courseId, deckId, card.getId())).withSelfRel();
         CardPublicDTO cardPublicDTO = DTOBuilder.buildDtoForEntity(card, CardPublicDTO.class, selfLink);
@@ -140,7 +143,7 @@ public class CardController {
     @Auditable(action = AuditingAction.EDIT_CARD_VIA_CATEGORY_AND_DECK)
     @PutMapping(value = "/api/category/{categoryId}/decks/{deckId}/cards/{cardId}")
     @PreAuthorize(value = "@accessToUrlService.hasAccessToCard(#categoryId, #deckId, #cardId)")
-    public ResponseEntity<CardPublicDTO> updateCardByCategoryAndDeck(@PathVariable Long categoryId, @PathVariable Long deckId, @PathVariable Long cardId, @Validated(Request.class) @RequestBody Card card, @RequestParam(required = false)  List<MultipartFile> images) {
+    public ResponseEntity<CardPublicDTO> updateCardByCategoryAndDeck(@PathVariable Long categoryId, @PathVariable Long deckId, @PathVariable Long cardId, @Validated(Request.class) @RequestBody Card card, @RequestParam(required = false)  List<String> images) {
         cardService.updateCard(card, deckId, images);
         Link selfLink = linkTo(methodOn(CardController.class).getCardByCategoryAndDeck(categoryId, deckId, card.getId())).withSelfRel();
         CardPublicDTO cardPublicDTO = DTOBuilder.buildDtoForEntity(card, CardPublicDTO.class, selfLink);
@@ -155,7 +158,7 @@ public class CardController {
                                                           @RequestParam String title,
                                                           @RequestParam String question,
                                                           @RequestParam String answer,
-                                                          @RequestParam List<MultipartFile> images) {
+                                                          @RequestParam(required = false) List<String> images) {
         LOGGER.debug("Updating card with id: {}  in deck with id: {}", cardId, deckId);
         Card card = new Card(title,question,answer);
         cardService.updateCard(card,cardId,images);

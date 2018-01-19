@@ -36,13 +36,6 @@ public class CardPublicDTO extends DTO<Card> {
         return getEntity().getRating();
     }
 
-//    public List<String> getCardImages() {
-//        return getEntity().getCardImages()
-//                .stream()
-//                .map(CardImage::getImage)
-//                .collect(toList());
-//    }
-
     public List<CardImage> getCardImages() {
         return getEntity().getCardImages();
     }

@@ -1,10 +1,13 @@
 package com.softserve.academy.spaced.repetition.service;
 
+import com.softserve.academy.spaced.repetition.domain.Card;
 import com.softserve.academy.spaced.repetition.domain.CardImage;
+
+import java.util.List;
 
 public interface CardImageService {
 
-    CardImage save(CardImage cardImage);
+    void save(List<String> imageList, Card card);
 
-    CardImage findOne(long id);
+    void delete(Long cardImageID);
 }

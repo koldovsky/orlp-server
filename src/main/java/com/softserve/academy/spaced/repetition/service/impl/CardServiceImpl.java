@@ -32,9 +32,6 @@ import static java.util.stream.Collectors.toList;
 @Service
 public class CardServiceImpl implements CardService {
 
-    @Autowired
-    private CardImageService cardImageService;
-
     private final CardRepository cardRepository;
     private final DeckRepository deckRepository;
     private final UserService userService;
@@ -42,7 +39,7 @@ public class CardServiceImpl implements CardService {
     private final UserCardQueueService userCardQueueService;
     private final DeckService deckService;
     @Autowired
-    private ImageService imageService;
+    private CardImageService cardImageService;
 
     @Autowired
     public CardServiceImpl(CardRepository cardRepository, DeckRepository deckRepository, AccountService accountService,
@@ -89,39 +86,28 @@ public class CardServiceImpl implements CardService {
     }
 
     @Override
-    public void addCard(Card card, Long deckId, List<MultipartFile> imageList) {
+    public void addCard(Card card, Long deckId, List<String> imageList) {
         if (card.getTitle().trim().isEmpty() || card.getAnswer().trim().isEmpty()
                 || card.getQuestion().trim().isEmpty()) {
             throw new IllegalArgumentException("All of card fields must be filled");
         }
-        if (imageList != null)
-           card.setCardImages(imageList.stream()
-                   .map(multipartFile ->
-                           cardImageService.save(new CardImage(imageService
-                                   .encodeToBase64(multipartFile))))
-                   .collect(toList()));
 
         Deck deck = deckRepository.findOne(deckId);
         card.setDeck(deck);
         deck.getCards().add(cardRepository.save(card));
+        cardImageService.save(imageList,card);
     }
 
     @Override
-    public void updateCard(Card card, Long cardId, List<MultipartFile> imageList) {
+    public void updateCard(Card card, Long cardId, List<String> imageList) {
         if (card.getTitle().trim().isEmpty() || card.getAnswer().trim().isEmpty()
                 || card.getQuestion().trim().isEmpty()) {
             throw new IllegalArgumentException("All of card fields must be filled");
         }
-        if (imageList != null)
-            card.setCardImages(imageList.stream()
-                    .map(multipartFile ->
-                            cardImageService.save(new CardImage(imageService
-                                    .encodeToBase64(multipartFile))))
-                    .collect(toList()));
-
         card.setId(cardId);
         card.setDeck(cardRepository.findOne(cardId).getDeck());
         cardRepository.save(card);
+        cardImageService.save(imageList,card);
     }
 
     @Override
@@ -173,7 +159,7 @@ public class CardServiceImpl implements CardService {
                 CardFileDTOList cards = yaml.loadAs(in, CardFileDTOList.class);
 
                 for (CardFileDTO card : cards.getCards())
-                    addCard(new Card(card.getTitle(),card.getQuestion(), card.getAnswer()), deckId, null);
+                    addCard(new Card(card.getTitle(), card.getQuestion(), card.getAnswer()), deckId, null);
 
             } catch (ParserException | ConstructorException ex) {
                 throw new IllegalArgumentException("Invalid format of file!");

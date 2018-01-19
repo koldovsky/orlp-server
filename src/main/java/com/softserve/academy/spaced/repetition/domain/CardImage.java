@@ -1,10 +1,13 @@
 package com.softserve.academy.spaced.repetition.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.softserve.academy.spaced.repetition.controller.utils.dto.EntityInterface;
+
 import javax.persistence.*;
 
 @Entity
 @Table(name = "card_image")
-public class CardImage {
+public class CardImage implements EntityInterface {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -12,10 +15,11 @@ public class CardImage {
     private Long id;
 
     @Column(name = "imagebase64", columnDefinition = "LONGTEXT")
-    @Basic(fetch = FetchType.LAZY)
     private String image;
 
-    @ManyToOne
+    @ManyToOne()
+    @JoinColumn(name = "card_id")
+    @JsonIgnore
     private Card card;
 
     public CardImage() {
