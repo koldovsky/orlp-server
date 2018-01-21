@@ -15,20 +15,26 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.transaction.annotation.Transactional;
 
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 @Transactional
 public class AccountVerificationByEmailServiceImplTest {
-    private final String EMAIL = "account@test.com";
+
     @Mock
     private JwtTokenForMail jwtTokenForMail;
+
     @Mock
     private AccountRepository accountRepository;
+
     @Mock
     private UserRepository userRepository;
+
     @InjectMocks
     private AccountVerificationByEmailServiceImpl accountVerificationByEmailService;
+
+    private final String EMAIL = "account@test.com";
     private User user;
     private Account account;
 
@@ -43,20 +49,20 @@ public class AccountVerificationByEmailServiceImplTest {
     public void testAccountVerification() {
         when(jwtTokenForMail.decryptToken("")).thenReturn(EMAIL);
         when(userRepository.findUserByAccountEmail(EMAIL)).thenReturn(user);
+        when(accountRepository.save(account)).thenReturn(account);
 
         accountVerificationByEmailService.accountVerification("");
         verify(jwtTokenForMail).decryptToken("");
         verify(userRepository,times(2)).findUserByAccountEmail(EMAIL);
-        validateMockitoUsage();
-
+        verify(accountRepository).save(account);
     }
 
     @Test
     public void testGetAccountEmail() {
         when(jwtTokenForMail.getAccountEmailFromToken("")).thenReturn("");
 
-        accountVerificationByEmailService.getAccountEmail("");
+        String result = accountVerificationByEmailService.getAccountEmail("");
         verify(jwtTokenForMail).getAccountEmailFromToken("");
-
+        assertEquals("", result);
     }
 }

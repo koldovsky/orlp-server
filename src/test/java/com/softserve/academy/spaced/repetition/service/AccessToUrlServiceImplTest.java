@@ -5,7 +5,6 @@ import com.softserve.academy.spaced.repetition.domain.enums.AccountStatus;
 import com.softserve.academy.spaced.repetition.domain.enums.AuthenticationType;
 import com.softserve.academy.spaced.repetition.domain.enums.LearningRegime;
 import com.softserve.academy.spaced.repetition.repository.*;
-import com.softserve.academy.spaced.repetition.security.JwtUser;
 import com.softserve.academy.spaced.repetition.service.impl.AccessToUrlServiceImpl;
 import com.softserve.academy.spaced.repetition.util.DomainFactory;
 import com.softserve.academy.spaced.repetition.utils.exceptions.NotAuthorisedUserException;
@@ -15,6 +14,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.stubbing.OngoingStubbing;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
@@ -31,15 +31,16 @@ public class AccessToUrlServiceImplTest {
     private final Long CARD_ID = 1L;
     private final Long FOLDER_ID = 1L;
     private final Long DECK_ID = 1L;
-    private final Long RATING = 1L;
-    private User user;
+    private final Long COMMENT_ID = 1L;
     private Deck deck;
     private Category category;
     private Course course;
     private Folder folder;
-    private Set<Folder> folderSet;
     private Card card;
-    private Person person;
+    private List<Course> courseList;
+    private List<Deck> deckList;
+    private List<Card> cardList;
+
     @Mock
     private CategoryRepository categoryRepository;
     @Mock
@@ -61,51 +62,28 @@ public class AccessToUrlServiceImplTest {
 
     @Before
     public void setUp() {
-        person = DomainFactory.createPerson(1L,"","",null,"","");
+        Set<Course> courseSet = DomainFactory.createCourseSet(course);
+        courseList = DomainFactory.createCourseList(course);
+        Set<Deck> deckSet = DomainFactory.createDeckSet(deck);
+        deckList = DomainFactory.createDeckList(deck);
+        cardList = DomainFactory.createCardList(card);
+        Person person = DomainFactory.createPerson(1L, "", "", null, "", "");
         Account account = DomainFactory.createAccount(1L, "", "account@test.com", AuthenticationType.LOCAL,
                 AccountStatus.ACTIVE, true, new Date(), null, LearningRegime.BAD_NORMAL_GOOD_STATUS_DEPENDING,
                 10, null);
-        user = DomainFactory.createUser(1L, account,person,folder,createCourseSet());
-        folderSet = new HashSet<>();
+        Long USER_ID = 1L;
+        User user = DomainFactory.createUser(USER_ID, account, person, folder, courseSet);
+        Set<Folder> folderSet = new HashSet<>();
         folderSet.add(folder);
-        folder = DomainFactory.createFolder(1L, createDeckSet());
+        folder = DomainFactory.createFolder(FOLDER_ID, deckSet);
+        Long RATING = 1L;
         course = DomainFactory.createCourse(COURSE_ID, null, null, null, RATING,
-                true, null, category, createDeckList(), null, null);
+                true, null, category, deckList, null, null);
         category = DomainFactory.createCategory(CATEGORY_ID, null, null,
                 null, null, null);
         deck = DomainFactory.createDeck(DECK_ID, null, null, null, category, RATING,
-                user, createCardList(), createCourseList(), null, folderSet, null);
+                user, cardList, courseList, null, folderSet, null);
         card = DomainFactory.createCard(CARD_ID, null, null, null, deck);
-    }
-
-    private List<Course> createCourseList() {
-        List<Course> courseList = new ArrayList<>();
-        courseList.add(course);
-        return courseList;
-    }
-
-    private Set<Course> createCourseSet() {
-        Set<Course> courseSet = new HashSet<>();
-        courseSet.add(course);
-        return courseSet;
-    }
-
-    private List<Deck> createDeckList() {
-        List<Deck> deckList = new ArrayList<>();
-        deckList.add(deck);
-        return deckList;
-    }
-
-    private Set<Deck> createDeckSet() {
-        Set<Deck> deckSet = new HashSet<>();
-        deckSet.add(deck);
-        return deckSet;
-    }
-
-    private List<Card> createCardList() {
-        List<Card> cardList = new ArrayList<>();
-        cardList.add(card);
-        return cardList;
     }
 
     @Test
@@ -120,7 +98,7 @@ public class AccessToUrlServiceImplTest {
     @Test
     public void testHasAccessToCourse() {
         when(courseRepository.getAccessToCourse(CATEGORY_ID, COURSE_ID))
-                .thenReturn(createCourseList());
+                .thenReturn(courseList);
 
         accessToUrlService.hasAccessToCourse(CATEGORY_ID, COURSE_ID);
         verify(courseRepository).getAccessToCourse(CATEGORY_ID, COURSE_ID);
@@ -129,7 +107,7 @@ public class AccessToUrlServiceImplTest {
     @Test
     public void testHasAccessToDeckFromFolder() {
         when(folderRepository.getAccessToDeckFromFolder(FOLDER_ID, DECK_ID))
-                .thenReturn(createDeckList());
+                .thenReturn(deckList);
 
         accessToUrlService.hasAccessToDeckFromFolder(FOLDER_ID, DECK_ID);
         verify(folderRepository).getAccessToDeckFromFolder(FOLDER_ID, DECK_ID);
@@ -138,7 +116,7 @@ public class AccessToUrlServiceImplTest {
     @Test
     public void testHasAccessToCourseByCategory() {
         when(courseRepository.getAccessToCourse(CATEGORY_ID))
-                .thenReturn(createCourseList());
+                .thenReturn(courseList);
 
         accessToUrlService.hasAccessToCourse(CATEGORY_ID);
         verify(courseRepository).getAccessToCourse(CATEGORY_ID);
@@ -147,9 +125,9 @@ public class AccessToUrlServiceImplTest {
     @Test
     public void testHasAccessToDeck() {
         when(courseRepository.getAccessToCourse(CATEGORY_ID, COURSE_ID))
-                .thenReturn(createCourseList());
+                .thenReturn(courseList);
         when(deckRepository.hasAccessToDeck(COURSE_ID, DECK_ID))
-                .thenReturn(createDeckList());
+                .thenReturn(deckList);
 
         accessToUrlService.hasAccessToDeck(CATEGORY_ID, COURSE_ID, DECK_ID);
         verify(courseRepository).getAccessToCourse(CATEGORY_ID, COURSE_ID);
@@ -159,7 +137,7 @@ public class AccessToUrlServiceImplTest {
     @Test
     public void testHasAccessToDeckFromCategory() {
         when(deckRepository.hasAccessToDeckFromCategory(CATEGORY_ID, DECK_ID))
-                .thenReturn(createDeckList());
+                .thenReturn(deckList);
 
         accessToUrlService.hasAccessToDeckFromCategory(CATEGORY_ID, DECK_ID);
         verify(deckRepository).hasAccessToDeckFromCategory(CATEGORY_ID, DECK_ID);
@@ -168,7 +146,7 @@ public class AccessToUrlServiceImplTest {
     @Test
     public void testHasAccessToDeckByCategory() {
         when(deckRepository.hasAccessToDeckFromCategory(CATEGORY_ID))
-                .thenReturn(createDeckList());
+                .thenReturn(deckList);
 
         accessToUrlService.hasAccessToDeck(CATEGORY_ID);
         verify(deckRepository).hasAccessToDeckFromCategory(CATEGORY_ID);
@@ -177,7 +155,7 @@ public class AccessToUrlServiceImplTest {
     @Test
     public void testHasAccessToCard() {
         when(cardRepository.hasAccessToCard(DECK_ID, CARD_ID))
-                .thenReturn(createCardList());
+                .thenReturn(cardList);
 
         accessToUrlService.hasAccessToCard(DECK_ID, CARD_ID);
         verify(cardRepository).hasAccessToCard(DECK_ID, CARD_ID);
@@ -186,9 +164,9 @@ public class AccessToUrlServiceImplTest {
     @Test
     public void testHasAccessToCardByCategory() {
         when(deckRepository.hasAccessToDeckFromCategory(CATEGORY_ID, DECK_ID))
-                .thenReturn(createDeckList());
+                .thenReturn(deckList);
         when(cardRepository.hasAccessToCard(DECK_ID, CARD_ID))
-                .thenReturn(createCardList());
+                .thenReturn(cardList);
 
         accessToUrlService.hasAccessToCard(CARD_ID, DECK_ID, CARD_ID);
         verify(deckRepository).hasAccessToDeckFromCategory(CATEGORY_ID, DECK_ID);
@@ -199,11 +177,11 @@ public class AccessToUrlServiceImplTest {
     @Test
     public void testHasAccessToCardByCard() {
         when(courseRepository.getAccessToCourse(CATEGORY_ID, COURSE_ID))
-                .thenReturn(createCourseList());
+                .thenReturn(courseList);
         when(deckRepository.hasAccessToDeck(COURSE_ID, DECK_ID))
-                .thenReturn(createDeckList());
+                .thenReturn(deckList);
         when(cardRepository.hasAccessToCard(DECK_ID, CARD_ID))
-                .thenReturn(createCardList());
+                .thenReturn(cardList);
 
         accessToUrlService.hasAccessToCard(CATEGORY_ID, COURSE_ID, DECK_ID, CARD_ID);
         verify(courseRepository).getAccessToCourse(CATEGORY_ID, COURSE_ID);
@@ -213,14 +191,11 @@ public class AccessToUrlServiceImplTest {
 
     @Test
     public void testHasAccessToFolder() throws NotAuthorisedUserException {
-//        when(userService.getAuthorizedUser().getFolder().getId()).thenReturn();
-//
-//        accessToUrlService.hasAccessToFolder(FOLDER_ID);
-//        verify(userService).getAuthorizedUser();
+
     }
 
     @Test(expected = NotAuthorisedUserException.class)
-    public void testHasAccessToFolderException() throws NotAuthorisedUserException {
+    public void testHasAccessToFolderByNotAuthorisedUser() throws NotAuthorisedUserException {
         when(userService.getAuthorizedUser()).thenThrow(NotAuthorisedUserException.class);
 
         accessToUrlService.hasAccessToFolder(FOLDER_ID);
@@ -241,11 +216,15 @@ public class AccessToUrlServiceImplTest {
 
     @Test
     public void testHasAccessToUpdateCommentForCourse() throws NotAuthorisedUserException {
-        when(userService.getAuthorizedUser().getPerson()).thenReturn(person);
-        when(courseCommentRepository.findOne(1L).getPerson()).thenReturn(person);
 
-        accessToUrlService.hasAccessToUpdateCommentForCourse(1L);
+    }
+
+    @Test(expected = NotAuthorisedUserException.class)
+    public void testHasAccessToUpdateCommentForCourseByNotAuthorisedUser() throws NotAuthorisedUserException {
+        when(userService.getAuthorizedUser()).thenThrow(NotAuthorisedUserException.class);
+
+        accessToUrlService.hasAccessToUpdateCommentForCourse(COMMENT_ID);
         verify(userService).getAuthorizedUser();
-        verify(courseCommentRepository).findOne(1L);
+
     }
 }

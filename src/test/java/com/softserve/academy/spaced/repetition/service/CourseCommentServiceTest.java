@@ -9,6 +9,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
@@ -23,23 +24,19 @@ import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
-@RunWith(SpringRunner.class)
-@ActiveProfiles("testdatabase")
-@SpringBootTest
-@Import(TestDatabaseConfig.class)
-@Sql("/data/TestData.sql")
+@RunWith(MockitoJUnitRunner.class)
 @Transactional
 public class CourseCommentServiceTest {
 
     private static final Long COURSE_ID = 1L;
 
-    @Autowired
+    @Mock
     private CourseCommentServiceImpl courseCommentServiceUnderTest;
 
-    @Autowired
+    @Mock
     private CourseCommentRepository courseCommentRepository;
 
-    @Autowired
+    @Mock
     private CourseRepository courseRepository;
 
     @Mock

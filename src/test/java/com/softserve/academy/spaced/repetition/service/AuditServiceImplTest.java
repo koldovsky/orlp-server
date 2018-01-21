@@ -11,6 +11,8 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
@@ -18,6 +20,7 @@ import java.util.Date;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -48,13 +51,14 @@ public class AuditServiceImplTest {
         auditList.add(audit);
         return auditList;
     }
+
     @Test
     public void testGetFullAuditList() {
         when(auditRepository.findAll()).thenReturn(createAuditList());
 
         List<Audit> result = auditService.getFullAuditList();
         verify(auditRepository).findAll();
-        assertEquals(result,createAuditList());
+        assertEquals(createAuditList(), result);
     }
 
     @Test
@@ -63,7 +67,7 @@ public class AuditServiceImplTest {
 
         List<Audit> result = auditService.getAuditListSortedByAccountEmailAsc();
         verify(auditRepository).findAllByOrderByAccountEmail();
-        assertEquals(result,createAuditList());
+        assertEquals(createAuditList(), result);
 
     }
 
@@ -73,7 +77,7 @@ public class AuditServiceImplTest {
 
         List<Audit> result = auditService.getAuditListSortedByAccountEmailDesc();
         verify(auditRepository).findAllByOrderByAccountEmailDesc();
-        assertEquals(result,createAuditList());
+        assertEquals(createAuditList(), result);
     }
 
     @Test
@@ -82,7 +86,7 @@ public class AuditServiceImplTest {
 
         List<Audit> result = auditService.getAuditListSortedByActionAsc();
         verify(auditRepository).findAllByOrderByAction();
-        assertEquals(result,createAuditList());
+        assertEquals(createAuditList(), result);
     }
 
     @Test
@@ -91,7 +95,7 @@ public class AuditServiceImplTest {
 
         List<Audit> result = auditService.getAuditListSortedByActionAscDesc();
         verify(auditRepository).findAllByOrderByActionDesc();
-        assertEquals(result,createAuditList());
+        assertEquals(createAuditList(), result);
     }
 
     @Test
@@ -100,7 +104,7 @@ public class AuditServiceImplTest {
 
         List<Audit> result = auditService.getAuditListSortedByIpAddressAsc();
         verify(auditRepository).findAllByOrderByIpAddress();
-        assertEquals(result,createAuditList());
+        assertEquals(createAuditList(), result);
     }
 
     @Test
@@ -109,7 +113,7 @@ public class AuditServiceImplTest {
 
         List<Audit> result = auditService.getAuditListSortedByIpAddressDesc();
         verify(auditRepository).findAllByOrderByIpAddressDesc();
-        assertEquals(result,createAuditList());
+        assertEquals(createAuditList(), result);
     }
 
     @Test
@@ -118,7 +122,7 @@ public class AuditServiceImplTest {
 
         List<Audit> result = auditService.getAuditListSortedByTimeAsc();
         verify(auditRepository).findAllByOrderByTime();
-        assertEquals(result,createAuditList());
+        assertEquals(createAuditList(), result);
     }
 
     @Test
@@ -127,7 +131,7 @@ public class AuditServiceImplTest {
 
         List<Audit> result = auditService.getAuditListSortedByTimeDesc();
         verify(auditRepository).findAllByOrderByTimeDesc();
-        assertEquals(result,createAuditList());
+        assertEquals(createAuditList(), result);
     }
 
     @Test
@@ -136,7 +140,7 @@ public class AuditServiceImplTest {
 
         List<Audit> result = auditService.getAuditListSortedByRoleAsc();
         verify(auditRepository).findAllByOrderByRole();
-        assertEquals(result,createAuditList());
+        assertEquals(createAuditList(), result);
     }
 
     @Test
@@ -145,11 +149,19 @@ public class AuditServiceImplTest {
 
         List<Audit> result = auditService.getAuditListSortedByRoleDesc();
         verify(auditRepository).findAllByOrderByRoleDesc();
-        assertEquals(result,createAuditList());
+        assertEquals(createAuditList(), result);
     }
 
     @Test
     public void testGetAuditByPage() {
+        final int PAGE_NUMBER = 1;
+        final boolean PAGE_ASCENDING_ORDER = true;
+        final String PAGE_SORT_BY = "field";
 
+        when(auditRepository.findAll(any(PageRequest.class))).thenReturn(null);
+
+        Page<Audit> result = auditService.getAuditByPage(PAGE_NUMBER, PAGE_SORT_BY, PAGE_ASCENDING_ORDER);
+        verify(auditRepository).findAll(any(PageRequest.class));
+        assertEquals(null, result);
     }
 }

@@ -43,9 +43,6 @@ public class AccountServiceImplTest {
     private User user;
     private RememberingLevel rememberingLevel;
 
-    @InjectMocks
-    private AccountServiceImpl accountService;
-
     @Mock
     private AccountRepository accountRepository;
 
@@ -63,6 +60,9 @@ public class AccountServiceImplTest {
 
     @Mock
     private PasswordEncoder passwordEncoder;
+
+    @InjectMocks
+    private AccountServiceImpl accountService;
 
 
     @Before
@@ -93,16 +93,27 @@ public class AccountServiceImplTest {
 
         accountService.updateAccount(account);
         verify(accountRepository).save(account);
+    }
+
+    @Test
+    public void getLearningRegime() throws NotAuthorisedUserException {
+        when(userService.getAuthorizedUser().getAccount().getLearningRegime())
+                .thenReturn(LearningRegime.BAD_NORMAL_GOOD_STATUS_DEPENDING);
+    }
+
+    @Test(expected = NotAuthorisedUserException.class)
+    public void testGetLearningRegimeByNotAuthorisedUser() throws NotAuthorisedUserException {
 
     }
 
     @Test
-    public void testGetLearningRegime() throws NotAuthorisedUserException {
+    public void updateLearningRegime() throws NotAuthorisedUserException{
 
     }
 
-    @Test
-    public void updateLearningRegime() throws NotAuthorisedUserException {
+    @Test(expected = NotAuthorisedUserException.class)
+    public void updateLearningRegimeNotAuthorisedUser() throws NotAuthorisedUserException {
+
     }
 
     @Test
@@ -123,30 +134,40 @@ public class AccountServiceImplTest {
 
     @Test
     public void initializeLearningRegimeSettingsForAccount() {
-        }
+    }
 
     @Test
     public void createNewAccountPassword() {
-    when(accountRepository.findByEmail(EMAIL)).thenReturn(account);
-    when(passwordEncoder.encode(PASSWORD)).thenReturn(PASSWORD);
-    when(accountRepository.save(account)).thenReturn(account);
+        when(accountRepository.findByEmail(EMAIL)).thenReturn(account);
+        when(passwordEncoder.encode(PASSWORD)).thenReturn(PASSWORD);
+        when(accountRepository.save(account)).thenReturn(account);
 
-    accountService.createNewAccountPassword(EMAIL,PASSWORD);
-    verify(accountRepository).findByEmail(EMAIL);
-    verify(passwordEncoder).encode(PASSWORD);
-    verify(accountRepository).save(account);
+        accountService.createNewAccountPassword(EMAIL,PASSWORD);
+        verify(accountRepository).findByEmail(EMAIL);
+        verify(passwordEncoder).encode(PASSWORD);
+        verify(accountRepository).save(account);
     }
 
     @Test
     public void testCheckAccountStatusAndSendMail() {
-        when(accountRepository.findByEmail(EMAIL)).thenReturn(account);
-        doNothing().when(mailService).sendPasswordRestoreMail(EMAIL);
-//        doReturn(EMAIL).when(mailService)
-//                .sendPasswordRestoreMail(EMAIL);
 
-        String result = accountService.checkAccountStatusAndSendMail(EMAIL);
-        verify(accountRepository).findByEmail(EMAIL);
-//        verify(mailService).sendPasswordRestoreMail(EMAIL);
-        assertEquals(result,account.getAuthenticationType().toString());
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }

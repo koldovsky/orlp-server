@@ -7,10 +7,7 @@ import com.softserve.academy.spaced.repetition.domain.enums.ImageType;
 import com.softserve.academy.spaced.repetition.domain.enums.LearningRegime;
 import com.softserve.academy.spaced.repetition.utils.audit.AuditingAction;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class DomainFactory {
 
@@ -186,7 +183,6 @@ public class DomainFactory {
                 " compiled into platform specific machine, rather into platform independent byte code. This byte code" +
                 " is distributed over the web and interpreted by virtual Machine (JVM) on whichever platform it is " +
                 "being run.", deck);
-
         Card card8 = createCard(8L, "Card 8", "List two Java IDE’s?", "Netbeans, Eclipse, etc."
                 , deck);
         Card card9 = createCard(9L, "Card 9", "List some Java keywords(unlike C, C++ keywords)?",
@@ -208,7 +204,7 @@ public class DomainFactory {
         return cards;
     }
 
-    public static Category careteCategory(Long id, String name, String description, Image image) {
+    public static Category createCategory(Long id, String name, String description, Image image) {
         Category category = new Category();
         category.setId(id);
         category.setName(name);
@@ -243,5 +239,55 @@ public class DomainFactory {
         cardRating.setCard(card);
         cardRating.setRating(rating);
         return cardRating;
+    }
+
+    public static Image createImage(Long id, String imagebase64, String type, User createdBy, Long size, boolean isImageUsed){
+        Image image = new Image();
+        image.setId(id);
+        image.setImagebase64(imagebase64);
+        image.setType(type);
+        image.setCreatedBy(createdBy);
+        image.setSize(size);
+        image.setIsImageUsed(isImageUsed);
+        return image;
+    }
+
+    public static CourseRating createCourseRating(Long id, String accountEmail, Course course, int rating){
+        CourseRating courseRating = new CourseRating();
+        courseRating.setId(id);
+        courseRating.setAccountEmail(accountEmail);
+        courseRating.setCourse(course);
+        courseRating.setRating(rating);
+        return courseRating;
+    }
+
+    public static List<Course> createCourseList(Course course) {
+        List<Course> courseList = new ArrayList<>();
+        courseList.add(course);
+        return courseList;
+    }
+
+    public static Set<Course> createCourseSet(Course course) {
+        Set<Course> courseSet = new HashSet<>();
+        courseSet.add(course);
+        return courseSet;
+    }
+
+    public static List<Deck> createDeckList(Deck deck) {
+        List<Deck> deckList = new ArrayList<>();
+        deckList.add(deck);
+        return deckList;
+    }
+
+    public static Set<Deck> createDeckSet(Deck deck) {
+        Set<Deck> deckSet = new HashSet<>();
+        deckSet.add(deck);
+        return deckSet;
+    }
+
+    public static List<Card> createCardList(Card card) {
+        List<Card> cardList = new ArrayList<>();
+        cardList.add(card);
+        return cardList;
     }
 }
