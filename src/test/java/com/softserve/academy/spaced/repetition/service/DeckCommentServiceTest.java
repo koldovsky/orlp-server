@@ -51,8 +51,7 @@ public class DeckCommentServiceTest {
     public void setUp() {
         person = DomainFactory.createPerson(PERSON_ID, null, null, null, null, null);
         user = DomainFactory.createUser(USER_ID, null, person, null, null);
-        deck = DomainFactory.createDeck(DECK_ID, null, null, null, null, 0,
-                user, null, null, null, null, null);
+        deck = DomainFactory.createDeck(DECK_ID, null, null, null, null, 0, user, null, null, null, null, null);
         deckComment = DomainFactory.createDeckComment(DECK_COMMENT_ID, DECK_COMMENT_TEXT, null, person,
                 DECK_COMMENT_PARENT_ID, deck);
     }
@@ -74,6 +73,14 @@ public class DeckCommentServiceTest {
         deckComment.setId(DECK_COMMENT_ID);
     }
 
+    @Test(expected = NotAuthorisedUserException.class)
+    public void testAddCommentToDeckByNotAuthorisedUser() throws NotAuthorisedUserException {
+        when(userService.getAuthorizedUser()).thenThrow(NotAuthorisedUserException.class);
+
+        deckCommentService.addCommentToDeck(DECK_ID, DECK_COMMENT_TEXT,DECK_COMMENT_PARENT_ID);
+        verify(userService).getAuthorizedUser();
+    }
+
     @Test
     public void testGetCommentById() {
         when(deckCommentRepository.findOne(DECK_COMMENT_ID)).thenReturn(deckComment);
@@ -84,10 +91,10 @@ public class DeckCommentServiceTest {
     }
 
     @Test
-    public void testGetAllCommentsOfDeck() {
+    public void testGetAllCommentsOfDeckByDeckId() {
         when(deckCommentRepository.findDeckCommentsByDeckId(DECK_ID)).thenReturn(null);
 
-        List<Comment> result = deckCommentService.getAllCommentsOfDeck(DECK_ID);
+        List<Comment> result = deckCommentService.getAllCommentsOfDeckByDeckId(DECK_ID);
         verify(deckCommentRepository).findDeckCommentsByDeckId(DECK_ID);
         assertEquals(null, result);
     }
@@ -95,11 +102,9 @@ public class DeckCommentServiceTest {
     @Test
     public void testUpdateCommentById() {
         when(deckCommentRepository.findOne(DECK_COMMENT_ID)).thenReturn(deckComment);
-        when(deckCommentRepository.save(deckComment)).thenReturn(deckComment);
 
         DeckComment result = deckCommentService.updateCommentById(DECK_COMMENT_ID, DECK_COMMENT_TEXT);
         verify(deckCommentRepository).findOne(DECK_COMMENT_ID);
-        verify(deckCommentRepository).save(deckComment);
         assertEquals(deckComment, result);
     }
 

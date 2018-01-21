@@ -215,7 +215,7 @@ public class DeckController {
     @Auditable(action = AuditingAction.DELETE_DECK_ADMIN)
     @DeleteMapping(value = "/api/admin/decks/{deckId}")
     public ResponseEntity deleteDeckForAdmin(@PathVariable Long deckId) throws NotAuthorisedUserException {
-        folderService.deleteDeckFromAllUsers(deckId);
+        folderService.deleteDeckFromAllUsersFolderById(deckId);
         deckService.deleteDeckById(deckId);
         return new ResponseEntity<>(HttpStatus.OK);
     }

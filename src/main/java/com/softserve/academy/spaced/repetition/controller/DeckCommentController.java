@@ -36,7 +36,7 @@ public class DeckCommentController {
     public ResponseEntity<List<CommentDTO>> getAllCommentsForDeck(@PathVariable Long categoryId,
                                                                   @PathVariable Long deckId) {
         LOGGER.debug("View all comments for deck with id: {}", deckId);
-        List<Comment> commentsList = commentService.getAllCommentsOfDeck(deckId);
+        List<Comment> commentsList = commentService.getAllCommentsOfDeckByDeckId(deckId);
         Link collectionLink = linkTo(methodOn(DeckCommentController.class)
                 .getAllCommentsForDeck(categoryId, deckId)).withSelfRel();
         List<CommentDTO> listOfComments = DTOBuilder

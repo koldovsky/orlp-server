@@ -31,18 +31,16 @@ public class ImageServiceImpl implements ImageService {
     @Value("${app.images.userQuote}")
     private Long userQuote;
 
-
     @Override
     public Image addImageToDB(MultipartFile file)
             throws ImageRepositorySizeQuotaExceededException, NotAuthorisedUserException {
         checkImageExtension(file);
-        Image image = new Image(encodeToBase64(file), file.getContentType(),
-                userService.getAuthorizedUser(), file.getSize());
+        User user = userService.getAuthorizedUser();
+        Image image = new Image(encodeToBase64(file), file.getContentType(), user, file.getSize());
         imageRepository.save(image);
-        image = imageRepository.getImageWithoutContent(image.getId());
+        image = imageRepository.getImageWithoutContentById(image.getId());
         return image;
     }
-
 
     @Override
     public void checkImageExtension(MultipartFile file) throws ImageRepositorySizeQuotaExceededException,
@@ -62,7 +60,6 @@ public class ImageServiceImpl implements ImageService {
         }
     }
 
-
     @Override
     public byte[] getDecodedImageContentByImageId(Long id) {
         byte[] imageContent = null;
@@ -78,7 +75,6 @@ public class ImageServiceImpl implements ImageService {
         return imageContent;
     }
 
-
     @Override
     public String encodeToBase64(MultipartFile file) {
         String encodedFile = null;
@@ -92,13 +88,11 @@ public class ImageServiceImpl implements ImageService {
         return encodedFile;
     }
 
-
     @Override
     public byte[] decodeFromBase64(String encodedFileContent) {
 
         return Base64.decodeBase64(encodedFileContent);
     }
-
 
     @Override
     public Long getUsersLimitInBytesForImagesLeft(Long userId) {
@@ -110,7 +104,6 @@ public class ImageServiceImpl implements ImageService {
         Long bytesLeft = userQuote - bytesUsed;
         return bytesLeft;
     }
-
 
     @Override
     public void deleteImage(Long id)
@@ -130,7 +123,6 @@ public class ImageServiceImpl implements ImageService {
         }
     }
 
-
     @Override
     public void setImageStatusInUse(Long imageId) {
         Image image = imageRepository.findOne(imageId);
@@ -138,14 +130,12 @@ public class ImageServiceImpl implements ImageService {
         imageRepository.save(image);
     }
 
-
     @Override
     public void setImageStatusNotInUse(Long imageId) {
         Image image = imageRepository.findOne(imageId);
         image.setIsImageUsed(false);
         imageRepository.save(image);
     }
-
 
     @Override
     public List<Image> getImagesForCurrentUser() throws NotAuthorisedUserException {

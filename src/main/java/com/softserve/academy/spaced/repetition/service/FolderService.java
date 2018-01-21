@@ -50,5 +50,5 @@ public interface FolderService {
      * @param deckId the deck identifier which will be deleted.
      * @throws NotAuthorisedUserException if unauthorized user used this operation.
      */
-    void deleteDeckFromAllUsers(Long deckId) throws NotAuthorisedUserException;
+    void deleteDeckFromAllUsersFolderById(Long deckId);
 }

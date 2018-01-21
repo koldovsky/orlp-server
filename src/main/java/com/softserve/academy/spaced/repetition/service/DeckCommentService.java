@@ -36,7 +36,7 @@ public interface DeckCommentService {
      * @param deckId deck`s id for which comments are searched, must not be {@literal null}.
      * @return list of comments to the deck with the given identifier.
      */
-    List<Comment> getAllCommentsOfDeck(Long deckId);
+    List<Comment> getAllCommentsOfDeckByDeckId(Long deckId);
 
     /**
      * Updates comment with the given identifier by adding the new text.

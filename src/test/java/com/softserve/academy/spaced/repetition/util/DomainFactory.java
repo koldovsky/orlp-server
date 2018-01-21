@@ -130,4 +130,16 @@ public class DomainFactory {
         deckRating.setRating(rating);
         return deckRating;
     }
+
+    public static Image createImage(Long imageId, String imagebase64, String type, User createdBy, Long size,
+                                    boolean isImageUsed) {
+        Image image = new Image();
+        image.setId(imageId);
+        image.setImagebase64(imagebase64);
+        image.setType(type);
+        image.setCreatedBy(createdBy);
+        image.setSize(size);
+        image.setIsImageUsed(isImageUsed);
+        return image;
+    }
 }

@@ -20,17 +20,15 @@ import static com.softserve.academy.spaced.repetition.service.impl.AccountServic
 @Service
 public class UserCardQueueServiceImpl implements UserCardQueueService {
     private static final int DAY_IN_MILLISECONDS = 24 * 60 * 60 * 1000;
-    private final UserCardQueueRepository userCardQueueRepository;
-    private final UserService userService;
-    private final RememberingLevelRepository rememberingLevelRepository;
 
     @Autowired
-    public UserCardQueueServiceImpl(UserCardQueueRepository userCardQueueRepository, UserService userService,
-                                    RememberingLevelRepository rememberingLevelRepository) {
-        this.userCardQueueRepository = userCardQueueRepository;
-        this.userService = userService;
-        this.rememberingLevelRepository = rememberingLevelRepository;
-    }
+    private UserCardQueueRepository userCardQueueRepository;
+
+    @Autowired
+    private RememberingLevelRepository rememberingLevelRepository;
+
+    @Autowired
+    private UserService userService;
 
     @Override
     @Transactional
@@ -96,7 +94,8 @@ public class UserCardQueueServiceImpl implements UserCardQueueService {
     @Override
     @Transactional
     public long countCardsThatNeedRepeating(Long deckId) throws NotAuthorisedUserException {
-        return userCardQueueRepository.countAllByUserIdEqualsAndDeckIdEqualsAndDateToRepeatBefore(
-                userService.getAuthorizedUser().getId(), deckId, new Date());
+        User user = userService.getAuthorizedUser();
+        Long id = user.getId();
+        return userCardQueueRepository.countAllByUserIdEqualsAndDeckIdEqualsAndDateToRepeatBefore(id, deckId, new Date());
     }
 }

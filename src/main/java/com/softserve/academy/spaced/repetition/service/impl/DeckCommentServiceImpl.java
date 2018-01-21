@@ -1,7 +1,6 @@
 package com.softserve.academy.spaced.repetition.service.impl;
 
-import com.softserve.academy.spaced.repetition.domain.Comment;
-import com.softserve.academy.spaced.repetition.domain.DeckComment;
+import com.softserve.academy.spaced.repetition.domain.*;
 import com.softserve.academy.spaced.repetition.utils.exceptions.NotAuthorisedUserException;
 import com.softserve.academy.spaced.repetition.repository.DeckCommentRepository;
 import com.softserve.academy.spaced.repetition.repository.DeckRepository;
@@ -34,13 +33,16 @@ public class DeckCommentServiceImpl implements DeckCommentService {
     @Transactional
     public DeckComment addCommentToDeck(Long deckId, String commentText, Long parentCommentId)
             throws NotAuthorisedUserException {
-        LOGGER.debug("Added comment to deck with id: {}", deckId);
+        User user = userService.getAuthorizedUser();
+        Deck deck = deckRepository.findOne(deckId);
+        Person person = user.getPerson();
         DeckComment comment = new DeckComment(commentText, new Date());
-        comment.setPerson(userService.getAuthorizedUser().getPerson());
-        comment.setDeck(deckRepository.findOne(deckId));
+        comment.setPerson(person);
+        comment.setDeck(deck);
         if (parentCommentId != null) {
             comment.setParentCommentId(parentCommentId);
         }
+        LOGGER.debug("Added comment to deck with id: {}", deckId);
         return deckCommentRepository.save(comment);
     }
 
@@ -51,7 +53,7 @@ public class DeckCommentServiceImpl implements DeckCommentService {
     }
 
     @Override
-    public List<Comment> getAllCommentsOfDeck(Long deckId) {
+    public List<Comment> getAllCommentsOfDeckByDeckId(Long deckId) {
         LOGGER.debug("View all comments for deck with id: {}", deckId);
         return deckCommentRepository.findDeckCommentsByDeckId(deckId);
     }
@@ -59,12 +61,11 @@ public class DeckCommentServiceImpl implements DeckCommentService {
     @Override
     @Transactional
     public DeckComment updateCommentById(Long commentId, String commentText) {
+        DeckComment comment = deckCommentRepository.findOne(commentId);
+        comment.setCommentDate(new Date());
+        comment.setCommentText(commentText);
         LOGGER.debug("Updated comment with id: {}", commentId);
-        DeckComment updatedComment = deckCommentRepository.findOne(commentId);
-        updatedComment.setCommentDate(new Date());
-        updatedComment.setCommentText(commentText);
-        deckCommentRepository.save(updatedComment);
-        return updatedComment;
+        return comment;
     }
 
     @Override

@@ -22,7 +22,7 @@ public interface ImageRepository extends JpaRepository<Image, Long> {
     public List<Image> getImagesWithoutContentById(Long id);
 
     @Query("SELECT i.id, i.createdBy FROM Image i WHERE i.id = ?1")
-    public Image getImageWithoutContent(Long id);
+    public Image getImageWithoutContentById(Long id);
 
     @Query("SELECT SUM(i.size) FROM Image i WHERE user_id = ?1")
     public Long getSumOfImagesSizesOfUserById(Long id);

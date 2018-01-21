@@ -40,14 +40,15 @@ public class FolderServiceImpl implements FolderService{
     @Override
     public List<Deck> getAllDecksByFolderId(Long folderId) {
         Folder folder = folderRepository.findOne(folderId);
-        List<Deck> decks = new ArrayList<>(folder.getDecks());
-        return decks;
+        Set<Deck> decks = folder.getDecks();
+        return new ArrayList<>(decks);
     }
 
     @Override
     public List<Long> getAllDecksIdFromFolder() throws NotAuthorisedUserException {
-        User authorizedUser = userService.getAuthorizedUser();
-        Long folderId = authorizedUser.getFolder().getId();
+        User user = userService.getAuthorizedUser();
+        Folder folder = user.getFolder();
+        Long folderId = folder.getId();
         return folderRepository.selectAllDecksIdFromFolder(folderId);
     }
 
@@ -67,19 +68,17 @@ public class FolderServiceImpl implements FolderService{
 
     @Override
     @Transactional
-    public void deleteDeckFromAllUsers(Long deckId) throws NotAuthorisedUserException {
+    public void deleteDeckFromAllUsersFolderById(Long deckId) {
         List<Folder> folders = folderRepository.getAllFolderWhereIdDecksEquals(deckId);
-        if(folders.size()!=0) {
-            for (Folder folder : folders) {
-                Collection<Deck> folderDecks = folder.getDecks();
-                for (Deck deck : folderDecks) {
-                    if (deck.getId().equals(deckId)) {
-                        folderDecks.remove(deck);
-                        break;
-                    }
+        for (Folder folder : folders) {
+            Set<Deck> decks = folder.getDecks();
+            for (Deck deck : decks) {
+                if (deck.getId().equals(deckId)) {
+                    decks.remove(deck);
+                    break;
                 }
-                folderRepository.save(folder);
             }
+            folderRepository.save(folder);
         }
     }
 }

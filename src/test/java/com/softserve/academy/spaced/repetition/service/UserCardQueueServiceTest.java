@@ -33,10 +33,10 @@ public class UserCardQueueServiceTest {
     private UserCardQueueRepository userCardQueueRepository;
 
     @Mock
-    private UserService userService;
+    private RememberingLevelRepository rememberingLevelRepository;
 
     @Mock
-    private RememberingLevelRepository rememberingLevelRepository;
+    private UserService userService;
 
     private User user;
     private Account account;

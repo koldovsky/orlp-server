@@ -78,7 +78,8 @@ public class DeckServiceImpl implements DeckService {
     @Transactional
     public void addDeckToCategory(Deck deck, Long categoryId) {
         Category category = categoryRepository.findOne(categoryId);
-        category.getDecks().add(deck);
+        List<Deck> decks = category.getDecks();
+        decks.add(deck);
         categoryRepository.save(category);
     }
 
@@ -197,20 +198,21 @@ public class DeckServiceImpl implements DeckService {
 
     @Override
     public Page<Deck> getPageWithDecksByCategory(long categoryId, int pageNumber, String sortBy, boolean ascending) {
-        PageRequest request = new PageRequest(pageNumber - 1, QUANTITY_DECKS_IN_PAGE,
+        PageRequest request = new PageRequest(--pageNumber, QUANTITY_DECKS_IN_PAGE,
                 ascending ? Sort.Direction.ASC : Sort.Direction.DESC, sortBy);
         return deckRepository.findAllByCategoryEquals(categoryRepository.findOne(categoryId), request);
     }
 
     @Override
     public Page<Deck> getPageWithAllAdminDecks(int pageNumber, String sortBy, boolean ascending) {
-        PageRequest request = new PageRequest(pageNumber - 1, QUANTITY_ADMIN_DECKS_IN_PAGE,
+        PageRequest request = new PageRequest(--pageNumber, QUANTITY_ADMIN_DECKS_IN_PAGE,
                 ascending ? Sort.Direction.ASC : Sort.Direction.DESC, sortBy);
         return deckRepository.findAll(request);
     }
 
     @Override
     public String getSynthaxToHightlight(long deckId){
-        return deckRepository.getDeckById(deckId).getSynthaxToHighlight();
+        Deck deck = deckRepository.getDeckById(deckId);
+        return deck.getSynthaxToHighlight();
     }
 }
