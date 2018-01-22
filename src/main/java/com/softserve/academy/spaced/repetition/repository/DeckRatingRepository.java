@@ -8,7 +8,7 @@ import org.springframework.data.repository.query.Param;
 public interface DeckRatingRepository extends JpaRepository<DeckRating, Long> {
 
     @Query("select avg(d.rating) from DeckRating d where d.deck.id =:deckId group by d.deck.id")
-    Double findAverageDeckRatingByDeckId(@Param("deckId") long deckId);
+    Double findRatingByDeckId(@Param("deckId") long deckId);
 
     DeckRating findAllByAccountEmailAndDeckId(String accountEmail, long deckId);
 }

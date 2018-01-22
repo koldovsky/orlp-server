@@ -52,7 +52,7 @@ public interface DeckService {
      *
      * @param deckId id of the deck which will be deleted.
      */
-    void deleteDeckById(Long deckId);
+    void deleteDeck(Long deckId);
 
     /**
      * Creates new deck
@@ -101,7 +101,7 @@ public interface DeckService {
      * @return list of the decks witch was created by the user.
      * @throws NotAuthorisedUserException if unauthorized user gets the decks.
      */
-    List<Deck> getAllUserDecks() throws NotAuthorisedUserException;
+    List<Deck> getAllDecksByUser() throws NotAuthorisedUserException;
 
     /**
      * Gets the deck of the user.
@@ -111,7 +111,7 @@ public interface DeckService {
      * @throws NotAuthorisedUserException if unauthorized user gets the decks.
      * @throws NotOwnerOperationException if the user is not owner of the deck gets the deck.
      */
-    Deck getUserDeckByDeckId(Long deckId) throws NotAuthorisedUserException, NotOwnerOperationException;
+    Deck getDeckUser(Long deckId) throws NotAuthorisedUserException, NotOwnerOperationException;
 
     /**
      * Gives the page with decks which are sorted by category.
@@ -140,7 +140,7 @@ public interface DeckService {
      * @param deckId deck`s id for which syntax will highlight.
      * @return highlighted syntax.
      */
-    String getSyntaxToHighlight(long deckId);
+    String getSynthaxToHightlight(long deckId);
 
     /**
      * Gets the deck with the given identifier.
@@ -148,7 +148,7 @@ public interface DeckService {
      * @param deckId the deck which will searched.
      * @return the deck with the given identifier.
      */
-    Deck getDeckById(Long deckId);
+    Deck getDeck(Long deckId);
 
     /**
      * Gets the list of the decks which belongs to course with given identifier.
@@ -156,7 +156,7 @@ public interface DeckService {
      * @param courseId course`s id for which the decks will be searched.
      * @return the list of the decks which belongs to course with given identifier.
      */
-    List<Deck> getAllDecksByCourseId(Long courseId);
+    List<Deck> getAllDecks(Long courseId);
 
     /**
      * Gets the list of the decks which belongs to category with given identifier.
@@ -164,14 +164,14 @@ public interface DeckService {
      * @param categoryId category`s id for which the decks will be searched.
      * @return the list of the decks which belongs to category with given identifier.
      */
-    List<Deck> getAllDecksByCategoryId(Long categoryId);
+    List<Deck> getAllDecksByCategory(Long categoryId);
 
     /**
      * Gets the list of decks that are ordered.
      *
      * @return the list of decks that are ordered.
      */
-    List<Deck> getAllDecksOrderedDescByRating();
+    List<Deck> getAllOrderedDecks();
 
     /**
      * Gets the list of cards that are in the deck by given identifier.

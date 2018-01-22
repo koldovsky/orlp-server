@@ -19,7 +19,7 @@ public interface DeckCommentService {
      * @return the comment or answer to comment.
      * @throws NotAuthorisedUserException if unauthorized user writes comments.
      */
-    DeckComment addCommentToDeck(Long deckId, String commentText, Long parentCommentId)
+    DeckComment addCommentForDeck(Long deckId, String commentText, Long parentCommentId)
             throws NotAuthorisedUserException;
 
     /**
@@ -36,7 +36,7 @@ public interface DeckCommentService {
      * @param deckId deck`s id for which comments are searched, must not be {@literal null}.
      * @return list of comments to the deck with the given identifier.
      */
-    List<Comment> getAllCommentsOfDeckByDeckId(Long deckId);
+    List<Comment> getAllCommentsForDeck(Long deckId);
 
     /**
      * Updates comment with the given identifier by adding the new text.

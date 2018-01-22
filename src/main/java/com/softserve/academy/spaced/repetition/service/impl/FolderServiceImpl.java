@@ -21,60 +21,72 @@ public class FolderServiceImpl implements FolderService{
     private FolderRepository folderRepository;
 
     @Autowired
-    private DeckRepository deckRepository;
-
-    @Autowired
     private UserService userService;
 
+    @Autowired
+    private DeckRepository deckRepository;
+
     @Override
-    public Deck addDeckToFolder(Long deckId) throws NotAuthorisedUserException {
-        User user = userService.getAuthorizedUser();
+    public Deck addDeck(Long deckId) throws NotAuthorisedUserException {
+
         Deck deck = deckRepository.getDeckById(deckId);
+
+        User user = userService.getAuthorizedUser();
+
         Folder folder = user.getFolder();
         Set<Deck> decks = folder.getDecks();
-        decks.add(deck);
+        if (!decks.add(deck)) {
+            folder.getDecks().remove(deck);
+        }
+        folderRepository.save(folder);
+
         return deck;
     }
 
     @Override
     public List<Deck> getAllDecksByFolderId(Long folderId) {
         Folder folder = folderRepository.findOne(folderId);
-        Set<Deck> decks = folder.getDecks();
-        return new ArrayList<>(decks);
+        List<Deck> decks = new ArrayList<>(folder.getDecks());
+
+        return decks;
     }
 
     @Override
-    public List<Long> getAllDecksIdFromFolder() throws NotAuthorisedUserException {
-        User user = userService.getAuthorizedUser();
-        Folder folder = user.getFolder();
-        Long folderId = folder.getId();
-        return folderRepository.selectAllDecksIdFromFolder(folderId);
+    public List<Long> getAllDecksIdWithFolder() throws NotAuthorisedUserException {
+        User authorizedUser = userService.getAuthorizedUser();
+        Long folderId = authorizedUser.getFolder().getId();
+
+        return folderRepository.selectAllDeckIdWithFolder(folderId);
     }
 
     @Override
-    public void deleteDeckFromFolderById(Long deckId) throws NotAuthorisedUserException {
+    public void deleteDeck(Long deckId) throws NotAuthorisedUserException {
         User user = userService.getAuthorizedUser();
         Folder folder = user.getFolder();
-        Set<Deck> decks = folder.getDecks();
-        for (Deck deck: decks) {
-            if (deck.getId().equals(deckId)) {
-                decks.remove(deck);
+        Collection<Deck> userDecks = folder.getDecks();
+        for (Deck deck: userDecks) {
+            if (deck.getId() == deckId) {
+                userDecks.remove(deck);
                 break;
             }
         }
+        folderRepository.save(folder);
     }
 
     @Override
     @Transactional
-    public void deleteDeckFromAllUsersFoldersById(Long deckId) throws NotAuthorisedUserException {
+    public void deleteDeckFromAllUsers(Long deckId) throws NotAuthorisedUserException {
         List<Folder> folders = folderRepository.getAllFolderWhereIdDecksEquals(deckId);
-        for (Folder folder : folders) {
-            Set<Deck> decks = folder.getDecks();
-            for (Deck deck : decks) {
-                if (deck.getId().equals(deckId)) {
-                    decks.remove(deck);
-                    break;
+        if(folders.size()!=0) {
+            for (Folder folder : folders) {
+                Collection<Deck> folderDecks = folder.getDecks();
+                for (Deck deck : folderDecks) {
+                    if (deck.getId().equals(deckId)) {
+                        folderDecks.remove(deck);
+                        break;
+                    }
                 }
+                folderRepository.save(folder);
             }
         }
     }

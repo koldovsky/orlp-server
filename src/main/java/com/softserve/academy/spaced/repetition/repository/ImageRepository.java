@@ -10,22 +10,22 @@ import java.util.List;
 @Repository
 public interface ImageRepository extends JpaRepository<Image, Long> {
 
-    Image findImageById(Long imageId);
+    public Image findImageById(Long id);
 
     @Query("SELECT id FROM Image")
-    List<Long> getIdList();
+    public List<Long> getIdList();
 
     @Query("SELECT i.id FROM Image i")
-    List<Image> getImagesWithoutContent();
+    public List<Image> getImagesWithoutContent();
 
     @Query("SELECT i.id, i.isImageUsed FROM Image i JOIN i.createdBy u WHERE u.id = ?1")
-    List<Image> getImagesWithoutContentById(Long userId);
+    public List<Image> getImagesWithoutContentById(Long id);
 
     @Query("SELECT i.id, i.createdBy FROM Image i WHERE i.id = ?1")
-    Image getImageWithoutContentById(Long imageId);
+    public Image getImageWithoutContent(Long id);
 
     @Query("SELECT SUM(i.size) FROM Image i WHERE user_id = ?1")
-    Long getSumOfImagesSizesOfUserById(Long userId);
+    public Long getSumOfImagesSizesOfUserById(Long id);
 
 }
 

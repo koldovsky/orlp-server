@@ -37,7 +37,7 @@ public interface DeckRepository extends JpaRepository<Deck, Long> {
     List<Deck> hasAccessToDeckFromCategory(@Param("category_id") Long categoryId);
 
     @Query(value = "SELECT d FROM Deck d INNER JOIN d.deckOwner u  WHERE d.id = :deck_id AND u.id = :user_id")
-    Deck getDeckByIdAndOwnerOfDeck(@Param("deck_id") Long deckId, @Param("user_id") Long userId);
+    Deck getDeckByItsIdAndOwnerOfDeck(@Param("deck_id") Long deckId, @Param("user_id") Long userId);
 
     List<Deck> findAllByDeckOwnerIdEquals(Long userId);
 

@@ -1,6 +1,5 @@
 package com.softserve.academy.spaced.repetition.service.impl;
 
-import com.softserve.academy.spaced.repetition.domain.Account;
 import com.softserve.academy.spaced.repetition.utils.exceptions.UserStatusException;
 import com.softserve.academy.spaced.repetition.service.DeckRatingService;
 import com.softserve.academy.spaced.repetition.service.UserService;
@@ -32,8 +31,7 @@ public class DeckRatingServiceImpl implements DeckRatingService{
     public void addDeckRating(int rating, Long deckId) throws NotAuthorisedUserException, UserStatusException {
         User user = userService.getAuthorizedUser();
         userService.isUserStatusActive(user);
-        Account account = user.getAccount();
-        String email = account.getEmail();
+        String email = user.getAccount().getEmail();
         DeckRating deckRating = deckRatingRepository.findAllByAccountEmailAndDeckId(email, deckId);
         if (deckRating == null) {
             deckRating = new DeckRating();
@@ -43,8 +41,9 @@ public class DeckRatingServiceImpl implements DeckRatingService{
         deckRating.setDeck(deck);
         deckRating.setRating(rating);
         deckRatingRepository.save(deckRating);
-        double averageDeckRating = deckRatingRepository.findAverageDeckRatingByDeckId(deckId);
-        deck.setRating(averageDeckRating);
+        double deckAverageRating = deckRatingRepository.findRatingByDeckId(deckId);
+        deck.setRating(deckAverageRating);
+        deckRepository.save(deck);
     }
 
     @Override

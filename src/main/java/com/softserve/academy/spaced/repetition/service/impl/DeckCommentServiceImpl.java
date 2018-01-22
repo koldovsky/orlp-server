@@ -1,6 +1,7 @@
 package com.softserve.academy.spaced.repetition.service.impl;
 
-import com.softserve.academy.spaced.repetition.domain.*;
+import com.softserve.academy.spaced.repetition.domain.Comment;
+import com.softserve.academy.spaced.repetition.domain.DeckComment;
 import com.softserve.academy.spaced.repetition.utils.exceptions.NotAuthorisedUserException;
 import com.softserve.academy.spaced.repetition.repository.DeckCommentRepository;
 import com.softserve.academy.spaced.repetition.repository.DeckRepository;
@@ -21,7 +22,7 @@ public class DeckCommentServiceImpl implements DeckCommentService {
     private static final Logger LOGGER = LoggerFactory.getLogger(DeckCommentServiceImpl.class);
 
     @Autowired
-    private DeckCommentRepository deckCommentRepository;
+    private DeckCommentRepository commentRepository;
 
     @Autowired
     private DeckRepository deckRepository;
@@ -31,47 +32,44 @@ public class DeckCommentServiceImpl implements DeckCommentService {
 
     @Override
     @Transactional
-    public DeckComment addCommentToDeck(Long deckId, String commentText, Long parentCommentId)
+    public DeckComment addCommentForDeck(Long deckId, String commentText, Long parentCommentId)
             throws NotAuthorisedUserException {
-        User user = userService.getAuthorizedUser();
-        Deck deck = deckRepository.findOne(deckId);
-        Person person = user.getPerson();
+        LOGGER.debug("Added comment to deck with id: {}", deckId);
         DeckComment comment = new DeckComment(commentText, new Date());
-        comment.setPerson(person);
-        comment.setDeck(deck);
+        comment.setPerson(userService.getAuthorizedUser().getPerson());
+        comment.setDeck(deckRepository.findOne(deckId));
         if (parentCommentId != null) {
             comment.setParentCommentId(parentCommentId);
         }
-        LOGGER.debug("Added comment to deck with id: {}", deckId);
-        return deckCommentRepository.save(comment);
+        return commentRepository.save(comment);
     }
 
     @Override
     public DeckComment getCommentById(Long commentId) {
         LOGGER.debug("View comment with id {}", commentId);
-        return deckCommentRepository.findOne(commentId);
+        return commentRepository.findOne(commentId);
     }
 
     @Override
-    public List<Comment> getAllCommentsOfDeckByDeckId(Long deckId) {
+    public List<Comment> getAllCommentsForDeck(Long deckId) {
         LOGGER.debug("View all comments for deck with id: {}", deckId);
-        return deckCommentRepository.findDeckCommentsByDeckId(deckId);
+        return commentRepository.findDeckCommentsByDeckId(deckId);
     }
 
     @Override
     @Transactional
     public DeckComment updateCommentById(Long commentId, String commentText) {
-        DeckComment comment = deckCommentRepository.findOne(commentId);
-        comment.setCommentDate(new Date());
-        comment.setCommentText(commentText);
         LOGGER.debug("Updated comment with id: {}", commentId);
-        return comment;
+        DeckComment updatedComment = commentRepository.findOne(commentId);
+        updatedComment.setCommentDate(new Date());
+        updatedComment.setCommentText(commentText);
+        return updatedComment;
     }
 
     @Override
     @Transactional
     public void deleteCommentById(Long commentId) {
         LOGGER.debug("Deleted comment with id:{}", commentId);
-        deckCommentRepository.deleteComment(commentId);
+        commentRepository.deleteComment(commentId);
     }
 }

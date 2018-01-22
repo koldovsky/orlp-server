@@ -51,7 +51,7 @@ public class DeckCommentServiceTest {
     public void setUp() {
         person = DomainFactory.createPerson(PERSON_ID, null, null, null, null, null);
         user = DomainFactory.createUser(USER_ID, null, person, null, null);
-        deck = DomainFactory.createDeck(DECK_ID, null, null, null, null, 0, user, null, null, null, null, null);
+        deck = DomainFactory.createDeck(DECK_ID, null, null, null, null, 0, user, null, null, null, null);
         deckComment = DomainFactory.createDeckComment(DECK_COMMENT_ID, DECK_COMMENT_TEXT, null, person,
                 DECK_COMMENT_PARENT_ID, deck);
 
@@ -59,14 +59,14 @@ public class DeckCommentServiceTest {
     }
 
     @Test
-    public void testAddCommentToDeck() throws NotAuthorisedUserException {
+    public void testAddCommentForDeck() throws NotAuthorisedUserException {
         deckComment.setId(null);
 
         when(userService.getAuthorizedUser()).thenReturn(user);
         when(deckRepository.findOne(DECK_ID)).thenReturn(deck);
         when(deckCommentRepository.save(deckComment)).thenReturn(deckComment);
 
-        DeckComment result = deckCommentService.addCommentToDeck(DECK_ID, DECK_COMMENT_TEXT, DECK_COMMENT_PARENT_ID);
+        DeckComment result = deckCommentService.addCommentForDeck(DECK_ID, DECK_COMMENT_TEXT, DECK_COMMENT_PARENT_ID);
         verify(userService).getAuthorizedUser();
         verify(deckRepository).findOne(DECK_ID);
         verify(deckCommentRepository).save(deckComment);
@@ -76,10 +76,10 @@ public class DeckCommentServiceTest {
     }
 
     @Test(expected = NotAuthorisedUserException.class)
-    public void testAddCommentToDeckByNotAuthorisedUser() throws NotAuthorisedUserException {
+    public void testAddCommentForDeckByNotAuthorisedUser() throws NotAuthorisedUserException {
         when(userService.getAuthorizedUser()).thenThrow(NotAuthorisedUserException.class);
 
-        deckCommentService.addCommentToDeck(DECK_ID, DECK_COMMENT_TEXT, DECK_COMMENT_PARENT_ID);
+        deckCommentService.addCommentForDeck(DECK_ID, DECK_COMMENT_TEXT, DECK_COMMENT_PARENT_ID);
         verify(userService).getAuthorizedUser();
     }
 
@@ -91,10 +91,10 @@ public class DeckCommentServiceTest {
     }
 
     @Test
-    public void testGetAllCommentsOfDeckByDeckId() {
+    public void testGetAllCommentsForDeck() {
         when(deckCommentRepository.findDeckCommentsByDeckId(DECK_ID)).thenReturn(null);
 
-        List<Comment> result = deckCommentService.getAllCommentsOfDeckByDeckId(DECK_ID);
+        List<Comment> result = deckCommentService.getAllCommentsForDeck(DECK_ID);
         verify(deckCommentRepository).findDeckCommentsByDeckId(DECK_ID);
         assertEquals(null, result);
     }

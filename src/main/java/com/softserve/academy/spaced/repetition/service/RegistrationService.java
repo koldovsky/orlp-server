@@ -15,6 +15,7 @@ public interface RegistrationService {
      * @param user user which is registering.
      * @return managed by admin user.
      */
+
     User registerNewUser(User user);
 
     /**
@@ -23,6 +24,7 @@ public interface RegistrationService {
      * @param user user to which email will be sent.
      * @throws MailException if Email is incorrect.
      */
+
     void sendConfirmationEmailMessage(User user) throws MailException;
 
 }

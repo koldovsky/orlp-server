@@ -4,7 +4,6 @@ import com.softserve.academy.spaced.repetition.controller.utils.dto.EntityInterf
 
 import javax.persistence.*;
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -140,14 +139,6 @@ public class Deck implements EntityInterface {
         this.deckComments = deckComments;
     }
 
-    public List<Course> getCourses () {
-        return courses;
-    }
-
-    public void setCourses(List<Course> courses) {
-        this.courses = courses;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -155,7 +146,7 @@ public class Deck implements EntityInterface {
 
         Deck deck = (Deck) o;
 
-        return Objects.equals(id, deck.id);
+        return id.equals(deck.id);
     }
 
     @Override

@@ -92,7 +92,7 @@ public class UserControllerTest {
 
     @Test
     public void getUsersByPage() throws Exception {
-        when(userService.getUsersPageByPageNumber(NUMBER_PAGE, SORT_BY, true)).thenReturn(createUsers());
+        when(userService.getUsersByPage(NUMBER_PAGE, SORT_BY, true)).thenReturn(createUsers());
         mockMvc.perform(get("/api/admin/users?p=" + NUMBER_PAGE + "&sortBy=" + SORT_BY + "&asc=true")
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON))

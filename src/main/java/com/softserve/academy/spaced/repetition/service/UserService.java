@@ -52,7 +52,7 @@ public interface UserService {
      * @param id user`s id which will be set as active.
      * @return user tat was set as active.
      */
-    User setUserStatusActive(Long id);
+    User setUsersStatusActive(Long id);
 
     /**
      * Sets user-status as deleted.
@@ -60,7 +60,7 @@ public interface UserService {
      * @param id user`s id by which will be set as deleted.
      * @return user tat was set as deleted.
      */
-    User setUserStatusDeleted(Long id);
+    User setUsersStatusDeleted(Long id);
 
     /**
      * Sets user-status as blocked.
@@ -68,7 +68,7 @@ public interface UserService {
      * @param id user`s id which will be set as blocked.
      * @return user that was set as blocked.
      */
-    User setUserStatusBlocked(Long id);
+    User setUsersStatusBlocked(Long id);
 
     /**
      * Finds user by identifier.
@@ -85,7 +85,16 @@ public interface UserService {
      * @param deckId deck`s id
      * @return user that was found by userId.
      */
-    User addExistingDeckToUserFolder(Long userId, Long deckId);
+    User addExistingDeckToUsersFolder(Long userId, Long deckId);
+
+    /**
+     * Gets the user`s email.
+     *
+     * @return the user`s email.
+     * @throws NotAuthorisedUserException if email of user is not activated.
+     */
+
+    String getNoAuthenticatedUserEmail() throws NotAuthorisedUserException;
 
     /**
      * Gets authorised user.
@@ -110,7 +119,7 @@ public interface UserService {
      * @param deckId decks id.
      * @return managed by admin user.
      */
-    User removeDeckFromUserFolder(Long userId, Long deckId);
+    User removeDeckFromUsersFolder(Long userId, Long deckId);
 
     /**
      * Gets list of decks from the folder of the defined user
@@ -118,7 +127,7 @@ public interface UserService {
      * @param userId user`s id.
      * @return list managed by admin users.
      */
-    List<Deck> getAllDecksFromUserFolderByUserId(Long userId);
+    List<Deck> getAllDecksFromUsersFolder(Long userId);
 
     /**
      * Gets page with all users.
@@ -128,7 +137,7 @@ public interface UserService {
      * @param ascending  the value that determines how the elements must be sorted on the page.
      * @return page with all users.
      */
-    Page<User> getUsersPageByPageNumber(int pageNumber, String sortBy, boolean ascending);
+    Page<User> getUsersByPage(int pageNumber, String sortBy, boolean ascending);
 
     /**
      * Sets new personal data.

@@ -89,8 +89,7 @@ public class DomainFactory {
 
     public static Deck createDeck(Long deckId, String name, String description, String syntaxToHighLight,
                                   Category category, double rating, User deckOwner, List<Card> cards,
-                                  List<Course> courses, List<DeckRating> deckRatings, Set<Folder> folders,
-                                  List<DeckComment> deckComments) {
+                                  List<DeckRating> deckRatings, Set<Folder> folders, List<DeckComment> deckComments) {
         Deck deck = new Deck();
         deck.setId(deckId);
         deck.setName(name);
@@ -100,7 +99,6 @@ public class DomainFactory {
         deck.setRating(rating);
         deck.setDeckOwner(deckOwner);
         deck.setCards(cards);
-        deck.setCourses(courses);
         deck.setDeckRatings(deckRatings);
         deck.setFolders(folders);
         deck.setDeckComments(deckComments);

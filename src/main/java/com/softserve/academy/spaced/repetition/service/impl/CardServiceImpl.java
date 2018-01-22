@@ -147,7 +147,7 @@ public class CardServiceImpl implements CardService {
     @Transactional
     public void uploadCards(MultipartFile cardsFile, Long deckId) throws WrongFormatException, EmptyFileException,
             NotOwnerOperationException, NotAuthorisedUserException, IOException {
-        if (deckService.getUserDeckByDeckId(deckId) != null) {
+        if (deckService.getDeckUser(deckId) != null) {
             if (!cardsFile.getContentType().equals("application/octet-stream")) {
                 throw new WrongFormatException();
             } else if (cardsFile.isEmpty()) {

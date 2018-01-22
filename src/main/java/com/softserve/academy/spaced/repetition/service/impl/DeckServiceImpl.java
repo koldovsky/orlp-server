@@ -40,25 +40,25 @@ public class DeckServiceImpl implements DeckService {
     private UserService userService;
 
     @Override
-    public List<Deck> getAllDecksByCourseId(Long courseId) {
+    public List<Deck> getAllDecks(Long courseId) {
         Course course = courseRepository.findOne(courseId);
         return course.getDecks();
     }
 
     @Override
-    public List<Deck> getAllDecksByCategoryId(Long categoryId) {
+    public List<Deck> getAllDecksByCategory(Long categoryId) {
         Category category = categoryRepository.findOne(categoryId);
         return category.getDecks();
     }
 
     @Override
-    public List<Deck> getAllDecksOrderedDescByRating() {
+    public List<Deck> getAllOrderedDecks() {
         return deckRepository.findAllByOrderByRatingDesc();
     }
 
     @Override
     @Transactional
-    public Deck getDeckById(Long deckId) {
+    public Deck getDeck(Long deckId) {
         return deckRepository.findOne(deckId);
     }
 
@@ -72,90 +72,75 @@ public class DeckServiceImpl implements DeckService {
     @Transactional
     public void addDeckToCategory(Deck deck, Long categoryId) {
         Category category = categoryRepository.findOne(categoryId);
-        List<Deck> decks = category.getDecks();
-        decks.add(deck);
+        category.getDecks().add(deckRepository.save(deck));
     }
 
     @Override
     @Transactional
     public void addDeckToCourse(Deck deck, Long categoryId, Long courseId) {
         Course course = courseRepository.findOne(courseId);
-        List<Deck> decks = course.getDecks();
-        decks.add(deck);
+        course.getDecks().add(deckRepository.save(deck));
     }
 
     @Override
     @Transactional
     public void updateDeck(Deck updatedDeck, Long deckId, Long categoryId) {
         Deck deck = deckRepository.findOne(deckId);
-        Category category = categoryRepository.findById(categoryId);
-        String name = updatedDeck.getName();
-        String description = updatedDeck.getDescription();
-        deck.setName(name);
-        deck.setDescription(description);
-        deck.setCategory(category);
+        deck.setName(updatedDeck.getName());
+        deck.setDescription(updatedDeck.getDescription());
+        deck.setCategory(categoryRepository.findById(categoryId));
+        deckRepository.save(deck);
     }
 
     @Override
     @Transactional
     public Deck updateDeckAdmin(Deck updatedDeck, Long deckId) {
         Deck deck = deckRepository.findOne(deckId);
-        Category category = updatedDeck.getCategory();
-        Long categoryId = category.getId();
-        category = categoryRepository.findById(categoryId);
-        String name = updatedDeck.getName();
-        String description = updatedDeck.getDescription();
-        deck.setName(name);
-        deck.setDescription(description);
-        deck.setCategory(category);
-        return deck;
+        deck.setName(updatedDeck.getName());
+        deck.setDescription(updatedDeck.getDescription());
+        deck.setCategory(categoryRepository.findById(updatedDeck.getCategory().getId()));
+        return deckRepository.save(deck);
     }
 
     @Override
     @Transactional
-    public void deleteDeckById(Long deckId) {
+    public void deleteDeck(Long deckId) {
         deckRepository.deleteDeckById(deckId);
     }
 
     @Override
     @Transactional
-    public void createNewDeck(Deck deck, Long categoryId) throws NotAuthorisedUserException {
+    public void createNewDeck(Deck newDeck, Long categoryId) throws NotAuthorisedUserException {
         User user = userService.getAuthorizedUser();
-        Category category = categoryRepository.findOne(categoryId);
-        deck.setCategory(category);
-        deck.setDeckOwner(user);
-        deckRepository.save(deck);
-    }
-
-    @Override
-    @Transactional
-    public Deck createNewDeckAdmin(Deck deck) throws NotAuthorisedUserException {
-        User user = userService.getAuthorizedUser();
-        Deck newDeck = new Deck();
-        String name = deck.getName();
-        String description = deck.getDescription();
-        Category category = deck.getCategory();
-        Long categoryId = category.getId();
-        category = categoryRepository.findById(categoryId);
-        newDeck.setName(name);
-        newDeck.setDescription(description);
-        newDeck.setCategory(category);
+        newDeck.setCategory(categoryRepository.findOne(categoryId));
         newDeck.setDeckOwner(user);
-        return deckRepository.save(newDeck);
+        deckRepository.save(newDeck);
     }
 
     @Override
     @Transactional
-    public void deleteOwnDeck(Long deckId) throws NotAuthorisedUserException, NotOwnerOperationException {
+    public Deck createNewDeckAdmin(Deck newDeck) throws NotAuthorisedUserException {
+        User user = userService.getAuthorizedUser();
+        Deck deck = new Deck();
+        deck.setName(newDeck.getName());
+        deck.setDescription(newDeck.getDescription());
+        deck.setCategory(categoryRepository.findById(newDeck.getCategory().getId()));
+        deck.setDeckOwner(user);
+        Deck savedDeck = deckRepository.save(deck);
+        deck.setId(savedDeck.getId());
+        return savedDeck;
+    }
+
+    @Override
+    @Transactional
+    public void deleteOwnDeck(Long deckId)
+            throws NotAuthorisedUserException, NotOwnerOperationException {
         User user = userService.getAuthorizedUser();
         Deck deck = deckRepository.findOne(deckId);
         if (deck == null) {
             throw new NoSuchElementException(DECK_EXCEPTION_MESSAGE);
         }
-        User deckOwner = deck.getDeckOwner();
-        Long deckOwnerId = deckOwner.getId();
-        Long userId = user.getId();
-        if (deckOwnerId.equals(userId)) {
+        if (deck.getDeckOwner().getId().equals(user.getId())) {
             deckRepository.delete(deck);
         } else {
             throw new NotOwnerOperationException();
@@ -171,42 +156,31 @@ public class DeckServiceImpl implements DeckService {
         if (deck == null) {
             throw new NoSuchElementException(DECK_EXCEPTION_MESSAGE);
         }
-        User deckOwner = deck.getDeckOwner();
-        Long deckOwnerId = deckOwner.getId();
-        Long userId = user.getId();
-        if (deckOwnerId.equals(userId)) {
-            String name = updatedDeck.getName();
-            String description = updatedDeck.getDescription();
-            Category category = categoryRepository.findOne(categoryId);
-            String syntaxToHighlight = updatedDeck.getSynthaxToHighlight();
-            deck.setName(name);
-            deck.setDescription(description);
-            deck.setCategory(category);
-            deck.setSynthaxToHighlight(syntaxToHighlight);
-            return deck;
+        if (deck.getDeckOwner().getId().equals(user.getId())) {
+            deck.setName(updatedDeck.getName());
+            deck.setDescription(updatedDeck.getDescription());
+            deck.setCategory(categoryRepository.findOne(categoryId));
+            deck.setSynthaxToHighlight(updatedDeck.getSynthaxToHighlight());
+            return deckRepository.save(deck);
         } else {
             throw new NotOwnerOperationException();
         }
     }
 
     @Override
-    public List<Deck> getAllUserDecks() throws NotAuthorisedUserException {
+    public List<Deck> getAllDecksByUser() throws NotAuthorisedUserException {
         User user = userService.getAuthorizedUser();
-        Long userId = user.getId();
-        return deckRepository.findAllByDeckOwnerIdEquals(userId);
+        return deckRepository.findAllByDeckOwnerIdEquals(user.getId());
     }
 
     @Override
-    public Deck getUserDeckByDeckId(Long deckId) throws NotAuthorisedUserException, NotOwnerOperationException {
+    public Deck getDeckUser(Long deckId) throws NotAuthorisedUserException, NotOwnerOperationException {
         User user = userService.getAuthorizedUser();
         Deck deck = deckRepository.findOne(deckId);
         if (deck == null) {
             throw new NoSuchElementException(DECK_EXCEPTION_MESSAGE);
         }
-        User deckOwner = deck.getDeckOwner();
-        Long deckOwnerId = deckOwner.getId();
-        Long userId = user.getId();
-        if (deckOwnerId.equals(userId)) {
+        if (deck.getDeckOwner().getId().equals(user.getId())) {
             return deck;
         } else {
             throw new NotOwnerOperationException();
@@ -215,22 +189,20 @@ public class DeckServiceImpl implements DeckService {
 
     @Override
     public Page<Deck> getPageWithDecksByCategory(long categoryId, int pageNumber, String sortBy, boolean ascending) {
-        Category category = categoryRepository.findOne(categoryId);
-        PageRequest request = new PageRequest(--pageNumber, QUANTITY_DECKS_IN_PAGE,
+        PageRequest request = new PageRequest(pageNumber - 1, QUANTITY_DECKS_IN_PAGE,
                 ascending ? Sort.Direction.ASC : Sort.Direction.DESC, sortBy);
-        return deckRepository.findAllByCategoryEquals(category, request);
+        return deckRepository.findAllByCategoryEquals(categoryRepository.findOne(categoryId), request);
     }
 
     @Override
     public Page<Deck> getPageWithAllAdminDecks(int pageNumber, String sortBy, boolean ascending) {
-        PageRequest request = new PageRequest(--pageNumber, QUANTITY_ADMIN_DECKS_IN_PAGE,
+        PageRequest request = new PageRequest(pageNumber - 1, QUANTITY_ADMIN_DECKS_IN_PAGE,
                 ascending ? Sort.Direction.ASC : Sort.Direction.DESC, sortBy);
         return deckRepository.findAll(request);
     }
 
     @Override
-    public String getSyntaxToHighlight(long deckId){
-        Deck deck = deckRepository.getDeckById(deckId);
-        return deck.getSynthaxToHighlight();
+    public String getSynthaxToHightlight(long deckId){
+        return deckRepository.getDeckById(deckId).getSynthaxToHighlight();
     }
 }
