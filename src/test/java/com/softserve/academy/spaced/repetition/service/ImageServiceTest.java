@@ -30,32 +30,26 @@ import static org.mockito.Mockito.*;
 @Transactional
 public class ImageServiceTest {
 
-    @InjectMocks
-    private ImageServiceImpl imageService;
-
-    @Mock
-    private ImageRepository imageRepository;
-
-    @Mock
-    private UserService userService;
-
-    @Mock
-    private MultipartFile multipartFile;
-
-    private User user;
-    private User notOwnerUser;
-    private Image image;
-
     private final long USER_ID = 1L;
     private final long NOT_OWNER_USER_ID = 42L;
     private final long IMAGE_ID = 1L;
     private final String IMAGE_BASE_64 = "";
     private final String IMAGE_CONTENT_TYPE = "image/";
     private final Long IMAGE_SIZE = 1L;
-
     private final String ENCODED_FILE_CONTENT = "content";
     private final Long MAX_FILE_SIZE = 1_048_576L;
     private final Long USER_QUOTA = 10_485_760L;
+    @InjectMocks
+    private ImageServiceImpl imageService;
+    @Mock
+    private ImageRepository imageRepository;
+    @Mock
+    private UserService userService;
+    @Mock
+    private MultipartFile multipartFile;
+    private User user;
+    private User notOwnerUser;
+    private Image image;
 
     @Before
     public void setUp() throws IOException, NotAuthorisedUserException {
@@ -76,12 +70,12 @@ public class ImageServiceTest {
         image.setId(null);
 
         when(imageRepository.save(image)).thenReturn(image);
-        when(imageRepository.getImageWithoutContentById(null)).thenReturn(image);
+        when(imageRepository.getImageWithoutContent(null)).thenReturn(image);
 
         Image result = imageService.addImageToDB(multipartFile);
         verify(userService, times(2)).getAuthorizedUser();
         verify(imageRepository).save(image);
-        verify(imageRepository).getImageWithoutContentById(null);
+        verify(imageRepository).getImageWithoutContent(null);
         assertEquals(image, result);
 
         image.setId(IMAGE_ID);
@@ -90,7 +84,7 @@ public class ImageServiceTest {
     @Test(expected = NotAuthorisedUserException.class)
     public void testAddImageToDBByNotAuthorisedUser()
             throws NotAuthorisedUserException, ImageRepositorySizeQuotaExceededException {
-        when(userService.getAuthorizedUser()).thenThrow(NotAuthorisedUserException.class);
+        when(userService.getAuthorizedUser()).thenThrow(new NotAuthorisedUserException());
 
         imageService.addImageToDB(multipartFile);
         verify(userService).getAuthorizedUser();
@@ -115,7 +109,7 @@ public class ImageServiceTest {
     @Test(expected = NotAuthorisedUserException.class)
     public void testCheckImageExtensionByNotAuthorisedUser()
             throws NotAuthorisedUserException, ImageRepositorySizeQuotaExceededException {
-        when(userService.getAuthorizedUser()).thenThrow(NotAuthorisedUserException.class);
+        when(userService.getAuthorizedUser()).thenThrow(new NotAuthorisedUserException());
 
         imageService.checkImageExtension(multipartFile);
         verify(userService).getAuthorizedUser();
@@ -197,17 +191,18 @@ public class ImageServiceTest {
         doNothing().when(imageRepository).delete(image);
 
         imageService.deleteImage(IMAGE_ID);
-        verify(userService).getAuthorizedUser();
         verify(imageRepository).findImageById(IMAGE_ID);
+        verify(userService).getAuthorizedUser();
         verify(imageRepository).delete(image);
     }
 
     @Test(expected = NotAuthorisedUserException.class)
     public void testDeleteImageByNotAuthorisedUser() throws NotAuthorisedUserException, NotOwnerOperationException,
             CanNotBeDeletedException {
-        when(userService.getAuthorizedUser()).thenThrow(NotAuthorisedUserException.class);
+        when(userService.getAuthorizedUser()).thenThrow(new NotAuthorisedUserException());
 
         imageService.deleteImage(IMAGE_ID);
+        verify(imageRepository).findImageById(IMAGE_ID);
         verify(userService).getAuthorizedUser();
     }
 
@@ -217,8 +212,8 @@ public class ImageServiceTest {
         when(userService.getAuthorizedUser()).thenReturn(notOwnerUser);
 
         imageService.deleteImage(IMAGE_ID);
-        verify(userService).getAuthorizedUser();
         verify(imageRepository).findImageById(IMAGE_ID);
+        verify(userService).getAuthorizedUser();
     }
 
     @Test(expected = CanNotBeDeletedException.class)
@@ -235,29 +230,35 @@ public class ImageServiceTest {
 
     @Test
     public void testSetImageStatusInUse() {
+        when(imageRepository.save(image)).thenReturn(image);
+
         imageService.setImageStatusInUse(IMAGE_ID);
         verify(imageRepository).findOne(IMAGE_ID);
+        verify(imageRepository).save(image);
     }
 
     @Test
     public void testSetImageStatusNotInUse() {
+        when(imageRepository.save(image)).thenReturn(image);
+
         imageService.setImageStatusNotInUse(IMAGE_ID);
         verify(imageRepository).findOne(IMAGE_ID);
+        verify(imageRepository).save(image);
     }
 
     @Test
     public void testGetImagesForCurrentUser() throws NotAuthorisedUserException {
-        when(imageRepository.getImagesWithoutContentById(USER_ID)).thenReturn(null);
+        when(imageRepository.getImagesWithoutContentById(USER_ID)).thenReturn(new ArrayList<>());
 
         List<Image> result = imageService.getImagesForCurrentUser();
         verify(userService).getAuthorizedUser();
         verify(imageRepository).getImagesWithoutContentById(USER_ID);
-        assertEquals(null, result);
+        assertNotNull(result);
     }
 
     @Test(expected = NotAuthorisedUserException.class)
     public void testGetImagesForCurrentUserByNotAuthorisedUser() throws NotAuthorisedUserException {
-        when(userService.getAuthorizedUser()).thenThrow(NotAuthorisedUserException.class);
+        when(userService.getAuthorizedUser()).thenThrow(new NotAuthorisedUserException());
 
         imageService.getImagesForCurrentUser();
         verify(userService).getAuthorizedUser();

@@ -76,7 +76,7 @@ public class UserServiceTest {
                 null, null, null);
         folder = DomainFactory.createFolder(FOLDER_ID, new HashSet<>());
         user = DomainFactory.createUser(USER_ID, account, person, folder, null);
-        deck = DomainFactory.createDeck(DECK_ID, null, null, null, null, 0D, user, null, null, null, null, null);
+        deck = DomainFactory.createDeck(DECK_ID, null, null, null, null, 0D, user, null, null, null, null);
     }
 
     @Test
@@ -106,28 +106,28 @@ public class UserServiceTest {
     }
 
     @Test
-    public void testSetUserStatusActive() {
+    public void testSetUsersStatusActive() {
         when(userRepository.findOne(USER_ID)).thenReturn(user);
 
-        User result = userService.setUserStatusActive(USER_ID);
+        User result = userService.setUsersStatusActive(USER_ID);
         verify(userRepository).findOne(USER_ID);
         assertEquals(user, result);
     }
 
     @Test
-    public void testSetUserStatusDeleted() {
+    public void testSetUsersStatusDeleted() {
         when(userRepository.findOne(USER_ID)).thenReturn(user);
 
-        User result = userService.setUserStatusDeleted(USER_ID);
+        User result = userService.setUsersStatusDeleted(USER_ID);
         verify(userRepository).findOne(USER_ID);
         assertEquals(user, result);
     }
 
     @Test
-    public void testSetUserStatusBlocked() {
+    public void testSetUsersStatusBlocked() {
         when(userRepository.findOne(USER_ID)).thenReturn(user);
 
-        User result = userService.setUserStatusBlocked(USER_ID);
+        User result = userService.setUsersStatusBlocked(USER_ID);
         verify(userRepository).findOne(USER_ID);
         assertEquals(user, result);
     }
@@ -142,12 +142,12 @@ public class UserServiceTest {
     }
 
     @Test
-    public void testAddExistingDeckToUserFolder() {
+    public void testAddExistingDeckToUsersFolder() {
         when(userRepository.findOne(USER_ID)).thenReturn(user);
         when(deckRepository.findOne(DECK_ID)).thenReturn(deck);
         ;
 
-        User result = userService.addExistingDeckToUserFolder(USER_ID, DECK_ID);
+        User result = userService.addExistingDeckToUsersFolder(USER_ID, DECK_ID);
         verify(userRepository).findOne(USER_ID);
         verify(deckRepository).findOne(DECK_ID);
         assertEquals(user, result);
@@ -163,29 +163,29 @@ public class UserServiceTest {
     }
 
     @Test
-    public void testRemoveDeckFromUserFolder() {
+    public void testRemoveDeckFromUsersFolder() {
         when(deckRepository.findOne(DECK_ID)).thenReturn(deck);
         when(userRepository.findOne(USER_ID)).thenReturn(user);
 
-        userService.removeDeckFromUserFolder(USER_ID, DECK_ID);
+        userService.removeDeckFromUsersFolder(USER_ID, DECK_ID);
         verify(deckRepository).findOne(DECK_ID);
         verify(userRepository).findOne(USER_ID);
     }
 
     @Test
-    public void testGetAllDecksFromUserFolderByUserId() {
+    public void testGetAllDecksFromUsersFolder() {
         when(userRepository.findOne(USER_ID)).thenReturn(user);
 
-        List<Deck> result = userService.getAllDecksFromUserFolderByUserId(USER_ID);
+        List<Deck> result = userService.getAllDecksFromUsersFolder(USER_ID);
         verify(userRepository).findOne(USER_ID);
         assertNotNull(result);
     }
 
     @Test
-    public void testGetUsersPageByPageNumber() {
+    public void testGetUsersByPage() {
         when(userRepository.findAll(any(PageRequest.class))).thenReturn(null);
 
-        Page<User> result = userService.getUsersPageByPageNumber(PAGE_REQUEST_NUMBER, PAGE_REQUEST_SORT_BY,
+        Page<User> result = userService.getUsersByPage(PAGE_REQUEST_NUMBER, PAGE_REQUEST_SORT_BY,
                 PAGE_REQUEST_ASCENDING);
         verify(userRepository).findAll(any(PageRequest.class));
         assertNull(result);

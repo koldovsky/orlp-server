@@ -23,6 +23,8 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -66,10 +68,11 @@ public class DeckServiceTest {
         user = DomainFactory.createUser(USER_ID, null, null, null, null);
         notOwnerUser = DomainFactory.createUser(NOT_OWNER_USER_ID, null, null, null, null);
 
-        category = DomainFactory.createCategory(CATEGORY_ID, null, null, null, null, null);
+        category = DomainFactory.createCategory(CATEGORY_ID, null, null, null, null, new ArrayList<>());
+        course = DomainFactory.createCourse(COURSE_ID, null, null, null, 0D, false, user, category, new ArrayList<>(),
+                null, null);
         deck = DomainFactory.createDeck(DECK_ID, null, null, DECK_SYNTAX_TO_HIGHLIGHT, category, 0D, user, null, null,
-                null, null, null);
-        course = DomainFactory.createCourse(COURSE_ID, null, null, null, 0D, false, user, category, null, null, null);
+                null, null);
 
         when(userService.getAuthorizedUser()).thenReturn(user);
         when(deckRepository.findOne(DECK_ID)).thenReturn(deck);
@@ -80,31 +83,31 @@ public class DeckServiceTest {
     }
 
     @Test
-    public void testGetAllDecksByCourseId() {
-        List<Deck> result = deckService.getAllDecksByCourseId(COURSE_ID);
+    public void testGetAllDecks() {
+        List<Deck> result = deckService.getAllDecks(COURSE_ID);
         verify(courseRepository).findOne(COURSE_ID);
-        assertEquals(null, result);
+        assertNotNull(result);
     }
 
     @Test
-    public void testGetAllDecksByCategoryId() {
-        List<Deck> result = deckService.getAllDecksByCategoryId(CATEGORY_ID);
+    public void testGetAllDecksByCategory() {
+        List<Deck> result = deckService.getAllDecksByCategory(CATEGORY_ID);
         verify(categoryRepository).findOne(CATEGORY_ID);
-        assertEquals(null, result);
+        assertNotNull(result);
     }
 
     @Test
-    public void testGetAllDecksOrderedDescByRating() {
+    public void testGetAllOrderedDecks() {
         when(deckRepository.findAllByOrderByRatingDesc()).thenReturn(null);
 
-        List<Deck> result = deckService.getAllDecksOrderedDescByRating();
+        List<Deck> result = deckService.getAllOrderedDecks();
         verify(deckRepository).findAllByOrderByRatingDesc();
-        assertEquals(null, result);
+        assertNull(result);
     }
 
     @Test
-    public void testGetDeckById() {
-        Deck result = deckService.getDeckById(DECK_ID);
+    public void testGetDeck() {
+        Deck result = deckService.getDeck(DECK_ID);
         verify(deckRepository).findOne(DECK_ID);
         assertEquals(deck, result);
     }
@@ -113,27 +116,21 @@ public class DeckServiceTest {
     public void testGetAllCardsByDeckId() {
         List<Card> result = deckService.getAllCardsByDeckId(DECK_ID);
         verify(deckRepository).findOne(DECK_ID);
-        assertEquals(null, result);
+        assertNull(result);
     }
 
     @Test
     public void testAddDeckToCategory() {
-        category.setDecks(new ArrayList<>());
-
         deckService.addDeckToCategory(deck, CATEGORY_ID);
         verify(categoryRepository).findOne(CATEGORY_ID);
-
-        category.setDecks(null);
+        verify(deckRepository).save(deck);
     }
 
     @Test
     public void testAddDeckToCourse() {
-        course.setDecks(new ArrayList<>());
-
         deckService.addDeckToCourse(deck, CATEGORY_ID, COURSE_ID);
         verify(courseRepository).findOne(COURSE_ID);
-
-        course.setDecks(null);
+        verify(deckRepository).save(deck);
     }
 
     @Test
@@ -141,6 +138,7 @@ public class DeckServiceTest {
         deckService.updateDeck(deck, DECK_ID, CATEGORY_ID);
         verify(deckRepository).findOne(DECK_ID);
         verify(categoryRepository).findById(CATEGORY_ID);
+        verify(deckRepository).save(deck);
     }
 
     @Test
@@ -152,10 +150,10 @@ public class DeckServiceTest {
     }
 
     @Test
-    public void testDeleteDeckById() {
+    public void testDeleteDeck() {
         doNothing().when(deckRepository).deleteDeckById(DECK_ID);
 
-        deckService.deleteDeckById(DECK_ID);
+        deckService.deleteDeck(DECK_ID);
         verify(deckRepository).deleteDeckById(DECK_ID);
     }
 
@@ -169,7 +167,7 @@ public class DeckServiceTest {
 
     @Test(expected = NotAuthorisedUserException.class)
     public void testCreateNewDeckByNotAuthorisedUser() throws NotAuthorisedUserException {
-        when(userService.getAuthorizedUser()).thenThrow(NotAuthorisedUserException.class);
+        when(userService.getAuthorizedUser()).thenThrow(new NotAuthorisedUserException());
 
         deckService.createNewDeck(deck, CATEGORY_ID);
         verify(userService).getAuthorizedUser();
@@ -190,7 +188,7 @@ public class DeckServiceTest {
 
     @Test(expected = NotAuthorisedUserException.class)
     public void testCreateNewDeckAdminByNotAuthorisedUser() throws NotAuthorisedUserException {
-        when(userService.getAuthorizedUser()).thenThrow(NotAuthorisedUserException.class);
+        when(userService.getAuthorizedUser()).thenThrow(new NotAuthorisedUserException());
 
         deckService.createNewDeckAdmin(deck);
         verify(userService).getAuthorizedUser();
@@ -198,9 +196,12 @@ public class DeckServiceTest {
 
     @Test
     public void testDeleteOwnDeck() throws NotAuthorisedUserException, NotOwnerOperationException {
+        doNothing().when(deckRepository).delete(deck);
+
         deckService.deleteOwnDeck(DECK_ID);
         verify(userService).getAuthorizedUser();
         verify(deckRepository).findOne(DECK_ID);
+        verify(deckRepository).delete(deck);
     }
 
     @Test(expected = NoSuchElementException.class)
@@ -249,45 +250,45 @@ public class DeckServiceTest {
     }
 
     @Test
-    public void testGetAllUserDecks() throws NotAuthorisedUserException {
+    public void testGetAllDecksByUser() throws NotAuthorisedUserException {
         when(deckRepository.findAllByDeckOwnerIdEquals(USER_ID)).thenReturn(null);
 
-        List<Deck> result = deckService.getAllUserDecks();
+        List<Deck> result = deckService.getAllDecksByUser();
         verify(userService).getAuthorizedUser();
         verify(deckRepository).findAllByDeckOwnerIdEquals(USER_ID);
-        assertEquals(null, result);
+        assertNull(result);
     }
 
     @Test(expected = NotAuthorisedUserException.class)
-    public void testGetAllUserDecksByNotAuthorisedUser() throws NotAuthorisedUserException {
-        when(userService.getAuthorizedUser()).thenThrow(NotAuthorisedUserException.class);
+    public void testGetAllDecksByUserByNotAuthorisedUser() throws NotAuthorisedUserException {
+        when(userService.getAuthorizedUser()).thenThrow(new NotAuthorisedUserException());
 
-        deckService.getAllUserDecks();
+        deckService.getAllDecksByUser();
         verify(userService).getAuthorizedUser();
     }
 
     @Test
-    public void testGetUserDeckByDeckId() throws NotAuthorisedUserException, NotOwnerOperationException {
-        Deck result = deckService.getUserDeckByDeckId(DECK_ID);
+    public void testGetDeckUser() throws NotAuthorisedUserException, NotOwnerOperationException {
+        Deck result = deckService.getDeckUser(DECK_ID);
         verify(userService).getAuthorizedUser();
         verify(deckRepository).findOne(DECK_ID);
         assertEquals(deck, result);
     }
 
     @Test(expected = NoSuchElementException.class)
-    public void testGetUserDeckByDeckIdThatNotFound() throws NotAuthorisedUserException, NotOwnerOperationException {
+    public void testGetDeckUserThatNotFound() throws NotAuthorisedUserException, NotOwnerOperationException {
         when(deckRepository.findOne(DECK_ID)).thenReturn(null);
 
-        deckService.getUserDeckByDeckId(DECK_ID);
+        deckService.getDeckUser(DECK_ID);
         verify(userService).getAuthorizedUser();
         verify(deckRepository).findOne(DECK_ID);
     }
 
     @Test(expected = NotOwnerOperationException.class)
-    public void testGetUserDeckByDeckIdByNotOwnerUser() throws NotAuthorisedUserException, NotOwnerOperationException {
+    public void testGetDeckUserByNotOwnerUser() throws NotAuthorisedUserException, NotOwnerOperationException {
         when(userService.getAuthorizedUser()).thenReturn(notOwnerUser);
 
-        deckService.getUserDeckByDeckId(DECK_ID);
+        deckService.getDeckUser(DECK_ID);
         verify(userService).getAuthorizedUser();
         verify(deckRepository).findOne(DECK_ID);
     }
@@ -300,7 +301,7 @@ public class DeckServiceTest {
                 PAGE_ASCENDING_ORDER);
         verify(categoryRepository).findOne(CATEGORY_ID);
         verify(deckRepository).findAllByCategoryEquals(eq(category), any(PageRequest.class));
-        assertEquals(null, result);
+        assertNull(result);
     }
 
     @Test
@@ -316,7 +317,7 @@ public class DeckServiceTest {
     public void testGetSyntaxToHighlight() {
         when(deckRepository.getDeckById(DECK_ID)).thenReturn(deck);
 
-        String result = deckService.getSyntaxToHighlight(DECK_ID);
+        String result = deckService.getSynthaxToHightlight(DECK_ID);
         verify(deckRepository).getDeckById(DECK_ID);
         assertEquals(DECK_SYNTAX_TO_HIGHLIGHT, result);
     }

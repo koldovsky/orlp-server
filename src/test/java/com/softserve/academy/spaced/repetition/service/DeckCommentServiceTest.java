@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -27,7 +28,7 @@ public class DeckCommentServiceTest {
     private DeckCommentServiceImpl deckCommentService;
 
     @Mock
-    private DeckCommentRepository deckCommentRepository;
+    private DeckCommentRepository commentRepository;
 
     @Mock
     private DeckRepository deckRepository;
@@ -55,7 +56,7 @@ public class DeckCommentServiceTest {
         deckComment = DomainFactory.createDeckComment(DECK_COMMENT_ID, DECK_COMMENT_TEXT, null, person,
                 DECK_COMMENT_PARENT_ID, deck);
 
-        when(deckCommentRepository.findOne(DECK_COMMENT_ID)).thenReturn(deckComment);
+        when(commentRepository.findOne(DECK_COMMENT_ID)).thenReturn(deckComment);
     }
 
     @Test
@@ -64,12 +65,12 @@ public class DeckCommentServiceTest {
 
         when(userService.getAuthorizedUser()).thenReturn(user);
         when(deckRepository.findOne(DECK_ID)).thenReturn(deck);
-        when(deckCommentRepository.save(deckComment)).thenReturn(deckComment);
+        when(commentRepository.save(deckComment)).thenReturn(deckComment);
 
         DeckComment result = deckCommentService.addCommentForDeck(DECK_ID, DECK_COMMENT_TEXT, DECK_COMMENT_PARENT_ID);
         verify(userService).getAuthorizedUser();
         verify(deckRepository).findOne(DECK_ID);
-        verify(deckCommentRepository).save(deckComment);
+        verify(commentRepository).save(deckComment);
         assertEquals(deckComment, result);
 
         deckComment.setId(DECK_COMMENT_ID);
@@ -77,7 +78,7 @@ public class DeckCommentServiceTest {
 
     @Test(expected = NotAuthorisedUserException.class)
     public void testAddCommentForDeckByNotAuthorisedUser() throws NotAuthorisedUserException {
-        when(userService.getAuthorizedUser()).thenThrow(NotAuthorisedUserException.class);
+        when(userService.getAuthorizedUser()).thenThrow(new NotAuthorisedUserException());
 
         deckCommentService.addCommentForDeck(DECK_ID, DECK_COMMENT_TEXT, DECK_COMMENT_PARENT_ID);
         verify(userService).getAuthorizedUser();
@@ -86,31 +87,31 @@ public class DeckCommentServiceTest {
     @Test
     public void testGetCommentById() {
         DeckComment result = deckCommentService.getCommentById(DECK_COMMENT_ID);
-        verify(deckCommentRepository).findOne(DECK_COMMENT_ID);
+        verify(commentRepository).findOne(DECK_COMMENT_ID);
         assertEquals(deckComment, result);
     }
 
     @Test
     public void testGetAllCommentsForDeck() {
-        when(deckCommentRepository.findDeckCommentsByDeckId(DECK_ID)).thenReturn(null);
+        when(commentRepository.findDeckCommentsByDeckId(DECK_ID)).thenReturn(null);
 
         List<Comment> result = deckCommentService.getAllCommentsForDeck(DECK_ID);
-        verify(deckCommentRepository).findDeckCommentsByDeckId(DECK_ID);
-        assertEquals(null, result);
+        verify(commentRepository).findDeckCommentsByDeckId(DECK_ID);
+        assertNull(result);
     }
 
     @Test
     public void testUpdateCommentById() {
         DeckComment result = deckCommentService.updateCommentById(DECK_COMMENT_ID, DECK_COMMENT_TEXT);
-        verify(deckCommentRepository).findOne(DECK_COMMENT_ID);
+        verify(commentRepository).findOne(DECK_COMMENT_ID);
         assertEquals(deckComment, result);
     }
 
     @Test
     public void testDeleteCommentById() {
-        doNothing().when(deckCommentRepository).deleteComment(DECK_COMMENT_ID);
+        doNothing().when(commentRepository).deleteComment(DECK_COMMENT_ID);
 
         deckCommentService.deleteCommentById(DECK_COMMENT_ID);
-        verify(deckCommentRepository).deleteComment(DECK_COMMENT_ID);
+        verify(commentRepository).deleteComment(DECK_COMMENT_ID);
     }
 }
