@@ -19,11 +19,15 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.context.MessageSource;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import com.softserve.academy.spaced.repetition.utils.exceptions.NotAuthorisedUserException;
+
+import java.util.Locale;
 
 @RunWith(MockitoJUnitRunner.class)
 public class DeckRatingControllerTest {
@@ -36,11 +40,22 @@ public class DeckRatingControllerTest {
     @Mock
     private DeckRatingService deckRatingService;
 
+    @InjectMocks
+    private ExceptionHandlerController exceptionHandlerController;
+
+    @Mock
+    private MessageSource messageSource;
+
+    private final String MESSAGE_SOURCE_MESSAGE = "message";
+
     @Before
     public void setUp() {
         mockMvc = MockMvcBuilders.standaloneSetup(deckRatingController)
-                .setControllerAdvice(new ExceptionHandlerController())
+                .setControllerAdvice(exceptionHandlerController)
                 .build();
+
+        when(messageSource.getMessage(any(String.class), any(Object[].class), any(Locale.class)))
+                .thenReturn(MESSAGE_SOURCE_MESSAGE);
     }
 
     @Test
@@ -82,6 +97,7 @@ public class DeckRatingControllerTest {
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isUnauthorized());
+        verify(messageSource).getMessage(any(String.class), any(Object[].class), any(Locale.class));
     }
 
     @Test

@@ -22,13 +22,13 @@ public class Person {
     private Long id;
 
     @Column(name = "first_name")
-    @NotNull(message = "{message.fieldNotBeNull}", groups = Request.class)
+    @NotNull(message = "{message.fieldNotNull}", groups = Request.class)
     @Size(message = "{message.fieldSizeLimits}", min = PERSON_FIELD_MIN_SIZE, max = PERSON_FIELD_MAX_SIZE, groups = Request.class)
     @Pattern(message = "{message.fieldCantContainReservedSymbols}", regexp = SPECIAL_SYMBOLS_PATTERN, groups = Request.class)
     private String firstName;
 
     @Column(name = "last_name")
-    @NotNull(message = "{message.fieldNotBeNull}", groups = Request.class)
+    @NotNull(message = "{message.fieldNotNull}", groups = Request.class)
     @Size(message = "{message.fieldSizeLimits}", min = PERSON_FIELD_MIN_SIZE, max = PERSON_FIELD_MAX_SIZE, groups = Request.class)
     @Pattern(message = "{message.fieldCantContainReservedSymbols}", regexp = SPECIAL_SYMBOLS_PATTERN, groups = Request.class)
     private String lastName;

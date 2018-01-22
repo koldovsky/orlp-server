@@ -11,7 +11,7 @@ public class NewAccountPasswordDTO {
 
     private String email;
 
-    @NotNull(message = "{message.fieldNotBeNull}", groups = Request.class)
+    @NotNull(message = "{message.fieldNotNull}", groups = Request.class)
     @Size(message = "{message.fieldSizeLimits}", min = PASS_MIN_SIZE, max = PASS_MAX_SIZE, groups = Request.class)
     private String password;
 

@@ -32,7 +32,7 @@ public class Account implements EntityInterface {
     private String password;
 
     @Column(name = "email", unique = true, nullable = false)
-    @NotNull(message = "{message.fieldNotBeNull}", groups = Request.class)
+    @NotNull(message = "{message.fieldNotNull}", groups = Request.class)
     @Size(message = "{message.fieldSizeLimits}", min = EMAIL_MIN_SIZE, max = EMAIL_MAX_SIZE, groups = Request.class)
     @Pattern( message = "{message.emailWrongFormat}", regexp = EMAIL_PATTERN, groups = Request.class)
     @EmailNotExist(groups = Request.class)

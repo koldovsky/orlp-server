@@ -17,7 +17,7 @@ public abstract class Comment implements EntityInterface {
     @Column(name = "comment_id", nullable = false)
     private Long id;
 
-    @NotBlank(message = "{message.fieldNotBeEmpty}", groups = Request.class)
+    @NotBlank(message = "{message.fieldNotEmpty}", groups = Request.class)
     @Column(name = "commentText", nullable = false, columnDefinition = "LONGTEXT")
     private String commentText;
 
