@@ -101,7 +101,7 @@ public interface DeckService {
      * @return list of the decks witch was created by the user.
      * @throws NotAuthorisedUserException if unauthorized user gets the decks.
      */
-    List<Deck> getAllDecksByUser() throws NotAuthorisedUserException;
+    List<Deck> getAllUserDecks() throws NotAuthorisedUserException;
 
     /**
      * Gets the deck of the user.
@@ -111,7 +111,7 @@ public interface DeckService {
      * @throws NotAuthorisedUserException if unauthorized user gets the decks.
      * @throws NotOwnerOperationException if the user is not owner of the deck gets the deck.
      */
-    Deck getDeckUser(Long deckId) throws NotAuthorisedUserException, NotOwnerOperationException;
+    Deck getUserDeckByDeckId(Long deckId) throws NotAuthorisedUserException, NotOwnerOperationException;
 
     /**
      * Gives the page with decks which are sorted by category.
@@ -140,7 +140,7 @@ public interface DeckService {
      * @param deckId deck`s id for which syntax will highlight.
      * @return highlighted syntax.
      */
-    String getSynthaxToHightlight(long deckId);
+    String getSyntaxToHighlight(long deckId);
 
     /**
      * Gets the deck with the given identifier.
@@ -171,7 +171,7 @@ public interface DeckService {
      *
      * @return the list of decks that are ordered.
      */
-    List<Deck> getAllOrderedDecks();
+    List<Deck> getAllDecksOrderedDescByRating();
 
     /**
      * Gets the list of cards that are in the deck by given identifier.

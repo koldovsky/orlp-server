@@ -25,17 +25,21 @@ import java.util.Map;
 
 @Service
 public class MailServiceImpl implements MailService {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(MailServiceImpl.class);
+
     @Value("${app.origin.url}")
     private String url;
+
     @Autowired
     private JavaMailSender mailSender;
+
     @Autowired
     private JwtTokenForMail jwtTokenForMail;
+
     @Autowired
     @Qualifier("freemarkerConf")
     private Configuration freemarkerConfiguration;
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(MailServiceImpl.class);
 
     private final String REGISTRATION_VERIFICATION_MAIL_TEMPLATE = "registrationVerificationMailTemplate.html";
     private final String ACTIVATION_ACCOUNT_MAIL_TEMPLATE = "activationAccountMailTemplate.html";
@@ -111,8 +115,7 @@ public class MailServiceImpl implements MailService {
         mailSender.send(preparator);
     }
 
-    @Override
-    public String getTemplateContentForMail(String mailTemplate, Map<String, Object> model) {
+    private String getTemplateContentForMail(String mailTemplate, Map<String, Object> model) {
         StringBuilder content = new StringBuilder();
         try {
             content.append(FreeMarkerTemplateUtils.processTemplateIntoString(

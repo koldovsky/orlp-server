@@ -1,10 +1,7 @@
 package com.softserve.academy.spaced.repetition.util;
 
 import com.softserve.academy.spaced.repetition.domain.*;
-import com.softserve.academy.spaced.repetition.domain.enums.AccountStatus;
-import com.softserve.academy.spaced.repetition.domain.enums.AuthenticationType;
-import com.softserve.academy.spaced.repetition.domain.enums.ImageType;
-import com.softserve.academy.spaced.repetition.domain.enums.LearningRegime;
+import com.softserve.academy.spaced.repetition.domain.enums.*;
 
 import java.util.Date;
 import java.util.List;
@@ -141,5 +138,31 @@ public class DomainFactory {
         image.setSize(size);
         image.setIsImageUsed(isImageUsed);
         return image;
+    }
+
+    public static RememberingLevel createRememberingLevel(Long rememberingLevelId, Integer orderNumber, String name,
+                                                          Integer numberOfPostponedDays, Account account) {
+        RememberingLevel rememberingLevel = new RememberingLevel();
+        rememberingLevel.setId(rememberingLevelId);
+        rememberingLevel.setOrderNumber(orderNumber);
+        rememberingLevel.setName(name);
+        rememberingLevel.setNumberOfPostponedDays(numberOfPostponedDays);
+        rememberingLevel.setAccount(account);
+        return rememberingLevel;
+    }
+
+    public static UserCardQueue createUserCardQueue(Long userCardQueueId, Long userId, Long cardId, Long deckId,
+                                                    UserCardQueueStatus status, Date cardDate, Date dateToRepeat,
+                                                    RememberingLevel rememberingLevel) {
+        UserCardQueue userCardQueue = new UserCardQueue();
+        userCardQueue.setId(userCardQueueId);
+        userCardQueue.setUserId(userId);
+        userCardQueue.setCardId(cardId);
+        userCardQueue.setDeckId(deckId);
+        userCardQueue.setStatus(status);
+        userCardQueue.setCardDate(cardDate);
+        userCardQueue.setDateToRepeat(dateToRepeat);
+        userCardQueue.setRememberingLevel(rememberingLevel);
+        return userCardQueue;
     }
 }

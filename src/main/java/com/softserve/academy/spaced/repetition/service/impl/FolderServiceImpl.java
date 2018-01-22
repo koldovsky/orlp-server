@@ -21,19 +21,18 @@ public class FolderServiceImpl implements FolderService{
     private FolderRepository folderRepository;
 
     @Autowired
-    private UserService userService;
-
-    @Autowired
     private DeckRepository deckRepository;
 
+    @Autowired
+    private UserService userService;
+
     @Override
-    public Deck addDeckToFolderById(Long deckId) throws NotAuthorisedUserException {
+    public Deck addDeckToFolder(Long deckId) throws NotAuthorisedUserException {
         User user = userService.getAuthorizedUser();
         Deck deck = deckRepository.getDeckById(deckId);
         Folder folder = user.getFolder();
         Set<Deck> decks = folder.getDecks();
         decks.add(deck);
-        folderRepository.save(folder);
         return deck;
     }
 
@@ -53,22 +52,21 @@ public class FolderServiceImpl implements FolderService{
     }
 
     @Override
-    public void deleteDeckById(Long deckId) throws NotAuthorisedUserException {
+    public void deleteDeckFromFolderById(Long deckId) throws NotAuthorisedUserException {
         User user = userService.getAuthorizedUser();
         Folder folder = user.getFolder();
         Set<Deck> decks = folder.getDecks();
         for (Deck deck: decks) {
-            if (deck.getId() == deckId) {
+            if (deck.getId().equals(deckId)) {
                 decks.remove(deck);
                 break;
             }
         }
-        folderRepository.save(folder);
     }
 
     @Override
     @Transactional
-    public void deleteDeckFromAllUsersFolderById(Long deckId) {
+    public void deleteDeckFromAllUsersFoldersById(Long deckId) throws NotAuthorisedUserException {
         List<Folder> folders = folderRepository.getAllFolderWhereIdDecksEquals(deckId);
         for (Folder folder : folders) {
             Set<Deck> decks = folder.getDecks();
@@ -78,7 +76,6 @@ public class FolderServiceImpl implements FolderService{
                     break;
                 }
             }
-            folderRepository.save(folder);
         }
     }
 }

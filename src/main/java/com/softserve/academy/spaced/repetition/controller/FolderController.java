@@ -35,7 +35,7 @@ public class FolderController {
     @Auditable(action = AuditingAction.ADD_DECK_TO_FOLDER)
     @PutMapping("/api/user/folder/add/deck/{deckId}")
     public ResponseEntity<DeckPublicDTO> addDeckToFolder(@PathVariable Long deckId) throws NotAuthorisedUserException {
-        Deck deck = folderService.addDeckToFolderById(deckId);
+        Deck deck = folderService.addDeckToFolder(deckId);
         Link selfLink = linkTo(methodOn(DeckController.class)
                 .getDeckByCategoryId(deck.getCategory().getId(), deckId)).withSelfRel();
         DeckPublicDTO deckPublicDTO = DTOBuilder.buildDtoForEntity(deck, DeckPublicDTO.class, selfLink);
@@ -89,6 +89,6 @@ public class FolderController {
     @Auditable(action = AuditingAction.DELETE_DECK)
     @DeleteMapping(value = "/api/user/folder/decks/{deckId}")
     public void deleteUserDeck(@PathVariable Long deckId) throws NotAuthorisedUserException {
-        folderService.deleteDeckById(deckId);
+        folderService.deleteDeckFromFolderById(deckId);
     }
 }

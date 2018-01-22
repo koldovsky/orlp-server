@@ -54,6 +54,8 @@ public class DeckCommentServiceTest {
         deck = DomainFactory.createDeck(DECK_ID, null, null, null, null, 0, user, null, null, null, null, null);
         deckComment = DomainFactory.createDeckComment(DECK_COMMENT_ID, DECK_COMMENT_TEXT, null, person,
                 DECK_COMMENT_PARENT_ID, deck);
+
+        when(deckCommentRepository.findOne(DECK_COMMENT_ID)).thenReturn(deckComment);
     }
 
     @Test
@@ -77,14 +79,12 @@ public class DeckCommentServiceTest {
     public void testAddCommentToDeckByNotAuthorisedUser() throws NotAuthorisedUserException {
         when(userService.getAuthorizedUser()).thenThrow(NotAuthorisedUserException.class);
 
-        deckCommentService.addCommentToDeck(DECK_ID, DECK_COMMENT_TEXT,DECK_COMMENT_PARENT_ID);
+        deckCommentService.addCommentToDeck(DECK_ID, DECK_COMMENT_TEXT, DECK_COMMENT_PARENT_ID);
         verify(userService).getAuthorizedUser();
     }
 
     @Test
     public void testGetCommentById() {
-        when(deckCommentRepository.findOne(DECK_COMMENT_ID)).thenReturn(deckComment);
-
         DeckComment result = deckCommentService.getCommentById(DECK_COMMENT_ID);
         verify(deckCommentRepository).findOne(DECK_COMMENT_ID);
         assertEquals(deckComment, result);
@@ -101,8 +101,6 @@ public class DeckCommentServiceTest {
 
     @Test
     public void testUpdateCommentById() {
-        when(deckCommentRepository.findOne(DECK_COMMENT_ID)).thenReturn(deckComment);
-
         DeckComment result = deckCommentService.updateCommentById(DECK_COMMENT_ID, DECK_COMMENT_TEXT);
         verify(deckCommentRepository).findOne(DECK_COMMENT_ID);
         assertEquals(deckComment, result);
@@ -115,5 +113,4 @@ public class DeckCommentServiceTest {
         deckCommentService.deleteCommentById(DECK_COMMENT_ID);
         verify(deckCommentRepository).deleteComment(DECK_COMMENT_ID);
     }
-
 }

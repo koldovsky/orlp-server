@@ -3,6 +3,7 @@ package com.softserve.academy.spaced.repetition.domain;
 import com.softserve.academy.spaced.repetition.controller.utils.dto.EntityInterface;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 @Table(name = "image")
@@ -110,5 +111,18 @@ public class Image implements EntityInterface {
 
     public void setIsImageUsed(boolean imageUsed) {
         isImageUsed = imageUsed;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Image image = (Image) o;
+        return Objects.equals(id, image.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return id.hashCode();
     }
 }

@@ -34,56 +34,58 @@ public class UserCardQueueServiceImpl implements UserCardQueueService {
     @Transactional
     public void updateUserCardQueue(Long deckId, Long cardId, String status)
             throws NotAuthorisedUserException, IllegalArgumentException {
-
         boolean userCardQueueStatusFound = Arrays.stream(UserCardQueueStatus.values())
                 .anyMatch(UserCardQueueStatus.valueOf(status)::equals);
-
         if(!userCardQueueStatusFound) {
             throw new IllegalArgumentException("Value of User Card Queue Status is not valid: " + status);
         }
 
-        UserCardQueueStatus userCardQueueStatus = UserCardQueueStatus.valueOf(status);
-
         User user = userService.getAuthorizedUser();
-        UserCardQueue userCardQueue = userCardQueueRepository.findUserCardQueueByUserIdAndCardId(user.getId(), cardId);
+        UserCardQueueStatus userCardQueueStatus = UserCardQueueStatus.valueOf(status);
+        Long userId = user.getId();
+        UserCardQueue userCardQueue = userCardQueueRepository.findUserCardQueueByUserIdAndCardId(userId, cardId);
         if (userCardQueue == null) {
             userCardQueue = new UserCardQueue();
             userCardQueue.setCardId(cardId);
             userCardQueue.setDeckId(deckId);
-            userCardQueue.setUserId(user.getId());
+            userCardQueue.setUserId(userId);
         }
         userCardQueue.setCardDate(new Date());
 
-        if (user.getAccount().getLearningRegime() == LearningRegime.BAD_NORMAL_GOOD_STATUS_DEPENDING) {
+        Account account = user.getAccount();
+        LearningRegime learningRegime = account.getLearningRegime();
+        if (learningRegime == LearningRegime.BAD_NORMAL_GOOD_STATUS_DEPENDING) {
             userCardQueue.setStatus(userCardQueueStatus);
-        } else if (user.getAccount().getLearningRegime() == LearningRegime.CARDS_POSTPONING_USING_SPACED_REPETITION) {
-            applyCardsPostponingLearningRegime(userCardQueue, userCardQueueStatus);
+        } else if (learningRegime == LearningRegime.CARDS_POSTPONING_USING_SPACED_REPETITION) {
+            applyCardsPostponingLearningRegime(userCardQueue, userCardQueueStatus, account);
         }
         userCardQueueRepository.save(userCardQueue);
     }
 
-    private void applyCardsPostponingLearningRegime(UserCardQueue userCardQueue, UserCardQueueStatus status)
-            throws NotAuthorisedUserException {
-        final Account account = userService.getAuthorizedUser().getAccount();
+    private void applyCardsPostponingLearningRegime(UserCardQueue userCardQueue, UserCardQueueStatus status,
+                                                    Account account) {
+        RememberingLevel userCardQueueRememberingLevel = userCardQueue.getRememberingLevel();
         RememberingLevel rememberingLevel =
                 rememberingLevelRepository.findRememberingLevelByAccountEqualsAndOrderNumber(account, 1);
-        if (userCardQueue.getRememberingLevel() != null) {
-            rememberingLevel = userCardQueue.getRememberingLevel();
+        if (userCardQueueRememberingLevel != null) {
+            rememberingLevel = userCardQueueRememberingLevel;
         }
 
-        if (status == UserCardQueueStatus.BAD && rememberingLevel.getOrderNumber() > 1) {
-            userCardQueue.setRememberingLevel(rememberingLevelRepository
-                    .findRememberingLevelByAccountEqualsAndOrderNumber(account, rememberingLevel.getOrderNumber() - 1));
-        } else if (status == UserCardQueueStatus.GOOD &&
-                rememberingLevel.getOrderNumber() < NUMBER_OF_REMEMBERING_LEVELS) {
-            userCardQueue.setRememberingLevel(rememberingLevelRepository
-                    .findRememberingLevelByAccountEqualsAndOrderNumber(account, rememberingLevel.getOrderNumber() + 1));
-        } else {
-            userCardQueue.setRememberingLevel(rememberingLevelRepository
-                    .findRememberingLevelByAccountEqualsAndOrderNumber(account, rememberingLevel.getOrderNumber()));
+        Integer orderedNumber = rememberingLevel.getOrderNumber();
+        if (status == UserCardQueueStatus.BAD && orderedNumber > 1) {
+            rememberingLevel = rememberingLevelRepository.findRememberingLevelByAccountEqualsAndOrderNumber(account,
+                    --orderedNumber);
+        } else if (status == UserCardQueueStatus.GOOD && orderedNumber < NUMBER_OF_REMEMBERING_LEVELS) {
+            rememberingLevel = rememberingLevelRepository.findRememberingLevelByAccountEqualsAndOrderNumber(account,
+                    ++orderedNumber);
         }
-        userCardQueue.setDateToRepeat(new Date(userCardQueue.getCardDate().getTime() +
-                userCardQueue.getRememberingLevel().getNumberOfPostponedDays() * DAY_IN_MILLISECONDS));
+        userCardQueue.setRememberingLevel(rememberingLevel);
+
+        Date cardDate = userCardQueue.getCardDate();
+        Long cardDateTime = cardDate.getTime();
+        Integer numberOfPostponedDays = userCardQueueRememberingLevel.getNumberOfPostponedDays();
+        Date dateToRepeat = new Date(cardDateTime + numberOfPostponedDays * DAY_IN_MILLISECONDS);
+        userCardQueue.setDateToRepeat(dateToRepeat);
     }
 
     @Override
@@ -95,7 +97,7 @@ public class UserCardQueueServiceImpl implements UserCardQueueService {
     @Transactional
     public long countCardsThatNeedRepeating(Long deckId) throws NotAuthorisedUserException {
         User user = userService.getAuthorizedUser();
-        Long id = user.getId();
-        return userCardQueueRepository.countAllByUserIdEqualsAndDeckIdEqualsAndDateToRepeatBefore(id, deckId, new Date());
+        Long userId = user.getId();
+        return userCardQueueRepository.countAllByUserIdEqualsAndDeckIdEqualsAndDateToRepeatBefore(userId, deckId, new Date());
     }
 }

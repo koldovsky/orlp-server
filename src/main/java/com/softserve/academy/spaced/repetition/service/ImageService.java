@@ -74,7 +74,7 @@ public interface ImageService {
      * @throws NotOwnerOperationException if user can not do this operation because it is not his image
      * @throws NotAuthorisedUserException if user is not authorised
      */
-    void deleteImage(Long imageId) throws CanNotBeDeletedException, NotOwnerOperationException, NotAuthorisedUserException;
+    void deleteImage(Long imageId) throws NotAuthorisedUserException, NotOwnerOperationException, CanNotBeDeletedException;
 
     /**
      * Sets field 'isImageUsed' on true.

@@ -52,7 +52,7 @@ public class DeckController {
 
     @GetMapping(value = "/api/decks/ordered")
     public ResponseEntity<List<DeckPublicDTO>> getAllDecksOrderByRating() {
-        List<Deck> decksList = deckService.getAllOrderedDecks();
+        List<Deck> decksList = deckService.getAllDecksOrderedDescByRating();
         Link collectionLink = linkTo(methodOn(DeckController.class).getAllDecksOrderByRating()).withRel("deck");
         List<DeckPublicDTO> decks = DTOBuilder.buildDtoListForCollection(decksList,
                 DeckPublicDTO.class, collectionLink);
@@ -194,7 +194,7 @@ public class DeckController {
     public ResponseEntity<DeckOfUserManagedByAdminDTO> addDeckForAdmin(@Validated(Request.class) @RequestBody Deck deck)
             throws NotAuthorisedUserException {
         Deck deckNew = deckService.createNewDeckAdmin(deck);
-        folderService.addDeckToFolderById(deckNew.getId());
+        folderService.addDeckToFolder(deckNew.getId());
         Link selfLink = linkTo(methodOn(DeckController.class).getOneDeckForAdmin(deckNew.getId())).withSelfRel();
         DeckOfUserManagedByAdminDTO deckOfUserManagedByAdminDTO = DTOBuilder
                 .buildDtoForEntity(deckNew, DeckOfUserManagedByAdminDTO.class, selfLink);
@@ -215,7 +215,7 @@ public class DeckController {
     @Auditable(action = AuditingAction.DELETE_DECK_ADMIN)
     @DeleteMapping(value = "/api/admin/decks/{deckId}")
     public ResponseEntity deleteDeckForAdmin(@PathVariable Long deckId) throws NotAuthorisedUserException {
-        folderService.deleteDeckFromAllUsersFolderById(deckId);
+        folderService.deleteDeckFromAllUsersFoldersById(deckId);
         deckService.deleteDeckById(deckId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -225,7 +225,7 @@ public class DeckController {
     public ResponseEntity<List<DeckPrivateDTO>> deleteOwnDeckByUser(@PathVariable Long deckId)
             throws NotAuthorisedUserException, NotOwnerOperationException {
         deckService.deleteOwnDeck(deckId);
-        List<Deck> decksList = deckService.getAllDecksByUser();
+        List<Deck> decksList = deckService.getAllUserDecks();
         Link collectionLink = linkTo(methodOn(DeckController.class).getAllDecksForUser()).withSelfRel();
         List<DeckPrivateDTO> decks = DTOBuilder
                 .buildDtoListForCollection(decksList, DeckPrivateDTO.class, collectionLink);
@@ -238,7 +238,7 @@ public class DeckController {
                                                          @PathVariable Long categoryId)
             throws NotAuthorisedUserException, NotOwnerOperationException {
         deckService.createNewDeck(deck, categoryId);
-        folderService.addDeckToFolderById(deck.getId());
+        folderService.addDeckToFolder(deck.getId());
         Link selfLink = linkTo(methodOn(DeckController.class).getOneDeckForUser(deck.getId())).withSelfRel();
         DeckPrivateDTO deckDTO = DTOBuilder.buildDtoForEntity(deck, DeckPrivateDTO.class, selfLink);
         return new ResponseEntity<>(deckDTO, HttpStatus.CREATED);
@@ -259,7 +259,7 @@ public class DeckController {
     @Auditable(action = AuditingAction.VIEW_DECKS_USER)
     @GetMapping(value = "/api/private/user/folder/decks/own")
     public ResponseEntity<List<DeckPrivateDTO>> getAllDecksForUser() throws NotAuthorisedUserException {
-        List<Deck> decksList = deckService.getAllDecksByUser();
+        List<Deck> decksList = deckService.getAllUserDecks();
         Link collectionLink = linkTo(methodOn(DeckController.class).getAllDecksForUser()).withSelfRel();
         List<DeckPrivateDTO> decks = DTOBuilder
                 .buildDtoListForCollection(decksList, DeckPrivateDTO.class, collectionLink);
@@ -270,7 +270,7 @@ public class DeckController {
     @GetMapping(value = "/api/private/user/folder/decks/own/{deckId}")
     public ResponseEntity<DeckPrivateDTO> getOneDeckForUser(@PathVariable Long deckId)
             throws NotAuthorisedUserException, NotOwnerOperationException {
-        Deck deck = deckService.getDeckUser(deckId);
+        Deck deck = deckService.getUserDeckByDeckId(deckId);
         Link selfLink = linkTo(methodOn(DeckController.class).getOneDeckForUser(deckId)).withSelfRel();
         DeckPrivateDTO deckDTO = DTOBuilder.buildDtoForEntity(deck, DeckPrivateDTO.class, selfLink);
         return new ResponseEntity<>(deckDTO, HttpStatus.OK);

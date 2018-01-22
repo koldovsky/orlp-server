@@ -32,8 +32,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         Account account = user.getAccount();
         Person person = user.getPerson();
         String email = account.getEmail();
-        userService.initializeNewUser(account, email.toLowerCase(), AccountStatus.ACTIVE,
-                true, AuthenticationType.LOCAL);
+        userService.initializeNewUser(account, email.toLowerCase(), AccountStatus.ACTIVE, true, AuthenticationType.LOCAL);
         person.setTypeImage(ImageType.NONE);
         user.setFolder(new Folder());
         userService.addUser(user);

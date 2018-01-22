@@ -16,7 +16,7 @@ public interface FolderService {
      * @return added deck.
      * @throws NotAuthorisedUserException if unauthorized user adds new deck data.
      */
-    Deck addDeckToFolderById(Long deckId) throws NotAuthorisedUserException;
+    Deck addDeckToFolder(Long deckId) throws NotAuthorisedUserException;
 
     /**
      * Gets the list af deck`s which are in the folder.
@@ -42,7 +42,7 @@ public interface FolderService {
      * @param deckId the deck identifier which will be deleted.
      * @throws NotAuthorisedUserException if unauthorized user used this operation.
      */
-    void deleteDeckById(Long deckId) throws NotAuthorisedUserException;
+    void deleteDeckFromFolderById(Long deckId) throws NotAuthorisedUserException;
 
     /**
      * Deletes the deck from all folders of users.
@@ -50,5 +50,5 @@ public interface FolderService {
      * @param deckId the deck identifier which will be deleted.
      * @throws NotAuthorisedUserException if unauthorized user used this operation.
      */
-    void deleteDeckFromAllUsersFolderById(Long deckId);
+    void deleteDeckFromAllUsersFoldersById(Long deckId) throws NotAuthorisedUserException;
 }

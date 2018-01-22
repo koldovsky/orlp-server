@@ -49,30 +49,29 @@ public class FolderServiceTest {
     private final long DECK_ID = 1L;
 
     @Before
-    public void setUp() {
+    public void setUp() throws NotAuthorisedUserException {
         folder = DomainFactory.createFolder(FOLDER_ID, new HashSet<>());
         user = DomainFactory.createUser(USER_ID, null, null, folder, null);
         deck = DomainFactory.createDeck(DECK_ID, null, null, null, null, 0D, user, null, null, null, null, null);
+
+        when(userService.getAuthorizedUser()).thenReturn(user);
     }
 
     @Test
-    public void testAddDeckToFolderById() throws NotAuthorisedUserException {
-        when(userService.getAuthorizedUser()).thenReturn(user);
+    public void testAddDeckToFolder() throws NotAuthorisedUserException {
         when(deckRepository.getDeckById(DECK_ID)).thenReturn(deck);
-        when(folderRepository.save(folder)).thenReturn(folder);
 
-        Deck result = folderService.addDeckToFolderById(DECK_ID);
+        Deck result = folderService.addDeckToFolder(DECK_ID);
         verify(userService).getAuthorizedUser();
         verify(deckRepository).getDeckById(DECK_ID);
-        verify(folderRepository).save(folder);
         assertEquals(deck, result);
     }
 
     @Test(expected = NotAuthorisedUserException.class)
-    public void testAddDeckToFolderByIdByNotAuthorisedUser() throws NotAuthorisedUserException {
+    public void testAddDeckToFolderByNotAuthorisedUser() throws NotAuthorisedUserException {
         when(userService.getAuthorizedUser()).thenThrow(NotAuthorisedUserException.class);
 
-        folderService.addDeckToFolderById(DECK_ID);
+        folderService.addDeckToFolder(DECK_ID);
         verify(userService).getAuthorizedUser();
     }
 
@@ -87,7 +86,6 @@ public class FolderServiceTest {
 
     @Test
     public void testGetAllDecksIdFromFolder() throws NotAuthorisedUserException {
-        when(userService.getAuthorizedUser()).thenReturn(user);
         when(folderRepository.selectAllDecksIdFromFolder(FOLDER_ID)).thenReturn(null);
 
         List<Long> result = folderService.getAllDecksIdFromFolder();
@@ -105,34 +103,24 @@ public class FolderServiceTest {
     }
 
     @Test
-    public void testDeleteDeckById() throws NotAuthorisedUserException {
-        when(userService.getAuthorizedUser()).thenReturn(user);
-        when(folderRepository.save(folder)).thenReturn(folder);
-
-        folderService.deleteDeckById(DECK_ID);
+    public void testDeleteDeckFromFolderById() throws NotAuthorisedUserException {
+        folderService.deleteDeckFromFolderById(DECK_ID);
         verify(userService).getAuthorizedUser();
-        verify(folderRepository).save(folder);
     }
 
     @Test(expected = NotAuthorisedUserException.class)
-    public void testDeleteDeckByIdByNotAuthorisedUser() throws NotAuthorisedUserException {
+    public void testDeleteDeckFromFolderByIdByNotAuthorisedUser() throws NotAuthorisedUserException {
         when(userService.getAuthorizedUser()).thenThrow(NotAuthorisedUserException.class);
 
-        folderService.deleteDeckById(DECK_ID);
+        folderService.deleteDeckFromFolderById(DECK_ID);
         verify(userService).getAuthorizedUser();
     }
 
     @Test
-    public void testDeleteDeckFromAllUsersFolderById() {
-        List<Folder> folders = new ArrayList<>();
-        folders.add(folder);
+    public void testDeleteDeckFromAllUsersFolderById() throws NotAuthorisedUserException {
+        when(folderRepository.getAllFolderWhereIdDecksEquals(DECK_ID)).thenReturn(new ArrayList<>());
 
-        when(folderRepository.getAllFolderWhereIdDecksEquals(DECK_ID)).thenReturn(folders);
-        when(folderRepository.save(folder)).thenReturn(folder);
-
-        folderService.deleteDeckFromAllUsersFolderById(DECK_ID);
+        folderService.deleteDeckFromAllUsersFoldersById(DECK_ID);
         verify(folderRepository).getAllFolderWhereIdDecksEquals(DECK_ID);
-        verify(folderRepository).save(folder);
     }
-
 }

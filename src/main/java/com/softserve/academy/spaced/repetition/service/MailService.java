@@ -37,13 +37,4 @@ public interface MailService {
      */
     void sendPasswordRestoreMail(String accountEmail);
 
-    /**
-     * Generates content of the mail message.
-     *
-     * @param mailTemplate string by which will be got html template for mail.
-     * @param model map with values which will be inserted into html page.
-     * @return content of the email.
-     */
-    String getTemplateContentForMail(String mailTemplate, Map<String, Object> model);
-
 }

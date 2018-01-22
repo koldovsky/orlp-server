@@ -50,24 +50,24 @@ public class DeckRatingServiceTest {
     private final int DECK_RATING_RATING = 1;
 
     @Before
-    public void setUp() {
+    public void setUp() throws NotAuthorisedUserException {
         account = DomainFactory.createAccount(ACCOUNT_ID, null, ACCOUNT_EMAIL, null, null, false, null, null, null,
                 null, null);
         user = DomainFactory.createUser(USER_ID, account, null, null, null);
         deck = DomainFactory.createDeck(DECK_ID, null, null, null, null, 0D, user, null, null, null, null, null);
         deckRating = DomainFactory.createDeckRating(DECK_RATING_ID, ACCOUNT_EMAIL, deck, DECK_RATING_RATING);
+
+        when(userService.getAuthorizedUser()).thenReturn(user);
     }
 
     @Test
     public void testAddDeckRating() throws NotAuthorisedUserException, UserStatusException {
-        when(userService.getAuthorizedUser()).thenReturn(user);
         doNothing().when(userService).isUserStatusActive(user);
         when(deckRatingRepository.findAllByAccountEmailAndDeckId(ACCOUNT_EMAIL, DECK_ID))
                 .thenReturn(deckRating);
         when(deckRepository.findOne(DECK_ID)).thenReturn(deck);
         when(deckRatingRepository.save(deckRating)).thenReturn(deckRating);
-        when(deckRatingRepository.findRatingByDeckId(DECK_ID)).thenReturn((double) DECK_RATING_RATING);
-        when(deckRepository.save(deck)).thenReturn(deck);
+        when(deckRatingRepository.findAverageDeckRatingByDeckId(DECK_ID)).thenReturn((double) DECK_RATING_RATING);
 
         deckRatingService.addDeckRating(DECK_RATING_RATING, DECK_ID);
         verify(userService).getAuthorizedUser();
@@ -75,12 +75,11 @@ public class DeckRatingServiceTest {
         verify(deckRatingRepository).findAllByAccountEmailAndDeckId(ACCOUNT_EMAIL, DECK_ID);
         verify(deckRepository).findOne(DECK_ID);
         verify(deckRatingRepository).save(deckRating);
-        verify(deckRatingRepository).findRatingByDeckId(DECK_ID);
-        verify(deckRepository).save(deck);
+        verify(deckRatingRepository).findAverageDeckRatingByDeckId(DECK_ID);
     }
 
     @Test(expected = NotAuthorisedUserException.class)
-    public void testAddDeckRatingByUnauthorisedUser() throws NotAuthorisedUserException, UserStatusException {
+    public void testAddDeckRatingByNotAuthorisedUser() throws NotAuthorisedUserException, UserStatusException {
         when(userService.getAuthorizedUser()).thenThrow(NotAuthorisedUserException.class);
 
         deckRatingService.addDeckRating(DECK_RATING_RATING, DECK_ID);
@@ -89,7 +88,6 @@ public class DeckRatingServiceTest {
 
     @Test(expected = UserStatusException.class)
     public void testAddDeckRatingByUserWithNotActiveStatus() throws NotAuthorisedUserException, UserStatusException {
-        when(userService.getAuthorizedUser()).thenReturn(user);
         doThrow(UserStatusException.class).when(userService).isUserStatusActive(user);
 
         deckRatingService.addDeckRating(DECK_RATING_RATING, DECK_ID);
@@ -105,5 +103,4 @@ public class DeckRatingServiceTest {
         verify(deckRatingRepository).findOne(DECK_ID);
         assertEquals(deckRating, result);
     }
-
 }

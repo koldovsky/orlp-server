@@ -38,7 +38,7 @@ public class ManageUserController {
                                                                    @RequestParam(name = "sortBy") String sortBy,
                                                                    @RequestParam(name = "asc") boolean ascending) {
         Page<UserManagedByAdminDTO> userManagedByAdminDTOS = userService
-                .getUsersByPage(pageNumber, sortBy, ascending).map((user) -> {
+                .getUsersPageByPageNumber(pageNumber, sortBy, ascending).map((user) -> {
                     Link selfLink = linkTo(methodOn(ManageUserController.class).getUserById(user.getId())).withSelfRel();
                     return DTOBuilder.buildDtoForEntity(user, UserManagedByAdminDTO.class, selfLink);
                 });
@@ -69,7 +69,7 @@ public class ManageUserController {
     @Auditable(action = AuditingAction.SET_ACCOUNT_BLOCKED)
     @PutMapping("/api/admin/users/{id}")
     public ResponseEntity<UserManagedByAdminDTO> setUsersStatusBlocked(@PathVariable Long id) {
-        User userWithChangedStatus = userService.setUsersStatusBlocked(id);
+        User userWithChangedStatus = userService.setUserStatusBlocked(id);
         Link link = linkTo(methodOn(ManageUserController.class).setUsersStatusBlocked(id)).withSelfRel();
         UserManagedByAdminDTO userManagedByAdminDTO = DTOBuilder
                 .buildDtoForEntity(userWithChangedStatus, UserManagedByAdminDTO.class, link);
@@ -85,7 +85,7 @@ public class ManageUserController {
     @Auditable(action = AuditingAction.SET_ACCOUNT_DELETED)
     @DeleteMapping("/api/admin/users/{id}")
     public ResponseEntity<UserManagedByAdminDTO> setUsersStatusDeleted(@PathVariable Long id) {
-        User userWithChangedStatus = userService.setUsersStatusDeleted(id);
+        User userWithChangedStatus = userService.setUserStatusDeleted(id);
         Link link = linkTo(methodOn(ManageUserController.class).setUsersStatusDeleted(id)).withSelfRel();
         UserManagedByAdminDTO userManagedByAdminDTO = DTOBuilder
                 .buildDtoForEntity(userWithChangedStatus, UserManagedByAdminDTO.class, link);
@@ -101,7 +101,7 @@ public class ManageUserController {
     @Auditable(action = AuditingAction.SET_ACCOUNT_ACTIVE)
     @PostMapping("/api/admin/users/{id}")
     public ResponseEntity<UserManagedByAdminDTO> setUsersStatusActive(@PathVariable Long id) {
-        User userWithChangedStatus = userService.setUsersStatusActive(id);
+        User userWithChangedStatus = userService.setUserStatusActive(id);
         Link link = linkTo(methodOn(ManageUserController.class).setUsersStatusActive(id)).withSelfRel();
         UserManagedByAdminDTO userManagedByAdminDTO = DTOBuilder
                 .buildDtoForEntity(userWithChangedStatus, UserManagedByAdminDTO.class, link);
@@ -119,7 +119,7 @@ public class ManageUserController {
     @PostMapping("/api/admin/users/{userId}/deck/{deckId}")
     public ResponseEntity<UserManagedByAdminDTO> addExistingDeckToUsersFolder(@PathVariable("userId") Long userId,
                                                                               @PathVariable("deckId") Long deckId) {
-        User user = userService.addExistingDeckToUsersFolder(userId, deckId);
+        User user = userService.addExistingDeckToUserFolder(userId, deckId);
         if (user != null) {
             Link link = linkTo(methodOn(ManageUserController.class)
                     .addExistingDeckToUsersFolder(userId, deckId)).withSelfRel();
@@ -142,7 +142,7 @@ public class ManageUserController {
     @DeleteMapping("/api/admin/users/{userId}/deck/{deckId}")
     public ResponseEntity<UserManagedByAdminDTO> removeDeckFromUsersFolder(@PathVariable("userId") Long userId,
                                                                            @PathVariable("deckId") Long deckId) {
-        User user = userService.removeDeckFromUsersFolder(userId, deckId);
+        User user = userService.removeDeckFromUserFolder(userId, deckId);
         if (user != null) {
             Link link = linkTo(methodOn(ManageUserController.class).getUserById(userId)).withSelfRel();
             UserManagedByAdminDTO userManagedByAdminDTO = DTOBuilder
@@ -162,7 +162,7 @@ public class ManageUserController {
     @Auditable(action = AuditingAction.VIEW_FOLDER_DECKS_ADMIN)
     @GetMapping("/api/admin/users/{userId}/decks")
     public ResponseEntity<List<DeckOfUserManagedByAdminDTO>> getAllDecksFromUsersFolder(@PathVariable("userId") Long userId) {
-        List<Deck> decksFromUsersFolder = userService.getAllDecksFromUsersFolder(userId);
+        List<Deck> decksFromUsersFolder = userService.getAllDecksFromUserFolderByUserId(userId);
         Link link = linkTo(methodOn(ManageUserController.class).getAllDecksFromUsersFolder(userId)).withSelfRel();
         List<DeckOfUserManagedByAdminDTO> decksFromUsersFolderDTO = DTOBuilder
                 .buildDtoListForCollection(decksFromUsersFolder, DeckOfUserManagedByAdminDTO.class, link);
