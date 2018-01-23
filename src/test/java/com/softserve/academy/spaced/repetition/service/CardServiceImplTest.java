@@ -1,5 +1,6 @@
 package com.softserve.academy.spaced.repetition.service;
 
+import com.softserve.academy.spaced.repetition.controller.utils.dto.CardFileDTOList;
 import com.softserve.academy.spaced.repetition.domain.*;
 import com.softserve.academy.spaced.repetition.domain.enums.LearningRegime;
 import com.softserve.academy.spaced.repetition.repository.CardRepository;
@@ -26,6 +27,7 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -40,16 +42,7 @@ public class CardServiceImplTest {
     private final Long USER_ID = 1L;
     private final Long DECK_ID = 1L;
     private final Long CARD_ID = 1L;
-    private final Long ACCOUNT_ID = 1L;
     private final Integer ACCOUNT_CARDS_NUMBER = 10;
-    private final long NOT_OWNER_USER_ID = 42L;
-    private final long IMAGE_ID = 1L;
-    private final String IMAGE_BASE_64 = "";
-    private final String CONTENT_TYPE = "application/octet-stream";
-    private final Long IMAGE_SIZE = 1L;
-    private final String ENCODED_FILE_CONTENT = "content";
-    private final Long MAX_FILE_SIZE = 1_048_576L;
-    private final Long USER_QUOTA = 10_485_760L;
     @Mock
     private CardRepository cardRepository;
     @Mock
@@ -74,12 +67,11 @@ public class CardServiceImplTest {
     private CardServiceImpl cardService;
     private Deck deck;
     private User user;
-    private Account account;
     private Card card;
 
     @Before
     public void setUp() throws Exception {
-        account = DomainFactory.createAccount(ACCOUNT_ID, null, null, null, null
+        Account account = DomainFactory.createAccount(1L, null, null, null, null
                 , false, null, null, LearningRegime.BAD_NORMAL_GOOD_STATUS_DEPENDING
                 , ACCOUNT_CARDS_NUMBER, null);
         user = DomainFactory.createUser(USER_ID, account, new Person(), new Folder(), null);
@@ -94,7 +86,7 @@ public class CardServiceImplTest {
     }
 
     @Test
-    public void getLearningCardsWithLearningRegimeBadNormalGood() throws NotAuthorisedUserException {
+    public void testGetLearningCardsWithLearningRegimeBadNormalGood() throws NotAuthorisedUserException {
         List<Card> learningCards = new ArrayList<>();
         when(accountService.getCardsNumber()).thenReturn(ACCOUNT_CARDS_NUMBER);
         when(cardRepository.cardsForLearningWithOutStatus(user.getId(), DECK_ID, ACCOUNT_CARDS_NUMBER)).thenReturn(learningCards);
@@ -111,7 +103,7 @@ public class CardServiceImplTest {
     }
 
     @Test
-    public void getLearningCardsWithLearningRegimeCardPositionUsingSpaced() throws NotAuthorisedUserException {
+    public void testGetLearningCardsWithLearningRegimeCardPositionUsingSpaced() throws NotAuthorisedUserException {
         List<Card> learningCards = new ArrayList<>();
         user.getAccount().setLearningRegime(LearningRegime.CARDS_POSTPONING_USING_SPACED_REPETITION);
         when(userService.getAuthorizedUser()).thenReturn(user);
@@ -126,30 +118,28 @@ public class CardServiceImplTest {
         assertNotNull(result);
     }
 
-    @Test(expected = NotAuthorisedUserException.class)
-    public void getLearningCardsByNotAuthorisedUser() throws NotAuthorisedUserException {
+    @Test
+    public void testGetLearningCardsByNotAuthorisedUser() throws NotAuthorisedUserException {
         when(userService.getAuthorizedUser()).thenThrow(new NotAuthorisedUserException());
+        when(cardRepository.findAllByDeckId(DECK_ID)).thenReturn(new ArrayList<>());
+        when(accountService.getCardsNumber()).thenReturn(0);
 
-//        when(cardRepository.findAllByDeckId(DECK_ID)).thenReturn(new ArrayList<>());
-//        when(accountService.getCardsNumber()).thenReturn(0);
-
-//        List<Card> result =
-        cardService.getLearningCards(DECK_ID);
+        List<Card> result = cardService.getLearningCards(DECK_ID);
         verify(userService).getAuthorizedUser();
-//        verify(cardRepository).findAllByDeckId(DECK_ID);
-//        verify(accountService).getCardsNumber();
-//        assertNotNull(result);
+        verify(cardRepository).findAllByDeckId(DECK_ID);
+        verify(accountService).getCardsNumber();
+        assertNotNull(result);
     }
 
     @Test
-    public void getCard() {
+    public void testGetCard() {
         Card result = cardService.getCard(CARD_ID);
         verify(cardRepository).findOne(CARD_ID);
         assertEquals(card, result);
     }
 
     @Test
-    public void addCard() {
+    public void testAddCard() {
         when(deckRepository.findOne(DECK_ID)).thenReturn(deck);
         when(cardRepository.save(card)).thenReturn(card);
 
@@ -159,7 +149,7 @@ public class CardServiceImplTest {
     }
 
     @Test
-    public void updateCard() {
+    public void testUpdateCard() {
         when(cardRepository.save(card)).thenReturn(card);
 
         cardService.updateCard(CARD_ID, card);
@@ -168,33 +158,38 @@ public class CardServiceImplTest {
     }
 
     @Test
-    public void getCardsQueue() throws NotAuthorisedUserException {
-        List<Card> learningCards = new ArrayList<>();
+    public void testGetCardsQueueWithOutStatus() throws NotAuthorisedUserException {
         List<Card> learningCardsTemp = new ArrayList<>();
         learningCardsTemp.add(card);
         learningCardsTemp.add(card);
         when(accountService.getCardsNumber()).thenReturn(1);
-        when(cardRepository.cardsForLearningWithOutStatus(user.getId(), DECK_ID, 11)).thenReturn(learningCardsTemp);
-//        when(cardRepository.getCardsThatNeedRepeating(eq(DECK_ID), any(Date.class), eq(user.getId()), eq(0)))
-//                .thenReturn(learningCards);
+        when(cardRepository.cardsForLearningWithOutStatus(USER_ID, DECK_ID, 1))
+                .thenReturn(learningCardsTemp);
+
+        List<Card> result = cardService.getCardsQueue(DECK_ID);
+        verify(userService).getAuthorizedUser();
+        verify(accountService).getCardsNumber();
+        verify(cardRepository).cardsForLearningWithOutStatus(USER_ID, DECK_ID, 1);
+        assertEquals(learningCardsTemp, result);
+    }
+
+    @Test(expected = NotAuthorisedUserException.class)
+    public void testGetCardsQueueByNotAuthorisedUser() throws NotAuthorisedUserException {
+        when(userService.getAuthorizedUser()).thenThrow(new NotAuthorisedUserException());
 
         cardService.getCardsQueue(DECK_ID);
         verify(userService).getAuthorizedUser();
-        verify(accountService).getCardsNumber();
-        verify(cardRepository).cardsForLearningWithOutStatus(user.getId(), DECK_ID, 1);
-//        verify(cardRepository).getCardsThatNeedRepeating(eq(DECK_ID),
-//                any(Date.class), eq(user.getId()), eq(0));
     }
 
     @Test
-    public void deleteCard() {
+    public void testDeleteCard() {
         doNothing().when(cardRepository).deleteCardById(CARD_ID);
 
         cardService.deleteCard(CARD_ID);
     }
 
     @Test
-    public void getAdditionalLearningCards() throws NotAuthorisedUserException {
+    public void testGetAdditionalLearningCards() throws NotAuthorisedUserException {
         List<Card> learningCards = new ArrayList<>();
         when(accountService.getCardsNumber()).thenReturn(ACCOUNT_CARDS_NUMBER);
         when(cardRepository.getPostponedCards(DECK_ID, new Date(), user.getId(), ACCOUNT_CARDS_NUMBER))
@@ -207,7 +202,7 @@ public class CardServiceImplTest {
     }
 
     @Test(expected = NotAuthorisedUserException.class)
-    public void getAdditionalLearningCardsByNotAuthorisedUser() throws NotAuthorisedUserException {
+    public void testGetAdditionalLearningCardsByNotAuthorisedUser() throws NotAuthorisedUserException {
         when(userService.getAuthorizedUser()).thenThrow(new NotAuthorisedUserException());
 
         cardService.getAdditionalLearningCards(DECK_ID);
@@ -215,7 +210,7 @@ public class CardServiceImplTest {
     }
 
     @Test
-    public void areThereNotPostponedCardsAvailable() throws NotAuthorisedUserException {
+    public void testAreThereNotPostponedCardsAvailable() throws NotAuthorisedUserException {
         List<Card> learningCards = new ArrayList<>();
         learningCards.add(card);
         when(userCardQueueService.countCardsThatNeedRepeating(DECK_ID)).thenReturn(0L);
@@ -230,7 +225,7 @@ public class CardServiceImplTest {
     }
 
     @Test(expected = NotAuthorisedUserException.class)
-    public void areThereNotPostponedCardsAvailableByNotAuthorisedUser() throws NotAuthorisedUserException {
+    public void testAreThereNotPostponedCardsAvailableByNotAuthorisedUser() throws NotAuthorisedUserException {
         when(userService.getAuthorizedUser()).thenThrow(new NotAuthorisedUserException());
 
         cardService.areThereNotPostponedCardsAvailable(DECK_ID);
@@ -238,23 +233,21 @@ public class CardServiceImplTest {
     }
 
     @Test
-    public void uploadCards() throws WrongFormatException, EmptyFileException, NotOwnerOperationException,
+    public void testUploadCards() throws WrongFormatException, EmptyFileException, NotOwnerOperationException,
             NotAuthorisedUserException, IOException {
-
-
-        when(cardsFile.getContentType()).thenReturn(CONTENT_TYPE);
-        when(cardsFile.getInputStream()).thenReturn(inputStream);
-//        when(yaml.loadAs(any(InputStream.class), eq(CardFileDTOList.class))).thenReturn(asd);
-//                doNothing().when(yaml).dump(any(Map.class), any());
-
-
-        when(deckService.getDeckUser(DECK_ID)).thenReturn(deck);
-        cardService.uploadCards(cardsFile, DECK_ID);
-        verify(deckService).getDeckUser(DECK_ID);
+//
+//        when(cardsFile.getContentType()).thenReturn("application/octet-stream");
+//        when(cardsFile.getInputStream()).thenReturn(inputStream);
+//        when(yaml.loadAs(any(InputStream.class), eq(CardFileDTOList.class))).thenReturn(any());
+//        doNothing().when(yaml).dump(any(Map.class), any());
+//        when(deckService.getDeckUser(DECK_ID)).thenReturn(deck);
+//
+//        cardService.uploadCards(cardsFile, DECK_ID);
+//        verify(deckService).getDeckUser(DECK_ID);
     }
 
     @Test
-    public void downloadCards() {
+    public void testDownloadCards() {
         List<Card> cardList = new ArrayList<>();
         cardList.add(card);
         when(cardRepository.findAllByDeckId(DECK_ID)).thenReturn(cardList);
@@ -264,7 +257,7 @@ public class CardServiceImplTest {
     }
 
     @Test
-    public void downloadCardsTemplate() {
+    public void testDownloadCardsTemplate() {
         cardService.downloadCardsTemplate(outputStream);
     }
 }

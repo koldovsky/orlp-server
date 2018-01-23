@@ -46,8 +46,8 @@ public class CardServiceImpl implements CardService {
     @Transactional
     public List<Card> getLearningCards(Long deckId) throws NotAuthorisedUserException {
         try {
-            User user = userService.getAuthorizedUser();//1
-            final int cardsNumber = accountService.getCardsNumber();//const
+            User user = userService.getAuthorizedUser();
+            final int cardsNumber = accountService.getCardsNumber();
             List<Card> learningCards = new ArrayList<>();
             if (user.getAccount().getLearningRegime().equals(LearningRegime.BAD_NORMAL_GOOD_STATUS_DEPENDING)) {
                 learningCards = cardRepository.cardsForLearningWithOutStatus(user.getId(), deckId, cardsNumber);
@@ -101,10 +101,6 @@ public class CardServiceImpl implements CardService {
         User user = userService.getAuthorizedUser();
         int cardsNumber = accountService.getCardsNumber();
         List<Card> cardsQueue = cardRepository.cardsForLearningWithOutStatus(user.getId(), deckId, cardsNumber);
-
-        System.out.println(cardsNumber);
-        System.out.println(cardsQueue.size());
-
         if (cardsQueue.size() < cardsNumber) {
             cardsQueue.addAll(cardRepository.cardsQueueForLearningWithStatus(user.getId(), deckId, cardsNumber)
                     .subList(0, cardsNumber - cardsQueue.size()));
