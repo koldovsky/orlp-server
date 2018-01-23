@@ -117,7 +117,7 @@ public class CardController {
                                                                   @PathVariable Long deckId,
                                                                   @RequestParam(required = false) List<String> image) {
         LOGGER.debug("Add card to categoryId: {}, deckId: {}", categoryId, deckId);
-        Card card = new Card(title,question,answer);
+        Card card = new Card(title, question, answer);
         cardService.addCard(card, deckId, image);
         Link selfLink = linkTo(methodOn(CardController.class).getCardByCategoryAndDeck(categoryId, deckId, card.getId())).withSelfRel();
         CardPublicDTO cardPublicDTO = DTOBuilder.buildDtoForEntity(card, CardPublicDTO.class, selfLink);
@@ -143,7 +143,7 @@ public class CardController {
     @Auditable(action = AuditingAction.EDIT_CARD_VIA_CATEGORY_AND_DECK)
     @PutMapping(value = "/api/category/{categoryId}/decks/{deckId}/cards/{cardId}")
     @PreAuthorize(value = "@accessToUrlService.hasAccessToCard(#categoryId, #deckId, #cardId)")
-    public ResponseEntity<CardPublicDTO> updateCardByCategoryAndDeck(@PathVariable Long categoryId, @PathVariable Long deckId, @PathVariable Long cardId, @Validated(Request.class) @RequestBody Card card, @RequestParam(required = false)  List<String> images) {
+    public ResponseEntity<CardPublicDTO> updateCardByCategoryAndDeck(@PathVariable Long categoryId, @PathVariable Long deckId, @PathVariable Long cardId, @Validated(Request.class) @RequestBody Card card, @RequestParam(required = false) List<String> images) {
         cardService.updateCard(card, deckId, images);
         Link selfLink = linkTo(methodOn(CardController.class).getCardByCategoryAndDeck(categoryId, deckId, card.getId())).withSelfRel();
         CardPublicDTO cardPublicDTO = DTOBuilder.buildDtoForEntity(card, CardPublicDTO.class, selfLink);
@@ -160,8 +160,8 @@ public class CardController {
                                                           @RequestParam String answer,
                                                           @RequestParam(required = false) List<String> images) {
         LOGGER.debug("Updating card with id: {}  in deck with id: {}", cardId, deckId);
-        Card card = new Card(title,question,answer);
-        cardService.updateCard(card,cardId,images);
+        Card card = new Card(title, question, answer);
+        cardService.updateCard(card, cardId, images);
         Link selfLink = linkTo(methodOn(CardController.class).getCardByDeck(deckId, cardId)).withSelfRel();
         CardPublicDTO cardPublicDTO = DTOBuilder.buildDtoForEntity(card, CardPublicDTO.class, selfLink);
         return new ResponseEntity<>(cardPublicDTO, HttpStatus.OK);
@@ -193,9 +193,9 @@ public class CardController {
      */
     @PostMapping("/api/cardsUpload")
     public ResponseEntity uploadCard(@RequestParam("file") MultipartFile file, Long deckId)
-            throws IOException, SQLException, ClassNotFoundException, WrongFormatException{
+            throws IOException, SQLException, ClassNotFoundException, WrongFormatException {
         cardLoadService.loadCard(file, deckId);
-        return new ResponseEntity <>(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @GetMapping(value = "/api/card/{cardId}")

@@ -17,16 +17,12 @@ public class CardImage implements EntityInterface {
     @Column(name = "imagebase64", columnDefinition = "LONGTEXT")
     private String image;
 
-    @ManyToOne()
+    @ManyToOne
     @JoinColumn(name = "card_id")
     @JsonIgnore
     private Card card;
 
     public CardImage() {
-    }
-
-    public CardImage(String image) {
-        this.image = image;
     }
 
     public CardImage(String image, Card card) {

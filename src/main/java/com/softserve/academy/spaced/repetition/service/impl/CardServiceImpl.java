@@ -91,7 +91,6 @@ public class CardServiceImpl implements CardService {
                 || card.getQuestion().trim().isEmpty()) {
             throw new IllegalArgumentException("All of card fields must be filled");
         }
-
         Deck deck = deckRepository.findOne(deckId);
         card.setDeck(deck);
         deck.getCards().add(cardRepository.save(card));

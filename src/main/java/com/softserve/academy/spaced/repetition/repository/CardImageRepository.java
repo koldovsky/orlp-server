@@ -7,7 +7,5 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface CardImageRepository extends JpaRepository<CardImage,Long>{
-
-    List<CardImage> findByCardId(Long id);
+public interface CardImageRepository extends JpaRepository<CardImage, Long> {
 }
