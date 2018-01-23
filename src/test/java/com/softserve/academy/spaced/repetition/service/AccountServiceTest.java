@@ -32,33 +32,26 @@ import static org.powermock.api.mockito.PowerMockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 @Transactional
-public class AccountServiceImplTest {
-
-    @Mock
-    private AccountRepository accountRepository;
-
-    @Mock
-    private RememberingLevelRepository rememberingLevelRepository;
-
-    @Mock
-    private UserService userService;
-
-    @Mock
-    private NumberOfPostponedDaysValidator numberOfPostponedDaysValidator;
-
-    @Mock
-    private MailService mailService;
-
-    @Mock
-    private PasswordEncoder passwordEncoder;
-
-    @InjectMocks
-    private AccountServiceImpl accountService;
+public class AccountServiceTest {
 
     private final Long ACCOUNT_ID = 1L;
     private final String PASSWORD = "pass";
     private final String EMAIL = "account@test.com";
     private final Integer CARDS_NUMBER = 10;
+    @Mock
+    private AccountRepository accountRepository;
+    @Mock
+    private RememberingLevelRepository rememberingLevelRepository;
+    @Mock
+    private UserService userService;
+    @Mock
+    private NumberOfPostponedDaysValidator numberOfPostponedDaysValidator;
+    @Mock
+    private MailService mailService;
+    @Mock
+    private PasswordEncoder passwordEncoder;
+    @InjectMocks
+    private AccountServiceImpl accountService;
     private Account account;
 
 
@@ -90,7 +83,7 @@ public class AccountServiceImplTest {
 
     @Test(expected = NotAuthorisedUserException.class)
     public void testGetLearningRegimeByNotAuthorisedUser() throws NotAuthorisedUserException {
-        when(userService.getAuthorizedUser()).thenThrow(NotAuthorisedUserException.class);
+        when(userService.getAuthorizedUser()).thenThrow(new NotAuthorisedUserException());
 
         accountService.getLearningRegime();
         verify(userService).getAuthorizedUser();
@@ -108,7 +101,7 @@ public class AccountServiceImplTest {
 
     @Test(expected = NotAuthorisedUserException.class)
     public void updateLearningRegimeByNotAuthorisedUser() throws NotAuthorisedUserException, IllegalArgumentException {
-        when(userService.getAuthorizedUser()).thenThrow(NotAuthorisedUserException.class);
+        when(userService.getAuthorizedUser()).thenThrow(new NotAuthorisedUserException());
 
         accountService.updateLearningRegime("BAD_NORMAL_GOOD_STATUS_DEPENDING");
         verify(userService).getAuthorizedUser();
@@ -122,7 +115,7 @@ public class AccountServiceImplTest {
 
     @Test(expected = NotAuthorisedUserException.class)
     public void testGetCardsNumberByNotAuthorisedUser() throws NotAuthorisedUserException {
-        when(userService.getAuthorizedUser()).thenThrow(NotAuthorisedUserException.class);
+        when(userService.getAuthorizedUser()).thenThrow(new NotAuthorisedUserException());
 
         accountService.getCardsNumber();
         verify(userService).getAuthorizedUser();
@@ -137,7 +130,7 @@ public class AccountServiceImplTest {
 
     @Test(expected = NotAuthorisedUserException.class)
     public void updateCardsNumber() throws NotAuthorisedUserException {
-        when(userService.getAuthorizedUser()).thenThrow(NotAuthorisedUserException.class);
+        when(userService.getAuthorizedUser()).thenThrow(new NotAuthorisedUserException());
 
         accountService.updateCardsNumber(CARDS_NUMBER);
         verify(userService).getAuthorizedUser();
@@ -152,7 +145,7 @@ public class AccountServiceImplTest {
 
     @Test(expected = NotAuthorisedUserException.class)
     public void testGetRememberingLevelsByNotAuthorisedUser() throws NotAuthorisedUserException {
-        when(userService.getAuthorizedUser()).thenThrow(NotAuthorisedUserException.class);
+        when(userService.getAuthorizedUser()).thenThrow(new NotAuthorisedUserException());
 
         accountService.updateCardsNumber(CARDS_NUMBER);
         verify(userService).getAuthorizedUser();

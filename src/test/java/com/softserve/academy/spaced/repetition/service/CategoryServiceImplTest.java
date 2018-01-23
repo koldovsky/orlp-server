@@ -25,17 +25,14 @@ import static org.mockito.Mockito.*;
 @Transactional
 public class CategoryServiceImplTest {
 
-    @Mock
-    private CategoryRepository categoryRepository;
-
-    @Mock
-    private ImageService imageService;
-
-    @InjectMocks
-    private CategoryServiceImpl categoryService;
-
     private final Long CATEGORY_ID = 1L;
     private final Long IMAGE_ID = 1L;
+    @Mock
+    private CategoryRepository categoryRepository;
+    @Mock
+    private ImageService imageService;
+    @InjectMocks
+    private CategoryServiceImpl categoryService;
     private Category category;
     private List<Category> categoryList;
     private Image image;

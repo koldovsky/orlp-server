@@ -37,16 +37,17 @@ public class AuditServiceImplTest {
     private Audit audit;
 
     @Before
-    public void setUp(){
+    public void setUp() {
         final long AUDIT_ID = 1L;
         final String EMAIL = "account@test.com";
         final String IP = "1.1.1.1";
         final String ROLE = "ROLE_USER";
         AuditingAction action;
         action = AuditingAction.VIEW_ALL_COMMENTS_FOR_COURSE;
-        audit = DomainFactory.createAudit(AUDIT_ID,EMAIL,action,new Date(),IP,ROLE);
+        audit = DomainFactory.createAudit(AUDIT_ID, EMAIL, action, new Date(), IP, ROLE);
     }
-    private List<Audit> createAuditList(){
+
+    private List<Audit> createAuditList() {
         List<Audit> auditList = new ArrayList<>();
         auditList.add(audit);
         return auditList;

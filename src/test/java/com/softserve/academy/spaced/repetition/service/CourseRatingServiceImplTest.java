@@ -24,18 +24,6 @@ import static org.mockito.Mockito.*;
 @Transactional
 public class CourseRatingServiceImplTest {
 
-    @Mock
-    private CourseRatingRepository courseRatingRepository;
-
-    @Mock
-    private CourseRepository courseRepository;
-
-    @Mock
-    private UserService userService;
-
-    @InjectMocks
-    private CourseRatingServiceImpl courseRatingService;
-
     private final String EMAIL = "account@test.com";
     private final Long COURSE_RATING_ID = 1L;
     private final Long COURSE_ID = 1L;
@@ -44,13 +32,22 @@ public class CourseRatingServiceImplTest {
     private Course course;
     private CourseRating courseRating;
 
+    @Mock
+    private CourseRatingRepository courseRatingRepository;
+    @Mock
+    private CourseRepository courseRepository;
+    @Mock
+    private UserService userService;
+    @InjectMocks
+    private CourseRatingServiceImpl courseRatingService;
+
     @Before
     public void setUp() {
         courseRating = DomainFactory.createCourseRating(COURSE_RATING_ID, EMAIL, null, RATING_OF_COURSE_RATING);
         Account account = DomainFactory.createAccount(1L, "", EMAIL
                 , null, null, true, new Date(), null, null
                 , 10, null);
-        course = DomainFactory.createCourse(COURSE_ID, null, null, null,1L,true
+        course = DomainFactory.createCourse(COURSE_ID, null, null, null, 1L, true
                 , null, null, null, null, null);
         user = DomainFactory.createUser(COURSE_RATING_ID, account, new Person(), new Folder(), null);
     }
@@ -77,9 +74,9 @@ public class CourseRatingServiceImplTest {
 
     @Test(expected = NotAuthorisedUserException.class)
     public void testAddCourseRatingByUnauthorisedUser() throws NotAuthorisedUserException, UserStatusException {
-        when(userService.getAuthorizedUser()).thenThrow(NotAuthorisedUserException.class);
+        when(userService.getAuthorizedUser()).thenThrow(new NotAuthorisedUserException());
 
-        courseRatingService.addCourseRating(RATING_OF_COURSE_RATING,COURSE_ID);
+        courseRatingService.addCourseRating(RATING_OF_COURSE_RATING, COURSE_ID);
         verify(userService).getAuthorizedUser();
     }
 

@@ -99,8 +99,11 @@ public class CardServiceImpl implements CardService {
     @Override
     public List<Card> getCardsQueue(long deckId) throws NotAuthorisedUserException {
         User user = userService.getAuthorizedUser();
-        final int cardsNumber = accountService.getCardsNumber();
+        int cardsNumber = accountService.getCardsNumber();
         List<Card> cardsQueue = cardRepository.cardsForLearningWithOutStatus(user.getId(), deckId, cardsNumber);
+
+        System.out.println(cardsNumber);
+        System.out.println(cardsQueue.size());
 
         if (cardsQueue.size() < cardsNumber) {
             cardsQueue.addAll(cardRepository.cardsQueueForLearningWithStatus(user.getId(), deckId, cardsNumber)

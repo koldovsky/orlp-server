@@ -1,9 +1,10 @@
 package com.softserve.academy.spaced.repetition.service;
 
-import com.softserve.academy.spaced.repetition.domain.*;
+import com.softserve.academy.spaced.repetition.domain.Account;
+import com.softserve.academy.spaced.repetition.domain.Card;
+import com.softserve.academy.spaced.repetition.domain.CardRating;
+import com.softserve.academy.spaced.repetition.domain.User;
 import com.softserve.academy.spaced.repetition.domain.enums.AccountStatus;
-import com.softserve.academy.spaced.repetition.domain.enums.AuthenticationType;
-import com.softserve.academy.spaced.repetition.domain.enums.LearningRegime;
 import com.softserve.academy.spaced.repetition.repository.CardRatingRepository;
 import com.softserve.academy.spaced.repetition.repository.CardRepository;
 import com.softserve.academy.spaced.repetition.service.impl.CardRatingServiceImpl;
@@ -17,10 +18,7 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
-
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -41,16 +39,8 @@ public class CardRatingServiceImplTest {
     private CardRatingServiceImpl cardRatingService;
 
     private Long CARD_ID = 1L;
-    private Long DECK_ID = 1L;
-    private Long DECK_RATING = 1L;
-    private int CARD_RATING = 1;
     private String EMAIL = "account@test.com";
     private User user;
-    private Deck deck;
-    private Category category;
-    private Course course;
-    private Folder folder;
-    private Set<Folder> folderSet;
     private Card card;
     private CardRating cardRating;
 
@@ -59,8 +49,8 @@ public class CardRatingServiceImplTest {
         Account account = DomainFactory.createAccount(1L, "", EMAIL, null,
                 AccountStatus.ACTIVE, true, null, null, null,
                 null, null);
-        user = DomainFactory.createUser(1L, account,null,null,null);
-        cardRating = DomainFactory.createCardRating(1L,EMAIL,card,CARD_RATING);
+        user = DomainFactory.createUser(1L, account, null, null, null);
+        cardRating = DomainFactory.createCardRating(1L, EMAIL, card, 1);
         card = DomainFactory.createCard(CARD_ID, "Card 1", "How many access modifiers do you know in Java?",
                 "There are 4 access modifiers in Java: public, protected, default and private", null);
     }
@@ -75,9 +65,9 @@ public class CardRatingServiceImplTest {
         when(cardRatingRepository.findRatingByCard_Id(CARD_ID)).thenReturn(1.0);
         when(cardRepository.save(card)).thenReturn(card);
 
-        cardRatingService.addCardRating(cardRating,CARD_ID);
+        cardRatingService.addCardRating(cardRating, CARD_ID);
         verify(userService).getAuthorizedUser();
-        verify(cardRatingRepository).findCardRatingByAccountEmailAndCard_Id(EMAIL,CARD_ID);
+        verify(cardRatingRepository).findCardRatingByAccountEmailAndCard_Id(EMAIL, CARD_ID);
         verify(cardRepository).findOne(CARD_ID);
         verify(cardRatingRepository).save(cardRating);
         verify(cardRatingRepository).findRatingByCard_Id(CARD_ID);
@@ -86,9 +76,9 @@ public class CardRatingServiceImplTest {
 
     @Test(expected = NotAuthorisedUserException.class)
     public void testAddCardRatingByUnauthorisedUser() throws NotAuthorisedUserException {
-        when(userService.getAuthorizedUser()).thenThrow(NotAuthorisedUserException.class);
+        when(userService.getAuthorizedUser()).thenThrow(new NotAuthorisedUserException());
 
-        cardRatingService.addCardRating(cardRating,CARD_ID);
+        cardRatingService.addCardRating(cardRating, CARD_ID);
         verify(userService).getAuthorizedUser();
     }
 
@@ -98,6 +88,6 @@ public class CardRatingServiceImplTest {
 
         CardRating result = cardRatingService.getCardRatingById(CARD_ID);
         verify(cardRatingRepository).findOne(CARD_ID);
-        assertEquals(cardRating,result);
+        assertEquals(cardRating, result);
     }
 }

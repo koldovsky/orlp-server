@@ -22,14 +22,18 @@ import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 @Transactional
 public class CourseServiceImplTest {
 
+    private final Long COURSE_ID = 1L;
+    private final Long CATEGORY_ID = 1L;
+    private final Long DECK_ID = 1L;
+    private final int PAGE_NUMBER = 1;
+    private final boolean PAGE_ASCENDING_ORDER = true;
+    private final String PAGE_SORT_BY = "field";
     @Mock
     private CourseRepository courseRepository;
     @Mock
@@ -44,17 +48,8 @@ public class CourseServiceImplTest {
     private CategoryRepository categoryRepository;
     @Mock
     private DeckRepository deckRepository;
-
     @InjectMocks
     private CourseServiceImpl courseService;
-
-    private final Long COURSE_ID = 1L;
-    private final Long CATEGORY_ID = 1L;
-    private final Long DECK_ID = 1L;
-    private final int PAGE_NUMBER = 1;
-    private final boolean PAGE_ASCENDING_ORDER = true;
-    private final String PAGE_SORT_BY = "field";
-
     private Course course;
     private User user;
     private Category category;
@@ -70,13 +65,13 @@ public class CourseServiceImplTest {
         courseSet = new HashSet<>();
         deckList = new ArrayList<>();
 
-        Deck deck = DomainFactory.createDeck(DECK_ID,null,null,null,category
-                ,1.0,null,null,null,null,null,null);
-        image = DomainFactory.createImage(1L,null,null,null,null,true);
-        category = DomainFactory.createCategory(CATEGORY_ID,null,null,image);
-        user = DomainFactory.createUser(1L,null,null,null,courseSet);
-               course = DomainFactory.createCourse(COURSE_ID, null, null, new Image(), 1,true
-                , user, new Category(),deckList,null,null);
+        Deck deck = DomainFactory.createDeck(DECK_ID, null, null, null, category
+                , 1.0, null, null, null, null, null, null);
+        image = DomainFactory.createImage(1L, null, null, null, null, true);
+        category = DomainFactory.createCategory(CATEGORY_ID, null, null, image);
+        user = DomainFactory.createUser(1L, null, null, null, courseSet);
+        course = DomainFactory.createCourse(COURSE_ID, null, null, new Image(), 1, true
+                , user, new Category(), deckList, null, null);
 
         courseList.add(course);
         courseSet.add(course);
@@ -110,7 +105,7 @@ public class CourseServiceImplTest {
     public void testGetAllDecksByCourseId() {
         when(courseRepository.getCourseByCategoryIdAndId(CATEGORY_ID, COURSE_ID)).thenReturn(course);
 
-        List<Deck> result = courseService.getAllDecksByCourseId(CATEGORY_ID,COURSE_ID);
+        List<Deck> result = courseService.getAllDecksByCourseId(CATEGORY_ID, COURSE_ID);
         verify(courseRepository).getCourseByCategoryIdAndId(CATEGORY_ID, COURSE_ID);
         assertEquals(deckList, result);
     }
@@ -119,7 +114,7 @@ public class CourseServiceImplTest {
     public void testGetCourseById() {
         when(courseRepository.getCourseByCategoryIdAndId(CATEGORY_ID, COURSE_ID)).thenReturn(course);
 
-        Course result = courseService.getCourseById(CATEGORY_ID,COURSE_ID);
+        Course result = courseService.getCourseById(CATEGORY_ID, COURSE_ID);
         verify(courseRepository).getCourseByCategoryIdAndId(CATEGORY_ID, COURSE_ID);
         assertEquals(course, result);
     }
@@ -128,7 +123,7 @@ public class CourseServiceImplTest {
     public void testAddCourse() {
         doNothing().when(imageService).setImageStatusInUse(null);
 
-        courseService.addCourse(course,CATEGORY_ID);
+        courseService.addCourse(course, CATEGORY_ID);
         verify(imageService).setImageStatusInUse(null);
         verify(courseRepository).save(course);
     }
@@ -153,7 +148,7 @@ public class CourseServiceImplTest {
 
     @Test
     public void testUpdateCourse() {
-        courseService.updateCourse(COURSE_ID,course);
+        courseService.updateCourse(COURSE_ID, course);
         verify(courseRepository).save(course);
     }
 
@@ -166,16 +161,17 @@ public class CourseServiceImplTest {
         verify(userRepository).save(user);
         verify(courseRepository).delete(COURSE_ID);
     }
+
     @Test(expected = NotAuthorisedUserException.class)
     public void testDeleteGlobalCourseByNotAuthorisedUser() throws NotAuthorisedUserException {
-        when(userService.getAuthorizedUser()).thenThrow(NotAuthorisedUserException.class);
+        when(userService.getAuthorizedUser()).thenThrow(new NotAuthorisedUserException());
 
         courseService.deleteGlobalCourse(COURSE_ID);
         verify(userService).getAuthorizedUser();
     }
 
     @Test
-    public void testUpdateListOfCoursesOfTheAuthorizedUser() throws NotAuthorisedUserException{
+    public void testUpdateListOfCoursesOfTheAuthorizedUser() throws NotAuthorisedUserException {
         Course result = courseService.updateListOfCoursesOfTheAuthorizedUser(COURSE_ID);
         verify(courseRepository).findOne(COURSE_ID);
         verify(userService).getAuthorizedUser();
@@ -184,8 +180,8 @@ public class CourseServiceImplTest {
     }
 
     @Test(expected = NotAuthorisedUserException.class)
-    public void testUpdateListOfCoursesOfTheAuthorizedUserByNotAuthorisedUser() throws NotAuthorisedUserException{
-        when(userService.getAuthorizedUser()).thenThrow(NotAuthorisedUserException.class);
+    public void testUpdateListOfCoursesOfTheAuthorizedUserByNotAuthorisedUser() throws NotAuthorisedUserException {
+        when(userService.getAuthorizedUser()).thenThrow(new NotAuthorisedUserException());
 
         courseService.updateListOfCoursesOfTheAuthorizedUser(COURSE_ID);
         verify(userService).getAuthorizedUser();
@@ -205,7 +201,7 @@ public class CourseServiceImplTest {
 
     @Test(expected = NotAuthorisedUserException.class)
     public void testGetAllCoursesIdOfTheCurrentUserByNotAuthorisedUser() throws NotAuthorisedUserException {
-        when(userService.getAuthorizedUser()).thenThrow(NotAuthorisedUserException.class);
+        when(userService.getAuthorizedUser()).thenThrow(new NotAuthorisedUserException());
 
         courseService.getAllCoursesIdOfTheCurrentUser();
         verify(userService).getAuthorizedUser();
@@ -216,7 +212,7 @@ public class CourseServiceImplTest {
         when(imageRepository.findImageById(course.getImage().getId())).thenReturn(image);
         when(categoryRepository.findById(CATEGORY_ID)).thenReturn(category);
 
-        courseService.createPrivateCourse(course,CATEGORY_ID);
+        courseService.createPrivateCourse(course, CATEGORY_ID);
         verify(userService).getAuthorizedUser();
         verify(courseRepository).save(any(Course.class));
         verify(userRepository).save(user);
@@ -224,15 +220,15 @@ public class CourseServiceImplTest {
 
     @Test(expected = NotAuthorisedUserException.class)
     public void testCreatePrivateCourseByNotAuthorisedUser() throws NotAuthorisedUserException {
-        when(userService.getAuthorizedUser()).thenThrow(NotAuthorisedUserException.class);
+        when(userService.getAuthorizedUser()).thenThrow(new NotAuthorisedUserException());
 
-        courseService.createPrivateCourse(course,CATEGORY_ID);
+        courseService.createPrivateCourse(course, CATEGORY_ID);
         verify(userService).getAuthorizedUser();
     }
 
     @Test
     public void testUpdateCourseAccess() {
-        courseService.updateCourseAccess(COURSE_ID,course);
+        courseService.updateCourseAccess(COURSE_ID, course);
         verify(courseRepository).findOne(COURSE_ID);
         verify(courseRepository).save(course);
     }
@@ -247,7 +243,7 @@ public class CourseServiceImplTest {
 
     @Test(expected = NotAuthorisedUserException.class)
     public void testDeleteLocalCourseByNotAuthorisedUser() throws NotAuthorisedUserException {
-        when(userService.getAuthorizedUser()).thenThrow(NotAuthorisedUserException.class);
+        when(userService.getAuthorizedUser()).thenThrow(new NotAuthorisedUserException());
 
         courseService.deleteLocalCourse(COURSE_ID);
         verify(userService).getAuthorizedUser();
@@ -278,8 +274,8 @@ public class CourseServiceImplTest {
         when(courseRepository.findAllByCategoryEquals(any(Category.class), any(PageRequest.class)))
                 .thenReturn(null);
 
-        Page<Course> result = courseService.getPageWithCoursesByCategory(CATEGORY_ID,PAGE_NUMBER
-                ,PAGE_SORT_BY,PAGE_ASCENDING_ORDER);
+        Page<Course> result = courseService.getPageWithCoursesByCategory(CATEGORY_ID, PAGE_NUMBER
+                , PAGE_SORT_BY, PAGE_ASCENDING_ORDER);
         verify(courseRepository).findAllByCategoryEquals(any(Category.class), any(PageRequest.class));
         assertEquals(null, result);
     }

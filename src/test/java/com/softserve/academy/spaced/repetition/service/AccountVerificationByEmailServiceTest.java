@@ -20,21 +20,17 @@ import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 @Transactional
-public class AccountVerificationByEmailServiceImplTest {
-
-    @Mock
-    private JwtTokenForMail jwtTokenForMail;
-
-    @Mock
-    private AccountRepository accountRepository;
-
-    @Mock
-    private UserRepository userRepository;
-
-    @InjectMocks
-    private AccountVerificationByEmailServiceImpl accountVerificationByEmailService;
+public class AccountVerificationByEmailServiceTest {
 
     private final String EMAIL = "account@test.com";
+    @Mock
+    private JwtTokenForMail jwtTokenForMail;
+    @Mock
+    private AccountRepository accountRepository;
+    @Mock
+    private UserRepository userRepository;
+    @InjectMocks
+    private AccountVerificationByEmailServiceImpl accountVerificationByEmailService;
     private User user;
     private Account account;
 
@@ -53,7 +49,7 @@ public class AccountVerificationByEmailServiceImplTest {
 
         accountVerificationByEmailService.accountVerification("");
         verify(jwtTokenForMail).decryptToken("");
-        verify(userRepository,times(2)).findUserByAccountEmail(EMAIL);
+        verify(userRepository, times(2)).findUserByAccountEmail(EMAIL);
         verify(accountRepository).save(account);
     }
 

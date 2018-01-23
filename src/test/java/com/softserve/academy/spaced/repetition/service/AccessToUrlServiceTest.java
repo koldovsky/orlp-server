@@ -1,10 +1,7 @@
 package com.softserve.academy.spaced.repetition.service;
 
 import com.softserve.academy.spaced.repetition.domain.*;
-import com.softserve.academy.spaced.repetition.domain.enums.AccountStatus;
-import com.softserve.academy.spaced.repetition.domain.enums.AuthenticationType;
 import com.softserve.academy.spaced.repetition.domain.enums.AuthorityName;
-import com.softserve.academy.spaced.repetition.domain.enums.LearningRegime;
 import com.softserve.academy.spaced.repetition.repository.*;
 import com.softserve.academy.spaced.repetition.service.impl.AccessToUrlServiceImpl;
 import com.softserve.academy.spaced.repetition.util.DomainFactory;
@@ -15,20 +12,18 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.mockito.stubbing.OngoingStubbing;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 @Transactional
-public class AccessToUrlServiceImplTest {
+public class AccessToUrlServiceTest {
 
     private final Long CATEGORY_ID = 1L;
     private final Long COURSE_ID = 1L;
@@ -36,31 +31,37 @@ public class AccessToUrlServiceImplTest {
     private final Long FOLDER_ID = 1L;
     private final Long DECK_ID = 1L;
     private final Long COMMENT_ID = 1L;
-    private User user;
     private Deck deck;
     private Category category;
     private Course course;
     private Card card;
     private List<Course> courseList;
     private List<Deck> deckList;
-    private List<Card> cardList;
 
     @Mock
     private CategoryRepository categoryRepository;
+
     @Mock
     private UserService userService;
+
     @Mock
     private CourseRepository courseRepository;
+
     @Mock
     private FolderRepository folderRepository;
+
     @Mock
     private DeckRepository deckRepository;
+
     @Mock
     private CardRepository cardRepository;
+
     @Mock
     private DeckCommentRepository deckCommentRepository;
+
     @Mock
     private CourseCommentRepository courseCommentRepository;
+
     @InjectMocks
     private AccessToUrlServiceImpl accessToUrlService;
 
@@ -68,24 +69,16 @@ public class AccessToUrlServiceImplTest {
     public void setUp() throws Exception {
         courseList = DomainFactory.createCourseList(course);
         deckList = DomainFactory.createDeckList(deck);
-        cardList = DomainFactory.createCardList(card);
-        user = DomainFactory.createUser(1L, new Account(), new Person(), new Folder(), null);
+        List<Card> cardList = DomainFactory.createCardList(card);
+        User user = DomainFactory.createUser(1L, new Account(), new Person(), new Folder(), null);
         course = DomainFactory.createCourse(COURSE_ID, null, null, null, 1L,
                 true, null, category, deckList, null, null);
         category = DomainFactory.createCategory(CATEGORY_ID, null, null,
                 null, null, null);
         deck = DomainFactory.createDeck(DECK_ID, null, null, null, category
-                , 1L,user, cardList, courseList, null, null, null);
+                , 1L, user, cardList, courseList, null, null, null);
         card = DomainFactory.createCard(CARD_ID, null, null, null, deck);
-
-        Authority roleAdmin = new Authority();
-        Authority roleUser = new Authority();
-        roleAdmin.setName(AuthorityName.ROLE_ADMIN);
-        roleUser.setName(AuthorityName.ROLE_USER);
-        Set<Authority> authorities = new HashSet<>();
-        authorities.add(roleAdmin);
-        authorities.add(roleUser);
-        user.getAccount().setAuthorities(authorities);
+        user.getAccount().setAuthorities(createAuthoritySet());
 
         when(userService.getAuthorizedUser()).thenReturn(user);
         when(courseRepository.getAccessToCourse(CATEGORY_ID, COURSE_ID))
@@ -94,6 +87,17 @@ public class AccessToUrlServiceImplTest {
                 .thenReturn(deckList);
         when(cardRepository.hasAccessToCard(DECK_ID, CARD_ID))
                 .thenReturn(cardList);
+    }
+
+    private Set<Authority> createAuthoritySet() {
+        Set<Authority> authorities = new HashSet<>();
+        Authority roleAdmin = new Authority();
+        Authority roleUser = new Authority();
+        roleAdmin.setName(AuthorityName.ROLE_ADMIN);
+        roleUser.setName(AuthorityName.ROLE_USER);
+        authorities.add(roleAdmin);
+        authorities.add(roleUser);
+        return authorities;
     }
 
     @Test
@@ -197,7 +201,7 @@ public class AccessToUrlServiceImplTest {
 
     @Test(expected = NotAuthorisedUserException.class)
     public void testHasAccessToFolderByNotAuthorisedUser() throws NotAuthorisedUserException {
-        when(userService.getAuthorizedUser()).thenThrow(NotAuthorisedUserException.class);
+        when(userService.getAuthorizedUser()).thenThrow(new NotAuthorisedUserException());
 
         accessToUrlService.hasAccessToFolder(FOLDER_ID);
         verify(userService).getAuthorizedUser();
@@ -208,14 +212,14 @@ public class AccessToUrlServiceImplTest {
         when(courseCommentRepository.findOne(COMMENT_ID)).thenReturn(new CourseComment());
 
         boolean result = accessToUrlService.hasAccessToDeleteCommentForCourse(COMMENT_ID);
-        verify(userService,times(2)).getAuthorizedUser();
+        verify(userService, times(2)).getAuthorizedUser();
         verify(courseCommentRepository).findOne(COMMENT_ID);
-        assertEquals(true,result);
+        assertEquals(true, result);
     }
 
     @Test(expected = NotAuthorisedUserException.class)
     public void hasAccessToDeleteCommentForCourseByNotAuthorisedUser() throws NotAuthorisedUserException {
-        when(userService.getAuthorizedUser()).thenThrow(NotAuthorisedUserException.class);
+        when(userService.getAuthorizedUser()).thenThrow(new NotAuthorisedUserException());
 
         accessToUrlService.hasAccessToDeleteCommentForCourse(COMMENT_ID);
         verify(userService).getAuthorizedUser();
@@ -226,14 +230,14 @@ public class AccessToUrlServiceImplTest {
         when(deckCommentRepository.findOne(COMMENT_ID)).thenReturn(new DeckComment());
 
         boolean result = accessToUrlService.hasAccessToDeleteCommentForDeck(COMMENT_ID);
-        verify(userService,times(2)).getAuthorizedUser();
+        verify(userService, times(2)).getAuthorizedUser();
         verify(deckCommentRepository).findOne(COMMENT_ID);
-        assertEquals(true,result);
+        assertEquals(true, result);
     }
 
     @Test(expected = NotAuthorisedUserException.class)
     public void hasAccessToDeleteCommentForDeckByNotAuthorisedUser() throws NotAuthorisedUserException {
-        when(userService.getAuthorizedUser()).thenThrow(NotAuthorisedUserException.class);
+        when(userService.getAuthorizedUser()).thenThrow(new NotAuthorisedUserException());
 
         accessToUrlService.hasAccessToDeleteCommentForDeck(COMMENT_ID);
         verify(userService).getAuthorizedUser();
@@ -246,12 +250,12 @@ public class AccessToUrlServiceImplTest {
         boolean result = accessToUrlService.hasAccessToUpdateCommentForDeck(COMMENT_ID);
         verify(userService).getAuthorizedUser();
         verify(deckCommentRepository).findOne(COMMENT_ID);
-        assertEquals(false,result);
+        assertEquals(false, result);
     }
 
     @Test(expected = NotAuthorisedUserException.class)
     public void hasAccessToUpdateCommentForDeckByNotAuthorisedUser() throws NotAuthorisedUserException {
-        when(userService.getAuthorizedUser()).thenThrow(NotAuthorisedUserException.class);
+        when(userService.getAuthorizedUser()).thenThrow(new NotAuthorisedUserException());
 
         accessToUrlService.hasAccessToUpdateCommentForDeck(COMMENT_ID);
         verify(userService).getAuthorizedUser();
@@ -263,12 +267,12 @@ public class AccessToUrlServiceImplTest {
 
         boolean result = accessToUrlService.hasAccessToUpdateCommentForCourse(COMMENT_ID);
         verify(courseCommentRepository).findOne(COMMENT_ID);
-        assertEquals(false,result);
+        assertEquals(false, result);
     }
 
     @Test(expected = NotAuthorisedUserException.class)
     public void testHasAccessToUpdateCommentForCourseByNotAuthorisedUser() throws NotAuthorisedUserException {
-        when(userService.getAuthorizedUser()).thenThrow(NotAuthorisedUserException.class);
+        when(userService.getAuthorizedUser()).thenThrow(new NotAuthorisedUserException());
 
         accessToUrlService.hasAccessToUpdateCommentForCourse(COMMENT_ID);
         verify(userService).getAuthorizedUser();
