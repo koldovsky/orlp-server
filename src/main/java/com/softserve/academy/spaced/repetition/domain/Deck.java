@@ -147,7 +147,7 @@ public class Deck implements EntityInterface {
 
         Deck deck = (Deck) o;
 
-        return Objects.equals(id, deck.id);
+        return id.equals(deck.id);
     }
 
     @Override

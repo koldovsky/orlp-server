@@ -38,6 +38,14 @@ public class DomainFactory {
         return account;
     }
 
+    public static Authority createAuthority(Long authorityId, AuthorityName name, List<Account> accounts) {
+        Authority authority = new Authority();
+        authority.setId(authorityId);
+        authority.setName(name);
+        authority.setAccounts(accounts);
+        return authority;
+    }
+
     public static Person createPerson(Long personId, String firstName, String lastName, ImageType imageType,
                                       String image, String imageBase64) {
         Person person = new Person();
@@ -114,7 +122,7 @@ public class DomainFactory {
         deckComment.setPerson(person);
         deckComment.setParentCommentId(parentCommentId);
         deckComment.setDeck(deck);
-        return  deckComment;
+        return deckComment;
     }
 
     public static DeckRating createDeckRating(Long deckRatingId, String accountEmail, Deck deck, int rating) {
@@ -126,11 +134,11 @@ public class DomainFactory {
         return deckRating;
     }
 
-    public static Image createImage(Long imageId, String imagebase64, String type, User createdBy, Long size,
+    public static Image createImage(Long imageId, String imageBase64, String type, User createdBy, Long size,
                                     boolean isImageUsed) {
         Image image = new Image();
         image.setId(imageId);
-        image.setImagebase64(imagebase64);
+        image.setImagebase64(imageBase64);
         image.setType(type);
         image.setCreatedBy(createdBy);
         image.setSize(size);

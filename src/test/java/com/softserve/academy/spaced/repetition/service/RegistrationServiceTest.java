@@ -13,12 +13,9 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.springframework.boot.actuate.autoconfigure.ShellProperties;
 import org.springframework.transaction.annotation.Transactional;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
 
@@ -26,45 +23,46 @@ import static org.mockito.Mockito.verify;
 @Transactional
 public class RegistrationServiceTest {
 
+    private final String ACCOUNT_EMAIL = "account@test.com";
     @InjectMocks
     private RegistrationServiceImpl registrationService;
-
     @Mock
     private UserService userService;
-
     @Mock
     private MailService mailService;
-
     @Mock
     private AccountService accountService;
-
     private User user;
-    private Person person;
     private Account account;
-
-    private final long USER_ID = 1L;
-    private final long PERSON_ID = 1L;
-    private final long ACCOUNT_ID = 1L;
-    private final String ACCOUNT_EMAIL = "account@email.test";
 
     @Before
     public void setUp() {
-        person = DomainFactory.createPerson(PERSON_ID, null, null, null, null, null);
-        account = DomainFactory.createAccount(ACCOUNT_ID, null, ACCOUNT_EMAIL, null, null, false, null ,null ,null,
+        final Long USER_ID = 1L;
+        final Long PERSON_ID = 1L;
+        final Long ACCOUNT_ID = 1L;
+
+        final Person person = DomainFactory.createPerson(PERSON_ID, null, null, null, null, null);
+        account = DomainFactory.createAccount(ACCOUNT_ID, null, ACCOUNT_EMAIL, null, null, false, null, null, null,
                 null, null);
         user = DomainFactory.createUser(USER_ID, account, person, null, null);
+
+        doNothing().when(userService).addUser(user);
+        doNothing().when(accountService).initializeLearningRegimeSettingsForAccount(account);
+        doNothing().when(mailService).sendConfirmationMail(user);
     }
 
     @Test
     public void testRegisterNewUser() {
-        doNothing().when(userService).initializeNewUser(eq(account), eq(ACCOUNT_EMAIL), any(AccountStatus.class),
-                any(boolean.class), any(AuthenticationType.class));
-        doNothing().when(userService).addUser(user);
-        doNothing().when(accountService).initializeLearningRegimeSettingsForAccount(account);
+        final AccountStatus ACCOUNT_STATUS_ACTIVE = AccountStatus.ACTIVE;
+        final boolean ACCOUNT_DEACTIVATED = true;
+        final AuthenticationType AUTHENTICATION_TYPE = AuthenticationType.LOCAL;
+
+        doNothing().when(userService).initializeNewUser(account, ACCOUNT_EMAIL, ACCOUNT_STATUS_ACTIVE,
+                ACCOUNT_DEACTIVATED, AUTHENTICATION_TYPE);
 
         User result = registrationService.registerNewUser(user);
-        verify(userService).initializeNewUser(eq(account), eq(ACCOUNT_EMAIL), any(AccountStatus.class), any(boolean.class),
-                any(AuthenticationType.class));
+        verify(userService).initializeNewUser(account, ACCOUNT_EMAIL, ACCOUNT_STATUS_ACTIVE, ACCOUNT_DEACTIVATED,
+                AUTHENTICATION_TYPE);
         verify(userService).addUser(user);
         verify(accountService).initializeLearningRegimeSettingsForAccount(account);
         assertEquals(user, result);
@@ -72,8 +70,6 @@ public class RegistrationServiceTest {
 
     @Test
     public void testSendConfirmationEmailMessage() {
-        doNothing().when(mailService).sendConfirmationMail(user);
-
         registrationService.sendConfirmationEmailMessage(user);
         verify(mailService).sendConfirmationMail(user);
     }

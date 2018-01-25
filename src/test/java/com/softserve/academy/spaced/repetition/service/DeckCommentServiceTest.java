@@ -7,6 +7,7 @@ import com.softserve.academy.spaced.repetition.service.impl.DeckCommentServiceIm
 import com.softserve.academy.spaced.repetition.util.DomainFactory;
 import com.softserve.academy.spaced.repetition.utils.exceptions.NotAuthorisedUserException;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -16,64 +17,53 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 @Transactional
 public class DeckCommentServiceTest {
 
-    @InjectMocks
-    private DeckCommentServiceImpl deckCommentService;
-
-    @Mock
-    private DeckCommentRepository commentRepository;
-
-    @Mock
-    private DeckRepository deckRepository;
-
-    @Mock
-    private UserService userService;
-
-    private User user;
-    private Person person;
-    private Deck deck;
-    private DeckComment deckComment;
-
-    private final long USER_ID = 1L;
-    private final long PERSON_ID = 1L;
     private final long DECK_ID = 1L;
     private final long DECK_COMMENT_ID = 1L;
-    private final String DECK_COMMENT_TEXT = "Comment Text";
+    private final String DECK_COMMENT_TEXT = "comment_text";
     private final long DECK_COMMENT_PARENT_ID = 1L;
+    @InjectMocks
+    private DeckCommentServiceImpl deckCommentService;
+    @Mock
+    private DeckCommentRepository commentRepository;
+    @Mock
+    private DeckRepository deckRepository;
+    @Mock
+    private UserService userService;
+    private DeckComment deckComment;
 
     @Before
-    public void setUp() {
-        person = DomainFactory.createPerson(PERSON_ID, null, null, null, null, null);
-        user = DomainFactory.createUser(USER_ID, null, person, null, null);
-        deck = DomainFactory.createDeck(DECK_ID, null, null, null, null, 0, user, null, null, null, null);
+    public void setUp() throws NotAuthorisedUserException {
+        final Long PERSON_ID = 1L;
+        final Long USER_ID = 1L;
+
+        final Person person = DomainFactory.createPerson(PERSON_ID, null, null, null, null, null);
+        final User user = DomainFactory.createUser(USER_ID, null, person, null, null);
+        final Deck deck = DomainFactory.createDeck(DECK_ID, null, null, null, null, 0, user, null, null, null, null);
         deckComment = DomainFactory.createDeckComment(DECK_COMMENT_ID, DECK_COMMENT_TEXT, null, person,
                 DECK_COMMENT_PARENT_ID, deck);
 
         when(commentRepository.findOne(DECK_COMMENT_ID)).thenReturn(deckComment);
+        when(userService.getAuthorizedUser()).thenReturn(user);
+        when(deckRepository.findOne(DECK_ID)).thenReturn(deck);
+        doNothing().when(commentRepository).deleteComment(DECK_COMMENT_ID);
     }
 
     @Test
     public void testAddCommentForDeck() throws NotAuthorisedUserException {
-        deckComment.setId(null);
-
-        when(userService.getAuthorizedUser()).thenReturn(user);
-        when(deckRepository.findOne(DECK_ID)).thenReturn(deck);
-        when(commentRepository.save(deckComment)).thenReturn(deckComment);
+        when(commentRepository.save(any(DeckComment.class))).thenReturn(deckComment);
 
         DeckComment result = deckCommentService.addCommentForDeck(DECK_ID, DECK_COMMENT_TEXT, DECK_COMMENT_PARENT_ID);
         verify(userService).getAuthorizedUser();
         verify(deckRepository).findOne(DECK_ID);
-        verify(commentRepository).save(deckComment);
+        verify(commentRepository).save(any(DeckComment.class));
         assertEquals(deckComment, result);
-
-        deckComment.setId(DECK_COMMENT_ID);
     }
 
     @Test(expected = NotAuthorisedUserException.class)
@@ -109,8 +99,6 @@ public class DeckCommentServiceTest {
 
     @Test
     public void testDeleteCommentById() {
-        doNothing().when(commentRepository).deleteComment(DECK_COMMENT_ID);
-
         deckCommentService.deleteCommentById(DECK_COMMENT_ID);
         verify(commentRepository).deleteComment(DECK_COMMENT_ID);
     }

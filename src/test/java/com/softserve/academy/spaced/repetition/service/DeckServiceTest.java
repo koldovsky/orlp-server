@@ -22,54 +22,43 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 @Transactional
 public class DeckServiceTest {
 
-    @InjectMocks
-    private DeckServiceImpl deckService;
-
-    @Mock
-    private DeckRepository deckRepository;
-
-    @Mock
-    private CategoryRepository categoryRepository;
-
-    @Mock
-    private CourseRepository courseRepository;
-
-    @Mock
-    private UserService userService;
-
-    private User user;
-    private User notOwnerUser;
-    private Category category;
-    private Course course;
-    private Deck deck;
-
     private final long USER_ID = 1L;
-    private final long NOT_OWNER_USER_ID = 42L;
     private final long CATEGORY_ID = 1L;
     private final long COURSE_ID = 1L;
     private final long DECK_ID = 1L;
-    private final String DECK_SYNTAX_TO_HIGHLIGHT = "syntax";
-
+    private final String DECK_SYNTAX_TO_HIGHLIGHT = "syntax_to_highlight";
     private final int PAGE_NUMBER = 1;
     private final boolean PAGE_ASCENDING_ORDER = true;
-    private final String PAGE_SORT_BY = "field";
+    private final String PAGE_SORT_BY = "sort_by";
+    @InjectMocks
+    private DeckServiceImpl deckService;
+    @Mock
+    private DeckRepository deckRepository;
+    @Mock
+    private CategoryRepository categoryRepository;
+    @Mock
+    private CourseRepository courseRepository;
+    @Mock
+    private UserService userService;
+    private User notOwnerUser;
+    private Category category;
+    private Deck deck;
 
     @Before
     public void setUp() throws NotAuthorisedUserException {
-        user = DomainFactory.createUser(USER_ID, null, null, null, null);
-        notOwnerUser = DomainFactory.createUser(NOT_OWNER_USER_ID, null, null, null, null);
+        final Long NOT_OWNER_USER_ID = 42L;
 
+        final User user = DomainFactory.createUser(USER_ID, null, null, null, null);
+        notOwnerUser = DomainFactory.createUser(NOT_OWNER_USER_ID, null, null, null, null);
         category = DomainFactory.createCategory(CATEGORY_ID, null, null, null, null, new ArrayList<>());
-        course = DomainFactory.createCourse(COURSE_ID, null, null, null, 0D, false, user, category, new ArrayList<>(),
+        final Course course = DomainFactory.createCourse(COURSE_ID, null, null, null, 0D, false, user, category, new ArrayList<>(),
                 null, null);
         deck = DomainFactory.createDeck(DECK_ID, null, null, DECK_SYNTAX_TO_HIGHLIGHT, category, 0D, user, null, null,
                 null, null);
@@ -77,6 +66,8 @@ public class DeckServiceTest {
         when(userService.getAuthorizedUser()).thenReturn(user);
         when(deckRepository.findOne(DECK_ID)).thenReturn(deck);
         when(deckRepository.save(deck)).thenReturn(deck);
+        doNothing().when(deckRepository).delete(deck);
+        doNothing().when(deckRepository).deleteDeckById(DECK_ID);
         when(courseRepository.findOne(COURSE_ID)).thenReturn(course);
         when(categoryRepository.findOne(CATEGORY_ID)).thenReturn(category);
         when(categoryRepository.findById(CATEGORY_ID)).thenReturn(category);
@@ -151,8 +142,6 @@ public class DeckServiceTest {
 
     @Test
     public void testDeleteDeck() {
-        doNothing().when(deckRepository).deleteDeckById(DECK_ID);
-
         deckService.deleteDeck(DECK_ID);
         verify(deckRepository).deleteDeckById(DECK_ID);
     }
@@ -175,15 +164,13 @@ public class DeckServiceTest {
 
     @Test
     public void testCreateNewDeckAdmin() throws NotAuthorisedUserException {
-        deck.setId(null);
+        when(deckRepository.save(any(Deck.class))).thenReturn(deck);
 
         Deck result = deckService.createNewDeckAdmin(deck);
         verify(userService).getAuthorizedUser();
         verify(categoryRepository).findById(CATEGORY_ID);
         verify(deckRepository).save(deck);
         assertEquals(deck, result);
-
-        deck.setId(DECK_ID);
     }
 
     @Test(expected = NotAuthorisedUserException.class)
@@ -196,8 +183,6 @@ public class DeckServiceTest {
 
     @Test
     public void testDeleteOwnDeck() throws NotAuthorisedUserException, NotOwnerOperationException {
-        doNothing().when(deckRepository).delete(deck);
-
         deckService.deleteOwnDeck(DECK_ID);
         verify(userService).getAuthorizedUser();
         verify(deckRepository).findOne(DECK_ID);
@@ -228,6 +213,7 @@ public class DeckServiceTest {
         verify(userService).getAuthorizedUser();
         verify(deckRepository).findOne(DECK_ID);
         verify(categoryRepository).findOne(CATEGORY_ID);
+        verify(deckRepository).save(deck);
         assertEquals(deck, result);
     }
 

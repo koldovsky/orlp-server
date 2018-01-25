@@ -20,9 +20,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -30,35 +28,31 @@ import static org.mockito.Mockito.when;
 @Transactional
 public class FolderServiceTest {
 
+    private final long FOLDER_ID = 1L;
+    private final long DECK_ID = 1L;
     @InjectMocks
     private FolderServiceImpl folderService;
-
     @Mock
     private FolderRepository folderRepository;
-
     @Mock
     private DeckRepository deckRepository;
-
     @Mock
     private UserService userService;
-
-    private User user;
     private Folder folder;
     private Deck deck;
 
-    private final long USER_ID = 1L;
-    private final long FOLDER_ID = 1L;
-    private final long DECK_ID = 1L;
-
     @Before
     public void setUp() throws NotAuthorisedUserException {
+        final Long USER_ID = 1L;
+
         folder = DomainFactory.createFolder(FOLDER_ID, new HashSet<>());
-        user = DomainFactory.createUser(USER_ID, null, null, folder, null);
+        final User user = DomainFactory.createUser(USER_ID, null, null, folder, null);
         deck = DomainFactory.createDeck(DECK_ID, null, null, null, null, 0D, user, null, null, null, null);
 
         when(userService.getAuthorizedUser()).thenReturn(user);
         when(deckRepository.getDeckById(DECK_ID)).thenReturn(deck);
         when(folderRepository.save(folder)).thenReturn(folder);
+        when(folderRepository.findOne(FOLDER_ID)).thenReturn(folder);
     }
 
     @Test
@@ -81,8 +75,6 @@ public class FolderServiceTest {
 
     @Test
     public void testGetAllDecksByFolderId() {
-        when(folderRepository.findOne(FOLDER_ID)).thenReturn(folder);
-
         List<Deck> result = folderService.getAllDecksByFolderId(FOLDER_ID);
         verify(folderRepository).findOne(FOLDER_ID);
         assertNotNull(result);
@@ -95,7 +87,7 @@ public class FolderServiceTest {
         List<Long> result = folderService.getAllDecksIdWithFolder();
         verify(userService).getAuthorizedUser();
         verify(folderRepository).selectAllDeckIdWithFolder(FOLDER_ID);
-        assertNull(null);
+        assertNull(result);
     }
 
     @Test(expected = NotAuthorisedUserException.class)
