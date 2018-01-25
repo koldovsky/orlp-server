@@ -7,8 +7,8 @@ import static com.softserve.academy.spaced.repetition.utils.validators.Validatio
 import static com.softserve.academy.spaced.repetition.utils.validators.ValidationConstants.MIN_COURSE_AND_CARD_RATING;
 
 public class RatingDTO {
-    @Min(message = "{message.ratingMinValue}", value = MIN_COURSE_AND_CARD_RATING, groups = Request.class)
-    @Max(message = "{message.ratingMaxValue}", value = MAX_COURSE_AND_CARD_RATING, groups = Request.class)
+    @Min(message = "{message.validation.ratingMinValue}", value = MIN_COURSE_AND_CARD_RATING, groups = Request.class)
+    @Max(message = "{message.validation.ratingMaxValue}", value = MAX_COURSE_AND_CARD_RATING, groups = Request.class)
     private int rating;
 
     public RatingDTO() {

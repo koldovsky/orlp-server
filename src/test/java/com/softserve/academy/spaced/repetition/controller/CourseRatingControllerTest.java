@@ -4,7 +4,6 @@ import com.softserve.academy.spaced.repetition.domain.Course;
 import com.softserve.academy.spaced.repetition.domain.CourseRating;
 import com.softserve.academy.spaced.repetition.utils.exceptions.NotAuthorisedUserException;
 import com.softserve.academy.spaced.repetition.service.CourseRatingService;
-import org.apache.tomcat.jni.Local;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -12,7 +11,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.context.MessageSource;
-import org.springframework.context.MessageSourceResolvable;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -29,24 +27,20 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(MockitoJUnitRunner.class)
 public class CourseRatingControllerTest {
 
-    private MockMvc mockMvc;
-
     @InjectMocks
     private CourseRatingController courseRatingController;
-
     @Mock
     private CourseRatingService courseRatingService;
-
     @InjectMocks
     private ExceptionHandlerController exceptionHandlerController;
-
     @Mock
     private MessageSource messageSource;
-
-    private final String MESSAGE_SOURCE_MESSAGE = "message";
+    private MockMvc mockMvc;
 
     @Before
     public void setUp() {
+        final String MESSAGE_SOURCE_MESSAGE = "message";
+
         mockMvc = MockMvcBuilders.standaloneSetup(courseRatingController)
                 .setControllerAdvice(exceptionHandlerController)
                 .build();

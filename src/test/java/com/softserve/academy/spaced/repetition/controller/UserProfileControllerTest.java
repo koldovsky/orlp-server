@@ -5,7 +5,6 @@ import com.softserve.academy.spaced.repetition.domain.Person;
 import com.softserve.academy.spaced.repetition.domain.User;
 import com.softserve.academy.spaced.repetition.utils.exceptions.NotAuthorisedUserException;
 import com.softserve.academy.spaced.repetition.service.UserService;
-import org.apache.tomcat.jni.Local;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -29,24 +28,19 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(MockitoJUnitRunner.class)
 public class UserProfileControllerTest {
 
-    private MockMvc mockMvc;
-
     @InjectMocks
     private UserProfileController userProfileController;
-
     @Mock
     private UserService userService;
-
     @InjectMocks
     private ExceptionHandlerController exceptionHandlerController;
-
     @Mock
     private MessageSource messageSource;
-
-    private final String MESSAGE_SOURCE_MESSAGE = "message";
+    private MockMvc mockMvc;
 
     @Before
     public void setUp() {
+        final String MESSAGE_SOURCE_MESSAGE = "message";
 
         mockMvc = MockMvcBuilders.standaloneSetup(userProfileController)
                 .setControllerAdvice(exceptionHandlerController)

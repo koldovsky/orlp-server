@@ -7,7 +7,7 @@ public class UserStatusException  extends  ApplicationException{
 
     public UserStatusException(AccountStatus accountStatus){
        this.accountStatus = accountStatus;
-   }
+    }
 
     public AccountStatus getAccountStatus() {
         return accountStatus;

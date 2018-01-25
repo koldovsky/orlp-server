@@ -20,13 +20,13 @@ public class User implements EntityInterface {
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "account_id")
-    @NotNull(message = "{message.fieldNotNull}", groups = Request.class)
+    @NotNull(message = "{message.validation.fieldNotNull}", groups = Request.class)
     @Valid
     private Account account;
 
     @OneToOne(cascade = {CascadeType.REFRESH, CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST})
     @JoinColumn(name = "person_id")
-    @NotNull(message = "{message.fieldNotNull}", groups = Request.class)
+    @NotNull(message = "{message.validation.fieldNotNull}", groups = Request.class)
     @Valid
     private Person person;
 

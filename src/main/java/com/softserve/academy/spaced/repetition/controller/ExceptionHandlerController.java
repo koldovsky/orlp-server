@@ -52,56 +52,64 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
     @ResponseStatus(HttpStatus.FORBIDDEN)
     @ResponseBody
     MessageDTO handleLargeFileException() {
-        return new MessageDTO(messageSource.getMessage("message.exception.tooLargeFile", new Object[]{}, locale));
+        return new MessageDTO(messageSource.getMessage("message.exception.tooLargeFile",
+                new Object[]{}, locale));
     }
 
     @ExceptionHandler(ImageRepositorySizeQuotaExceededException.class)
     @ResponseStatus(HttpStatus.FORBIDDEN)
     @ResponseBody
     MessageDTO handleImageRepositorySizeQuotaExceededException() {
-        return new MessageDTO(messageSource.getMessage("message.exception.exceededQuotaDeleteImage", new Object[]{}, locale));
+        return new MessageDTO(messageSource.getMessage("message.exception.exceededQuotaDeleteImage",
+                new Object[]{}, locale));
     }
 
     @ExceptionHandler(CanNotBeDeletedException.class)
     @ResponseStatus(HttpStatus.FORBIDDEN)
     @ResponseBody
     MessageDTO handleCanNotBeDeletedException() {
-        return new MessageDTO(messageSource.getMessage("message.exception.imageInUse", new Object[]{}, locale));
+        return new MessageDTO(messageSource.getMessage("message.exception.imageInUse",
+                new Object[]{}, locale));
     }
 
     @ExceptionHandler(NotOwnerOperationException.class)
     @ResponseStatus(HttpStatus.FORBIDDEN)
     @ResponseBody
     MessageDTO handleNotOwnerOperationException() {
-        return new MessageDTO(messageSource.getMessage("message.exception.forCurrentUserNotAllowed", new Object[]{}, locale));
+        return new MessageDTO(messageSource.getMessage("message.exception.forCurrentUserNotAllowed",
+                new Object[]{}, locale));
     }
 
     @ExceptionHandler(NotAuthorisedUserException.class)
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     @ResponseBody
     MessageDTO handleNotAuthorisedUserException() {
-        return new MessageDTO(messageSource.getMessage("message.exception.userNotAuthorised", new Object[]{}, locale));
+        return new MessageDTO(messageSource.getMessage("message.exception.userNotAuthorised",
+                new Object[]{}, locale));
     }
 
     @ExceptionHandler(UnknownHostException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
     @ResponseBody
     MessageDTO handleUnknownHostException() {
-        return new MessageDTO(messageSource.getMessage("message.exception.ipAddressNotDetermined", new Object[]{}, locale));
+        return new MessageDTO(messageSource.getMessage("message.exception.ipAddressNotDetermined",
+                new Object[]{}, locale));
     }
 
     @ExceptionHandler(MailException.class)
     @ResponseStatus(HttpStatus.SERVICE_UNAVAILABLE)
     @ResponseBody
     MessageDTO handleMailException() {
-        return new MessageDTO(messageSource.getMessage("message.exception.mailNotSent", new Object[]{}, locale));
+        return new MessageDTO(messageSource.getMessage("message.exception.mailNotSent",
+                new Object[]{}, locale));
     }
 
     @ExceptionHandler(WrongFormatException.class)
     @ResponseStatus(HttpStatus.NOT_ACCEPTABLE)
     @ResponseBody
     MessageDTO handleWrongFormatException() {
-        return new MessageDTO(messageSource.getMessage("message.exception.notValidFileFormat", new Object[]{}, locale));
+        return new MessageDTO(messageSource.getMessage("message.exception.notValidFileFormat",
+                new Object[]{}, locale));
     }
 
     @ExceptionHandler(UserStatusException.class)

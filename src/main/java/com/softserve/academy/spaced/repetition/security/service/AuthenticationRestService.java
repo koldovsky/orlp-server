@@ -151,7 +151,8 @@ public class AuthenticationRestService {
 
     private void validateUser(UserDetails userDetails){
         if(!userDetails.isAccountNonLocked()){
-            throw new LockedException(messageSource.getMessage("message.exception.accountDeactivated", new Object[]{}, locale));
+            throw new LockedException(messageSource.getMessage("message.exception.accountDeactivated",
+                    new Object[]{}, locale));
         }
     }
 }

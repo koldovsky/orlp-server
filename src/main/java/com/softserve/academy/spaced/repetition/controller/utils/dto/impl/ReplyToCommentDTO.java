@@ -5,7 +5,7 @@ import org.hibernate.validator.constraints.NotBlank;
 
 public class ReplyToCommentDTO {
 
-    @NotBlank(message = "{message.fieldNotEmpty}", groups = Request.class)
+    @NotBlank(message = "{message.validation.fieldNotEmpty}", groups = Request.class)
     private String commentText;
     private Long parentCommentId;
 

@@ -8,7 +8,6 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import com.softserve.academy.spaced.repetition.domain.Deck;
@@ -19,7 +18,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.context.MessageSource;
 import org.springframework.http.MediaType;
@@ -32,24 +30,20 @@ import java.util.Locale;
 @RunWith(MockitoJUnitRunner.class)
 public class DeckRatingControllerTest {
 
-    private MockMvc mockMvc;
-
     @InjectMocks
     private DeckRatingController deckRatingController;
-
     @Mock
     private DeckRatingService deckRatingService;
-
     @InjectMocks
     private ExceptionHandlerController exceptionHandlerController;
-
     @Mock
     private MessageSource messageSource;
-
-    private final String MESSAGE_SOURCE_MESSAGE = "message";
+    private MockMvc mockMvc;
 
     @Before
     public void setUp() {
+        final String MESSAGE_SOURCE_MESSAGE = "message";
+
         mockMvc = MockMvcBuilders.standaloneSetup(deckRatingController)
                 .setControllerAdvice(exceptionHandlerController)
                 .build();
