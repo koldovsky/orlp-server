@@ -78,7 +78,8 @@ public class CardServiceImplTest {
 
         when(userService.getAuthorizedUser()).thenReturn(user);
         when(cardRepository.findOne(CARD_ID)).thenReturn(card);
-
+        when(cardRepository.save(card)).thenReturn(card);
+        when(deckService.getDeckUser(DECK_ID)).thenReturn(deck);
 
     }
 
@@ -139,7 +140,6 @@ public class CardServiceImplTest {
     @Test
     public void testAddCard() {
         when(deckRepository.findOne(DECK_ID)).thenReturn(deck);
-        when(cardRepository.save(card)).thenReturn(card);
 
         cardService.addCard(card, DECK_ID);
         verify(deckRepository).findOne(DECK_ID);
@@ -148,8 +148,6 @@ public class CardServiceImplTest {
 
     @Test
     public void testUpdateCard() {
-        when(cardRepository.save(card)).thenReturn(card);
-
         cardService.updateCard(CARD_ID, card);
         verify(cardRepository).findOne(DECK_ID);
         verify(cardRepository).save(card);
@@ -205,6 +203,7 @@ public class CardServiceImplTest {
         doNothing().when(cardRepository).deleteCardById(CARD_ID);
 
         cardService.deleteCard(CARD_ID);
+        verify(cardRepository).deleteCardById(CARD_ID);
     }
 
     @Test
@@ -256,7 +255,6 @@ public class CardServiceImplTest {
             NotAuthorisedUserException, IOException {
 
         FileInputStream file = new FileInputStream("src\\test\\resources\\ymlTestPackage\\Java interview .yml");
-        when(deckService.getDeckUser(DECK_ID)).thenReturn(deck);
         when(cardsFile.getContentType()).thenReturn("application/octet-stream");
         when(cardsFile.isEmpty()).thenReturn(false);
         when(cardsFile.getInputStream()).thenReturn(file);
@@ -275,7 +273,6 @@ public class CardServiceImplTest {
     @Test(expected = WrongFormatException.class)
     public void testUploadCardsWrongFormat() throws WrongFormatException, EmptyFileException, NotOwnerOperationException,
             NotAuthorisedUserException, IOException {
-        when(deckService.getDeckUser(DECK_ID)).thenReturn(deck);
         when(cardsFile.getContentType()).thenReturn("application/octet-strea");
 
         cardService.uploadCards(cardsFile, DECK_ID);
@@ -286,7 +283,6 @@ public class CardServiceImplTest {
     @Test(expected = EmptyFileException.class)
     public void testUploadCardsEmptyFile() throws WrongFormatException, EmptyFileException, NotOwnerOperationException,
             NotAuthorisedUserException, IOException {
-        when(deckService.getDeckUser(DECK_ID)).thenReturn(deck);
         when(cardsFile.getContentType()).thenReturn("application/octet-stream");
         when(cardsFile.isEmpty()).thenReturn(true);
 
@@ -314,10 +310,5 @@ public class CardServiceImplTest {
 
         cardService.downloadCards(DECK_ID, outputStream);
         verify(cardRepository).findAllByDeckId(DECK_ID);
-    }
-
-    @Test
-    public void testDownloadCardsTemplate() {
-        cardService.downloadCardsTemplate(outputStream);
     }
 }
