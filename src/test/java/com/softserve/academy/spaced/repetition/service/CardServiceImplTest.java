@@ -1,7 +1,5 @@
 package com.softserve.academy.spaced.repetition.service;
 
-import com.softserve.academy.spaced.repetition.controller.utils.dto.CardFileDTO;
-import com.softserve.academy.spaced.repetition.controller.utils.dto.CardFileDTOList;
 import com.softserve.academy.spaced.repetition.domain.*;
 import com.softserve.academy.spaced.repetition.domain.enums.LearningRegime;
 import com.softserve.academy.spaced.repetition.repository.CardRepository;
@@ -20,13 +18,13 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-import org.yaml.snakeyaml.Yaml;
 
-import java.io.*;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -56,8 +54,6 @@ public class CardServiceImplTest {
     private DeckService deckService;
     @Mock
     private MultipartFile cardsFile;
-    @Mock
-    private Yaml yaml;
     @Mock
     private OutputStream outputStream;
     @InjectMocks
