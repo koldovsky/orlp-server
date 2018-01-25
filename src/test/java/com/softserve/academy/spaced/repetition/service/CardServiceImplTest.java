@@ -1,5 +1,6 @@
 package com.softserve.academy.spaced.repetition.service;
 
+import com.softserve.academy.spaced.repetition.controller.utils.dto.CardFileDTO;
 import com.softserve.academy.spaced.repetition.controller.utils.dto.CardFileDTOList;
 import com.softserve.academy.spaced.repetition.domain.*;
 import com.softserve.academy.spaced.repetition.domain.enums.LearningRegime;
@@ -21,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import org.yaml.snakeyaml.Yaml;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -59,8 +61,6 @@ public class CardServiceImplTest {
     private MultipartFile cardsFile;
     @Mock
     private Yaml yaml;
-    @Mock
-    private InputStream inputStream;
     @Mock
     private OutputStream outputStream;
     @InjectMocks
@@ -107,6 +107,7 @@ public class CardServiceImplTest {
         List<Card> learningCards = new ArrayList<>();
         user.getAccount().setLearningRegime(LearningRegime.CARDS_POSTPONING_USING_SPACED_REPETITION);
         when(userService.getAuthorizedUser()).thenReturn(user);
+        when(accountService.getCardsNumber()).thenReturn(0);
         when(cardRepository.getCardsThatNeedRepeating(eq(DECK_ID), any(Date.class), eq(user.getId()), eq(0)))
                 .thenReturn(learningCards);
 
@@ -173,6 +174,27 @@ public class CardServiceImplTest {
         assertEquals(learningCardsTemp, result);
     }
 
+    @Test
+    public void testGetCardsQueueWithStatus() throws NotAuthorisedUserException {
+        List<Card> cardsQueue = new ArrayList<>();
+        cardsQueue.add(card);
+        cardsQueue.add(card);
+        List<Card> cardsQueueTemp = new ArrayList<>(cardsQueue);
+        cardsQueueTemp.add(card);
+        when(accountService.getCardsNumber()).thenReturn(3);
+        when(cardRepository.cardsForLearningWithOutStatus(USER_ID, DECK_ID, 3))
+                .thenReturn(cardsQueue);
+        when(cardRepository.cardsQueueForLearningWithStatus(user.getId(), DECK_ID, 3))
+                .thenReturn(cardsQueueTemp);
+
+        List<Card> result = cardService.getCardsQueue(DECK_ID);
+        verify(userService).getAuthorizedUser();
+        verify(accountService).getCardsNumber();
+        verify(cardRepository).cardsForLearningWithOutStatus(USER_ID, DECK_ID, 3);
+        verify(cardRepository).cardsQueueForLearningWithStatus(USER_ID, DECK_ID, 3);
+        assertEquals(cardsQueue, result);
+    }
+
     @Test(expected = NotAuthorisedUserException.class)
     public void testGetCardsQueueByNotAuthorisedUser() throws NotAuthorisedUserException {
         when(userService.getAuthorizedUser()).thenThrow(new NotAuthorisedUserException());
@@ -235,16 +257,66 @@ public class CardServiceImplTest {
     @Test
     public void testUploadCards() throws WrongFormatException, EmptyFileException, NotOwnerOperationException,
             NotAuthorisedUserException, IOException {
-//
-//        when(cardsFile.getContentType()).thenReturn("application/octet-stream");
-//        when(cardsFile.getInputStream()).thenReturn(inputStream);
-//        when(yaml.loadAs(any(InputStream.class), eq(CardFileDTOList.class))).thenReturn(any());
-//        doNothing().when(yaml).dump(any(Map.class), any());
-//        when(deckService.getDeckUser(DECK_ID)).thenReturn(deck);
-//
-//        cardService.uploadCards(cardsFile, DECK_ID);
-//        verify(deckService).getDeckUser(DECK_ID);
+        CardFileDTO cardFileDTO = new CardFileDTO();
+        cardFileDTO.setAnswer("answer");
+        cardFileDTO.setQuestion("question");
+        cardFileDTO.setTitle("title");
+
+        List<CardFileDTO> learningCards = new ArrayList<>();
+        learningCards.add(cardFileDTO);
+
+        CardFileDTOList cardFileDTOList = new CardFileDTOList();
+        cardFileDTOList.setCards(learningCards);
+
+        InputStream anyInputStream = new ByteArrayInputStream("test data".getBytes());
+
+        when(deckService.getDeckUser(DECK_ID)).thenReturn(deck);
+        when(cardsFile.getContentType()).thenReturn("application/octet-stream");
+        when(cardsFile.isEmpty()).thenReturn(false);
+        when(cardsFile.getInputStream()).thenReturn(anyInputStream);
+        when(yaml.loadAs(anyInputStream,CardFileDTOList.class)).thenReturn(cardFileDTOList);
+
+        cardService.uploadCards(cardsFile, DECK_ID);
+        verify(deckService).getDeckUser(DECK_ID);
+        verify(cardsFile).getContentType();
+        verify(cardsFile).isEmpty();
+        verify(cardsFile).getInputStream();
+//        verify(yaml).loadAs(anyInputStream, CardFileDTOList.class);
     }
+
+    @Test(expected = WrongFormatException.class)
+    public void testUploadCardsWrongFormat() throws WrongFormatException, EmptyFileException, NotOwnerOperationException,
+            NotAuthorisedUserException, IOException {
+        when(deckService.getDeckUser(DECK_ID)).thenReturn(deck);
+        when(cardsFile.getContentType()).thenReturn("application/octet-strea");
+
+        cardService.uploadCards(cardsFile, DECK_ID);
+        verify(deckService).getDeckUser(DECK_ID);
+        verify(cardsFile).getContentType();
+    }
+
+    @Test(expected = EmptyFileException.class)
+    public void testUploadCardsEmptyFile() throws WrongFormatException, EmptyFileException, NotOwnerOperationException,
+            NotAuthorisedUserException, IOException {
+        when(deckService.getDeckUser(DECK_ID)).thenReturn(deck);
+        when(cardsFile.getContentType()).thenReturn("application/octet-stream");
+        when(cardsFile.isEmpty()).thenReturn(true);
+
+        cardService.uploadCards(cardsFile, DECK_ID);
+        verify(deckService).getDeckUser(DECK_ID);
+        verify(cardsFile).getContentType();
+        verify(cardsFile).isEmpty();
+    }
+
+    @Test(expected = NotAuthorisedUserException.class)
+    public void testUploadCardsNotAuthorisedUser() throws WrongFormatException, EmptyFileException, NotOwnerOperationException,
+            NotAuthorisedUserException, IOException {
+        when(deckService.getDeckUser(DECK_ID)).thenThrow(new NotAuthorisedUserException());
+
+        cardService.uploadCards(cardsFile, DECK_ID);
+        verify(deckService).getDeckUser(DECK_ID);
+    }
+
 
     @Test
     public void testDownloadCards() {

@@ -213,14 +213,6 @@ public class DomainFactory {
         return category;
     }
 
-    public static List<Category> createListOfCategory(Long category_id) {
-        List<Category> categoryList = new ArrayList<>();
-        Category category1 = createCategory(category_id, "Category1", "description",
-                null, null, null);
-        categoryList.add(category1);
-        return categoryList;
-    }
-
     public static Audit createAudit(long id, String accountEmail, AuditingAction action, Date time, String ipAddress, String role) {
         Audit audit = new Audit();
         audit.setId(id);
@@ -259,35 +251,5 @@ public class DomainFactory {
         courseRating.setCourse(course);
         courseRating.setRating(rating);
         return courseRating;
-    }
-
-    public static List<Course> createCourseList(Course course) {
-        List<Course> courseList = new ArrayList<>();
-        courseList.add(course);
-        return courseList;
-    }
-
-    public static Set<Course> createCourseSet(Course course) {
-        Set<Course> courseSet = new HashSet<>();
-        courseSet.add(course);
-        return courseSet;
-    }
-
-    public static List<Deck> createDeckList(Deck deck) {
-        List<Deck> deckList = new ArrayList<>();
-        deckList.add(deck);
-        return deckList;
-    }
-
-    public static Set<Deck> createDeckSet(Deck deck) {
-        Set<Deck> deckSet = new HashSet<>();
-        deckSet.add(deck);
-        return deckSet;
-    }
-
-    public static List<Card> createCardList(Card card) {
-        List<Card> cardList = new ArrayList<>();
-        cardList.add(card);
-        return cardList;
     }
 }

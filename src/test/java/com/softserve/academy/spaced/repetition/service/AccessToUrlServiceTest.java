@@ -14,6 +14,7 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -31,10 +32,7 @@ public class AccessToUrlServiceTest {
     private final Long FOLDER_ID = 1L;
     private final Long DECK_ID = 1L;
     private final Long COMMENT_ID = 1L;
-    private Deck deck;
     private Category category;
-    private Course course;
-    private Card card;
     private List<Course> courseList;
     private List<Deck> deckList;
 
@@ -67,19 +65,21 @@ public class AccessToUrlServiceTest {
 
     @Before
     public void setUp() throws Exception {
-        courseList = DomainFactory.createCourseList(course);
-        deckList = DomainFactory.createDeckList(deck);
-        List<Card> cardList = DomainFactory.createCardList(card);
+        courseList = new ArrayList<>();
+        deckList = new ArrayList<>();
+        List<Card> cardList = new ArrayList<>();
         User user = DomainFactory.createUser(1L, new Account(), new Person(), new Folder(), null);
-        course = DomainFactory.createCourse(COURSE_ID, null, null, null, 1L,
+        Course course = DomainFactory.createCourse(COURSE_ID, null, null, null, 1L,
                 true, null, category, deckList, null, null);
         category = DomainFactory.createCategory(CATEGORY_ID, null, null,
                 null, null, null);
-        deck = DomainFactory.createDeck(DECK_ID, null, null, null, category
+        Deck deck = DomainFactory.createDeck(DECK_ID, null, null, null, category
                 , 1L, user, cardList, courseList, null, null, null);
-        card = DomainFactory.createCard(CARD_ID, null, null, null, deck);
+        Card card = DomainFactory.createCard(CARD_ID, null, null, null, deck);
+        cardList.add(card);
+        courseList.add(course);
+        deckList.add(deck);
         user.getAccount().setAuthorities(createAuthoritySet());
-
         when(userService.getAuthorizedUser()).thenReturn(user);
         when(courseRepository.getAccessToCourse(CATEGORY_ID, COURSE_ID))
                 .thenReturn(courseList);
@@ -102,8 +102,10 @@ public class AccessToUrlServiceTest {
 
     @Test
     public void testHasAccessToCategory() {
+        List<Category> categoryList = new ArrayList<>();
+        categoryList.add(category);
         when(categoryRepository.hasAccessToCategory(CATEGORY_ID))
-                .thenReturn(DomainFactory.createListOfCategory(CATEGORY_ID));
+                .thenReturn(categoryList);
 
         boolean result = accessToUrlService.hasAccessToCategory(CATEGORY_ID);
         verify(categoryRepository).hasAccessToCategory(CATEGORY_ID);
