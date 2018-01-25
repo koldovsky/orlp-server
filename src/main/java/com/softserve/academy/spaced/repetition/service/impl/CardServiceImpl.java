@@ -143,14 +143,11 @@ public class CardServiceImpl implements CardService {
             Yaml yaml = new Yaml();
             InputStream in = cardsFile.getInputStream();
             try {
-                System.out.println("1");
                 CardFileDTOList cards = yaml.loadAs(in, CardFileDTOList.class);
                 for (CardFileDTO card : cards.getCards()) {
-                    System.out.println("2");
                     addCard(new Card(card.getQuestion(), card.getAnswer(), card.getTitle()), deckId);
                 }
             } catch (ParserException | ConstructorException ex) {
-                System.out.println("3");
                 throw new IllegalArgumentException("Invalid format of file!");
             }
         }

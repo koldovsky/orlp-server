@@ -22,10 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import org.yaml.snakeyaml.Yaml;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -77,7 +74,11 @@ public class CardServiceImplTest {
         user = DomainFactory.createUser(USER_ID, account, new Person(), new Folder(), null);
         deck = DomainFactory.createDeck(DECK_ID, null, null, null, null,
                 1.0, null, new ArrayList<>(), null, null, null, null);
-        card = DomainFactory.createCard(CARD_ID, "Title", "Question", "Answer", new Deck());
+        card = DomainFactory.createCard(CARD_ID, "Card One",
+                "What are the supported platforms by Java Programming Language?",
+                "Java runs on a variety of platforms, such as Windows, Mac OS, and the\n" +
+                        "    various versions of UNIX/Linux like HP-Unix, Sun Solaris, Redhat Linux, Ubuntu,\n" +
+                        "    CentOS, etc.", new Deck());
 
         when(userService.getAuthorizedUser()).thenReturn(user);
         when(cardRepository.findOne(CARD_ID)).thenReturn(card);
@@ -257,31 +258,22 @@ public class CardServiceImplTest {
     @Test
     public void testUploadCards() throws WrongFormatException, EmptyFileException, NotOwnerOperationException,
             NotAuthorisedUserException, IOException {
-        CardFileDTO cardFileDTO = new CardFileDTO();
-        cardFileDTO.setAnswer("answer");
-        cardFileDTO.setQuestion("question");
-        cardFileDTO.setTitle("title");
 
-        List<CardFileDTO> learningCards = new ArrayList<>();
-        learningCards.add(cardFileDTO);
-
-        CardFileDTOList cardFileDTOList = new CardFileDTOList();
-        cardFileDTOList.setCards(learningCards);
-
-        InputStream anyInputStream = new ByteArrayInputStream("test data".getBytes());
-
+        FileInputStream file = new FileInputStream("src\\test\\resources\\ymlTestPackage\\Java interview .yml");
         when(deckService.getDeckUser(DECK_ID)).thenReturn(deck);
         when(cardsFile.getContentType()).thenReturn("application/octet-stream");
         when(cardsFile.isEmpty()).thenReturn(false);
-        when(cardsFile.getInputStream()).thenReturn(anyInputStream);
-        when(yaml.loadAs(anyInputStream,CardFileDTOList.class)).thenReturn(cardFileDTOList);
+        when(cardsFile.getInputStream()).thenReturn(file);
+        when(deckRepository.findOne(DECK_ID)).thenReturn(deck);
+        when(cardRepository.save(any(Card.class))).thenReturn(any(Card.class));
 
         cardService.uploadCards(cardsFile, DECK_ID);
         verify(deckService).getDeckUser(DECK_ID);
         verify(cardsFile).getContentType();
         verify(cardsFile).isEmpty();
         verify(cardsFile).getInputStream();
-//        verify(yaml).loadAs(anyInputStream, CardFileDTOList.class);
+        verify(deckRepository).findOne(DECK_ID);
+
     }
 
     @Test(expected = WrongFormatException.class)
