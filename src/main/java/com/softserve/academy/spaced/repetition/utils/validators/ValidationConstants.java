@@ -26,7 +26,7 @@ public class ValidationConstants {
 
     public static final String SPECIAL_SYMBOLS_PATTERN_MESSAGE = "Can not consist of reserved symbols";
 
-    public static final int EMAIL_MIN_SIZE = 6;
+    public static final int EMAIL_MIN_SIZE = 3;
 
     public static final int EMAIL_MAX_SIZE = 254;
 
