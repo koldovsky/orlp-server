@@ -254,7 +254,7 @@ public class CardServiceImplTest {
     public void testUploadCards() throws WrongFormatException, EmptyFileException, NotOwnerOperationException,
             NotAuthorisedUserException, IOException {
 
-        FileInputStream file = new FileInputStream("src\\test\\resources\\ymlTestPackage\\Java interview .yml");
+        FileInputStream file = new FileInputStream("src\\test\\resources\\ymlTestPackage\\JavaInterview.yml");
         when(cardsFile.getContentType()).thenReturn("application/octet-stream");
         when(cardsFile.isEmpty()).thenReturn(false);
         when(cardsFile.getInputStream()).thenReturn(file);
@@ -300,7 +300,6 @@ public class CardServiceImplTest {
         cardService.uploadCards(cardsFile, DECK_ID);
         verify(deckService).getDeckUser(DECK_ID);
     }
-
 
     @Test
     public void testDownloadCards() {
