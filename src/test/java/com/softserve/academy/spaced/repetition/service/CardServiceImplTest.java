@@ -19,9 +19,11 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -252,12 +254,14 @@ public class CardServiceImplTest {
 
     @Test
     public void testUploadCards() throws WrongFormatException, EmptyFileException, NotOwnerOperationException,
-            NotAuthorisedUserException, IOException {
+            NotAuthorisedUserException, IOException, URISyntaxException {
+        File file = new File(Thread.currentThread().getContextClassLoader()
+                .getResource("ymlTestPackage/JavaInterview.yml").toURI());
 
-        FileInputStream file = new FileInputStream("src\\test\\resources\\ymlTestPackage\\JavaInterview.yml");
+        FileInputStream fileStream = new FileInputStream(file);
         when(cardsFile.getContentType()).thenReturn("application/octet-stream");
         when(cardsFile.isEmpty()).thenReturn(false);
-        when(cardsFile.getInputStream()).thenReturn(file);
+        when(cardsFile.getInputStream()).thenReturn(fileStream);
         when(deckRepository.findOne(DECK_ID)).thenReturn(deck);
         when(cardRepository.save(any(Card.class))).thenReturn(any(Card.class));
 
