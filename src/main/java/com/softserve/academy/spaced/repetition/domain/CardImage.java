@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.softserve.academy.spaced.repetition.controller.utils.dto.EntityInterface;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "card_image")
@@ -15,11 +16,13 @@ public class CardImage implements EntityInterface {
     private Long id;
 
     @Column(name = "imagebase64", columnDefinition = "LONGTEXT")
+    @NotNull
     private String image;
 
     @ManyToOne
     @JoinColumn(name = "card_id")
     @JsonIgnore
+    @NotNull
     private Card card;
 
     public CardImage() {
