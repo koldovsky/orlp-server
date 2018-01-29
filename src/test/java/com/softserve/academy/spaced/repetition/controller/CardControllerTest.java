@@ -48,9 +48,71 @@ public class CardControllerTest {
                 .build();
     }
 
+    public static Card createCard(long rating, long deckId) {
+        Deck deck = new Deck();
+        deck.setId(deckId);
+        Card card = new Card();
+        card.setId(1L);
+        card.setTitle("Card 1");
+        card.setAnswer("There are 4 access modifiers in Java: public, protected, default and private");
+        card.setQuestion("How many access modifiers do you know in Java?");
+        card.setDeck(deck);
+        card.setRating(rating);
+        return card;
+    }
+
+    public static List<Card> createLearningCards(long deckId) {
+        List<Card> cards = new ArrayList<>();
+        Deck deck = new Deck();
+        deck.setId(deckId);
+        Card card = DomainFactory.createCard(1L, "Card 1", "How many access modifiers do you know in Java?",
+                "There are 4 access modifiers in Java: public, protected, default and private", deck);
+        Card card2 = DomainFactory.createCard(2L, "Card 2", "What are the supported platforms by Java Programming" +
+                " Language?", "Java runs on a variety of platforms, such as Windows, Mac OS, and the various" +
+                " versions of UNIX/Linux like HP-Unix, Sun Solaris, Redhat Linux, Ubuntu, CentOS, etc.", deck);
+        Card card3 = DomainFactory.createCard(3L, "Card 3", "List any five features of Java?", "Some " +
+                "features include Object Oriented, Platform Independent, Robust, Interpreted, Multi-threaded", deck);
+        Card card4 = DomainFactory.createCard(4L, "Card 4", "Why is Java Architectural Neutral?",
+                "It’s compiler generates an architecture-neutral object file format, which makes the" +
+                        " compiled code to be executable on many processors, with the presence of Java runtime system.",
+                deck);
+        Card card5 = DomainFactory.createCard(5L, "Card 5", "How Java enabled High Performance?", "Java " +
+                "uses Just-In-Time compiler" +
+                " to enable high performance. Just-In-Time compiler is a program that turns Java bytecode, which is" +
+                " a program that contains instructions that must be interpreted into instructions that can be sent" +
+                " directly to the processor.", deck);
+        Card card6 = DomainFactory.createCard(6L, "Card 6", "Why Java is considered dynamic?", "It is " +
+                "designed to adapt to an evolving environment. Java programs can carry extensive amount of run-time" +
+                " information that can be used to verify and resolve accesses to objects on run-time.", deck);
+        Card card7 = DomainFactory.createCard(7L, "Card 7", "What is Java Virtual Machine and how it is considered" +
+                " in context of Java’s platform independent feature?", "When Java is compiled, it is not" +
+                " compiled into platform specific machine, rather into platform independent byte code. This byte code" +
+                " is distributed over the web and interpreted by virtual Machine (JVM) on whichever platform it is " +
+                "being run.", deck);
+        Card card8 = DomainFactory.createCard(8L, "Card 8", "List two Java IDE’s?", "Netbeans, Eclipse, etc."
+                , deck);
+        Card card9 = DomainFactory.createCard(9L, "Card 9", "List some Java keywords(unlike C, C++ keywords)?",
+                "Some Java keywords are import, super, finally, etc.", deck);
+        Card card10 = DomainFactory.createCard(10L, "Card 10", "What do you mean by Object?", "Object is a" +
+                " runtime entity and it’s state is stored in fields and behavior is shown via methods. Methods" +
+                " operate on an objects internal state and serve as the primary mechanism for object-to-object" +
+                " communication.", deck);
+        cards.add(card);
+        cards.add(card2);
+        cards.add(card3);
+        cards.add(card4);
+        cards.add(card5);
+        cards.add(card6);
+        cards.add(card7);
+        cards.add(card8);
+        cards.add(card9);
+        cards.add(card10);
+        return cards;
+    }
+
     @Test
     public void getCardById() throws Exception {
-        when(cardService.getCard(eq(1L))).thenReturn(DomainFactory.createCard(RATING,DECK_ID));
+        when(cardService.getCard(eq(1L))).thenReturn(createCard(RATING,DECK_ID));
         mockMvc.perform(get("/api/card/{cardId}", 1L)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON))
@@ -73,7 +135,7 @@ public class CardControllerTest {
         Long deckId = 1L;
         User mockedUser1 = new User(new Account("","email1@email.com"), new Person("first1", "last1"), new Folder());
         when(mockedUserService.getAuthorizedUser()).thenReturn(mockedUser1);
-        when(cardService.getLearningCards(deckId)).thenReturn(DomainFactory.createLearningCards(DECK_ID));
+        when(cardService.getLearningCards(deckId)).thenReturn(createLearningCards(DECK_ID));
         mockMvc.perform(get("/api/decks/{deckId}/learn", 1L)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON))
@@ -204,7 +266,5 @@ public class CardControllerTest {
                         "}" +
                         "]"));
     }
-
-
 }
 
