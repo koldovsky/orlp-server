@@ -4,7 +4,6 @@ import com.softserve.academy.spaced.repetition.controller.utils.dto.EntityInterf
 
 import javax.persistence.*;
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 
 @Entity
