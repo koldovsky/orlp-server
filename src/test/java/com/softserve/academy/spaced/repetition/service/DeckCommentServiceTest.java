@@ -7,7 +7,6 @@ import com.softserve.academy.spaced.repetition.service.impl.DeckCommentServiceIm
 import com.softserve.academy.spaced.repetition.util.DomainFactory;
 import com.softserve.academy.spaced.repetition.utils.exceptions.NotAuthorisedUserException;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -17,7 +16,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -56,7 +56,7 @@ public class DeckCommentServiceTest {
     }
 
     @Test
-    public void testAddCommentForDeck() throws NotAuthorisedUserException {
+    public void testAddCommentToDeck() throws NotAuthorisedUserException {
         when(commentRepository.save(any(DeckComment.class))).thenReturn(deckComment);
 
         DeckComment result = deckCommentService.addCommentForDeck(DECK_ID, DECK_COMMENT_TEXT, DECK_COMMENT_PARENT_ID);
@@ -67,7 +67,7 @@ public class DeckCommentServiceTest {
     }
 
     @Test(expected = NotAuthorisedUserException.class)
-    public void testAddCommentForDeckByNotAuthorisedUser() throws NotAuthorisedUserException {
+    public void testAddCommentToDeckByNotAuthorisedUser() throws NotAuthorisedUserException {
         when(userService.getAuthorizedUser()).thenThrow(new NotAuthorisedUserException());
 
         deckCommentService.addCommentForDeck(DECK_ID, DECK_COMMENT_TEXT, DECK_COMMENT_PARENT_ID);
@@ -82,7 +82,7 @@ public class DeckCommentServiceTest {
     }
 
     @Test
-    public void testGetAllCommentsForDeck() {
+    public void testGetAllDeckComments() {
         when(commentRepository.findDeckCommentsByDeckId(DECK_ID)).thenReturn(null);
 
         List<Comment> result = deckCommentService.getAllCommentsForDeck(DECK_ID);

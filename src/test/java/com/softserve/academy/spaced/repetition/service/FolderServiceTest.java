@@ -81,7 +81,7 @@ public class FolderServiceTest {
     }
 
     @Test
-    public void testGetAllDecksIdWithFolder() throws NotAuthorisedUserException {
+    public void testGetAllDecksIdFromFolder() throws NotAuthorisedUserException {
         when(folderRepository.selectAllDeckIdWithFolder(FOLDER_ID)).thenReturn(null);
 
         List<Long> result = folderService.getAllDecksIdWithFolder();
@@ -91,7 +91,7 @@ public class FolderServiceTest {
     }
 
     @Test(expected = NotAuthorisedUserException.class)
-    public void testGetAllDecksIdWithFolderByNotAuthorisedUser() throws NotAuthorisedUserException {
+    public void testGetAllDecksIdFromFolderByNotAuthorisedUser() throws NotAuthorisedUserException {
         when(userService.getAuthorizedUser()).thenThrow(new NotAuthorisedUserException());
 
         folderService.getAllDecksIdWithFolder();

@@ -2,7 +2,9 @@ package com.softserve.academy.spaced.repetition.service;
 
 import com.softserve.academy.spaced.repetition.controller.utils.dto.impl.PasswordDTO;
 import com.softserve.academy.spaced.repetition.domain.*;
-import com.softserve.academy.spaced.repetition.domain.enums.*;
+import com.softserve.academy.spaced.repetition.domain.enums.AccountStatus;
+import com.softserve.academy.spaced.repetition.domain.enums.AuthenticationType;
+import com.softserve.academy.spaced.repetition.domain.enums.AuthorityName;
 import com.softserve.academy.spaced.repetition.repository.AuthorityRepository;
 import com.softserve.academy.spaced.repetition.repository.DeckRepository;
 import com.softserve.academy.spaced.repetition.repository.UserRepository;
@@ -103,6 +105,7 @@ public class UserServiceTest {
         when(userRepository.save(user)).thenReturn(user);
         when(userRepository.findOne(USER_ID)).thenReturn(user);
         when(deckRepository.findOne(DECK_ID)).thenReturn(deck);
+        when(deckRepository.getDeckByItsIdAndOwnerOfDeck(DECK_ID, USER_ID)).thenReturn(deck);
         doNothing().when(imageService).checkImageExtension(multipartFile);
     }
 
@@ -134,17 +137,13 @@ public class UserServiceTest {
         verify(userRepository, times(2)).findOne(USER_ID);
         verify(userRepository).save(user);
         assertEquals(user, result);
-        assertEquals(ACCOUNT_STATUS_ACTIVE, result.getAccount().getStatus());
     }
 
     @Test
     public void testSetUsersStatusDeleted() {
-        final AccountStatus ACCOUNT_STATUS_DELETED = AccountStatus.DELETED;
-
         User result = userService.setUsersStatusDeleted(USER_ID);
         verify(userRepository, times(2)).findOne(USER_ID);
         assertEquals(user, result);
-        assertEquals(ACCOUNT_STATUS_DELETED, result.getAccount().getStatus());
     }
 
     @Test
@@ -153,7 +152,6 @@ public class UserServiceTest {
         verify(userRepository, times(2)).findOne(USER_ID);
         verify(userRepository).save(user);
         assertEquals(user, result);
-        assertEquals(ACCOUNT_STATUS_BLOCKED, result.getAccount().getStatus());
     }
 
     @Test
@@ -170,17 +168,18 @@ public class UserServiceTest {
         verify(deckRepository).findOne(DECK_ID);
         verify(userRepository).save(user);
         assertEquals(user, result);
-        assertEquals(user.getFolder().getDecks(), result.getFolder().getDecks());
     }
 
     @Test
     public void testAddExistingDeckToUserFolderIfDeckAlreadyInFolder() {
+        Set<Deck> decks = folder.getDecks();
+        decks.add(deck);
+
         User result = userService.addExistingDeckToUsersFolder(USER_ID, DECK_ID);
         verify(userRepository).findOne(USER_ID);
-        verify(deckRepository).findOne(DECK_ID);
-        verify(userRepository).save(user);
-        assertEquals(user, result);
-        assertEquals(user.getFolder().getDecks(), result.getFolder().getDecks());
+        assertNull(result);
+
+        decks.remove(deck);
     }
 
 
@@ -227,9 +226,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void testRemoveDeckFromUsersFolder() {
-        when(deckRepository.getDeckByItsIdAndOwnerOfDeck(DECK_ID, USER_ID)).thenReturn(deck);
-
+    public void testDeleteDeckFromUsersFolder() {
         User result = userService.removeDeckFromUsersFolder(USER_ID, DECK_ID);
         verify(deckRepository).getDeckByItsIdAndOwnerOfDeck(DECK_ID, USER_ID);
         verify(userRepository).findOne(USER_ID);
@@ -237,7 +234,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void testRemoveDeckFromUsersFolderThatNotFoundByDeckAndUserId() {
+    public void testDeleteDeckFromUsersFolderThatNotFoundByDeckIdAndUserId() {
         Set<Deck> decks = folder.getDecks();
         decks.add(deck);
 
@@ -249,11 +246,10 @@ public class UserServiceTest {
         verify(deckRepository).findOne(DECK_ID);
         verify(userRepository).save(user);
         assertEquals(user, result);
-        assertEquals(user.getFolder().getDecks(), result.getFolder().getDecks());
     }
 
     @Test
-    public void testGetAllDecksFromUsersFolder() {
+    public void testGetAllDecksFromUserFolder() {
         List<Deck> result = userService.getAllDecksFromUsersFolder(USER_ID);
         verify(userRepository).findOne(USER_ID);
         assertNotNull(result);
@@ -281,8 +277,6 @@ public class UserServiceTest {
         verify(userRepository).findUserByAccountEmail(ACCOUNT_EMAIL);
         verify(userRepository).save(user);
         assertEquals(user, result);
-        assertEquals(user.getPerson().getFirstName(), result.getPerson().getFirstName());
-        assertEquals(user.getPerson().getLastName(), result.getPerson().getLastName());
     }
 
     @Test(expected = NotAuthorisedUserException.class)
@@ -324,7 +318,6 @@ public class UserServiceTest {
     @Test
     public void testUploadImage() throws NotAuthorisedUserException, ImageRepositorySizeQuotaExceededException {
         final String IMAGE_BASE64 = "image_base64";
-        final ImageType IMAGE_TYPE_BASE64 = ImageType.BASE64;
 
         when(imageService.encodeToBase64(multipartFile)).thenReturn(IMAGE_BASE64);
 
@@ -334,17 +327,8 @@ public class UserServiceTest {
         verify(authentication).getPrincipal();
         verify(userRepository).save(user);
         assertEquals(user, result);
-        assertEquals(result.getPerson().getImageBase64(), IMAGE_BASE64);
-        assertEquals(result.getPerson().getTypeImage(), IMAGE_TYPE_BASE64);
     }
 
-    @Test(expected = ImageRepositorySizeQuotaExceededException.class)
-    public void testUploadImageIfQuotaExceeded() throws NotAuthorisedUserException, ImageRepositorySizeQuotaExceededException {
-        doThrow(new ImageRepositorySizeQuotaExceededException()).when(imageService).checkImageExtension(multipartFile);
-
-        userService.uploadImage(multipartFile);
-        verify(imageService).checkImageExtension(multipartFile);
-    }
 
     @Test(expected = NotAuthorisedUserException.class)
     public void testUploadImageByNotAuthorisedUser() throws NotAuthorisedUserException, ImageRepositorySizeQuotaExceededException {
@@ -354,6 +338,14 @@ public class UserServiceTest {
         verify(imageService).checkImageExtension(multipartFile);
         verify(securityContext).getAuthentication();
         verify(authentication).getPrincipal();
+    }
+
+    @Test(expected = ImageRepositorySizeQuotaExceededException.class)
+    public void testUploadImageIfQuotaExceeded() throws NotAuthorisedUserException, ImageRepositorySizeQuotaExceededException {
+        doThrow(new ImageRepositorySizeQuotaExceededException()).when(imageService).checkImageExtension(multipartFile);
+
+        userService.uploadImage(multipartFile);
+        verify(imageService).checkImageExtension(multipartFile);
     }
 
     @Test
@@ -436,7 +428,6 @@ public class UserServiceTest {
     @Test
     public void testInitializeNewUser() {
         final AuthenticationType AUTHENTICATION_TYPE = AuthenticationType.LOCAL;
-        final LearningRegime LEARNING_REGIME = LearningRegime.CARDS_POSTPONING_USING_SPACED_REPETITION;
 
         when(passwordEncoder.encode(ACCOUNT_PASSWORD)).thenReturn(PASSWORD_ENCODER_ENCODED_PASSWORD);
         when(authorityRepository.findAuthorityByName(AUTHORITY_NAME_USER)).thenReturn(authority);
@@ -445,12 +436,6 @@ public class UserServiceTest {
                 AUTHENTICATION_TYPE);
         verify(passwordEncoder).encode(ACCOUNT_PASSWORD);
         verify(authorityRepository).findAuthorityByName(AUTHORITY_NAME_USER);
-        assertEquals(account.getEmail(), ACCOUNT_EMAIL);
-        assertEquals(account.getPassword(), PASSWORD_ENCODER_ENCODED_PASSWORD);
-        assertEquals(account.getStatus(), ACCOUNT_STATUS_ACTIVE);
-        assertEquals(account.getAuthenticationType(), AUTHENTICATION_TYPE);
-        assertEquals(account.isDeactivated(), ACCOUNT_DEACTIVATED);
-        assertEquals(account.getLearningRegime(), LEARNING_REGIME);
     }
 
     @Test
