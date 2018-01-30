@@ -311,6 +311,7 @@ public class CardServiceImplTest {
     public void testDownloadCards() {
         List<Card> cardList = new ArrayList<>();
         cardList.add(card);
+
         when(cardRepository.findAllByDeckId(DECK_ID)).thenReturn(cardList);
 
         cardService.downloadCards(DECK_ID, outputStream);

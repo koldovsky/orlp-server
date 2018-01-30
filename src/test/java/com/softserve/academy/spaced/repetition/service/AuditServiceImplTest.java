@@ -31,10 +31,8 @@ public class AuditServiceImplTest {
 
     @InjectMocks
     private AuditServiceImpl auditService;
-
     @Mock
     private AuditRepository auditRepository;
-
     private Audit audit;
     private List<Audit> audits;
 

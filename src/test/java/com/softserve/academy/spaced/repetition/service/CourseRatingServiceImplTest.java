@@ -28,10 +28,6 @@ public class CourseRatingServiceImplTest {
     private final Long COURSE_RATING_ID = 1L;
     private final Long COURSE_ID = 1L;
     private final int RATING_OF_COURSE_RATING = 1;
-    private User user;
-    private Course course;
-    private CourseRating courseRating;
-
     @Mock
     private CourseRatingRepository courseRatingRepository;
     @Mock
@@ -40,6 +36,9 @@ public class CourseRatingServiceImplTest {
     private UserService userService;
     @InjectMocks
     private CourseRatingServiceImpl courseRatingService;
+    private User user;
+    private Course course;
+    private CourseRating courseRating;
 
     @Before
     public void setUp() {

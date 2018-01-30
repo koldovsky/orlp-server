@@ -33,37 +33,27 @@ public class AccessToUrlServiceTest {
     private final Long FOLDER_ID = 1L;
     private final Long DECK_ID = 1L;
     private final Long COMMENT_ID = 1L;
+    @Mock
+    private CategoryRepository categoryRepository;
+    @Mock
+    private UserService userService;
+    @Mock
+    private CourseRepository courseRepository;
+    @Mock
+    private FolderRepository folderRepository;
+    @Mock
+    private DeckRepository deckRepository;
+    @Mock
+    private CardRepository cardRepository;
+    @Mock
+    private DeckCommentRepository deckCommentRepository;
+    @Mock
+    private CourseCommentRepository courseCommentRepository;
+    @InjectMocks
+    private AccessToUrlServiceImpl accessToUrlService;
     private Category category;
     private List<Course> courseList;
     private List<Deck> deckList;
-
-    @Mock
-    private CategoryRepository categoryRepository;
-
-    @Mock
-    private UserService userService;
-
-    @Mock
-    private CourseRepository courseRepository;
-
-    @Mock
-    private FolderRepository folderRepository;
-
-    @Mock
-    private DeckRepository deckRepository;
-
-    @Mock
-    private CardRepository cardRepository;
-
-    @Mock
-    private DeckCommentRepository deckCommentRepository;
-
-    @Mock
-    private CourseCommentRepository courseCommentRepository;
-
-    @InjectMocks
-    private AccessToUrlServiceImpl accessToUrlService;
-
     @Before
     public void setUp() throws Exception {
         courseList = new ArrayList<>();
@@ -81,6 +71,7 @@ public class AccessToUrlServiceTest {
         courseList.add(course);
         deckList.add(deck);
         user.getAccount().setAuthorities(createAuthoritySet());
+
         when(userService.getAuthorizedUser()).thenReturn(user);
         when(courseRepository.getAccessToCourse(CATEGORY_ID, COURSE_ID))
                 .thenReturn(courseList);

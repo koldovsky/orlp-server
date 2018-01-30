@@ -77,7 +77,6 @@ public class AccountServiceTest {
 
     @Test
     public void testGetLearningRegime() throws NotAuthorisedUserException {
-
         LearningRegime result = accountService.getLearningRegime();
         verify(userService).getAuthorizedUser();
         assertEquals(LearningRegime.BAD_NORMAL_GOOD_STATUS_DEPENDING, result);

@@ -43,8 +43,7 @@ public class CategoryServiceImplTest {
         categoryList = new ArrayList<>();
         category = DomainFactory.createCategory(CATEGORY_ID, null, null, image);
         categoryList.add(category);
-        image = DomainFactory.createImage(IMAGE_ID, null, null, null, null
-                , false);
+        image = DomainFactory.createImage(IMAGE_ID, null, null, null, null, false);
     }
 
     @Test

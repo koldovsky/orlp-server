@@ -55,7 +55,6 @@ public class CourseServiceImplTest {
     private User user;
     private Category category;
     private Image image;
-
     private List<Course> courseList;
     private Set<Course> courseSet;
     private List<Deck> deckList;

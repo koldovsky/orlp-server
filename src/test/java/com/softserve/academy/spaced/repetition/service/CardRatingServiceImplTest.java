@@ -26,20 +26,16 @@ import static org.mockito.Mockito.when;
 @Transactional
 public class CardRatingServiceImplTest {
 
+    private final Long CARD_ID = 1L;
+    private final String EMAIL = "account@test.com";
     @Mock
     private CardRatingRepository cardRatingRepository;
-
     @Mock
     private CardRepository cardRepository;
-
     @Mock
     private UserService userService;
-
     @InjectMocks
     private CardRatingServiceImpl cardRatingService;
-
-    private Long CARD_ID = 1L;
-    private String EMAIL = "account@test.com";
     private User user;
     private Card card;
     private CardRating cardRating;
