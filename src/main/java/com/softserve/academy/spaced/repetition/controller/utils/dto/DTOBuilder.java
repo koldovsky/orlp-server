@@ -26,7 +26,9 @@ public class DTOBuilder {
     }
 
     public static <M extends EntityInterface, T extends DTO<M>> T buildDtoForEntity(M entity, Class<T> dtoClass, Link selfLink) {
-
+        if(entity == null){
+            return null;
+        }
         Constructor<T> declaredConstructor = null;
         try {
             declaredConstructor = dtoClass.getDeclaredConstructor(entity.getClass(), selfLink.getClass());

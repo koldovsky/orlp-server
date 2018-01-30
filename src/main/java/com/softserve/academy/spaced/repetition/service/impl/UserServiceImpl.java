@@ -138,7 +138,7 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
         return user;
     }
-
+    //TODO: Move to separate class
     @Override
     public String getNoAuthenticatedUserEmail() throws NotAuthorisedUserException {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -149,7 +149,7 @@ public class UserServiceImpl implements UserService {
             throw new NotAuthorisedUserException();
         }
     }
-
+    //TODO: Move to separate class
     @Override
     public User getAuthorizedUser() throws NotAuthorisedUserException {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
