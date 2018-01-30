@@ -66,16 +66,4 @@ public class UserController {
         return new ResponseEntity<>(courses, HttpStatus.OK);
     }
 
-    @GetMapping("api/status")
-    public ResponseEntity getUserStatus() throws UserStatusException {
-        userService.getUserStatus();
-        return new ResponseEntity(HttpStatus.OK);
-    }
-
-    @GetMapping("api/confirmation-mail")
-    public ResponseEntity sendConfirmationMail() throws NotAuthorisedUserException {
-        userService.activateAccount();
-        return new ResponseEntity(HttpStatus.OK);
-    }
-
 }

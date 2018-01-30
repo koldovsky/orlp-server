@@ -67,25 +67,5 @@ public class AccountController {
         return ResponseEntity.ok().build();
     }
 
-    @PutMapping(value = "api/reset/password")
-    public ResponseEntity<String> sendResetPasswordMail(@RequestBody String email) {
-        LOGGER.debug("Send reset password mail to email: {}", email);
-        String accountStatus = accountService.checkAccountStatusAndSendMail(email);
-        return ResponseEntity.ok(accountStatus);
-    }
 
-    @PutMapping(value = "api/verification/token")
-    public ResponseEntity<String> verificationToken(@RequestBody String token) {
-        LOGGER.debug("Token verification");
-        String emailFromToken = verificationService.getAccountEmail(token);
-        return ResponseEntity.ok(emailFromToken);
-    }
-
-    @PutMapping(value = "api/create/password")
-    public ResponseEntity createNewPasswordForUser(@Validated(Request.class) @RequestBody
-                                                               NewAccountPasswordDTO newAccountPasswordDTO) {
-        LOGGER.debug("Created new password for: {}", newAccountPasswordDTO.getEmail());
-        accountService.createNewAccountPassword(newAccountPasswordDTO.getEmail(), newAccountPasswordDTO.getPassword());
-        return ResponseEntity.ok().build();
-    }
 }
