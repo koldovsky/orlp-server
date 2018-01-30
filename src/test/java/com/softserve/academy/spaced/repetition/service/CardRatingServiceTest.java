@@ -24,7 +24,7 @@ import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 @Transactional
-public class CardRatingServiceImplTest {
+public class CardRatingServiceTest {
 
     private final Long CARD_ID = 1L;
     private final String EMAIL = "account@test.com";

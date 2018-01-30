@@ -22,7 +22,7 @@ import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 @Transactional
-public class CourseCommentServiceImplTest {
+public class CourseCommentServiceTest {
 
     private final Long COMMENT_ID = 1L;
     private final Long COURSE_ID = 1L;

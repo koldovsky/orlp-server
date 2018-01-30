@@ -36,7 +36,7 @@ import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 @Transactional
-public class CardServiceImplTest {
+public class CardServiceTest {
 
     private final Long USER_ID = 1L;
     private final Long DECK_ID = 1L;

@@ -27,7 +27,7 @@ import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 @Transactional
-public class AuditServiceImplTest {
+public class AuditServiceTest {
 
     @InjectMocks
     private AuditServiceImpl auditService;

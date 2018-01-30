@@ -22,7 +22,7 @@ import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 @Transactional
-public class CourseRatingServiceImplTest {
+public class CourseRatingServiceTest {
 
     private final String EMAIL = "account@test.com";
     private final Long COURSE_RATING_ID = 1L;

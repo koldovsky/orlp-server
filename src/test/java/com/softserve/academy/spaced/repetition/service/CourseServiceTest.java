@@ -27,7 +27,7 @@ import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 @Transactional
-public class CourseServiceImplTest {
+public class CourseServiceTest {
 
     private final Long COURSE_ID = 1L;
     private final Long CATEGORY_ID = 1L;
