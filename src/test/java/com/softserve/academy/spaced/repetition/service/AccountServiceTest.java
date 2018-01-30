@@ -26,7 +26,7 @@ import java.util.Date;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 import static org.powermock.api.mockito.PowerMockito.when;
@@ -142,7 +142,7 @@ public class AccountServiceTest {
     public void testGetRememberingLevels() throws NotAuthorisedUserException {
         List<RememberingLevel> result = accountService.getRememberingLevels();
         verify(userService).getAuthorizedUser();
-        assertNotNull(result);
+        assertNull(result);
     }
 
     @Test(expected = NotAuthorisedUserException.class)

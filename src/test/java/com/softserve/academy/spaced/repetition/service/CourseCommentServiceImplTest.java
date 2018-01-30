@@ -38,8 +38,10 @@ public class CourseCommentServiceImplTest {
     private User user;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         user = DomainFactory.createUser(1L, null, new Person(), new Folder(), null);
+
+        when(commentRepository.findOne(COMMENT_ID)).thenReturn(new CourseComment());
     }
 
     @Test
@@ -64,8 +66,6 @@ public class CourseCommentServiceImplTest {
 
     @Test
     public void getCommentById() {
-        when(commentRepository.findOne(COMMENT_ID)).thenReturn(new CourseComment());
-
         CourseComment result = courseCommentService.getCommentById(COMMENT_ID);
         verify(commentRepository).findOne(COMMENT_ID);
         assertNotNull(result);
@@ -82,8 +82,6 @@ public class CourseCommentServiceImplTest {
 
     @Test
     public void updateCommentById() {
-        when(commentRepository.findOne(COMMENT_ID)).thenReturn(new CourseComment());
-
         CourseComment result = courseCommentService.updateCommentById(COMMENT_ID, COMMENT_TEXT);
         verify(commentRepository).findOne(COMMENT_ID);
         assertNotNull(result);

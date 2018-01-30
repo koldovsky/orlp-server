@@ -66,17 +66,19 @@ public class CardServiceImplTest {
 
     @Before
     public void setUp() throws Exception {
+        List<Card> cardList = new ArrayList<>();
+        cardList.add(card);
         Account account = DomainFactory.createAccount(1L, null, null, null, null
                 , false, null, null, LearningRegime.BAD_NORMAL_GOOD_STATUS_DEPENDING
                 , ACCOUNT_CARDS_NUMBER, null);
         user = DomainFactory.createUser(USER_ID, account, new Person(), new Folder(), null);
         deck = DomainFactory.createDeck(DECK_ID, null, null, null, null,
-                1.0, null, new ArrayList<>(), null, null, null, null);
+                1.0, null, cardList, null, null, null);
         card = DomainFactory.createCard(CARD_ID, "Card One",
                 "What are the supported platforms by Java Programming Language?",
                 "Java runs on a variety of platforms, such as Windows, Mac OS, and the\n" +
                         "    various versions of UNIX/Linux like HP-Unix, Sun Solaris, Redhat Linux, Ubuntu,\n" +
-                        "    CentOS, etc.", new Deck());
+                        "    CentOS, etc.", deck);
 
         when(userService.getAuthorizedUser()).thenReturn(user);
         when(cardRepository.findOne(CARD_ID)).thenReturn(card);

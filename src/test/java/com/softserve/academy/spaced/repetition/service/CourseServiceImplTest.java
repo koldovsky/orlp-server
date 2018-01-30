@@ -67,7 +67,7 @@ public class CourseServiceImplTest {
         deckList = new ArrayList<>();
 
         Deck deck = DomainFactory.createDeck(DECK_ID, null, null, null, category
-                , 1.0, null, null, null, null, null, null);
+                , 1.0, null, null, null, null, null);
         image = DomainFactory.createImage(1L, null, null, null, null, true);
         category = DomainFactory.createCategory(CATEGORY_ID, null, null, image);
         user = DomainFactory.createUser(1L, null, null, null, courseSet);

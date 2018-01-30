@@ -75,7 +75,7 @@ public class AccessToUrlServiceTest {
         category = DomainFactory.createCategory(CATEGORY_ID, null, null,
                 null, null, null);
         Deck deck = DomainFactory.createDeck(DECK_ID, null, null, null, category
-                , 1L, user, cardList, courseList, null, null, null);
+                , 1L, user, cardList,null, null, null);
         Card card = DomainFactory.createCard(CARD_ID, null, null, null, deck);
         cardList.add(card);
         courseList.add(course);
