@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 
@@ -266,7 +267,7 @@ public class CourseServiceImplTest {
         when(courseRepository.findAll(any(PageRequest.class))).thenReturn(null);
         Page<Course> result = courseService.getPageWithCourses(PAGE_NUMBER, PAGE_SORT_BY, PAGE_ASCENDING_ORDER);
         verify(courseRepository).findAll(any(PageRequest.class));
-        assertEquals(null, result);
+        assertNull(result);
     }
 
     @Test
@@ -277,6 +278,6 @@ public class CourseServiceImplTest {
         Page<Course> result = courseService.getPageWithCoursesByCategory(CATEGORY_ID, PAGE_NUMBER
                 , PAGE_SORT_BY, PAGE_ASCENDING_ORDER);
         verify(courseRepository).findAllByCategoryEquals(any(Category.class), any(PageRequest.class));
-        assertEquals(null, result);
+        assertNull(result);
     }
 }

@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -81,7 +82,7 @@ public class CategoryServiceImplTest {
         Category result = categoryService.addCategory(null, null, image);
         verify(imageService).setImageStatusInUse(IMAGE_ID);
         verify(categoryRepository).save(any(Category.class));
-        assertEquals(null, result);
+        assertNull(result);
     }
 
     @Test
@@ -103,7 +104,6 @@ public class CategoryServiceImplTest {
 
         Page<Category> result = categoryService.getSortedCategories(PAGE_NUMBER, PAGE_SORT_BY, PAGE_ASCENDING_ORDER);
         verify(categoryRepository).findAll(any(PageRequest.class));
-        assertEquals(null, result);
-
+        assertNull(result);
     }
 }
