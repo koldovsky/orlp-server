@@ -1,10 +1,7 @@
 package com.softserve.academy.spaced.repetition.util;
 
 import com.softserve.academy.spaced.repetition.domain.*;
-import com.softserve.academy.spaced.repetition.domain.enums.AccountStatus;
-import com.softserve.academy.spaced.repetition.domain.enums.AuthenticationType;
-import com.softserve.academy.spaced.repetition.domain.enums.ImageType;
-import com.softserve.academy.spaced.repetition.domain.enums.LearningRegime;
+import com.softserve.academy.spaced.repetition.domain.enums.*;
 import com.softserve.academy.spaced.repetition.utils.audit.AuditingAction;
 
 import java.util.Date;
@@ -42,6 +39,14 @@ public class DomainFactory {
         return account;
     }
 
+    public static Authority createAuthority(Long authorityId, AuthorityName name, List<Account> accounts) {
+        Authority authority = new Authority();
+        authority.setId(authorityId);
+        authority.setName(name);
+        authority.setAccounts(accounts);
+        return authority;
+    }
+  
     public static Person createPerson(Long personId, String firstName, String lastName, ImageType imageType,
                                       String image, String imageBase64) {
         Person person = new Person();
@@ -65,6 +70,15 @@ public class DomainFactory {
         category.setDecks(decks);
         return category;
     }
+  
+    public static Category createCategory(Long id, String name, String description, Image image) {
+        Category category = new Category();
+        category.setId(id);
+        category.setName(name);
+        category.setDescription(description);
+        category.setImage(image);
+        return category;
+    }
 
     public static Course createCourse(Long courseId, String name, String description, Image image, double rating,
                                       boolean published, User owner, Category category, List<Deck> decks,
@@ -83,6 +97,15 @@ public class DomainFactory {
         course.setCourseComments(courseComments);
         return course;
     }
+  
+    public static CourseRating createCourseRating(Long id, String accountEmail, Course course, int rating) {
+        CourseRating courseRating = new CourseRating();
+        courseRating.setId(id);
+        courseRating.setAccountEmail(accountEmail);
+        courseRating.setCourse(course);
+        courseRating.setRating(rating);
+        return courseRating;
+    }
 
     public static Folder createFolder(Long folderId, Set<Deck> decks) {
         Folder folder = new Folder();
@@ -93,8 +116,7 @@ public class DomainFactory {
 
     public static Deck createDeck(Long deckId, String name, String description, String syntaxToHighLight,
                                   Category category, double rating, User deckOwner, List<Card> cards,
-                                  List<DeckRating> deckRatings, Set<Folder> folders,
-                                  List<DeckComment> deckComments) {
+                                  List<DeckRating> deckRatings, Set<Folder> folders, List<DeckComment> deckComments) {
         Deck deck = new Deck();
         deck.setId(deckId);
         deck.setName(name);
@@ -130,7 +152,7 @@ public class DomainFactory {
         deckRating.setRating(rating);
         return deckRating;
     }
-
+  
     public static Card createCard(Long id, String title, String question, String answer, Deck deck) {
         Card card = new Card();
         card.setId(id);
@@ -141,14 +163,14 @@ public class DomainFactory {
         card.setDeck(deck);
         return card;
     }
-
-    public static Category createCategory(Long id, String name, String description, Image image) {
-        Category category = new Category();
-        category.setId(id);
-        category.setName(name);
-        category.setDescription(description);
-        category.setImage(image);
-        return category;
+  
+    public static CardRating createCardRating(Long id, String accountEmail, Card card, int rating) {
+        CardRating cardRating = new CardRating();
+        cardRating.setId(id);
+        cardRating.setAccountEmail(accountEmail);
+        cardRating.setCard(card);
+        cardRating.setRating(rating);
+        return cardRating;
     }
 
     public static Audit createAudit(long id, String accountEmail, AuditingAction action, Date time, String ipAddress, String role) {
@@ -162,19 +184,11 @@ public class DomainFactory {
         return audit;
     }
 
-    public static CardRating createCardRating(Long id, String accountEmail, Card card, int rating) {
-        CardRating cardRating = new CardRating();
-        cardRating.setId(id);
-        cardRating.setAccountEmail(accountEmail);
-        cardRating.setCard(card);
-        cardRating.setRating(rating);
-        return cardRating;
-    }
-
-    public static Image createImage(Long id, String imagebase64, String type, User createdBy, Long size, boolean isImageUsed) {
+    public static Image createImage(Long imageId, String imageBase64, String type, User createdBy, Long size,
+                                    boolean isImageUsed) {
         Image image = new Image();
-        image.setId(id);
-        image.setImagebase64(imagebase64);
+        image.setId(imageId);
+        image.setImagebase64(imageBase64);
         image.setType(type);
         image.setCreatedBy(createdBy);
         image.setSize(size);
@@ -182,12 +196,29 @@ public class DomainFactory {
         return image;
     }
 
-    public static CourseRating createCourseRating(Long id, String accountEmail, Course course, int rating) {
-        CourseRating courseRating = new CourseRating();
-        courseRating.setId(id);
-        courseRating.setAccountEmail(accountEmail);
-        courseRating.setCourse(course);
-        courseRating.setRating(rating);
-        return courseRating;
+    public static RememberingLevel createRememberingLevel(Long rememberingLevelId, Integer orderNumber, String name,
+                                                          Integer numberOfPostponedDays, Account account) {
+        RememberingLevel rememberingLevel = new RememberingLevel();
+        rememberingLevel.setId(rememberingLevelId);
+        rememberingLevel.setOrderNumber(orderNumber);
+        rememberingLevel.setName(name);
+        rememberingLevel.setNumberOfPostponedDays(numberOfPostponedDays);
+        rememberingLevel.setAccount(account);
+        return rememberingLevel;
+    }
+
+    public static UserCardQueue createUserCardQueue(Long userCardQueueId, Long userId, Long cardId, Long deckId,
+                                                    UserCardQueueStatus status, Date cardDate, Date dateToRepeat,
+                                                    RememberingLevel rememberingLevel) {
+        UserCardQueue userCardQueue = new UserCardQueue();
+        userCardQueue.setId(userCardQueueId);
+        userCardQueue.setUserId(userId);
+        userCardQueue.setCardId(cardId);
+        userCardQueue.setDeckId(deckId);
+        userCardQueue.setStatus(status);
+        userCardQueue.setCardDate(cardDate);
+        userCardQueue.setDateToRepeat(dateToRepeat);
+        userCardQueue.setRememberingLevel(rememberingLevel);
+        return userCardQueue;
     }
 }

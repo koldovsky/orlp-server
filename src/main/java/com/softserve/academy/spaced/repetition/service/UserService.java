@@ -22,19 +22,6 @@ import java.util.Set;
  * This interface proceeds all operations with users.
  */
 public interface UserService {
-
-    void setAuthorityRepository(AuthorityRepository authorityRepository);
-
-    void setUserRepository(UserRepository userRepository);
-
-    void setDeckRepository(DeckRepository deckRepository);
-
-    void setPasswordEncoder(PasswordEncoder passwordEncoder);
-
-    void setImageService(ImageServiceImpl imageService);
-
-    void setMailService(MailService mailService);
-
     /**
      * Adds new user
      *
