@@ -20,21 +20,12 @@ import java.util.List;
 public class CourseCommentServiceImpl implements CourseCommentService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CourseCommentServiceImpl.class);
-
-    private final CourseCommentRepository commentRepository;
-
-    private final CourseRepository courseRepository;
-
-    private final UserService userService;
-
-
     @Autowired
-    public CourseCommentServiceImpl(CourseCommentRepository commentRepository, CourseRepository courseRepository
-            , UserService userService) {
-        this.commentRepository = commentRepository;
-        this.courseRepository = courseRepository;
-        this.userService = userService;
-    }
+    private CourseCommentRepository commentRepository;
+    @Autowired
+    private CourseRepository courseRepository;
+    @Autowired
+    private UserService userService;
 
     @Override
     @Transactional

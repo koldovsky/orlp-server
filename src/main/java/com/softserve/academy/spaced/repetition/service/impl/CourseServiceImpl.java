@@ -2,14 +2,10 @@ package com.softserve.academy.spaced.repetition.service.impl;
 
 import com.softserve.academy.spaced.repetition.domain.*;
 import com.softserve.academy.spaced.repetition.repository.*;
-import com.softserve.academy.spaced.repetition.domain.Category;
-import com.softserve.academy.spaced.repetition.domain.Course;
-import com.softserve.academy.spaced.repetition.domain.Deck;
-import com.softserve.academy.spaced.repetition.domain.User;
-import com.softserve.academy.spaced.repetition.utils.exceptions.NotAuthorisedUserException;
 import com.softserve.academy.spaced.repetition.service.CourseService;
 import com.softserve.academy.spaced.repetition.service.ImageService;
 import com.softserve.academy.spaced.repetition.service.UserService;
+import com.softserve.academy.spaced.repetition.utils.exceptions.NotAuthorisedUserException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -28,60 +24,23 @@ public class CourseServiceImpl implements CourseService {
     public static final int TOP_COURSES = 4;
 
     private final static int QUANTITY_COURSES_IN_PAGE = 12;
-
+    @Autowired
     private CourseRepository courseRepository;
-
+    @Autowired
     private UserService userService;
-
+    @Autowired
     private UserRepository userRepository;
-
-
+    @Autowired
     private ImageService imageService;
-
+    @Autowired
     private ImageRepository imageRepository;
-
+    @Autowired
     private CategoryRepository categoryRepository;
-
+    @Autowired
     private DeckRepository deckRepository;
-
     @Autowired
     private MessageSource messageSource;
     private final Locale locale = LocaleContextHolder.getLocale();
-
-    @Autowired
-    public void setCourseRepository(CourseRepository courseRepository) {
-        this.courseRepository = courseRepository;
-    }
-
-    @Autowired
-    public void setUserService(UserService userService) {
-        this.userService = userService;
-    }
-
-    @Autowired
-    public void setUserRepository(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
-
-    @Autowired
-    public void setImageService(ImageService imageService) {
-        this.imageService = imageService;
-    }
-
-    @Autowired
-    public void setImageRepository(ImageRepository imageRepository) {
-        this.imageRepository = imageRepository;
-    }
-
-    @Autowired
-    public void setCategoryRepository(CategoryRepository categoryRepository) {
-        this.categoryRepository = categoryRepository;
-    }
-
-    @Autowired
-    public void setDeckRepository(DeckRepository deckRepository) {
-        this.deckRepository = deckRepository;
-    }
 
     @Override
     public List<Course> getAllCourses() {

@@ -32,33 +32,22 @@ import java.util.*;
 @Service
 public class CardServiceImpl implements CardService {
 
-    private final CardRepository cardRepository;
-
-    private final DeckRepository deckRepository;
-
-    private final UserService userService;
-
-    private final AccountService accountService;
-
-    private final UserCardQueueService userCardQueueService;
-
-    private final DeckService deckService;
+    @Autowired
+    private CardRepository cardRepository;
+    @Autowired
+    private DeckRepository deckRepository;
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private AccountService accountService;
+    @Autowired
+    private UserCardQueueService userCardQueueService;
+    @Autowired
+    private DeckService deckService;
 
     @Autowired
     private MessageSource messageSource;
     private final Locale locale = LocaleContextHolder.getLocale();
-
-    @Autowired
-    public CardServiceImpl(CardRepository cardRepository, DeckRepository deckRepository, AccountService accountService,
-                           UserService userService, UserCardQueueService userCardQueueService,
-                           DeckService deckService) {
-        this.cardRepository = cardRepository;
-        this.deckRepository = deckRepository;
-        this.userService = userService;
-        this.accountService = accountService;
-        this.userCardQueueService = userCardQueueService;
-        this.deckService = deckService;
-    }
 
     @Override
     @Transactional
@@ -121,14 +110,12 @@ public class CardServiceImpl implements CardService {
         User user = userService.getAuthorizedUser();
         final int cardsNumber = accountService.getCardsNumber();
         List<Card> cardsQueue = cardRepository.cardsForLearningWithOutStatus(user.getId(), deckId, cardsNumber);
-
         if (cardsQueue.size() < cardsNumber) {
             cardsQueue.addAll(cardRepository.cardsQueueForLearningWithStatus(user.getId(), deckId, cardsNumber)
                     .subList(0, cardsNumber - cardsQueue.size()));
         }
         return cardsQueue;
     }
-
 
     @Override
     @Transactional

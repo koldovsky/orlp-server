@@ -17,6 +17,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.security.authentication.TestingAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.context.SecurityContextImpl;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -51,6 +52,7 @@ public class ValidatorsTest {
     @Before
     public void setUp() {
         jwtUser = mock(JwtUser.class);
+        SecurityContextHolder.setContext(new SecurityContextImpl());
         SecurityContextHolder.getContext().setAuthentication(new TestingAuthenticationToken(jwtUser, null));
     }
 
