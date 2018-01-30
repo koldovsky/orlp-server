@@ -2,6 +2,7 @@ package com.softserve.academy.spaced.repetition.util;
 
 import com.softserve.academy.spaced.repetition.domain.*;
 import com.softserve.academy.spaced.repetition.domain.enums.*;
+import com.softserve.academy.spaced.repetition.utils.audit.AuditingAction;
 
 import java.util.Date;
 import java.util.List;
@@ -45,7 +46,7 @@ public class DomainFactory {
         authority.setAccounts(accounts);
         return authority;
     }
-
+  
     public static Person createPerson(Long personId, String firstName, String lastName, ImageType imageType,
                                       String image, String imageBase64) {
         Person person = new Person();
@@ -69,6 +70,15 @@ public class DomainFactory {
         category.setDecks(decks);
         return category;
     }
+  
+    public static Category createCategory(Long id, String name, String description, Image image) {
+        Category category = new Category();
+        category.setId(id);
+        category.setName(name);
+        category.setDescription(description);
+        category.setImage(image);
+        return category;
+    }
 
     public static Course createCourse(Long courseId, String name, String description, Image image, double rating,
                                       boolean published, User owner, Category category, List<Deck> decks,
@@ -86,6 +96,15 @@ public class DomainFactory {
         course.setCourseRatings(courseRatings);
         course.setCourseComments(courseComments);
         return course;
+    }
+  
+    public static CourseRating createCourseRating(Long id, String accountEmail, Course course, int rating) {
+        CourseRating courseRating = new CourseRating();
+        courseRating.setId(id);
+        courseRating.setAccountEmail(accountEmail);
+        courseRating.setCourse(course);
+        courseRating.setRating(rating);
+        return courseRating;
     }
 
     public static Folder createFolder(Long folderId, Set<Deck> decks) {
@@ -132,6 +151,37 @@ public class DomainFactory {
         deckRating.setDeck(deck);
         deckRating.setRating(rating);
         return deckRating;
+    }
+  
+    public static Card createCard(Long id, String title, String question, String answer, Deck deck) {
+        Card card = new Card();
+        card.setId(id);
+        card.setTitle(title);
+        card.setQuestion(question);
+        card.setAnswer(answer);
+        card.setRating(0L);
+        card.setDeck(deck);
+        return card;
+    }
+  
+    public static CardRating createCardRating(Long id, String accountEmail, Card card, int rating) {
+        CardRating cardRating = new CardRating();
+        cardRating.setId(id);
+        cardRating.setAccountEmail(accountEmail);
+        cardRating.setCard(card);
+        cardRating.setRating(rating);
+        return cardRating;
+    }
+
+    public static Audit createAudit(long id, String accountEmail, AuditingAction action, Date time, String ipAddress, String role) {
+        Audit audit = new Audit();
+        audit.setId(id);
+        audit.setAccountEmail(accountEmail);
+        audit.setAction(action);
+        audit.setTime(time);
+        audit.setIpAddress(ipAddress);
+        audit.setRole(role);
+        return audit;
     }
 
     public static Image createImage(Long imageId, String imageBase64, String type, User createdBy, Long size,

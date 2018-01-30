@@ -32,7 +32,7 @@ public class CardsFileController {
         return new ResponseEntity(HttpStatus.OK);
     }
 
-    @GetMapping("download/deck/{deckId}/cards")
+    @GetMapping("api/private/download/deck/{deckId}/cards")
     public void downloadFile(HttpServletResponse response, @PathVariable Long deckId) throws IOException {
         response.setContentType("application/octet-stream");
         response.setHeader("Content-Disposition", "attachment; filename=Cards.yml");
