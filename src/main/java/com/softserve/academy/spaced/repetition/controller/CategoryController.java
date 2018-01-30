@@ -72,7 +72,7 @@ public class CategoryController {
                 });
         return new ResponseEntity<>(sortedCategoriesDTOS, HttpStatus.OK);
     }
-
+//TODO Add delete category (Roman Somyk)
     @Auditable(action = AuditingAction.CREATE_CATEGORY)
     @PostMapping("/api/admin/add/category")
     public ResponseEntity<CategoryPublicDTO> addCategory(@Validated(Request.class) @RequestBody CategoryDTO categoryDTO) {
@@ -93,4 +93,5 @@ public class CategoryController {
         CategoryPublicDTO categoryDTO = DTOBuilder.buildDtoForEntity(category, CategoryPublicDTO.class, selfLink);
         return new ResponseEntity<>(categoryDTO, HttpStatus.OK);
     }
+
 }
