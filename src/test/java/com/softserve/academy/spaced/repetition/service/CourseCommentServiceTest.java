@@ -1,105 +1,97 @@
 package com.softserve.academy.spaced.repetition.service;
 
-import com.softserve.academy.spaced.repetition.config.TestDatabaseConfig;
 import com.softserve.academy.spaced.repetition.domain.*;
 import com.softserve.academy.spaced.repetition.repository.CourseCommentRepository;
 import com.softserve.academy.spaced.repetition.repository.CourseRepository;
 import com.softserve.academy.spaced.repetition.service.impl.CourseCommentServiceImpl;
+import com.softserve.academy.spaced.repetition.util.DomainFactory;
+import com.softserve.academy.spaced.repetition.utils.exceptions.NotAuthorisedUserException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Import;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.when;
+import static org.junit.Assert.assertNotNull;
+import static org.mockito.Mockito.*;
 
-@RunWith(SpringRunner.class)
-@ActiveProfiles("testdatabase")
-@SpringBootTest
-@Import(TestDatabaseConfig.class)
-@Sql("/data/TestData.sql")
+@RunWith(MockitoJUnitRunner.class)
 @Transactional
 public class CourseCommentServiceTest {
 
-    private static final Long COURSE_ID = 1L;
-
-    @Autowired
-    private CourseCommentServiceImpl courseCommentServiceUnderTest;
-
-    @Autowired
-    private CourseCommentRepository courseCommentRepository;
-
-    @Autowired
-    private CourseRepository courseRepository;
-
+    private final Long COMMENT_ID = 1L;
+    private final Long COURSE_ID = 1L;
+    private final String COMMENT_TEXT = "Some text";
+    @InjectMocks
+    private CourseCommentServiceImpl courseCommentService;
     @Mock
-    private UserService mockedUserService;
+    private CourseCommentRepository commentRepository;
+    @Mock
+    private CourseRepository courseRepository;
+    @Mock
+    private UserService userService;
+    private User user;
 
     @Before
-    public void setUp() throws Exception {
-        courseCommentServiceUnderTest = new CourseCommentServiceImpl(courseCommentRepository, courseRepository, mockedUserService);
-    }
+    public void setUp() {
+        user = DomainFactory.createUser(1L, null, new Person(), new Folder(), null);
 
-    private User createMockedUser() {
-        User mockedUser = new User(new Account("", "user@email.com"), new Person("Ivan", "Kruk"), new Folder());
-        mockedUser.getPerson().setId(1l);
-        return mockedUser;
+        when(commentRepository.findOne(COMMENT_ID)).thenReturn(new CourseComment());
     }
 
     @Test
-    public void testAddCommentForCourse() throws Exception {
-        when(mockedUserService.getAuthorizedUser()).thenReturn(createMockedUser());
-        CourseComment savedComment = courseCommentServiceUnderTest.addCommentForCourse(COURSE_ID, "Very interesting", null);
-        assertNotNull(savedComment);
-        assertEquals("Checking field commentText", "Very interesting", savedComment.getCommentText());
-        assertEquals("Checking field parentCommentId", null, savedComment.getParentCommentId());
-        assertEquals("Checking set person", createMockedUser().getPerson(), savedComment.getPerson());
-        assertEquals("Checking set courseId", COURSE_ID, savedComment.getCourse().getId());
+    public void addCommentForCourse() throws NotAuthorisedUserException {
+        when(userService.getAuthorizedUser()).thenReturn(user);
+        when(courseRepository.findOne(COURSE_ID)).thenReturn(new Course());
+        when(commentRepository.save(new CourseComment())).thenReturn(new CourseComment());
+
+        CourseComment result = courseCommentService.addCommentForCourse(COURSE_ID, COMMENT_TEXT, null);
+        verify(userService).getAuthorizedUser();
+        verify(courseRepository).findOne(COURSE_ID);
+        verify(commentRepository).save(new CourseComment());
+        assertNotNull(result);
+    }
+
+    @Test(expected = NotAuthorisedUserException.class)
+    public void addCommentForCourseByNotAuthorisedUser() throws NotAuthorisedUserException {
+        when(userService.getAuthorizedUser()).thenThrow(new NotAuthorisedUserException());
+
+        courseCommentService.addCommentForCourse(COURSE_ID, COMMENT_TEXT, null);
     }
 
     @Test
-    public void testGetCommentById() throws Exception {
-        when(mockedUserService.getAuthorizedUser()).thenReturn(createMockedUser());
-        CourseComment savedComment = courseCommentServiceUnderTest.addCommentForCourse(COURSE_ID, "Very interesting", null);
-        assertEquals("Getting comment for course.", savedComment, courseCommentServiceUnderTest.getCommentById(savedComment.getId()));
+    public void getCommentById() {
+        CourseComment result = courseCommentService.getCommentById(COMMENT_ID);
+        verify(commentRepository).findOne(COMMENT_ID);
+        assertNotNull(result);
     }
 
     @Test
-    public void testGetAllCommentsForCourse() throws Exception {
-        when(mockedUserService.getAuthorizedUser()).thenReturn(createMockedUser());
-        CourseComment savedFirstComment = courseCommentServiceUnderTest.addCommentForCourse(COURSE_ID, "Good", null);
-        CourseComment savedSecondComment = courseCommentServiceUnderTest.addCommentForCourse(COURSE_ID, "Very interesting", null);
-        List<Comment> listOfCommentsForCourse = courseCommentServiceUnderTest.getAllCommentsForCourse(COURSE_ID);
-        assertEquals("Getting all comments for course.", 2, listOfCommentsForCourse.size());
-        assertEquals("Check first comment", savedFirstComment, listOfCommentsForCourse.get(0));
-        assertEquals("Check second comment", savedSecondComment, listOfCommentsForCourse.get(1));
+    public void getAllCommentsForCourse() {
+        when(commentRepository.findCourseCommentsByCourseId(COURSE_ID)).thenReturn(new ArrayList<>());
+
+        List<Comment> result = courseCommentService.getAllCommentsForCourse(COURSE_ID);
+        verify(commentRepository).findCourseCommentsByCourseId(COURSE_ID);
+        assertNotNull(result);
     }
 
     @Test
-    public void testDeleteCommentById() throws Exception {
-        when(mockedUserService.getAuthorizedUser()).thenReturn(createMockedUser());
-        CourseComment savedComment = courseCommentServiceUnderTest.addCommentForCourse(COURSE_ID, "Very interesting", null);
-        courseCommentServiceUnderTest.addCommentForCourse(COURSE_ID, "Very interesting", savedComment.getId());
-        courseCommentServiceUnderTest.deleteCommentById(savedComment.getId());
-        assertEquals("Trying to find comment.", 0, courseCommentRepository.findCourseCommentsByCourseId(COURSE_ID).size());
+    public void updateCommentById() {
+        CourseComment result = courseCommentService.updateCommentById(COMMENT_ID, COMMENT_TEXT);
+        verify(commentRepository).findOne(COMMENT_ID);
+        assertNotNull(result);
     }
 
     @Test
-    public void testUpdateCommentById() throws Exception {
-        when(mockedUserService.getAuthorizedUser()).thenReturn(createMockedUser());
-        CourseComment savedComment = courseCommentServiceUnderTest.addCommentForCourse(COURSE_ID, "Very interesting", null);
-        CourseComment updatedComment = courseCommentServiceUnderTest.updateCommentById(savedComment.getId(), "New CommentText");
-        assertEquals("Changed comment text.", "New CommentText", updatedComment.getCommentText());
-    }
+    public void deleteCommentById() {
+        doNothing().when(commentRepository).deleteComment(COMMENT_ID);
 
+        courseCommentService.deleteCommentById(COMMENT_ID);
+        verify(commentRepository).deleteComment(COMMENT_ID);
+    }
 }
