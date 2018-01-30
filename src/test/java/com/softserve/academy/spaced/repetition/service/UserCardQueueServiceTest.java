@@ -129,7 +129,6 @@ public class UserCardQueueServiceTest {
         verify(userCardQueueRepository).save(userCardQueue);
     }
 
-
     @Test(expected = IllegalArgumentException.class)
     public void testUpdateUserCardQueueIfStatusIsNotValid() throws NotAuthorisedUserException {
         final String INCORRECT_USER_CARD_QUEUE_STATUS = "INCORRECT";

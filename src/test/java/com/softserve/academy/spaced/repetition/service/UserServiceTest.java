@@ -182,7 +182,6 @@ public class UserServiceTest {
         decks.remove(deck);
     }
 
-
     @Test
     public void testGetNoAuthenticatedUserEmail() throws NotAuthorisedUserException {
         String result = userService.getNoAuthenticatedUserEmail();
@@ -329,7 +328,6 @@ public class UserServiceTest {
         assertEquals(user, result);
     }
 
-
     @Test(expected = NotAuthorisedUserException.class)
     public void testUploadImageByNotAuthorisedUser() throws NotAuthorisedUserException, ImageRepositorySizeQuotaExceededException {
         when(authentication.getPrincipal()).thenReturn(AUTHENTICATION_NOT_AUTHORISED_USER);
@@ -449,5 +447,4 @@ public class UserServiceTest {
 
         userService.isUserStatusActive(user);
     }
-
 }

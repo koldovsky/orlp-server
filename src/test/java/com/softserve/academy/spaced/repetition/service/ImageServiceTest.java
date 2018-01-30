@@ -131,9 +131,9 @@ public class ImageServiceTest {
 
     @Test(expected = MultipartException.class)
     public void testCheckImageExtensionIfFileIsTooLarge() throws NotAuthorisedUserException, ImageRepositorySizeQuotaExceededException {
-        final Long EXCEEDED_MAX_FILE_SIEZ = MAX_FILE_SIZE + 1L;
+        final Long EXCEEDED_MAX_FILE_SIZE = MAX_FILE_SIZE + 1L;
 
-        when(multipartFile.getSize()).thenReturn(EXCEEDED_MAX_FILE_SIEZ);
+        when(multipartFile.getSize()).thenReturn(EXCEEDED_MAX_FILE_SIZE);
 
         imageService.checkImageExtension(multipartFile);
         verify(userService).getAuthorizedUser();
