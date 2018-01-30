@@ -41,7 +41,7 @@ public class Person {
 
     private String image;
 
-    @Column(name = "image_base_64", columnDefinition = "LONGTEXT")
+    @Column(name = "image_base64", columnDefinition = "LONGTEXT")
     @Basic(fetch = FetchType.LAZY)
     private String imageBase64;
 

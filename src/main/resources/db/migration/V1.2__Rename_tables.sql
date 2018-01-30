@@ -1,5 +1,5 @@
 alter table account change authenticationtype authentication_type varchar(8) not null;
-alter table account change lastpasswordresetdate last_password_reset_date varchar(255) not null;
+alter table account change lastpasswordresetdate last_password_reset_date datetime;
 alter table account change email email varchar(254) not null;
 alter table account change password password varchar(60) not null;
 alter table audit change account_email account_email varchar(254) not null;
