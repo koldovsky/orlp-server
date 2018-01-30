@@ -26,6 +26,7 @@ import java.util.Date;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 import static org.powermock.api.mockito.PowerMockito.when;
@@ -38,6 +39,7 @@ public class AccountServiceTest {
     private final String PASSWORD = "pass";
     private final String EMAIL = "account@test.com";
     private final Integer CARDS_NUMBER = 10;
+    private final String LEARNING_REGIME = "BAD_NORMAL_GOOD_STATUS_DEPENDING";
     @Mock
     private AccountRepository accountRepository;
     @Mock
@@ -93,7 +95,7 @@ public class AccountServiceTest {
     public void testUpdateLearningRegime() throws NotAuthorisedUserException, IllegalArgumentException {
         when(accountRepository.findOne(ACCOUNT_ID)).thenReturn(account);
 
-        accountService.updateLearningRegime("BAD_NORMAL_GOOD_STATUS_DEPENDING");
+        accountService.updateLearningRegime(LEARNING_REGIME);
         verify(accountRepository).findOne(ACCOUNT_ID);
         verify(userService).getAuthorizedUser();
         verify(accountRepository).save(account);
@@ -103,7 +105,7 @@ public class AccountServiceTest {
     public void updateLearningRegimeByNotAuthorisedUser() throws NotAuthorisedUserException, IllegalArgumentException {
         when(userService.getAuthorizedUser()).thenThrow(new NotAuthorisedUserException());
 
-        accountService.updateLearningRegime("BAD_NORMAL_GOOD_STATUS_DEPENDING");
+        accountService.updateLearningRegime(LEARNING_REGIME);
         verify(userService).getAuthorizedUser();
     }
 
@@ -140,7 +142,7 @@ public class AccountServiceTest {
     public void testGetRememberingLevels() throws NotAuthorisedUserException {
         List<RememberingLevel> result = accountService.getRememberingLevels();
         verify(userService).getAuthorizedUser();
-        assertEquals(null, result);
+        assertNotNull(result);
     }
 
     @Test(expected = NotAuthorisedUserException.class)

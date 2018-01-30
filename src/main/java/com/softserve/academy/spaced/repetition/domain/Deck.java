@@ -139,14 +139,6 @@ public class Deck implements EntityInterface {
         this.deckComments = deckComments;
     }
 
-    public List<Course> getCourses() {
-        return courses;
-    }
-
-    public void setCourses(List<Course> courses) {
-        this.courses = courses;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
