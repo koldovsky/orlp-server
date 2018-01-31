@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface CardImageService {
 
-    void save(List<String> imageList, Card card);
+    void addCardImage(List<String> imageList, Card card);
 
-    void delete(Long cardImageID);
+    void deleteById(Long cardImageID);
 }

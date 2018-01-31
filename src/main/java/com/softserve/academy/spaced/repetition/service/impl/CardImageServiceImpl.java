@@ -19,7 +19,7 @@ public class CardImageServiceImpl implements CardImageService {
     private CardImageRepository cardImageRepository;
 
     @Override
-    public void save(List<String> imageList, Card card) {
+    public void addCardImage(List<String> imageList, Card card) {
         if (imageList != null && imageList.size() >= MIN_IMAGE_LIST_SIZE) {
             if (imageList.get(0).endsWith(BASE64_TYPE)) {
                 cardImageRepository.save(new CardImage(imageList.get(0) + "," + imageList.get(1), card));
@@ -30,7 +30,7 @@ public class CardImageServiceImpl implements CardImageService {
     }
 
     @Override
-    public void delete(Long cardImageID) {
+    public void deleteById(Long cardImageID) {
         cardImageRepository.delete(cardImageID);
     }
 }

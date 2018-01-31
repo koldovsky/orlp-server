@@ -1,33 +1,24 @@
-package com.softserve.academy.spaced.repetition.controller.utils.dto;
+package com.softserve.academy.spaced.repetition.controller.dto.simpleDTO;
 
-import org.springframework.hateoas.Link;
-import org.springframework.web.multipart.MultipartFile;
+import java.util.List;
 
 public class CardDTO {
 
     private String title;
-
     private String question;
-
     private String answer;
-
-    private MultipartFile image;
-
+    private List<String> images;
     private Integer cardId;
-
     private Integer rating;
-
-    private Link self;
-
 
     public CardDTO() {
     }
 
-    public CardDTO(String title, String question, String answer, MultipartFile image) {
+    public CardDTO(String title, String question, String answer, List<String> images) {
         this.title = title;
         this.question = question;
         this.answer = answer;
-        this.image = image;
+        this.images = images;
     }
 
     public String getTitle() {
@@ -54,12 +45,12 @@ public class CardDTO {
         this.answer = answer;
     }
 
-    public MultipartFile getImage() {
-        return image;
+    public List<String> getImage() {
+        return images;
     }
 
-    public void setImage(MultipartFile image) {
-        this.image = image;
+    public void setImage(List<String> image) {
+        this.images = image;
     }
 
     public Integer getCardId() {
@@ -76,13 +67,5 @@ public class CardDTO {
 
     public void setRating(Integer rating) {
         this.rating = rating;
-    }
-
-    public Link getSelf() {
-        return self;
-    }
-
-    public void setSelf(Link self) {
-        this.self = self;
     }
 }

@@ -17,7 +17,7 @@ public class CardImageController {
     @ResponseStatus(HttpStatus.OK)
     @DeleteMapping(value = "/api/private/cardImage/{id}")
     public void deleteCardImage(@PathVariable long id) {
-        cardImageService.delete(id);
+        cardImageService.deleteById(id);
     }
 
 }

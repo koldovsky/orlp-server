@@ -53,7 +53,7 @@ public class CardImageServiceTest {
     public void testSaveWithOneImages() {
         when(cardImageRepository.save(cardImage)).thenReturn(cardImage);
 
-        cardImageService.save(oneImageList, card);
+        cardImageService.addCardImage(oneImageList, card);
         verify(cardImageRepository).save(any(CardImage.class));
     }
 
@@ -61,7 +61,7 @@ public class CardImageServiceTest {
     public void testSaveWithManyImages() {
         when(cardImageRepository.save(new CardImage(imageList.get(0), card))).thenReturn(cardImage);
 
-        cardImageService.save(imageList, card);
+        cardImageService.addCardImage(imageList, card);
         verify(cardImageRepository, times(2)).save(any(CardImage.class));
     }
 

@@ -93,7 +93,7 @@ public class CardServiceImpl implements CardService {
         Deck deck = deckRepository.findOne(deckId);
         card.setDeck(deck);
         deck.getCards().add(cardRepository.save(card));
-        cardImageService.save(imageList, card);
+        cardImageService.addCardImage(imageList, card);
     }
 
     @Override
@@ -106,7 +106,7 @@ public class CardServiceImpl implements CardService {
         card.setId(cardId);
         card.setDeck(cardRepository.findOne(cardId).getDeck());
         cardRepository.save(card);
-        cardImageService.save(imageList, card);
+        cardImageService.addCardImage(imageList, card);
     }
 
     @Override

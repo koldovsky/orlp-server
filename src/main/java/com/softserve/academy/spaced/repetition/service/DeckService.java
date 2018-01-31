@@ -180,6 +180,4 @@ public interface DeckService {
      * @return list of cards that are in the deck by given identifier.
      */
     List<Card> getAllCardsByDeckId(Long deckId);
-
-
 }

@@ -157,43 +157,43 @@ public class CardServiceTest {
     @Test
     public void testAddCardWithoutImage() {
         when(deckRepository.findOne(DECK_ID)).thenReturn(deck);
-        doNothing().when(cardImageService).save(null, card);
+        doNothing().when(cardImageService).addCardImage(null, card);
 
         cardService.addCard(card, DECK_ID, null);
         verify(deckRepository).findOne(DECK_ID);
         verify(cardRepository).save(card);
-        verify(cardImageService).save(null, card);
+        verify(cardImageService).addCardImage(null, card);
     }
 
     @Test
     public void testAddCardWithImage() {
         when(deckRepository.findOne(DECK_ID)).thenReturn(deck);
-        doNothing().when(cardImageService).save(imageList, card);
+        doNothing().when(cardImageService).addCardImage(imageList, card);
 
         cardService.addCard(card, DECK_ID, imageList);
         verify(deckRepository).findOne(DECK_ID);
         verify(cardRepository).save(card);
-        verify(cardImageService).save(imageList, card);
+        verify(cardImageService).addCardImage(imageList, card);
     }
 
     @Test
     public void testUpdateCardWithoutImage() {
-        doNothing().when(cardImageService).save(null, card);
+        doNothing().when(cardImageService).addCardImage(null, card);
 
         cardService.updateCard(card, CARD_ID, null);
         verify(cardRepository).findOne(DECK_ID);
         verify(cardRepository).save(card);
-        verify(cardImageService).save(null, card);
+        verify(cardImageService).addCardImage(null, card);
     }
 
     @Test
     public void testUpdateCardWithImage() {
-        doNothing().when(cardImageService).save(imageList, card);
+        doNothing().when(cardImageService).addCardImage(imageList, card);
 
         cardService.updateCard(card, CARD_ID, imageList);
         verify(cardRepository).findOne(DECK_ID);
         verify(cardRepository).save(card);
-        verify(cardImageService).save(imageList, card);
+        verify(cardImageService).addCardImage(imageList, card);
     }
 
 
