@@ -25,12 +25,14 @@ public class CardsFileController {
     private CardService cardService;
 
     @PostMapping("api/private/upload/deck/{deckId}/cards")
-    public ResponseEntity uploadFile(@RequestParam("file") MultipartFile cardsFile, @PathVariable Long deckId) throws WrongFormatException, NotOwnerOperationException, NotAuthorisedUserException, EmptyFileException, IOException {
+    public ResponseEntity uploadFile(@RequestParam("file") MultipartFile cardsFile, @PathVariable Long deckId)
+            throws WrongFormatException,NotOwnerOperationException, NotAuthorisedUserException, EmptyFileException,
+            IOException {
         cardService.uploadCards(cardsFile, deckId);
         return new ResponseEntity(HttpStatus.OK);
     }
 
-    @GetMapping("download/deck/{deckId}/cards")
+    @GetMapping("api/private/download/deck/{deckId}/cards")
     public void downloadFile(HttpServletResponse response, @PathVariable Long deckId) throws IOException {
         response.setContentType("application/octet-stream");
         response.setHeader("Content-Disposition", "attachment; filename=Cards.yml");

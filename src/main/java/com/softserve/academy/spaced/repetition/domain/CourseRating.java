@@ -6,11 +6,12 @@ import com.softserve.academy.spaced.repetition.controller.utils.dto.Request;
 import javax.persistence.*;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import static com.softserve.academy.spaced.repetition.utils.validators.ValidationConstants.COURSE_AND_CARD_RATING_ERROR_MESSAGE;
 import static com.softserve.academy.spaced.repetition.utils.validators.ValidationConstants.MAX_COURSE_AND_CARD_RATING;
 import static com.softserve.academy.spaced.repetition.utils.validators.ValidationConstants.MIN_COURSE_AND_CARD_RATING;
+import static com.softserve.academy.spaced.repetition.utils.validators.ValidationConstants.EMAIL_MAX_SIZE;
 
 @Entity
 @Table(name = "course_rating")
@@ -21,16 +22,18 @@ public class CourseRating implements EntityInterface {
     @Column(name = "rating_id")
     private Long id;
 
-    @Column(name = "account_email", nullable = false)
+    @Column(name = "account_email", length = EMAIL_MAX_SIZE)
+    @NotNull
     private String accountEmail;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "course_id")
     private Course course;
 
-    @Column(name = "rating", nullable = false)
-    @Min(value = MIN_COURSE_AND_CARD_RATING, message = COURSE_AND_CARD_RATING_ERROR_MESSAGE, groups = Request.class)
-    @Max(value = MAX_COURSE_AND_CARD_RATING, message = COURSE_AND_CARD_RATING_ERROR_MESSAGE, groups = Request.class)
+    @Column(name = "rating")
+    @NotNull
+    @Min(value = MIN_COURSE_AND_CARD_RATING, message = "{message.validation.ratingMinValue}", groups = Request.class)
+    @Max(value = MAX_COURSE_AND_CARD_RATING, message = "{message.validation.ratingMaxValue}", groups = Request.class)
     private int rating;
 
     public CourseRating() {

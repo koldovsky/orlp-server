@@ -6,7 +6,7 @@ import javax.persistence.*;
 import java.util.Set;
 
 @Entity
-@Table(name = "Folder")
+@Table(name = "folder")
 public class Folder implements EntityInterface {
 
     @Id

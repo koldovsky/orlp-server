@@ -11,9 +11,12 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.context.MessageSource;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+
+import java.util.Locale;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
@@ -32,13 +35,21 @@ public class UserProfileControllerTest {
 
     @Mock
     private UserService userService;
+    @InjectMocks
+    private ExceptionHandlerController exceptionHandlerController;
+    @Mock
+    private MessageSource messageSource;
 
     @Before
     public void setUp() {
+        final String MESSAGE_SOURCE_MESSAGE = "message";
 
         mockMvc = MockMvcBuilders.standaloneSetup(userProfileController)
-                .setControllerAdvice(new ExceptionHandlerController())
+                .setControllerAdvice(exceptionHandlerController)
                 .build();
+
+        when(messageSource.getMessage(any(String.class), any(Object[].class), any(Locale.class)))
+                .thenReturn(MESSAGE_SOURCE_MESSAGE);
     }
 
     private User editedUser() {
@@ -79,6 +90,7 @@ public class UserProfileControllerTest {
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isUnauthorized());
+        verify(messageSource).getMessage(any(String.class), any(Object[].class), any(Locale.class));
     }
 
     private Person newPersonException() {
@@ -113,5 +125,6 @@ public class UserProfileControllerTest {
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isUnauthorized());
+        verify(messageSource).getMessage(any(String.class), any(Object[].class), any(Locale.class));
     }
 }

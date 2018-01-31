@@ -86,7 +86,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 registry.addMapping("/**")
                         .allowedOrigins(url)
                         .allowCredentials(true)
-                        .allowedHeaders("Access-Control-Allow-Credentials", "Content-Type", "Access-Control-Allow-Headers", "X-Requested-With", "Origin", "Accept")
+                        .allowedHeaders("Access-Control-Allow-Credentials", "Content-Type",
+                                "Access-Control-Allow-Headers", "X-Requested-With", "Origin", "Accept")
                         .allowedMethods("PUT", "DELETE", "GET", "POST")
                         .maxAge(MAX_AGE);
             }

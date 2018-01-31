@@ -13,7 +13,7 @@ import static com.softserve.academy.spaced.repetition.utils.validators.Validatio
 
 
 @Entity
-@Table(name = "Person")
+@Table(name = "person")
 public class Person {
 
     @Id
@@ -21,27 +21,27 @@ public class Person {
     @Column(name = "person_id")
     private Long id;
 
-    @Column(name = "first_name")
-    @NotNull(message = NULL_MESSAGE, groups = Request.class)
-    @Size(min = PERSON_FIELD_MIN_SIZE, max = PERSON_FIELD_MAX_SIZE, message = PERSON_FIELD_SIZE_MESSAGE, groups = Request.class)
-    @Pattern(regexp = SPECIAL_SYMBOLS_PATTERN, message = SPECIAL_SYMBOLS_PATTERN_MESSAGE, groups = Request.class)
+    @Column(name = "first_name", length = PERSON_FIELD_MAX_SIZE)
+    @NotNull(message = "{message.validation.fieldNotNull}", groups = Request.class)
+    @Size(min = PERSON_FIELD_MIN_SIZE, max = PERSON_FIELD_MAX_SIZE, message = "{message.validation.fieldSizeLimits}", groups = Request.class)
+    @Pattern(regexp = SPECIAL_SYMBOLS_PATTERN, message = "{message.validation.fieldCantContainReservedSymbols}", groups = Request.class)
     private String firstName;
 
-    @Column(name = "last_name")
-    @NotNull(message = NULL_MESSAGE, groups = Request.class)
-    @Size(min = PERSON_FIELD_MIN_SIZE, max = PERSON_FIELD_MAX_SIZE, message = PERSON_FIELD_SIZE_MESSAGE, groups = Request.class)
-    @Pattern(regexp = SPECIAL_SYMBOLS_PATTERN, message = SPECIAL_SYMBOLS_PATTERN_MESSAGE, groups = Request.class)
+    @Column(name = "last_name", length = PERSON_FIELD_MAX_SIZE)
+    @NotNull(message = "{message.validation.fieldNotNull}", groups = Request.class)
+    @Size(min = PERSON_FIELD_MIN_SIZE, max = PERSON_FIELD_MAX_SIZE, message = "{message.validation.fieldSizeLimits}", groups = Request.class)
+    @Pattern(regexp = SPECIAL_SYMBOLS_PATTERN, message = "{message.validation.fieldCantContainReservedSymbols}", groups = Request.class)
     private String lastName;
 
 
-    @Column(name = "IMAGETYPE", length = 6)
+    @Column(name = "image_type", length = IMAGE_TYPE_MAX_SIZE)
     @NotNull
     @Enumerated(EnumType.STRING)
-    private ImageType typeImage;
+    private ImageType imageType;
 
     private String image;
 
-    @Column(name = "imagebase64", columnDefinition = "LONGTEXT")
+    @Column(name = "image_base64", columnDefinition = "LONGTEXT")
     @Basic(fetch = FetchType.LAZY)
     private String imageBase64;
 
@@ -53,10 +53,10 @@ public class Person {
         this.lastName = lastName;
     }
 
-    public Person(String firstName, String lastName, ImageType typeImage, String image) {
+    public Person(String firstName, String lastName, ImageType imageType, String image) {
         this.firstName = firstName;
         this.lastName = lastName;
-        this.typeImage = typeImage;
+        this.imageType = imageType;
         this.image = image;
     }
 
@@ -84,12 +84,12 @@ public class Person {
         this.lastName = lastName;
     }
 
-    public ImageType getTypeImage() {
-        return typeImage;
+    public ImageType getImageType() {
+        return imageType;
     }
 
-    public void setTypeImage(ImageType typeImage) {
-        this.typeImage = typeImage;
+    public void setImageType(ImageType imageType) {
+        this.imageType = imageType;
     }
 
     public String getImage() {

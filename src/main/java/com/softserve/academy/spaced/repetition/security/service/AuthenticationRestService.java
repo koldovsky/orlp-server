@@ -9,6 +9,8 @@ import com.softserve.academy.spaced.repetition.security.JwtTokenUtil;
 import com.softserve.academy.spaced.repetition.security.JwtUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpHeaders;
 import org.springframework.mobile.device.Device;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -25,11 +27,15 @@ import org.springframework.stereotype.Service;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Collections;
+import java.util.Locale;
 import java.util.Map;
 
 @Service
 public class AuthenticationRestService {
 
+    @Autowired
+    private MessageSource messageSource;
+    private final Locale locale = LocaleContextHolder.getLocale();
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
     @Autowired
@@ -98,7 +104,8 @@ public class AuthenticationRestService {
             String refreshedToken = jwtTokenUtil.refreshToken(token);
             return addTokenToHeaderCookie(refreshedToken);
         } else {
-            throw new BadCredentialsException("Token is not valid");
+            throw new BadCredentialsException(messageSource.getMessage("message.exception.tokenNotValid",
+                    new Object[]{}, locale));
         }
     }
 
@@ -115,32 +122,37 @@ public class AuthenticationRestService {
         if (token != null) {
             return token;
         } else {
-            throw new BadCredentialsException("No token");
+            throw new BadCredentialsException(messageSource.getMessage("message.exception.tokenNotExist",
+                    new Object[]{}, locale));
         }
     }
 
     private HttpHeaders addTokenToHeaderCookie(String token) {
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Set-Cookie", tokenHeader + "=" + token + "; Path=/" + "; Expires=" + jwtTokenUtil.getExpirationDateFromToken(token));
+        headers.add("Set-Cookie", tokenHeader + "=" +
+                token + "; Path=/" + "; Expires=" + jwtTokenUtil.getExpirationDateFromToken(token));
         return headers;
     }
 
     private Authentication getAuthenticationToken(String email, String password) {
         final Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(email, password, Collections.singletonList(new SimpleGrantedAuthority(AuthorityName.ROLE_USER.toString())))
+                new UsernamePasswordAuthenticationToken(email, password,
+                        Collections.singletonList(new SimpleGrantedAuthority(AuthorityName.ROLE_USER.toString())))
         );
         return authentication;
     }
 
     private Authentication getAuthenticationTokenWithoutVerify(String email) {
         final UsernamePasswordAuthenticationToken authentication =
-                new UsernamePasswordAuthenticationToken(email, null, Collections.singletonList(new SimpleGrantedAuthority(AuthorityName.ROLE_USER.toString())));
+                new UsernamePasswordAuthenticationToken(email, null,
+                        Collections.singletonList(new SimpleGrantedAuthority(AuthorityName.ROLE_USER.toString())));
         return authentication;
     }
 
     private void validateUser(UserDetails userDetails){
         if(!userDetails.isAccountNonLocked()){
-            throw new LockedException("Account is deactivated");
+            throw new LockedException(messageSource.getMessage("message.exception.accountDeactivated",
+                    new Object[]{}, locale));
         }
     }
 }

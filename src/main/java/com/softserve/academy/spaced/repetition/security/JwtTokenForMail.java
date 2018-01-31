@@ -6,12 +6,11 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.NoSuchElementException;
+import java.util.*;
 
 @Service
 public class JwtTokenForMail extends JwtTokenUtil {
@@ -19,6 +18,9 @@ public class JwtTokenForMail extends JwtTokenUtil {
     private static final String DATE_OF_CREATION = "date";
     private static final int EXPIRATION_TO_ONE_DAY = 143;
 
+    @Autowired
+    private MessageSource messageSource;
+    private final Locale locale = LocaleContextHolder.getLocale();
     @Autowired
     AccountRepository accountRepository;
     @Value("${app.jwt.expiration}")
@@ -63,7 +65,8 @@ public class JwtTokenForMail extends JwtTokenUtil {
         if (!isTokenExpired(token)) {
             return email;
         }
-        throw new NoSuchElementException("No token found");
+        throw new NoSuchElementException(messageSource.getMessage("message.exception.tokenNotFound",
+                new Object[]{}, locale));
     }
 
     public String getAccountEmailFromToken(String token) {

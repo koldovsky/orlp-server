@@ -34,8 +34,7 @@ public class RegistrationController {
     }
 
     @RequestMapping(value = "/registrationConfirm", method = RequestMethod.POST)
-    public ResponseEntity confirmRegistration
-            (@RequestBody String token) {
+    public ResponseEntity confirmRegistration(@RequestBody String token) {
         verificationService.accountVerification(token);
         return new ResponseEntity(HttpStatus.OK);
     }

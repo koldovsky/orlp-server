@@ -3,7 +3,6 @@ package com.softserve.academy.spaced.repetition.service.impl;
 import com.softserve.academy.spaced.repetition.controller.utils.dto.CardFileDTO;
 import com.softserve.academy.spaced.repetition.controller.utils.dto.CardFileDTOList;
 import com.softserve.academy.spaced.repetition.domain.Card;
-import com.softserve.academy.spaced.repetition.domain.CardImage;
 import com.softserve.academy.spaced.repetition.domain.Deck;
 import com.softserve.academy.spaced.repetition.domain.User;
 import com.softserve.academy.spaced.repetition.domain.enums.LearningRegime;
@@ -15,6 +14,8 @@ import com.softserve.academy.spaced.repetition.utils.exceptions.NotAuthorisedUse
 import com.softserve.academy.spaced.repetition.utils.exceptions.NotOwnerOperationException;
 import com.softserve.academy.spaced.repetition.utils.exceptions.WrongFormatException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.FileCopyUtils;
@@ -27,31 +28,27 @@ import org.yaml.snakeyaml.parser.ParserException;
 import java.io.*;
 import java.util.*;
 
-import static java.util.stream.Collectors.toList;
 
 @Service
 public class CardServiceImpl implements CardService {
 
-    private final CardRepository cardRepository;
-    private final DeckRepository deckRepository;
-    private final UserService userService;
-    private final AccountService accountService;
-    private final UserCardQueueService userCardQueueService;
-    private final DeckService deckService;
+    private final Locale locale = LocaleContextHolder.getLocale();
+    @Autowired
+    private CardRepository cardRepository;
+    @Autowired
+    private DeckRepository deckRepository;
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private AccountService accountService;
+    @Autowired
+    private UserCardQueueService userCardQueueService;
+    @Autowired
+    private DeckService deckService;
+    @Autowired
+    private MessageSource messageSource;
     @Autowired
     private CardImageService cardImageService;
-
-    @Autowired
-    public CardServiceImpl(CardRepository cardRepository, DeckRepository deckRepository, AccountService accountService,
-                           UserService userService, UserCardQueueService userCardQueueService,
-                           DeckService deckService) {
-        this.cardRepository = cardRepository;
-        this.deckRepository = deckRepository;
-        this.userService = userService;
-        this.accountService = accountService;
-        this.userCardQueueService = userCardQueueService;
-        this.deckService = deckService;
-    }
 
     @Override
     @Transactional
@@ -89,24 +86,26 @@ public class CardServiceImpl implements CardService {
     public void addCard(Card card, Long deckId, List<String> imageList) {
         if (card.getTitle().trim().isEmpty() || card.getAnswer().trim().isEmpty()
                 || card.getQuestion().trim().isEmpty()) {
-            throw new IllegalArgumentException("All of card fields must be filled");
+            throw new IllegalArgumentException(messageSource.getMessage("message.exception.cardFieldsNotEmpty",
+                    new Object[]{}, locale));
         }
         Deck deck = deckRepository.findOne(deckId);
         card.setDeck(deck);
         deck.getCards().add(cardRepository.save(card));
-        cardImageService.save(imageList,card);
+        cardImageService.save(imageList, card);
     }
 
     @Override
     public void updateCard(Card card, Long cardId, List<String> imageList) {
         if (card.getTitle().trim().isEmpty() || card.getAnswer().trim().isEmpty()
                 || card.getQuestion().trim().isEmpty()) {
-            throw new IllegalArgumentException("All of card fields must be filled");
+            throw new IllegalArgumentException(messageSource.getMessage("message.exception.cardFieldsNotEmpty",
+                    new Object[]{}, locale));
         }
         card.setId(cardId);
         card.setDeck(cardRepository.findOne(cardId).getDeck());
         cardRepository.save(card);
-        cardImageService.save(imageList,card);
+        cardImageService.save(imageList, card);
     }
 
     @Override
@@ -114,7 +113,6 @@ public class CardServiceImpl implements CardService {
         User user = userService.getAuthorizedUser();
         final int cardsNumber = accountService.getCardsNumber();
         List<Card> cardsQueue = cardRepository.cardsForLearningWithOutStatus(user.getId(), deckId, cardsNumber);
-
         if (cardsQueue.size() < cardsNumber) {
             cardsQueue.addAll(cardRepository.cardsQueueForLearningWithStatus(user.getId(), deckId, cardsNumber)
                     .subList(0, cardsNumber - cardsQueue.size()));
@@ -150,8 +148,8 @@ public class CardServiceImpl implements CardService {
 
         if (deckService.getDeckUser(deckId) != null) {
             if (cardsFile.isEmpty())
-                throw new EmptyFileException("File is empty!");
-
+                throw new EmptyFileException(messageSource.getMessage("message.exception.fileEmpty",
+                        new Object[]{}, locale));
             Yaml yaml = new Yaml();
             InputStream in = cardsFile.getInputStream();
             try {
@@ -161,7 +159,8 @@ public class CardServiceImpl implements CardService {
                     addCard(new Card(card.getTitle(), card.getQuestion(), card.getAnswer()), deckId, null);
 
             } catch (ParserException | ConstructorException ex) {
-                throw new IllegalArgumentException("Invalid format of file!");
+                throw new IllegalArgumentException(messageSource.getMessage("message.exception.fileWrongFormat",
+                        new Object[]{}, locale));
             }
         }
     }
@@ -185,7 +184,8 @@ public class CardServiceImpl implements CardService {
         try (Writer out = new BufferedWriter(new OutputStreamWriter(outputStream))) {
             yaml.dump(cardsMap, out);
         } catch (IOException ex) {
-            throw new IllegalArgumentException("Dumping of file failed!");
+            throw new IllegalArgumentException(messageSource.getMessage("message.exception.fileDumpingFailed",
+                    new Object[]{}, locale));
         }
 
     }
@@ -195,7 +195,8 @@ public class CardServiceImpl implements CardService {
         try (InputStream in = CardServiceImpl.class.getResourceAsStream("/data/CardsTemplate.yml")) {
             FileCopyUtils.copy(in, outputStream);
         } catch (IOException ex) {
-            throw new IllegalArgumentException("Copy of file failed!");
+            throw new IllegalArgumentException(messageSource.getMessage("message.exception.fileCopyFailed",
+                    new Object[]{}, locale));
         }
     }
 }

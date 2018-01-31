@@ -1,6 +1,7 @@
 package com.softserve.academy.spaced.repetition.repository;
 
-import com.softserve.academy.spaced.repetition.domain.*;
+import com.softserve.academy.spaced.repetition.domain.Category;
+import com.softserve.academy.spaced.repetition.domain.Deck;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -25,8 +26,8 @@ public interface DeckRepository extends JpaRepository<Deck, Long> {
 
     void deleteDeckById(Long id);
 
-    @Query(value = "SELECT d.id, d.name, d.description, d.rating, d.category, d.deckOwner FROM Course c  INNER JOIN c.decks AS d WHERE "
-            + "c.id = :course_id and d.id = :deck_id")
+    @Query(value = "SELECT d.id, d.name, d.description, d.rating, d.category, d.deckOwner FROM Course c " +
+            "INNER JOIN c.decks AS d WHERE c.id = :course_id and d.id = :deck_id")
     List<Deck> hasAccessToDeck(@Param("course_id") Long courseId, @Param("deck_id") Long deckId);
 
     @Query(value = "SELECT d FROM Category c INNER JOIN c.decks AS d WHERE c.id = :category_id AND d.id = :deck_id")
