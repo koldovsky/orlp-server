@@ -43,4 +43,38 @@ public class RegistrationController {
         registrationService.sendConfirmationEmailMessage(user);
         return new ResponseEntity<>(user.getPerson(), HttpStatus.CREATED);
     }
+
+    @RequestMapping(value = "/registrationConfirm", method = RequestMethod.POST)
+    public ResponseEntity confirmRegistration(@RequestBody String token) {
+        verificationService.accountVerification(token);
+        return new ResponseEntity(HttpStatus.OK);
+    }
+
+    @PutMapping(value = "api/verification/token")
+    public ResponseEntity<String> verificationToken(@RequestBody String token) {
+        LOGGER.debug("Token verification");
+        String emailFromToken = verificationService.getAccountEmail(token);
+        return ResponseEntity.ok(emailFromToken);
+    }
+
+    @GetMapping("api/confirmation-mail")
+    public ResponseEntity sendConfirmationMail() throws NotAuthorisedUserException {
+        userService.activateAccount();
+        return new ResponseEntity(HttpStatus.OK);
+    }
+
+    @PutMapping(value = "api/reset/password")
+    public ResponseEntity<String> sendResetPasswordMail(@RequestBody String email) {
+        LOGGER.debug("Send reset password mail to email: {}", email);
+        String accountStatus = accountService.checkAccountStatusAndSendMail(email);
+        return ResponseEntity.ok(accountStatus);
+    }
+
+    @PutMapping(value = "api/create/password")
+    public ResponseEntity createNewPasswordForUser(@Validated(Request.class) @RequestBody
+                                                           NewAccountPasswordDTO newAccountPasswordDTO) {
+        LOGGER.debug("Created new password for: {}", newAccountPasswordDTO.getEmail());
+        accountService.createNewAccountPassword(newAccountPasswordDTO.getEmail(), newAccountPasswordDTO.getPassword());
+        return ResponseEntity.ok().build();
+    }
 }
