@@ -8,7 +8,7 @@ public class ValidationConstants {
     public static final int MAX_COURSE_AND_CARD_RATING = 5;
     public static final int PASSWORD_MIN_SIZE = 8;
     public static final int PASSWORD_MAX_SIZE = 20;
-    public static final int PASS_MAX_SIZE_HASH = 60;
+    public static final int PASSWORD_MAX_SIZE_HASH = 60;
     public static final int EMAIL_MIN_SIZE = 3;
     public static final int EMAIL_MAX_SIZE = 254;
     public static final int AUTH_TYPE_MAX_SIZE = 15;

@@ -5,7 +5,6 @@ import com.softserve.academy.spaced.repetition.controller.utils.dto.Request;
 import com.softserve.academy.spaced.repetition.domain.enums.AccountStatus;
 import com.softserve.academy.spaced.repetition.domain.enums.AuthenticationType;
 import com.softserve.academy.spaced.repetition.domain.enums.LearningRegime;
-import com.softserve.academy.spaced.repetition.utils.validators.EmailNotExist;
 import com.softserve.academy.spaced.repetition.utils.validators.EmailNotUsed;
 
 import javax.persistence.*;
@@ -28,15 +27,15 @@ public class Account implements EntityInterface {
     @Column(name = "account_id")
     private Long id;
 
-    @Column(name = "password", length = PASS_MAX_SIZE_HASH)
+    @Column(name = "password", length = PASSWORD_MAX_SIZE_HASH)
     @NotNull
-    @Size(min = PASS_MIN_SIZE, max = PASS_MAX_SIZE, message = "{message.validation.fieldSizeLimits}", groups = Request.class)
+    @Size(min = PASSWORD_MIN_SIZE, max = PASSWORD_MAX_SIZE, message = "{message.validation.fieldSizeLimits}", groups = Request.class)
     private String password;
 
     @Column(name = "email", unique = true, length = EMAIL_MAX_SIZE)
     @NotNull(message = "{message.validation.fieldNotNull}", groups = Request.class)
     @Size(min = EMAIL_MIN_SIZE, max = EMAIL_MAX_SIZE, message = "{message.validation.fieldSizeLimits}", groups = Request.class)
-    @Pattern(regexp = EMAIL_PATTERN, message = EMAIL_PATTERN_MESSAGE, groups = Request.class)
+    @Pattern(regexp = EMAIL_PATTERN, message = "{message.validation.emailWrongFormat}", groups = Request.class)
     @EmailNotUsed(groups = Request.class)
     private String email;
 
