@@ -14,12 +14,14 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.context.MessageSource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.NoSuchElementException;
 
 import static org.junit.Assert.*;
@@ -47,6 +49,8 @@ public class DeckServiceTest {
     private CourseRepository courseRepository;
     @Mock
     private UserService userService;
+    @Mock
+    private MessageSource messageSource;
     private User notOwnerUser;
     private Category category;
     private Deck deck;
@@ -54,6 +58,7 @@ public class DeckServiceTest {
     @Before
     public void setUp() throws NotAuthorisedUserException {
         final Long NOT_OWNER_USER_ID = 42L;
+        final String MESSAGE_SOURCE_MESSAGE = "message";
 
         final User user = DomainFactory.createUser(USER_ID, null, null, null, null);
         notOwnerUser = DomainFactory.createUser(NOT_OWNER_USER_ID, null, null, null, null);
@@ -63,6 +68,8 @@ public class DeckServiceTest {
         deck = DomainFactory.createDeck(DECK_ID, null, null, DECK_SYNTAX_TO_HIGHLIGHT, category, 0D, user, null, null,
                 null, null);
 
+        when(messageSource.getMessage(any(String.class), any(Object[].class), any(Locale.class)))
+                .thenReturn(MESSAGE_SOURCE_MESSAGE);
         when(userService.getAuthorizedUser()).thenReturn(user);
         when(deckRepository.findOne(DECK_ID)).thenReturn(deck);
         when(deckRepository.save(deck)).thenReturn(deck);

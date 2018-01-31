@@ -16,6 +16,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.context.MessageSource;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -27,6 +28,7 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -58,6 +60,8 @@ public class CardServiceTest {
     private MultipartFile cardsFile;
     @Mock
     private OutputStream outputStream;
+    @Mock
+    private MessageSource messageSource;
     @InjectMocks
     private CardServiceImpl cardService;
     private Deck deck;
@@ -66,6 +70,7 @@ public class CardServiceTest {
 
     @Before
     public void setUp() throws Exception {
+        final String MESSAGE_SOURCE_MESSAGE = "message";
         List<Card> cardList = new ArrayList<>();
         cardList.add(card);
         Account account = DomainFactory.createAccount(1L, null, null, null, null
@@ -80,6 +85,8 @@ public class CardServiceTest {
                         "    various versions of UNIX/Linux like HP-Unix, Sun Solaris, Redhat Linux, Ubuntu,\n" +
                         "    CentOS, etc.", deck);
 
+        when(messageSource.getMessage(any(String.class), any(Object[].class), any(Locale.class)))
+                .thenReturn(MESSAGE_SOURCE_MESSAGE);
         when(userService.getAuthorizedUser()).thenReturn(user);
         when(cardRepository.findOne(CARD_ID)).thenReturn(card);
         when(cardRepository.save(card)).thenReturn(card);
