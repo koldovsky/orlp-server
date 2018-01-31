@@ -32,7 +32,7 @@ public class DeckLinkByCategoryDTO extends DTO<Deck> {
         return getEntity().getRating();
     }
 
-    public String getSynthax() {return getEntity().getSynthaxToHighlight(); }
+    public String getSynthax() {return getEntity().getSyntaxToHighlight(); }
 }
 
 

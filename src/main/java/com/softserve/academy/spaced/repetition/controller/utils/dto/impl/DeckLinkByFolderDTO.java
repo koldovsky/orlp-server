@@ -34,6 +34,6 @@ public class DeckLinkByFolderDTO extends DTO<Deck> {
     }
 
     public String getSynthax(){
-        return getEntity().getSynthaxToHighlight();
+        return getEntity().getSyntaxToHighlight();
     }
 }

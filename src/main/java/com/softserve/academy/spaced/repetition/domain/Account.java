@@ -24,21 +24,22 @@ public class Account implements EntityInterface {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "account_id", nullable = false)
+    @Column(name = "account_id")
     private Long id;
 
-    @Column(name = "password")
+    @Column(name = "password", length = PASS_MAX_SIZE_HASH)
+    @NotNull
     @Size(message = PASS_SIZE_MESSAGE, min = PASS_MIN_SIZE, max = PASS_MAX_SIZE, groups = Request.class)
     private String password;
 
-    @Column(name = "email", unique = true, nullable = false)
+    @Column(name = "email", unique = true, length = EMAIL_MAX_SIZE)
     @NotNull(message = NULL_MESSAGE, groups = Request.class)
     @Size(min = EMAIL_MIN_SIZE, max = EMAIL_MAX_SIZE, message = EMAIL_SIZE_MESSAGE, groups = Request.class)
     @Pattern(regexp = EMAIL_PATTERN, message = EMAIL_PATTERN_MESSAGE, groups = Request.class)
     @EmailNotExist(groups = Request.class)
     private String email;
 
-    @Column(name = "AUTHENTICATIONTYPE", length = 8)
+    @Column(name = "authentication_type", length = AUTH_TYPE_MAX_SIZE)
     @NotNull
     @Enumerated(EnumType.STRING)
     private AuthenticationType authenticationType;
@@ -52,9 +53,9 @@ public class Account implements EntityInterface {
     @NotNull
     private boolean deactivated;
 
-    @Column(name = "LASTPASSWORDRESETDATE")
-    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "last_password_reset_date")
     @NotNull
+    @Temporal(TemporalType.TIMESTAMP)
     private Date lastPasswordResetDate;
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
@@ -63,9 +64,9 @@ public class Account implements EntityInterface {
             inverseJoinColumns = {@JoinColumn(name = "authority_id")})
     private Set<Authority> authorities;
 
-    @NotNull
     @Column(name = "learning_regime",
             columnDefinition = "varchar(45) default 'CARDS_POSTPONING_USING_SPACED_REPETITION'")
+    @NotNull
     @Enumerated(value = EnumType.STRING)
     private LearningRegime learningRegime;
 

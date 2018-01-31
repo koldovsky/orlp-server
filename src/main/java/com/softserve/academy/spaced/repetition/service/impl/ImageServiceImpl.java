@@ -70,7 +70,7 @@ public class ImageServiceImpl implements ImageService {
         for (Long existingId : idList) {
             if (id.equals(existingId)) {
                 Image image = imageRepository.findImageById(id);
-                String encodedFileContent = image.getImagebase64();
+                String encodedFileContent = image.getImageBase64();
                 imageContent = decodeFromBase64(encodedFileContent);
                 break;
             }
