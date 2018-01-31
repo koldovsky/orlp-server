@@ -14,6 +14,8 @@ import com.softserve.academy.spaced.repetition.utils.validators.NumberOfPostpone
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 @Service
 public class AccountServiceImpl implements AccountService {
@@ -38,6 +41,9 @@ public class AccountServiceImpl implements AccountService {
     private MailService mailService;
     @Autowired
     private PasswordEncoder passwordEncoder;
+    @Autowired
+    private MessageSource messageSource;
+    private final Locale locale = LocaleContextHolder.getLocale();
 
     @Override
     public void updateAccount(Account account) {
@@ -58,7 +64,8 @@ public class AccountServiceImpl implements AccountService {
                 .anyMatch(LearningRegime.valueOf(learningRegime)::equals);
 
         if(!learningRegimeFound) {
-            throw new IllegalArgumentException("Value of Learning Regime is not valid: " + learningRegime);
+            throw new IllegalArgumentException(messageSource.getMessage("message.exception.learningRegimeNotValid",
+                    new Object[]{learningRegime}, locale));
         }
 
         LearningRegime regime = LearningRegime.valueOf(learningRegime);
@@ -79,7 +86,8 @@ public class AccountServiceImpl implements AccountService {
     public void updateCardsNumber(Integer cardsNumber) throws NotAuthorisedUserException {
         Account account = userService.getAuthorizedUser().getAccount();
         if (cardsNumber < 1) {
-            throw new IllegalArgumentException("Number of cards should be greater than 0.");
+            throw new IllegalArgumentException(messageSource.getMessage("message.exception.numbersOfCardsNegative",
+                    new Object[]{}, locale));
         }
         account.setCardsNumber(cardsNumber);
         accountRepository.save(account);

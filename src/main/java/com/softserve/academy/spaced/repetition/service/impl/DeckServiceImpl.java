@@ -12,6 +12,8 @@ import com.softserve.academy.spaced.repetition.service.DeckService;
 import com.softserve.academy.spaced.repetition.service.FolderService;
 import com.softserve.academy.spaced.repetition.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -19,13 +21,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.NoSuchElementException;
 
 @Service
 public class DeckServiceImpl implements DeckService {
     private final static int QUANTITY_ADMIN_DECKS_IN_PAGE = 20;
     private final static int QUANTITY_DECKS_IN_PAGE = 12;
-    private final static String DECK_EXCEPTION_MESSAGE = "Such deck not found";
 
     @Autowired
     private DeckRepository deckRepository;
@@ -38,6 +40,10 @@ public class DeckServiceImpl implements DeckService {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private MessageSource messageSource;
+    private final Locale locale = LocaleContextHolder.getLocale();
 
     @Override
     public List<Deck> getAllDecks(Long courseId) {
@@ -138,7 +144,8 @@ public class DeckServiceImpl implements DeckService {
         User user = userService.getAuthorizedUser();
         Deck deck = deckRepository.findOne(deckId);
         if (deck == null) {
-            throw new NoSuchElementException(DECK_EXCEPTION_MESSAGE);
+            throw new NoSuchElementException(messageSource.getMessage("message.exception.deckNotFound",
+                    new Object[]{}, locale));
         }
         if (deck.getDeckOwner().getId().equals(user.getId())) {
             deckRepository.delete(deck);
@@ -154,7 +161,8 @@ public class DeckServiceImpl implements DeckService {
         User user = userService.getAuthorizedUser();
         Deck deck = deckRepository.findOne(deckId);
         if (deck == null) {
-            throw new NoSuchElementException(DECK_EXCEPTION_MESSAGE);
+            throw new NoSuchElementException(messageSource.getMessage("message.exception.deckNotFound",
+                    new Object[]{}, locale));
         }
         if (deck.getDeckOwner().getId().equals(user.getId())) {
             deck.setName(updatedDeck.getName());
@@ -178,7 +186,8 @@ public class DeckServiceImpl implements DeckService {
         User user = userService.getAuthorizedUser();
         Deck deck = deckRepository.findOne(deckId);
         if (deck == null) {
-            throw new NoSuchElementException(DECK_EXCEPTION_MESSAGE);
+            throw new NoSuchElementException(messageSource.getMessage("message.exception.deckNotFound",
+                    new Object[]{}, locale));
         }
         if (deck.getDeckOwner().getId().equals(user.getId())) {
             return deck;

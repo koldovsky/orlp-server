@@ -8,8 +8,11 @@ import com.softserve.academy.spaced.repetition.service.AccountVerificationByEmai
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.util.Locale;
 import java.util.NoSuchElementException;
 
 @Service
@@ -22,12 +25,17 @@ public class AccountVerificationByEmailServiceImpl implements AccountVerificatio
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private MessageSource messageSource;
+    private final Locale locale = LocaleContextHolder.getLocale();
+
     @Override
     public void accountVerification(String token) {
         String email;
         email = jwtTokenForMail.decryptToken(token);
         if (userRepository.findUserByAccountEmail(email) == null) {
-            throw new NoSuchElementException("Email not exists");
+            throw new NoSuchElementException(messageSource.getMessage("message.exception.emailNotExist",
+                    new Object[]{}, locale));
         }
         Account editedAcc = userRepository.findUserByAccountEmail(email).getAccount();
         editedAcc.setDeactivated(false);

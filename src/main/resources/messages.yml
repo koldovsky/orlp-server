@@ -1,0 +1,48 @@
+message:
+  exception:
+    fileNotFound: "Such file not found!"
+    cardFileNotReadable: "Can't read data from uploaded file!"
+    learningRegimeNotValid: "Value of Learning Regime is not valid - {0}!"
+    numbersOfCardsNegative: "Number of cards should be greater than 0!"
+    cardFieldsNotEmpty: "All of card's fields should be filled!"
+    fileEmpty: "File is empty!"
+    fileWrongFormat: "Invalid format of file!"
+    fileDumpingFailed: "Dumping of file failed!"
+    fileCopyFailed: "Copy of file failed!"
+    deckAlreadyExists: "Such deck already exists!"
+    deckNotFound: "Such deck not found!"
+    fileSizeTooLarge: "File upload error: file is too large!"
+    imageFileWrongFormat: "File upload error: file is not an image!"
+    userCardQueueStatusNotValid: "Value of User Card Queue Status is not valid - {0}!"
+    numberOfPostponedDaysNegative: "Number of postponed days should be greater than 0!"
+    numberOfPostponedDaysLessThanPreviousLevel: >
+      Number of postponed days for this level should be greater than number of
+      postponed days for a previous one!
+    numberOfPostponedDaysMoreThanNextLevel: >
+      Number of postponed days for this level should be less than number of
+      postponed days for a next one!
+    emailNotExist: "Email doesn't exist!"
+    userNotFoundByEmail: "No user found with email {0}!"
+    userNotAuthorised: "Operation is unavailable for unauthorized users!"
+    ipAddressNotDetermined: "The IP address of a host could not be determined!"
+    mailNotSent: "Mail not sent!"
+    tokenNotValid: "Token is not valid!"
+    tokenNotExist: "Token doesn't exist!"
+    accountDeactivated: "Account is deactivated!"
+    facebookDataGetError: "ERROR in getting FB graph data! {0}"
+    facebookDataParseError: "ERROR in parsing FB graph data! {0}"
+    tokenNotFound: "No token found!"
+  database:
+    connectionSuccessful: "Connection to {0} has been established."
+  notification:
+    logIn: "Please log in!"
+  validation:
+    fieldNotNull: "Field can not be null!"
+    fieldNotEmpty: "Field can not be empty!"
+    fieldCantContainReservedSymbols: "Field can not contain reserved symbols!"
+    emailWrongFormat: "Incorrect format!"
+    emailAlreadyUsed: "Email already used!"
+    passwordMatchWithCurrent: "Password should match with current!"
+    fieldSizeLimits: "Field can't be less than {min} and more than {max} symbols!"
+    ratingMinValue: "Rating can't be less than {value}!"
+    ratingMaxValue: "Rating can't be more than {value}!"

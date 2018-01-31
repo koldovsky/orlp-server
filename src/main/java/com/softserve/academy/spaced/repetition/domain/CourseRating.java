@@ -9,7 +9,6 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import static com.softserve.academy.spaced.repetition.utils.validators.ValidationConstants.COURSE_AND_CARD_RATING_ERROR_MESSAGE;
 import static com.softserve.academy.spaced.repetition.utils.validators.ValidationConstants.MAX_COURSE_AND_CARD_RATING;
 import static com.softserve.academy.spaced.repetition.utils.validators.ValidationConstants.MIN_COURSE_AND_CARD_RATING;
 import static com.softserve.academy.spaced.repetition.utils.validators.ValidationConstants.EMAIL_MAX_SIZE;
@@ -33,8 +32,8 @@ public class CourseRating implements EntityInterface {
 
     @Column(name = "rating")
     @NotNull
-    @Min(value = MIN_COURSE_AND_CARD_RATING, message = COURSE_AND_CARD_RATING_ERROR_MESSAGE, groups = Request.class)
-    @Max(value = MAX_COURSE_AND_CARD_RATING, message = COURSE_AND_CARD_RATING_ERROR_MESSAGE, groups = Request.class)
+    @Min(value = MIN_COURSE_AND_CARD_RATING, message = "{message.validation.ratingMinValue}", groups = Request.class)
+    @Max(value = MAX_COURSE_AND_CARD_RATING, message = "{message.validation.ratingMaxValue}", groups = Request.class)
     private int rating;
 
     public CourseRating() {

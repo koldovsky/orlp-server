@@ -15,6 +15,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.context.MessageSource;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartException;
@@ -23,6 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
@@ -44,6 +46,8 @@ public class ImageServiceTest {
     private UserService userService;
     @Mock
     private MultipartFile multipartFile;
+    @Mock
+    private MessageSource messageSource;
     private User notOwnerUser;
     private Image image;
 
@@ -53,6 +57,7 @@ public class ImageServiceTest {
         final Long IMAGE_SIZE = 1L;
         final String IMAGE_BASE64 = "base64";
         final String IMAGE_CONTENT_TYPE = "image/";
+        final String MESSAGE_SOURCE_MESSAGE = "message";
 
         final String FIELD_MAX_FILE_SIZE = "maxFileSize";
         final String FIELD_USER_QUOTE = "userQuote";
@@ -66,6 +71,8 @@ public class ImageServiceTest {
         when(multipartFile.getSize()).thenReturn(IMAGE_SIZE);
         when(multipartFile.getBytes()).thenReturn(new byte[]{});
         when(multipartFile.getContentType()).thenReturn(IMAGE_CONTENT_TYPE);
+        when(messageSource.getMessage(any(String.class), any(Object[].class), any(Locale.class)))
+                .thenReturn(MESSAGE_SOURCE_MESSAGE);
         when(userService.getAuthorizedUser()).thenReturn(user);
         when(imageRepository.findImageById(IMAGE_ID)).thenReturn(image);
         when(imageRepository.findOne(IMAGE_ID)).thenReturn(image);

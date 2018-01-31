@@ -9,8 +9,6 @@ import javax.validation.constraints.NotNull;
 import java.util.Date;
 import java.util.Objects;
 
-import static com.softserve.academy.spaced.repetition.utils.validators.ValidationConstants.EMPTY_MESSAGE;
-
 @Entity
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public abstract class Comment implements EntityInterface {
@@ -21,7 +19,7 @@ public abstract class Comment implements EntityInterface {
     private Long id;
 
     @Column(name = "comment_text", columnDefinition = "LONGTEXT")
-    @NotBlank(message = EMPTY_MESSAGE, groups = Request.class)
+    @NotBlank(message = "{message.validation.fieldNotEmpty}", groups = Request.class)
     private String commentText;
 
     @Column(name = "comment_date")
