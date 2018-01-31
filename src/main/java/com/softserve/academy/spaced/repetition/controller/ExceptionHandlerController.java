@@ -1,8 +1,8 @@
 package com.softserve.academy.spaced.repetition.controller;
 
-import com.softserve.academy.spaced.repetition.controller.utils.dto.FieldErrorDTO;
-import com.softserve.academy.spaced.repetition.controller.utils.dto.ValidationMessageDTO;
-import com.softserve.academy.spaced.repetition.controller.utils.dto.impl.MessageDTO;
+import com.softserve.academy.spaced.repetition.controller.dto.simpleDTO.FieldErrorDTO;
+import com.softserve.academy.spaced.repetition.controller.dto.simpleDTO.ValidationMessageDTO;
+import com.softserve.academy.spaced.repetition.controller.dto.impl.MessageDTO;
 import com.softserve.academy.spaced.repetition.domain.enums.AccountStatus;
 import com.softserve.academy.spaced.repetition.utils.exceptions.*;
 import org.springframework.beans.factory.annotation.Autowired;

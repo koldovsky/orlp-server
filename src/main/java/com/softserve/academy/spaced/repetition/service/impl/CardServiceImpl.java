@@ -1,7 +1,7 @@
 package com.softserve.academy.spaced.repetition.service.impl;
 
-import com.softserve.academy.spaced.repetition.controller.utils.dto.CardFileDTO;
-import com.softserve.academy.spaced.repetition.controller.utils.dto.CardFileDTOList;
+import com.softserve.academy.spaced.repetition.controller.dto.simpleDTO.CardFileDTO;
+import com.softserve.academy.spaced.repetition.controller.dto.simpleDTO.CardFileDTOList;
 import com.softserve.academy.spaced.repetition.domain.Card;
 import com.softserve.academy.spaced.repetition.domain.Deck;
 import com.softserve.academy.spaced.repetition.domain.User;
@@ -27,6 +27,7 @@ import org.yaml.snakeyaml.parser.ParserException;
 
 import java.io.*;
 import java.util.*;
+
 
 
 @Service

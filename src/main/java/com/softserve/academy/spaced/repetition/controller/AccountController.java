@@ -1,9 +1,9 @@
 package com.softserve.academy.spaced.repetition.controller;
 
-import com.softserve.academy.spaced.repetition.controller.utils.dto.DTOBuilder;
-import com.softserve.academy.spaced.repetition.controller.utils.dto.Request;
-import com.softserve.academy.spaced.repetition.controller.utils.dto.impl.NewAccountPasswordDTO;
-import com.softserve.academy.spaced.repetition.controller.utils.dto.impl.RememberingLevelDTO;
+import com.softserve.academy.spaced.repetition.controller.dto.builder.DTOBuilder;
+import com.softserve.academy.spaced.repetition.controller.dto.annotations.Request;
+import com.softserve.academy.spaced.repetition.controller.dto.impl.NewAccountPasswordDTO;
+import com.softserve.academy.spaced.repetition.controller.dto.impl.RememberingLevelDTO;
 import com.softserve.academy.spaced.repetition.domain.RememberingLevel;
 import com.softserve.academy.spaced.repetition.domain.enums.LearningRegime;
 import com.softserve.academy.spaced.repetition.service.AccountService;
@@ -64,28 +64,6 @@ public class AccountController {
     public ResponseEntity updateRememberingLevel(@PathVariable Long levelId, @RequestBody String numberOfPostponedDays)
             throws NotAuthorisedUserException {
         accountService.updateRememberingLevel(levelId, Integer.parseInt(numberOfPostponedDays));
-        return ResponseEntity.ok().build();
-    }
-
-    @PutMapping(value = "api/reset/password")
-    public ResponseEntity<String> sendResetPasswordMail(@RequestBody String email) {
-        LOGGER.debug("Send reset password mail to email: {}", email);
-        String accountStatus = accountService.checkAccountStatusAndSendMail(email);
-        return ResponseEntity.ok(accountStatus);
-    }
-
-    @PutMapping(value = "api/verification/token")
-    public ResponseEntity<String> verificationToken(@RequestBody String token) {
-        LOGGER.debug("Token verification");
-        String emailFromToken = verificationService.getAccountEmail(token);
-        return ResponseEntity.ok(emailFromToken);
-    }
-
-    @PutMapping(value = "api/create/password")
-    public ResponseEntity createNewPasswordForUser(@Validated(Request.class) @RequestBody
-                                                               NewAccountPasswordDTO newAccountPasswordDTO) {
-        LOGGER.debug("Created new password for: {}", newAccountPasswordDTO.getEmail());
-        accountService.createNewAccountPassword(newAccountPasswordDTO.getEmail(), newAccountPasswordDTO.getPassword());
         return ResponseEntity.ok().build();
     }
 }

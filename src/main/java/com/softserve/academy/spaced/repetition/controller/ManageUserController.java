@@ -1,8 +1,8 @@
 package com.softserve.academy.spaced.repetition.controller;
 
-import com.softserve.academy.spaced.repetition.controller.utils.dto.DTOBuilder;
-import com.softserve.academy.spaced.repetition.controller.utils.dto.impl.DeckOfUserManagedByAdminDTO;
-import com.softserve.academy.spaced.repetition.controller.utils.dto.impl.UserManagedByAdminDTO;
+import com.softserve.academy.spaced.repetition.controller.dto.builder.DTOBuilder;
+import com.softserve.academy.spaced.repetition.controller.dto.impl.DeckOfUserManagedByAdminDTO;
+import com.softserve.academy.spaced.repetition.controller.dto.impl.UserManagedByAdminDTO;
 import com.softserve.academy.spaced.repetition.domain.Deck;
 import com.softserve.academy.spaced.repetition.domain.User;
 import com.softserve.academy.spaced.repetition.service.UserService;
@@ -109,7 +109,7 @@ public class ManageUserController {
     }
 
     /**
-     * Ads deck to users folder
+     * Adds deck to users folder
      *
      * @param userId - users id
      * @param deckId - decks id

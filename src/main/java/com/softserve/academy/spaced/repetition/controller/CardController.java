@@ -1,11 +1,11 @@
 package com.softserve.academy.spaced.repetition.controller;
 
-import com.softserve.academy.spaced.repetition.controller.utils.dto.DTOBuilder;
-import com.softserve.academy.spaced.repetition.controller.utils.dto.Request;
-import com.softserve.academy.spaced.repetition.controller.utils.dto.impl.CardPublicDTO;
+import com.softserve.academy.spaced.repetition.controller.dto.builder.DTOBuilder;
+import com.softserve.academy.spaced.repetition.controller.dto.annotations.Request;
+import com.softserve.academy.spaced.repetition.controller.dto.impl.CardPublicDTO;
 import com.softserve.academy.spaced.repetition.domain.Card;
 import com.softserve.academy.spaced.repetition.service.CardService;
-import com.softserve.academy.spaced.repetition.service.cardLoaders.CardLoadService;
+import com.softserve.academy.spaced.repetition.service.cardLoaders.impl.CardLoadService;
 import com.softserve.academy.spaced.repetition.utils.audit.Auditable;
 import com.softserve.academy.spaced.repetition.utils.audit.AuditingAction;
 import com.softserve.academy.spaced.repetition.utils.exceptions.NotAuthorisedUserException;
@@ -38,9 +38,6 @@ public class CardController {
 
     @Autowired
     private CardService cardService;
-
-    @Autowired
-    private CardLoadService cardLoadService;
 
     @GetMapping("/api/decks/{deckId}/learn")
     public ResponseEntity<List<CardPublicDTO>> getLearningCards(@PathVariable Long deckId)
@@ -197,22 +194,6 @@ public class CardController {
         List<CardPublicDTO> cards = DTOBuilder
                 .buildDtoListForCollection(learningCards, CardPublicDTO.class, collectionLink);
         return new ResponseEntity<>(cards, HttpStatus.OK);
-    }
-
-    /**
-     * Upload anki cards
-     *
-     * @param file - card-file
-     * @return - HttpStatus.Ok
-     * @throws NoSuchElementException - is dropping when classloader failed in loading Driver to uploading file.
-     * @throws WrongFormatException   - is dropping when uploading file has wrong format.
-     * @throws NoSuchElementException - is dropping when file is not found.
-     */
-    @PostMapping("/api/cardsUpload")
-    public ResponseEntity uploadCard(@RequestParam("file") MultipartFile file, Long deckId)
-            throws IOException, SQLException, ClassNotFoundException, WrongFormatException {
-        cardLoadService.loadCard(file, deckId);
-        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @GetMapping(value = "/api/card/{cardId}")

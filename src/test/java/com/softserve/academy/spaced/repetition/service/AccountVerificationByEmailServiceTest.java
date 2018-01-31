@@ -4,7 +4,7 @@ import com.softserve.academy.spaced.repetition.domain.Account;
 import com.softserve.academy.spaced.repetition.domain.User;
 import com.softserve.academy.spaced.repetition.repository.AccountRepository;
 import com.softserve.academy.spaced.repetition.repository.UserRepository;
-import com.softserve.academy.spaced.repetition.security.JwtTokenForMail;
+import com.softserve.academy.spaced.repetition.security.service.JwtTokenForMailService;
 import com.softserve.academy.spaced.repetition.service.impl.AccountVerificationByEmailServiceImpl;
 import com.softserve.academy.spaced.repetition.util.DomainFactory;
 import org.junit.Before;
@@ -24,7 +24,7 @@ public class AccountVerificationByEmailServiceTest {
 
     private final String EMAIL = "account@test.com";
     @Mock
-    private JwtTokenForMail jwtTokenForMail;
+    private JwtTokenForMailService jwtTokenForMail;
     @Mock
     private AccountRepository accountRepository;
     @Mock
