@@ -109,7 +109,7 @@ public class ManageUserController {
     }
 
     /**
-     * Ads deck to users folder
+     * Adds deck to users folder
      *
      * @param userId - users id
      * @param deckId - decks id
