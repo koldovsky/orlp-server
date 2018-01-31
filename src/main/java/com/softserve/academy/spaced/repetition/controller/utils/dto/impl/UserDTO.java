@@ -25,7 +25,7 @@ public class UserDTO extends DTO<User> {
 
     public String getEmail() { return getEntity().getAccount().getEmail(); }
 
-    public ImageType getImageType() { return getEntity().getPerson().getTypeImage();}
+    public ImageType getImageType() { return getEntity().getPerson().getImageType();}
 
     public String getImageBase64() {
         return getEntity().getPerson().getImageBase64();

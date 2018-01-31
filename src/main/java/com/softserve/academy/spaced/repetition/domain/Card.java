@@ -3,10 +3,11 @@ package com.softserve.academy.spaced.repetition.domain;
 import com.softserve.academy.spaced.repetition.controller.utils.dto.EntityInterface;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Entity
-@Table(name = "Card")
+@Table(name = "card")
 public class Card implements EntityInterface {
 
     @Id
@@ -15,12 +16,15 @@ public class Card implements EntityInterface {
     private Long id;
 
     @Column(name = "title")
+    @NotNull
     private String title;
 
-    @Column(name = "question", nullable = false, columnDefinition = "LONGTEXT")
+    @Column(name = "question", columnDefinition = "LONGTEXT")
+    @NotNull
     private String question;
 
-    @Column(name = "answer", nullable = false, columnDefinition = "LONGTEXT")
+    @Column(name = "answer", columnDefinition = "LONGTEXT")
+    @NotNull
     private String answer;
 
     @Column(name = "rating")

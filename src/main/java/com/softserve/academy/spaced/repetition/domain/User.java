@@ -12,7 +12,7 @@ import java.util.Set;
 import static com.softserve.academy.spaced.repetition.utils.validators.ValidationConstants.NULL_MESSAGE;
 
 @Entity
-@Table(name = "User")
+@Table(name = "user")
 public class User implements EntityInterface {
 
     @Id

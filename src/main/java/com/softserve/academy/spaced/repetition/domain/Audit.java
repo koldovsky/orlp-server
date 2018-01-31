@@ -4,7 +4,11 @@ import com.softserve.academy.spaced.repetition.controller.utils.dto.EntityInterf
 import com.softserve.academy.spaced.repetition.utils.audit.AuditingAction;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.Date;
+
+import static com.softserve.academy.spaced.repetition.utils.validators.ValidationConstants.*;
+
 
 @Entity
 @Table(name = "audit")
@@ -15,21 +19,26 @@ public class Audit implements EntityInterface {
     @Column(name = "audit_id")
     private long id;
 
-    @Column(name = "accountEmail", nullable = false)
+    @Column(name = "account_email", length = EMAIL_MAX_SIZE)
+    @NotNull
     private String accountEmail;
 
-    @Column(name = "action", nullable = false)
+    @Column(name = "action")
+    @NotNull
     @Enumerated(EnumType.STRING)
     private AuditingAction action;
 
-    @Column(name = "time", nullable = false)
+    @Column(name = "time")
+    @NotNull
     @Temporal(TemporalType.TIMESTAMP)
     private Date time;
 
-    @Column(name = "ip_address", nullable = false)
+    @Column(name = "ip_address")
+    @NotNull
     private String ipAddress;
 
-    @Column(name = "role", nullable = false)
+    @Column(name = "role")
+    @NotNull
     private String role;
 
     public Audit() {
