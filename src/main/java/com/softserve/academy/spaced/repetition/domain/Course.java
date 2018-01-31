@@ -4,10 +4,11 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.softserve.academy.spaced.repetition.controller.dto.annotations.EntityInterface;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Entity
-@Table(name = "Course")
+@Table(name = "course")
 public class Course implements EntityInterface {
 
     @Id
@@ -15,10 +16,12 @@ public class Course implements EntityInterface {
     @Column(name = "course_id")
     private Long id;
 
-    @Column(name = "name", nullable = false)
+    @Column(name = "name")
+    @NotNull
     private String name;
 
-    @Column(name = "description", nullable = false)
+    @Column(name = "description")
+    @NotNull
     private String description;
 
     @OneToOne(fetch = FetchType.LAZY)

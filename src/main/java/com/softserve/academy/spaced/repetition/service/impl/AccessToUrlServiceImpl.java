@@ -1,11 +1,11 @@
 package com.softserve.academy.spaced.repetition.service.impl;
 
-import com.softserve.academy.spaced.repetition.domain.enums.AuthorityName;
 import com.softserve.academy.spaced.repetition.domain.Person;
+import com.softserve.academy.spaced.repetition.domain.enums.AuthorityName;
 import com.softserve.academy.spaced.repetition.repository.*;
-import com.softserve.academy.spaced.repetition.utils.exceptions.NotAuthorisedUserException;
 import com.softserve.academy.spaced.repetition.service.AccessToUrlService;
 import com.softserve.academy.spaced.repetition.service.UserService;
+import com.softserve.academy.spaced.repetition.utils.exceptions.NotAuthorisedUserException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,31 +14,22 @@ import java.util.Objects;
 @Service("accessToUrlService")
 public class AccessToUrlServiceImpl implements AccessToUrlService {
 
-    private final CategoryRepository categoryRepository;
-    private final UserService userService;
-    private final CourseRepository courseRepository;
-    private final FolderRepository folderRepository;
-    private final DeckRepository deckRepository;
-    private final CardRepository cardRepository;
-    private final DeckCommentRepository deckCommentRepository;
-    private final CourseCommentRepository courseCommentRepository;
-
     @Autowired
-    public AccessToUrlServiceImpl(CategoryRepository categoryRepository, UserService userService,
-                                  CourseRepository courseRepository, FolderRepository folderRepository,
-                                  DeckRepository deckRepository, CardRepository cardRepository,
-                                  DeckCommentRepository deckCommentRepository,
-                                  CourseCommentRepository courseCommentRepository) {
-        this.categoryRepository = categoryRepository;
-        this.userService = userService;
-        this.courseRepository = courseRepository;
-        this.folderRepository = folderRepository;
-        this.deckRepository = deckRepository;
-        this.cardRepository = cardRepository;
-        this.deckCommentRepository = deckCommentRepository;
-        this.courseCommentRepository = courseCommentRepository;
-    }
-
+    private CategoryRepository categoryRepository;
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private CourseRepository courseRepository;
+    @Autowired
+    private FolderRepository folderRepository;
+    @Autowired
+    private DeckRepository deckRepository;
+    @Autowired
+    private CardRepository cardRepository;
+    @Autowired
+    private DeckCommentRepository deckCommentRepository;
+    @Autowired
+    private CourseCommentRepository courseCommentRepository;
 
     @Override
     public boolean hasAccessToCategory(Long category_id) {

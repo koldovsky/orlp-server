@@ -5,7 +5,11 @@ import com.softserve.academy.spaced.repetition.controller.dto.impl.CourseLinkDTO
 import com.softserve.academy.spaced.repetition.controller.dto.impl.UserDTO;
 import com.softserve.academy.spaced.repetition.controller.dto.impl.UserLinksDTO;
 import com.softserve.academy.spaced.repetition.domain.Course;
+import com.softserve.academy.spaced.repetition.domain.Person;
 import com.softserve.academy.spaced.repetition.domain.User;
+import com.softserve.academy.spaced.repetition.utils.audit.Auditable;
+import com.softserve.academy.spaced.repetition.utils.audit.AuditingAction;
+import com.softserve.academy.spaced.repetition.utils.exceptions.ImageRepositorySizeQuotaExceededException;
 import com.softserve.academy.spaced.repetition.utils.exceptions.NotAuthorisedUserException;
 import com.softserve.academy.spaced.repetition.utils.exceptions.UserStatusException;
 import com.softserve.academy.spaced.repetition.service.MailService;
@@ -13,10 +17,11 @@ import com.softserve.academy.spaced.repetition.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Link;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -71,11 +76,4 @@ public class UserController {
         userService.getUserStatus();
         return new ResponseEntity(HttpStatus.OK);
     }
-
-    @GetMapping("api/confirmation-mail")
-    public ResponseEntity sendConfirmationMail() throws NotAuthorisedUserException {
-        userService.activateAccount();
-        return new ResponseEntity(HttpStatus.OK);
-    }
-
 }

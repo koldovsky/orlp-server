@@ -5,7 +5,7 @@ import java.util.Date;
 import java.util.Objects;
 
 @Entity
-@Table(name = "CourseComment")
+@Table(name = "course_comment")
 public class CourseComment extends Comment {
 
     @ManyToOne(fetch = FetchType.EAGER)

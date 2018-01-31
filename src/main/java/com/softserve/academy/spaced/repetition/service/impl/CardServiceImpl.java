@@ -15,6 +15,8 @@ import com.softserve.academy.spaced.repetition.repository.DeckRepository;
 import com.softserve.academy.spaced.repetition.service.*;
 import com.softserve.academy.spaced.repetition.service.UserCardQueueService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.FileCopyUtils;
@@ -30,29 +32,22 @@ import java.util.*;
 @Service
 public class CardServiceImpl implements CardService {
 
-    private final CardRepository cardRepository;
-
-    private final DeckRepository deckRepository;
-
-    private final UserService userService;
-
-    private final AccountService accountService;
-
-    private final UserCardQueueService userCardQueueService;
-
-    private final DeckService deckService;
+    @Autowired
+    private CardRepository cardRepository;
+    @Autowired
+    private DeckRepository deckRepository;
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private AccountService accountService;
+    @Autowired
+    private UserCardQueueService userCardQueueService;
+    @Autowired
+    private DeckService deckService;
 
     @Autowired
-    public CardServiceImpl(CardRepository cardRepository, DeckRepository deckRepository, AccountService accountService,
-                           UserService userService, UserCardQueueService userCardQueueService,
-                           DeckService deckService) {
-        this.cardRepository = cardRepository;
-        this.deckRepository = deckRepository;
-        this.userService = userService;
-        this.accountService = accountService;
-        this.userCardQueueService = userCardQueueService;
-        this.deckService = deckService;
-    }
+    private MessageSource messageSource;
+    private final Locale locale = LocaleContextHolder.getLocale();
 
     @Override
     @Transactional
@@ -90,7 +85,8 @@ public class CardServiceImpl implements CardService {
     public void addCard(Card card, Long deckId) {
         if (card.getTitle().trim().isEmpty() || card.getAnswer().trim().isEmpty()
                 || card.getQuestion().trim().isEmpty()) {
-            throw new IllegalArgumentException("All of card fields must be filled");
+            throw new IllegalArgumentException(messageSource.getMessage("message.exception.cardFieldsNotEmpty",
+                    new Object[]{}, locale));
         }
         Deck deck = deckRepository.findOne(deckId);
         card.setDeck(deck);
@@ -101,7 +97,8 @@ public class CardServiceImpl implements CardService {
     public void updateCard(Long id, Card card) {
         if (card.getTitle().trim().isEmpty() || card.getAnswer().trim().isEmpty()
                 || card.getQuestion().trim().isEmpty()) {
-            throw new IllegalArgumentException("All of card fields must be filled");
+            throw new IllegalArgumentException(messageSource.getMessage("message.exception.cardFieldsNotEmpty",
+                    new Object[]{}, locale));
         }
         card.setId(id);
         card.setDeck(cardRepository.findOne(id).getDeck());
@@ -113,14 +110,12 @@ public class CardServiceImpl implements CardService {
         User user = userService.getAuthorizedUser();
         final int cardsNumber = accountService.getCardsNumber();
         List<Card> cardsQueue = cardRepository.cardsForLearningWithOutStatus(user.getId(), deckId, cardsNumber);
-
         if (cardsQueue.size() < cardsNumber) {
             cardsQueue.addAll(cardRepository.cardsQueueForLearningWithStatus(user.getId(), deckId, cardsNumber)
                     .subList(0, cardsNumber - cardsQueue.size()));
         }
         return cardsQueue;
     }
-
 
     @Override
     @Transactional
@@ -151,7 +146,8 @@ public class CardServiceImpl implements CardService {
             if (!cardsFile.getContentType().equals("application/octet-stream")) {
                 throw new WrongFormatException();
             } else if (cardsFile.isEmpty()) {
-                throw new EmptyFileException("File is empty!");
+                throw new EmptyFileException(messageSource.getMessage("message.exception.fileEmpty",
+                        new Object[]{}, locale));
             }
             Yaml yaml = new Yaml();
             InputStream in = cardsFile.getInputStream();
@@ -161,7 +157,8 @@ public class CardServiceImpl implements CardService {
                     addCard(new Card(card.getQuestion(), card.getAnswer(), card.getTitle()), deckId);
                 }
             } catch (ParserException | ConstructorException ex) {
-                throw new IllegalArgumentException("Invalid format of file!");
+                throw new IllegalArgumentException(messageSource.getMessage("message.exception.fileWrongFormat",
+                        new Object[]{}, locale));
             }
         }
     }
@@ -185,7 +182,8 @@ public class CardServiceImpl implements CardService {
         try (Writer out = new BufferedWriter(new OutputStreamWriter(outputStream))) {
             yaml.dump(cardsMap, out);
         } catch (IOException ex) {
-            throw new IllegalArgumentException("Dumping of file failed!");
+            throw new IllegalArgumentException(messageSource.getMessage("message.exception.fileDumpingFailed",
+                    new Object[]{}, locale));
         }
 
     }
@@ -195,7 +193,8 @@ public class CardServiceImpl implements CardService {
         try (InputStream in = CardServiceImpl.class.getResourceAsStream("/data/CardsTemplate.yml")) {
             FileCopyUtils.copy(in, outputStream);
         } catch (IOException ex) {
-            throw new IllegalArgumentException("Copy of file failed!");
+            throw new IllegalArgumentException(messageSource.getMessage("message.exception.fileCopyFailed",
+                    new Object[]{}, locale));
         }
     }
 }

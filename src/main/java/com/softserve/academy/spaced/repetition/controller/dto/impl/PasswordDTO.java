@@ -10,13 +10,13 @@ import static com.softserve.academy.spaced.repetition.utils.validators.Validatio
 
 public class PasswordDTO {
 
-    @NotNull(message = NULL_MESSAGE, groups = Request.class)
-    @Size(min = 1, message = PASS_SIZE_MESSAGE, groups = Request.class)
+    @NotNull(message = "{message.validation.fieldNotNull}", groups = Request.class)
+    @Size(min = PASSWORD_MIN_SIZE, max = PASSWORD_MAX_SIZE, message = "{message.validation.fieldSizeLimits}", groups = Request.class)
     @PasswordMatches(groups = Request.class)
     private String currentPassword;
 
-    @NotNull(message = NULL_MESSAGE, groups = Request.class)
-    @Size(min = PASS_MIN_SIZE, max = PASS_MAX_SIZE, message = PASS_SIZE_MESSAGE, groups = Request.class)
+    @NotNull(message = "{message.validation.fieldNotNull}", groups = Request.class)
+    @Size(min = PASSWORD_MIN_SIZE, max = PASSWORD_MAX_SIZE, message = "{message.validation.fieldSizeLimits}", groups = Request.class)
     private String newPassword;
 
     public PasswordDTO(String currentPassword, String newPassword){

@@ -9,6 +9,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.softserve.academy.spaced.repetition.security.DTO.ReCaptchaResponseDto;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -25,7 +26,6 @@ import org.springframework.test.annotation.Rollback;
 import com.softserve.academy.spaced.repetition.domain.Account;
 import com.softserve.academy.spaced.repetition.domain.Authority;
 import com.softserve.academy.spaced.repetition.domain.enums.AuthorityName;
-import com.softserve.academy.spaced.repetition.security.dto.ReCaptchaResponseDto;
 import com.softserve.academy.spaced.repetition.security.utils.JwtTokenUtil;
 import com.softserve.academy.spaced.repetition.security.authentification.JwtUser;
 import com.softserve.academy.spaced.repetition.security.authentification.JwtUserFactory;

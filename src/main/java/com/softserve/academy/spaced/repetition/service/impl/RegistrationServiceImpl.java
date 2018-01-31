@@ -18,11 +18,13 @@ import org.springframework.stereotype.Service;
 @Service
 public class RegistrationServiceImpl implements RegistrationService {
 
-    private AuthorityRepository authorityRepository;
+    @Autowired
     private UserService userService;
-    private PasswordEncoder passwordEncoder;
+
+    @Autowired
     private MailService mailService;
 
+    @Autowired
     private AccountService accountService;
 
     @Override
@@ -30,7 +32,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         Account account = user.getAccount();
         userService.initializeNewUser(account, account.getEmail().toLowerCase(), AccountStatus.ACTIVE,
                 true, AuthenticationType.LOCAL);
-        user.getPerson().setTypeImage(ImageType.NONE);
+        user.getPerson().setImageType(ImageType.NONE);
         user.setFolder(new Folder());
         userService.addUser(user);
         accountService.initializeLearningRegimeSettingsForAccount(account);
@@ -42,33 +44,4 @@ public class RegistrationServiceImpl implements RegistrationService {
         mailService.sendConfirmationMail(user);
     }
 
-    @Override
-    @Autowired
-    public void setAuthorityRepository(AuthorityRepository authorityRepository) {
-        this.authorityRepository = authorityRepository;
-    }
-
-    @Override
-    @Autowired
-    public void setUserService(UserService userService) {
-        this.userService = userService;
-    }
-
-    @Override
-    @Autowired
-    public void setPasswordEncoder(PasswordEncoder passwordEncoder) {
-        this.passwordEncoder = passwordEncoder;
-    }
-
-    @Override
-    @Autowired
-    public void setMailService(MailService mailService) {
-        this.mailService = mailService;
-    }
-
-    @Override
-    @Autowired
-    public void setAccountService(AccountService accountService) {
-        this.accountService = accountService;
-    }
 }

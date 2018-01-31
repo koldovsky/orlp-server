@@ -1,4 +1,4 @@
-package com.softserve.academy.spaced.repetition.security.dto;
+package com.softserve.academy.spaced.repetition.security.DTO;
 
 public class JwtAuthenticationRequest{
 

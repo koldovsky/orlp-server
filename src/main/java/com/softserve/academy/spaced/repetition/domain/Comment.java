@@ -5,10 +5,9 @@ import com.softserve.academy.spaced.repetition.controller.dto.annotations.Reques
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 import java.util.Objects;
-
-import static com.softserve.academy.spaced.repetition.utils.validators.ValidationConstants.EMPTY_MESSAGE;
 
 @Entity
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
@@ -16,22 +15,24 @@ public abstract class Comment implements EntityInterface {
 
     @Id
     @GeneratedValue(strategy = GenerationType.TABLE)
-    @Column(name = "comment_id", nullable = false)
+    @Column(name = "comment_id")
     private Long id;
 
-    @NotBlank(message = EMPTY_MESSAGE, groups = Request.class)
-    @Column(name = "commentText", nullable = false, columnDefinition = "LONGTEXT")
+    @Column(name = "comment_text", columnDefinition = "LONGTEXT")
+    @NotBlank(message = "{message.validation.fieldNotEmpty}", groups = Request.class)
     private String commentText;
 
-    @Column(name = "comment_date", nullable = false)
+    @Column(name = "comment_date")
+    @NotNull
     @Temporal(TemporalType.TIMESTAMP)
     private Date commentDate;
 
+    @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "person_id")
     private Person person;
 
-    @Column(name = "parentCommentId")
+    @Column(name = "parent_comment_id")
     private Long parentCommentId;
 
     public Comment() {

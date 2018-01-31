@@ -20,7 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class UserProfileController {
 
     @Autowired
-    UserService userService;
+    private UserService userService;
 
     @Auditable(action = AuditingAction.EDIT_PERSONAL_DATA)
     @PutMapping(value = "/api/private/user/data")

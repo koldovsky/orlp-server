@@ -66,7 +66,8 @@ public class JwtTokenForMailService extends JwtTokenUtil {
         if (!isTokenExpired(token)) {
             return email;
         }
-        throw new NoSuchElementException(messageSource.getMessage("message.exception.noTokenFound", new Object[]{}, locale));
+        throw new NoSuchElementException(messageSource.getMessage("message.exception.tokenNotFound",
+                new Object[]{}, locale));
     }
 
     public String getAccountEmailFromToken(String token) {

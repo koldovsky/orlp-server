@@ -3,11 +3,12 @@ package com.softserve.academy.spaced.repetition.domain;
 import com.softserve.academy.spaced.repetition.controller.dto.annotations.EntityInterface;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Set;
 
 @Entity
-@Table(name = "Deck")
+@Table(name = "deck")
 public class Deck implements EntityInterface {
 
     @Id
@@ -15,14 +16,16 @@ public class Deck implements EntityInterface {
     @Column(name = "deck_id")
     private Long id;
 
-    @Column(name = "name", nullable = false)
+    @Column(name = "name")
+    @NotNull
     private String name;
 
-    @Column(name = "description", nullable = false)
+    @Column(name = "description")
+    @NotNull
     private String description;
 
-    @Column(name = "synthax")
-    private String synthaxToHighlight;
+    @Column(name = "syntax")
+    private String syntaxToHighlight;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
@@ -154,11 +157,11 @@ public class Deck implements EntityInterface {
         return id.hashCode();
     }
 
-    public String getSynthaxToHighlight() {
-        return synthaxToHighlight;
+    public String getSyntaxToHighlight() {
+        return syntaxToHighlight;
     }
 
-    public void setSynthaxToHighlight(String synthaxToHighlight) {
-        this.synthaxToHighlight = synthaxToHighlight;
+    public void setSyntaxToHighlight(String syntaxToHighlight) {
+        this.syntaxToHighlight = syntaxToHighlight;
     }
 }

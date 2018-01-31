@@ -1,5 +1,6 @@
 package com.softserve.academy.spaced.repetition.controller.dto.impl;
 
+import com.softserve.academy.spaced.repetition.controller.DeckController;
 import com.softserve.academy.spaced.repetition.controller.dto.builder.DTO;
 import com.softserve.academy.spaced.repetition.controller.FolderController;
 import com.softserve.academy.spaced.repetition.domain.Deck;
@@ -13,7 +14,8 @@ public class DeckLinkByFolderDTO extends DTO<Deck> {
     public DeckLinkByFolderDTO(Deck deck, Link link) {
         super(deck, link);
 
-        Link linkCards = linkTo(methodOn(FolderController.class).getCardsByFolderAndDeck((long) -1, getEntity().getId())).withRel("cards");
+        Link linkCards = linkTo(methodOn(DeckController.class)
+                .getCardsByFolderAndDeck((long) -1, getEntity().getId())).withRel("cards");
         add(getLinkWithReplacedParentPart(linkCards).withRel("cards"));
     }
 
@@ -32,6 +34,6 @@ public class DeckLinkByFolderDTO extends DTO<Deck> {
     }
 
     public String getSynthax(){
-        return getEntity().getSynthaxToHighlight();
+        return getEntity().getSyntaxToHighlight();
     }
 }

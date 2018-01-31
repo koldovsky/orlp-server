@@ -2,7 +2,7 @@ package com.softserve.academy.spaced.repetition.security.service;
 
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import com.softserve.academy.spaced.repetition.domain.enums.AuthorityName;
-import com.softserve.academy.spaced.repetition.security.dto.ReCaptchaResponseDto;
+import com.softserve.academy.spaced.repetition.security.DTO.ReCaptchaResponseDto;
 import com.softserve.academy.spaced.repetition.security.utils.FacebookAuthUtil;
 import com.softserve.academy.spaced.repetition.security.utils.GoogleAuthUtil;
 import com.softserve.academy.spaced.repetition.security.utils.JwtTokenUtil;
@@ -104,7 +104,8 @@ public class AuthenticationRestService {
             String refreshedToken = jwtTokenUtil.refreshToken(token);
             return addTokenToHeaderCookie(refreshedToken);
         } else {
-            throw new BadCredentialsException(messageSource.getMessage("message.exception.notValidToken", new Object[]{}, locale));
+            throw new BadCredentialsException(messageSource.getMessage("message.exception.tokenNotValid",
+                    new Object[]{}, locale));
         }
     }
 
@@ -121,7 +122,8 @@ public class AuthenticationRestService {
         if (token != null) {
             return token;
         } else {
-            throw new BadCredentialsException(messageSource.getMessage("message.exception.noToken", new Object[]{}, locale));
+            throw new BadCredentialsException(messageSource.getMessage("message.exception.tokenNotExist",
+                    new Object[]{}, locale));
         }
     }
 
@@ -149,7 +151,8 @@ public class AuthenticationRestService {
 
     private void validateUser(UserDetails userDetails){
         if(!userDetails.isAccountNonLocked()){
-            throw new LockedException(messageSource.getMessage("message.exception.deactivatedAccount", new Object[]{}, locale));
+            throw new LockedException(messageSource.getMessage("message.exception.accountDeactivated",
+                    new Object[]{}, locale));
         }
     }
 }

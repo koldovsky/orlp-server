@@ -37,9 +37,6 @@ public class CardController {
     @Autowired
     private CardService cardService;
 
-    @Autowired
-    private CardLoadService cardLoadService;
-
     @GetMapping("/api/decks/{deckId}/learn")
     public ResponseEntity<List<CardPublicDTO>> getLearningCards(@PathVariable Long deckId)
             throws NotAuthorisedUserException {
@@ -187,22 +184,6 @@ public class CardController {
         List<CardPublicDTO> cards = DTOBuilder
                 .buildDtoListForCollection(learningCards, CardPublicDTO.class, collectionLink);
         return new ResponseEntity<>(cards, HttpStatus.OK);
-    }
-
-    /**
-     * Upload anki cards
-     *
-     * @param file - card-file
-     * @return - HttpStatus.Ok
-     * @throws NoSuchElementException - is dropping when classloader failed in loading Driver to uploading file.
-     * @throws WrongFormatException   - is dropping when uploading file has wrong format.
-     * @throws NoSuchElementException - is dropping when file is not found.
-     */
-    @PostMapping("/api/cardsUpload")
-    public ResponseEntity uploadCard(@RequestParam("file") MultipartFile file, Long deckId)
-            throws IOException, SQLException, ClassNotFoundException, WrongFormatException {
-        cardLoadService.loadCard(file, deckId);
-        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @GetMapping(value = "/api/card/{cardId}")
