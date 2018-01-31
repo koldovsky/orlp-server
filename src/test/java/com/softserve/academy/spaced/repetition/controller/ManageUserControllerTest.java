@@ -31,7 +31,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RunWith(MockitoJUnitRunner.class)
-public class UserControllerTest {
+public class ManageUserControllerTest {
     private MockMvc mockMvc;
 
     @InjectMocks
