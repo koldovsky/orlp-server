@@ -53,7 +53,7 @@ public class DomainFactory {
         person.setId(personId);
         person.setFirstName(firstName);
         person.setLastName(lastName);
-        person.setTypeImage(imageType);
+        person.setImageType(imageType);
         person.setImage(image);
         person.setImageBase64(imageBase64);
         return person;
@@ -121,7 +121,7 @@ public class DomainFactory {
         deck.setId(deckId);
         deck.setName(name);
         deck.setDescription(description);
-        deck.setSynthaxToHighlight(syntaxToHighLight);
+        deck.setSyntaxToHighlight(syntaxToHighLight);
         deck.setCategory(category);
         deck.setRating(rating);
         deck.setDeckOwner(deckOwner);
@@ -188,7 +188,7 @@ public class DomainFactory {
                                     boolean isImageUsed) {
         Image image = new Image();
         image.setId(imageId);
-        image.setImagebase64(imageBase64);
+        image.setImageBase64(imageBase64);
         image.setType(type);
         image.setCreatedBy(createdBy);
         image.setSize(size);
