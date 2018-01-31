@@ -1,201 +1,177 @@
 package com.softserve.academy.spaced.repetition.service;
 
-import com.softserve.academy.spaced.repetition.config.TestDatabaseConfig;
-import com.softserve.academy.spaced.repetition.domain.*;
+import com.softserve.academy.spaced.repetition.domain.Account;
+import com.softserve.academy.spaced.repetition.domain.RememberingLevel;
+import com.softserve.academy.spaced.repetition.domain.User;
+import com.softserve.academy.spaced.repetition.domain.UserCardQueue;
 import com.softserve.academy.spaced.repetition.domain.enums.LearningRegime;
-import com.softserve.academy.spaced.repetition.domain.enums.UserCardQueueStatus;
-import com.softserve.academy.spaced.repetition.utils.exceptions.NotAuthorisedUserException;
 import com.softserve.academy.spaced.repetition.repository.RememberingLevelRepository;
 import com.softserve.academy.spaced.repetition.repository.UserCardQueueRepository;
 import com.softserve.academy.spaced.repetition.service.impl.UserCardQueueServiceImpl;
+import com.softserve.academy.spaced.repetition.util.DomainFactory;
+import com.softserve.academy.spaced.repetition.utils.exceptions.NotAuthorisedUserException;
 import org.junit.Before;
-import org.junit.ClassRule;
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameter;
-import org.junit.runners.Parameterized.Parameters;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Import;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.context.junit4.rules.SpringClassRule;
-import org.springframework.test.context.junit4.rules.SpringMethodRule;
+import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
 
-import static com.softserve.academy.spaced.repetition.service.impl.AccountServiceImpl.NUMBER_OF_REMEMBERING_LEVELS;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.mockito.Mockito.when;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.*;
 
-@RunWith(Parameterized.class)
-@ActiveProfiles("testdatabase")
-@SpringBootTest
-@Import(TestDatabaseConfig.class)
-@Sql("/data/TestData.sql")
+@RunWith(MockitoJUnitRunner.class)
 @Transactional
 public class UserCardQueueServiceTest {
-    private static final int DAY_IN_MILLISECONDS = 24 * 60 * 60 * 1000;
-    private static final Long ACCOUNT_ID = 1L;
-    private static final Long CARD_ID = 1L;
-    private static final Long DECK_ID = 1L;
-    private static final Long USER_ID = 1L;
 
-    @ClassRule
-    public static final SpringClassRule SCR = new SpringClassRule();
-
-    @Rule
-    public final SpringMethodRule springMethodRule = new SpringMethodRule();
-
-    private UserCardQueueService userCardQueueService;
-
-    @Autowired
-    private UserCardQueueRepository userCardQueueRepository;
-
-    @Autowired
-    private RememberingLevelRepository rememberingLevelRepository;
-
+    private final long USER_ID = 1L;
+    private final long DECK_ID = 1L;
+    private final long CARD_ID = 1L;
+    private final long USER_CARD_QUEUE_ID = 1L;
+    private final Date USER_CARD_QUEUE_CARD_DATE = new Date();
+    private final int REMEMBERING_LEVEL_ORDER_NUMBER = 5;
+    private final String USER_CARD_QUEUE_STATUS_GOOD = "GOOD";
+    private final LearningRegime LEARNING_REGIME_BAD_NORMAL_GOOD = LearningRegime.BAD_NORMAL_GOOD_STATUS_DEPENDING;
+    private final LearningRegime LEARNING_REGIME_CARDS_POSTPONING = LearningRegime.CARDS_POSTPONING_USING_SPACED_REPETITION;
+    @InjectMocks
+    private UserCardQueueServiceImpl userCardQueueService;
     @Mock
-    private UserService mockedUserService;
-
-    @Parameter
-    public boolean isExisting;
-
-    @Parameter(1)
-    public UserCardQueueStatus startingStatus;
-
-    @Parameter(2)
-    public UserCardQueueStatus status;
-
-    @Parameter(3)
-    public Integer startingOrderNumber;
-
-    @Parameter(4)
-    public Integer expectedOrderNumber;
-
-    @Parameter(5)
-    public Date startingDateToRepeat;
-
-    @Parameter(6)
-    public LearningRegime learningRegime;
-
-    private RememberingLevel startingRememberingLevel;
-    private RememberingLevel expectedRememberingLevel;
+    private UserCardQueueRepository userCardQueueRepository;
+    @Mock
+    private RememberingLevelRepository rememberingLevelRepository;
+    @Mock
+    private UserService userService;
+    private Account account;
+    private UserCardQueue userCardQueue;
+    private RememberingLevel rememberingLevel;
 
     @Before
-    public void setUp() throws Exception {
-        userCardQueueService = new UserCardQueueServiceImpl(userCardQueueRepository, mockedUserService,
-                rememberingLevelRepository);
-        User mockedUser = createMockedUser(learningRegime);
-        when(mockedUserService.getAuthorizedUser()).thenReturn(mockedUser);
-        startingRememberingLevel = rememberingLevelRepository
-                .findRememberingLevelByAccountEqualsAndOrderNumber(mockedUser.getAccount(), startingOrderNumber);
-        expectedRememberingLevel = rememberingLevelRepository
-                .findRememberingLevelByAccountEqualsAndOrderNumber(mockedUser.getAccount(), expectedOrderNumber);
-    }
+    public void setUp() throws NotAuthorisedUserException {
+        final Long ACCOUNT_ID = 1L;
+        final Long REMEMBERING_LEVEL_ID = 1L;
+        final Integer REMEMBERING_LEVEL_NUMBER_OF_POSTPONED_DAYS = 1;
 
-    @Parameters
-    public static Collection<Object[]> data() throws NotAuthorisedUserException {
-        Collection<Object[]> params = new ArrayList<>();
-        params.add(new Object[]{false, null, UserCardQueueStatus.GOOD, null, 2, new Date(),
-        LearningRegime.CARDS_POSTPONING_USING_SPACED_REPETITION});
-        params.add(new Object[]{false, null, UserCardQueueStatus.NORMAL, null, 1, new Date(),
-                LearningRegime.CARDS_POSTPONING_USING_SPACED_REPETITION});
-        params.add(new Object[]{false, null, UserCardQueueStatus.BAD, null, 1, new Date(),
-                LearningRegime.CARDS_POSTPONING_USING_SPACED_REPETITION});
-        params.add(new Object[]{true, null, UserCardQueueStatus.GOOD, 4, 5, new Date(),
-                LearningRegime.CARDS_POSTPONING_USING_SPACED_REPETITION});
-        params.add(new Object[]{true, null, UserCardQueueStatus.NORMAL, 4, 4, new Date(),
-                LearningRegime.CARDS_POSTPONING_USING_SPACED_REPETITION});
-        params.add(new Object[]{true, null, UserCardQueueStatus.BAD, 4, 3, new Date(),
-                LearningRegime.CARDS_POSTPONING_USING_SPACED_REPETITION});
-        params.add(new Object[]{true, UserCardQueueStatus.BAD, UserCardQueueStatus.GOOD, 4, 5, new Date(),
-                LearningRegime.CARDS_POSTPONING_USING_SPACED_REPETITION});
-        params.add(new Object[]{true, UserCardQueueStatus.BAD, UserCardQueueStatus.NORMAL, 4, 4, new Date(),
-                LearningRegime.CARDS_POSTPONING_USING_SPACED_REPETITION});
-        params.add(new Object[]{true, UserCardQueueStatus.NORMAL, UserCardQueueStatus.BAD, 4, 3, new Date(),
-                LearningRegime.CARDS_POSTPONING_USING_SPACED_REPETITION});
-        params.add(new Object[]{true, null, UserCardQueueStatus.BAD, 1, 1, new Date(),
-                LearningRegime.CARDS_POSTPONING_USING_SPACED_REPETITION});
-        params.add(new Object[]{true, null, UserCardQueueStatus.GOOD, NUMBER_OF_REMEMBERING_LEVELS,
-                NUMBER_OF_REMEMBERING_LEVELS, new Date(), LearningRegime.CARDS_POSTPONING_USING_SPACED_REPETITION});
-        params.add(new Object[]{false, null, UserCardQueueStatus.GOOD, null, null, null,
-                LearningRegime.BAD_NORMAL_GOOD_STATUS_DEPENDING});
-        params.add(new Object[]{true, UserCardQueueStatus.BAD, UserCardQueueStatus.GOOD, null, null, null,
-                LearningRegime.BAD_NORMAL_GOOD_STATUS_DEPENDING});
-        params.add(new Object[]{true, UserCardQueueStatus.BAD, UserCardQueueStatus.GOOD, 1, 1, new Date(),
-                LearningRegime.BAD_NORMAL_GOOD_STATUS_DEPENDING});
-        return params;
+        account = DomainFactory.createAccount(ACCOUNT_ID, null, null, null, null, false, null, null,
+                LEARNING_REGIME_CARDS_POSTPONING, null, null);
+        final User user = DomainFactory.createUser(USER_ID, account, null, null, null);
+        rememberingLevel = DomainFactory.createRememberingLevel(REMEMBERING_LEVEL_ID, REMEMBERING_LEVEL_ORDER_NUMBER,
+                null, REMEMBERING_LEVEL_NUMBER_OF_POSTPONED_DAYS, account);
+        userCardQueue = DomainFactory.createUserCardQueue(USER_CARD_QUEUE_ID, USER_ID, CARD_ID, DECK_ID, null,
+                USER_CARD_QUEUE_CARD_DATE, null, rememberingLevel);
+
+        when(userService.getAuthorizedUser()).thenReturn(user);
+        when(userCardQueueRepository.findUserCardQueueByUserIdAndCardId(USER_ID, CARD_ID)).thenReturn(userCardQueue);
+        when(userCardQueueRepository.save(userCardQueue)).thenReturn(userCardQueue);
+        when(rememberingLevelRepository.findRememberingLevelByAccountEqualsAndOrderNumber(account, 1))
+                .thenReturn(rememberingLevel);
     }
 
     @Test
-    public void testUpdateUserCardQueue() throws NotAuthorisedUserException {
-        UserCardQueue actualUserCardQueue;
-        if (!isExisting) {
-            actualUserCardQueue = userCardQueueRepository.findUserCardQueueByUserIdAndCardId(
-                    USER_ID, CARD_ID);
-            if (actualUserCardQueue != null) {
-                userCardQueueRepository.delete(actualUserCardQueue.getId());
-            }
-        } else {
-            buildUserCardQueueAndSave(startingStatus, startingRememberingLevel, startingDateToRepeat);
-        }
+    public void testUpdateUserCardQueueIfLearningRegimeIsBadNormalGood() throws NotAuthorisedUserException {
+        account.setLearningRegime(LEARNING_REGIME_BAD_NORMAL_GOOD);
 
-        userCardQueueService.updateUserCardQueue(DECK_ID, CARD_ID, status.getStatus());
+        userCardQueueService.updateUserCardQueue(DECK_ID, CARD_ID, USER_CARD_QUEUE_STATUS_GOOD);
+        verify(userService).getAuthorizedUser();
+        verify(userCardQueueRepository).findUserCardQueueByUserIdAndCardId(USER_ID, CARD_ID);
+        verify(userCardQueueRepository).save(userCardQueue);
 
-        actualUserCardQueue = userCardQueueRepository.findUserCardQueueByUserIdAndCardId(USER_ID, CARD_ID);
-        Date expectedDateToRepeat;
-        UserCardQueueStatus expectedStatus;
-        if (learningRegime == LearningRegime.CARDS_POSTPONING_USING_SPACED_REPETITION) {
-            expectedDateToRepeat = new Date(actualUserCardQueue.getCardDate().getTime()
-                    + expectedRememberingLevel.getNumberOfPostponedDays() * DAY_IN_MILLISECONDS);
-            expectedStatus = startingStatus;
-        } else {
-            expectedDateToRepeat = startingDateToRepeat;
-            expectedStatus = status;
-        }
-        checkFields(expectedStatus, actualUserCardQueue, expectedRememberingLevel, expectedDateToRepeat);
+        account.setLearningRegime(LEARNING_REGIME_CARDS_POSTPONING);
     }
 
-    private void buildUserCardQueueAndSave(UserCardQueueStatus status, RememberingLevel rememberingLevel,
-                                                    Date dateToRepeat) {
-        UserCardQueue userCardQueue = new UserCardQueue();
-        userCardQueue.setCardId(CARD_ID);
-        userCardQueue.setDeckId(DECK_ID);
-        userCardQueue.setUserId(USER_ID);
-        userCardQueue.setCardDate(new Date());
-        userCardQueue.setStatus(status);
-        userCardQueue.setRememberingLevel(rememberingLevel);
-        userCardQueue.setDateToRepeat(dateToRepeat);
-        userCardQueueRepository.save(userCardQueue);
+    @Test
+    public void testUpdateUserCardQueueIfLearningRegimeIsCardsPostponingAndUserStatusBad() throws NotAuthorisedUserException {
+        final String USER_CARD_QUEUE_STATUS_BAD = "BAD";
+
+        when(rememberingLevelRepository.findRememberingLevelByAccountEqualsAndOrderNumber(account,
+                REMEMBERING_LEVEL_ORDER_NUMBER - 1)).thenReturn(rememberingLevel);
+
+        userCardQueueService.updateUserCardQueue(DECK_ID, CARD_ID, USER_CARD_QUEUE_STATUS_BAD);
+        verify(userService, times(2)).getAuthorizedUser();
+        verify(userCardQueueRepository).findUserCardQueueByUserIdAndCardId(USER_ID, CARD_ID);
+        verify(rememberingLevelRepository).findRememberingLevelByAccountEqualsAndOrderNumber(account, 1);
+        verify(rememberingLevelRepository).findRememberingLevelByAccountEqualsAndOrderNumber(account,
+                REMEMBERING_LEVEL_ORDER_NUMBER - 1);
+        verify(userCardQueueRepository).save(userCardQueue);
     }
 
-    private User createMockedUser(LearningRegime learningRegime) {
-        Account mockedAccount = new Account();
-        mockedAccount.setId(ACCOUNT_ID);
-        mockedAccount.setLearningRegime(learningRegime);
-        User mockedUser = new User();
-        mockedUser.setId(USER_ID);
-        mockedUser.setAccount(mockedAccount);
-        return mockedUser;
+    @Test
+    public void testUpdateUserCardQueueIfLearningRegimeIsCardsPostponingAndUserStatusGood() throws NotAuthorisedUserException {
+        when(rememberingLevelRepository.findRememberingLevelByAccountEqualsAndOrderNumber(account,
+                REMEMBERING_LEVEL_ORDER_NUMBER + 1)).thenReturn(rememberingLevel);
+
+        userCardQueueService.updateUserCardQueue(DECK_ID, CARD_ID, USER_CARD_QUEUE_STATUS_GOOD);
+        verify(userService, times(2)).getAuthorizedUser();
+        verify(userCardQueueRepository).findUserCardQueueByUserIdAndCardId(USER_ID, CARD_ID);
+        verify(rememberingLevelRepository).findRememberingLevelByAccountEqualsAndOrderNumber(account, 1);
+        verify(rememberingLevelRepository).findRememberingLevelByAccountEqualsAndOrderNumber(account,
+                REMEMBERING_LEVEL_ORDER_NUMBER + 1);
+        verify(userCardQueueRepository).save(userCardQueue);
     }
 
-    private void checkFields(UserCardQueueStatus status, UserCardQueue actualUserCardQueue,
-                             RememberingLevel rememberingLevel, Date dateToRepeat) {
-        assertNotNull("id", actualUserCardQueue.getId());
-        assertEquals("cardId", CARD_ID, actualUserCardQueue.getCardId());
-        assertEquals("deckId", DECK_ID, actualUserCardQueue.getDeckId());
-        assertEquals("accountEmail", USER_ID, actualUserCardQueue.getUserId());
-        assertNotNull("cardDate", actualUserCardQueue.getCardDate());
-        assertEquals("status", status, actualUserCardQueue.getStatus());
-        assertEquals("rememberingLevel", rememberingLevel, actualUserCardQueue.getRememberingLevel());
-        assertEquals("dateToRepeat", dateToRepeat, actualUserCardQueue.getDateToRepeat());
+    @Test
+    public void testUpdateUserCardQueueIfLearningRegimeIsCardsPostponingAndUserStatusNormal() throws NotAuthorisedUserException {
+        final String USER_CARD_QUEUE_STATUS_NORMAL = "NORMAL";
+
+        when(rememberingLevelRepository.findRememberingLevelByAccountEqualsAndOrderNumber(account,
+                REMEMBERING_LEVEL_ORDER_NUMBER)).thenReturn(rememberingLevel);
+
+        userCardQueueService.updateUserCardQueue(DECK_ID, CARD_ID, USER_CARD_QUEUE_STATUS_NORMAL);
+        verify(userService, times(2)).getAuthorizedUser();
+        verify(userCardQueueRepository).findUserCardQueueByUserIdAndCardId(USER_ID, CARD_ID);
+        verify(rememberingLevelRepository).findRememberingLevelByAccountEqualsAndOrderNumber(account, 1);
+        verify(rememberingLevelRepository).findRememberingLevelByAccountEqualsAndOrderNumber(account,
+                REMEMBERING_LEVEL_ORDER_NUMBER);
+        verify(userCardQueueRepository).save(userCardQueue);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testUpdateUserCardQueueIfStatusIsNotValid() throws NotAuthorisedUserException {
+        final String INCORRECT_USER_CARD_QUEUE_STATUS = "INCORRECT";
+
+        userCardQueueService.updateUserCardQueue(DECK_ID, CARD_ID, INCORRECT_USER_CARD_QUEUE_STATUS);
+    }
+
+    @Test(expected = NotAuthorisedUserException.class)
+    public void testUpdateUserCardQueueByNotAuthorisedUser() throws NotAuthorisedUserException {
+        when(userService.getAuthorizedUser()).thenThrow(new NotAuthorisedUserException());
+
+        userCardQueueService.updateUserCardQueue(DECK_ID, CARD_ID, USER_CARD_QUEUE_STATUS_GOOD);
+        verify(userService).getAuthorizedUser();
+    }
+
+    @Test
+    public void testGetUserCardQueueById() {
+        when(userCardQueueRepository.findOne(USER_CARD_QUEUE_ID)).thenReturn(userCardQueue);
+
+        UserCardQueue result = userCardQueueService.getUserCardQueueById(USER_CARD_QUEUE_ID);
+        verify(userCardQueueRepository).findOne(USER_CARD_QUEUE_ID);
+        assertEquals(userCardQueue, result);
+    }
+
+    @Test
+    public void testCountCardsThatNeedRepeating() throws NotAuthorisedUserException {
+        final Long COUNT_OF_CARDS_THAT_NEED_REPEATING = 1L;
+
+        when(userCardQueueRepository.countAllByUserIdEqualsAndDeckIdEqualsAndDateToRepeatBefore(eq(USER_ID),
+                eq(DECK_ID), any(Date.class))).thenReturn(COUNT_OF_CARDS_THAT_NEED_REPEATING);
+
+        Long result = userCardQueueService.countCardsThatNeedRepeating(DECK_ID);
+        verify(userService).getAuthorizedUser();
+        verify(userCardQueueRepository).countAllByUserIdEqualsAndDeckIdEqualsAndDateToRepeatBefore(eq(USER_ID),
+                eq(DECK_ID), any(Date.class));
+        assertEquals(COUNT_OF_CARDS_THAT_NEED_REPEATING, result);
+    }
+
+    @Test(expected = NotAuthorisedUserException.class)
+    public void testCountCardsThatNeedRepeatingByNotAuthorisedUser() throws NotAuthorisedUserException {
+        when(userService.getAuthorizedUser()).thenThrow(new NotAuthorisedUserException());
+
+        userCardQueueService.countCardsThatNeedRepeating(DECK_ID);
+        verify(userService).getAuthorizedUser();
     }
 }

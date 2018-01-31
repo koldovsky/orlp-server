@@ -22,9 +22,6 @@ public class CardRatingServiceImpl implements CardRatingService {
     private CardRepository cardRepository;
 
     @Autowired
-    private DeckRepository deckRepository;
-
-    @Autowired
     private UserService userService;
 
     @Override
