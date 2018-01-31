@@ -115,11 +115,11 @@ public class ValidatorsTest {
 
     @Test
     public void testEmailExists() {
-        final String EMAIL_NOT_EXIST_MESSAGE = "Email doesn't exist!";
+        final String EMAIL_ALREADY_EXISTS_MESSAGE = "Email already exists!";
 
         user.getAccount().setEmail("admin@gmail.com");
         Set<ConstraintViolation<User>> violations = validator.validate(user, Request.class);
         assertEquals(1, violations.size());
-        assertEquals(EMAIL_NOT_EXIST_MESSAGE, violations.iterator().next().getMessage());
+        assertEquals(EMAIL_ALREADY_EXISTS_MESSAGE, violations.iterator().next().getMessage());
     }
 }

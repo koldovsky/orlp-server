@@ -41,6 +41,7 @@ message:
     fieldNotEmpty: "Field can not be empty!"
     fieldCantContainReservedSymbols: "Field can not contain reserved symbols!"
     emailWrongFormat: "Incorrect format!"
+    emailAlreadyExists: "Email already exists!"
     passwordMatchWithCurrent: "Password should match with current!"
     fieldSizeLimits: "Field can't be less than {min} and more than {max} symbols!"
     ratingMinValue: "Rating can't be less than {value}!"
