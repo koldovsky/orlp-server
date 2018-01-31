@@ -1,7 +1,7 @@
 package com.softserve.academy.spaced.repetition.controller;
 
-import com.softserve.academy.spaced.repetition.controller.dto.builder.DTOBuilder;
 import com.softserve.academy.spaced.repetition.controller.dto.annotations.Request;
+import com.softserve.academy.spaced.repetition.controller.dto.builder.DTOBuilder;
 import com.softserve.academy.spaced.repetition.controller.dto.impl.CategoryDTO;
 import com.softserve.academy.spaced.repetition.controller.dto.impl.CategoryLinkDTO;
 import com.softserve.academy.spaced.repetition.controller.dto.impl.CategoryPublicDTO;
@@ -18,7 +18,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
 
 import java.util.List;
 
@@ -73,7 +72,8 @@ public class CategoryController {
                 });
         return new ResponseEntity<>(sortedCategoriesDTOS, HttpStatus.OK);
     }
-//TODO Add delete category (Roman Somyk)
+
+    //TODO Add delete category (Roman Somyk)
     @Auditable(action = AuditingAction.CREATE_CATEGORY)
     @PostMapping("/api/admin/add/category")
     public ResponseEntity<CategoryPublicDTO> addCategory(@Validated(Request.class) @RequestBody CategoryDTO categoryDTO) {
