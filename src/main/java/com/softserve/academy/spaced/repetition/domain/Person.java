@@ -23,14 +23,14 @@ public class Person {
 
     @Column(name = "first_name")
     @NotNull(message = "{message.validation.fieldNotNull}", groups = Request.class)
-    @Size(message = "{message.validation.fieldSizeLimits}", min = PERSON_FIELD_MIN_SIZE, max = PERSON_FIELD_MAX_SIZE, groups = Request.class)
-    @Pattern(message = "{message.validation.fieldCantContainReservedSymbols}", regexp = SPECIAL_SYMBOLS_PATTERN, groups = Request.class)
+    @Size(min = PERSON_FIELD_MIN_SIZE, max = PERSON_FIELD_MAX_SIZE, message = "{message.validation.fieldSizeLimits}", groups = Request.class)
+    @Pattern(regexp = SPECIAL_SYMBOLS_PATTERN, message = "{message.validation.fieldCantContainReservedSymbols}", groups = Request.class)
     private String firstName;
 
     @Column(name = "last_name")
     @NotNull(message = "{message.validation.fieldNotNull}", groups = Request.class)
-    @Size(message = "{message.validation.fieldSizeLimits}", min = PERSON_FIELD_MIN_SIZE, max = PERSON_FIELD_MAX_SIZE, groups = Request.class)
-    @Pattern(message = "{message.validation.fieldCantContainReservedSymbols}", regexp = SPECIAL_SYMBOLS_PATTERN, groups = Request.class)
+    @Size(min = PERSON_FIELD_MIN_SIZE, max = PERSON_FIELD_MAX_SIZE, message = "{message.validation.fieldSizeLimits}", groups = Request.class)
+    @Pattern(regexp = SPECIAL_SYMBOLS_PATTERN, message = "{message.validation.fieldCantContainReservedSymbols}", groups = Request.class)
     private String lastName;
 
 

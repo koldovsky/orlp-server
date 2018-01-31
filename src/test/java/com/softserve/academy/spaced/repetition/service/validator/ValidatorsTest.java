@@ -43,7 +43,9 @@ public class ValidatorsTest {
     private final String FIELD_SIZE_MESSAGE = "Field can't be less than %d and more than %d symbols!";
     @Autowired
     private Validator validator;
+
     private JwtUser jwtUser;
+
     private User user = new User(
             new Account("password", "user@gmail.com"),
             new Person("user", "user"),
@@ -58,8 +60,8 @@ public class ValidatorsTest {
 
     @Test
     public void testPasswordSize() {
-        final int PASS_MIN_SIZE = ValidationConstants.PASS_MIN_SIZE;
-        final int PASS_MAX_SIZE = ValidationConstants.PASS_MAX_SIZE;
+        final int PASS_MIN_SIZE = ValidationConstants.PASSWORD_MIN_SIZE;
+        final int PASS_MAX_SIZE = ValidationConstants.PASSWORD_MAX_SIZE;
         final String PASS_SIZE_MESSAGE = String.format(FIELD_SIZE_MESSAGE, PASS_MIN_SIZE, PASS_MAX_SIZE);
 
         user.getAccount().setPassword("user");
@@ -95,7 +97,7 @@ public class ValidatorsTest {
         final int EMAIL_MAX_SIZE = ValidationConstants.EMAIL_MAX_SIZE;
         final String EMAIL_SIZE_MESSAGE = String.format(FIELD_SIZE_MESSAGE, EMAIL_MIN_SIZE, EMAIL_MAX_SIZE);
 
-        user.getAccount().setEmail("ex");
+        user.getAccount().setEmail("");
         Set<ConstraintViolation<User>> violations = validator.validate(user, Request.class);
         assertEquals(2, violations.size());
         assertTrue(violations.toString().contains(EMAIL_SIZE_MESSAGE));

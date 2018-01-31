@@ -41,6 +41,9 @@ public class AccountServiceImpl implements AccountService {
     private MailService mailService;
     @Autowired
     private PasswordEncoder passwordEncoder;
+    @Autowired
+    private MessageSource messageSource;
+    private final Locale locale = LocaleContextHolder.getLocale();
 
     @Override
     public void updateAccount(Account account) {

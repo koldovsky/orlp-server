@@ -18,11 +18,10 @@ import java.util.Locale;
 public class JwtUserDetailsService implements UserDetailsService {
 
     @Autowired
-    private AccountRepository accountRepository;
-
-    @Autowired
     private MessageSource messageSource;
     private final Locale locale = LocaleContextHolder.getLocale();
+    @Autowired
+    private AccountRepository accountRepository;
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {

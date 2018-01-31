@@ -30,15 +30,17 @@ import java.util.Locale;
 @RunWith(MockitoJUnitRunner.class)
 public class DeckRatingControllerTest {
 
+    private MockMvc mockMvc;
+
     @InjectMocks
     private DeckRatingController deckRatingController;
+
     @Mock
     private DeckRatingService deckRatingService;
     @InjectMocks
     private ExceptionHandlerController exceptionHandlerController;
     @Mock
     private MessageSource messageSource;
-    private MockMvc mockMvc;
 
     @Before
     public void setUp() {

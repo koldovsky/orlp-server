@@ -27,15 +27,17 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(MockitoJUnitRunner.class)
 public class CourseRatingControllerTest {
 
+    private MockMvc mockMvc;
+
     @InjectMocks
     private CourseRatingController courseRatingController;
+
     @Mock
     private CourseRatingService courseRatingService;
     @InjectMocks
     private ExceptionHandlerController exceptionHandlerController;
     @Mock
     private MessageSource messageSource;
-    private MockMvc mockMvc;
 
     @Before
     public void setUp() {

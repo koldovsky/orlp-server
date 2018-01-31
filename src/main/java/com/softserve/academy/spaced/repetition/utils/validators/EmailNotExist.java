@@ -9,7 +9,7 @@ import java.lang.annotation.*;
 @Documented
 @Constraint(validatedBy = {EmailNotExistValidator.class})
 public @interface EmailNotExist {
-    String message() default "{message.validation.emailAlreadyExists}";
+    String message() default "{message.exception.emailNotExists}";
 
     Class<?>[] groups() default {};
 

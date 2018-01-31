@@ -27,8 +27,8 @@ public class CourseRating implements EntityInterface {
     private Course course;
 
     @Column(name = "rating", nullable = false)
-    @Min(message = "{message.validation.ratingMinValue}", value = MIN_COURSE_AND_CARD_RATING, groups = Request.class)
-    @Max(message = "{message.validation.ratingMaxValue}", value = MAX_COURSE_AND_CARD_RATING, groups = Request.class)
+    @Min(value = MIN_COURSE_AND_CARD_RATING, message = "{message.validation.ratingMinValue}", groups = Request.class)
+    @Max(value = MAX_COURSE_AND_CARD_RATING, message = "{message.validation.ratingMaxValue}", groups = Request.class)
     private int rating;
 
     public CourseRating() {

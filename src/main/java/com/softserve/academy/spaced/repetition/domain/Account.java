@@ -28,13 +28,13 @@ public class Account implements EntityInterface {
     private Long id;
 
     @Column(name = "password")
-    @Size(message = "{message.validation.fieldSizeLimits}", min = PASS_MIN_SIZE, max = PASS_MAX_SIZE, groups = Request.class)
+    @Size(message = "{message.validation.fieldSizeLimits}", min = PASSWORD_MIN_SIZE, max = PASSWORD_MAX_SIZE, groups = Request.class)
     private String password;
 
     @Column(name = "email", unique = true, nullable = false)
     @NotNull(message = "{message.validation.fieldNotNull}", groups = Request.class)
-    @Size(message = "{message.validation.fieldSizeLimits}", min = EMAIL_MIN_SIZE, max = EMAIL_MAX_SIZE, groups = Request.class)
-    @Pattern( message = "{message.validation.emailWrongFormat}", regexp = EMAIL_PATTERN, groups = Request.class)
+    @Size(min = EMAIL_MIN_SIZE, max = EMAIL_MAX_SIZE, message = "{message.validation.fieldSizeLimits}", groups = Request.class)
+    @Pattern(regexp = EMAIL_PATTERN, message = "{message.validation.emailWrongFormat}", groups = Request.class)
     @EmailNotExist(groups = Request.class)
     private String email;
 

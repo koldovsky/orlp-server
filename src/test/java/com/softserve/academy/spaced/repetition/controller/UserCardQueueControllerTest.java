@@ -29,15 +29,18 @@ public class UserCardQueueControllerTest {
 
     private static final long DECK_ID = 1L;
     private static final long CARD_ID = 1L;
+    private MockMvc mockMvc;
+    private UserCardQueueStatus status;
+
     @InjectMocks
     private UserCardQueueController userCardQueueController;
+
     @Mock
     private UserCardQueueService userCardQueueService;
     @InjectMocks
     private ExceptionHandlerController exceptionHandlerController;
     @Mock
     private MessageSource messageSource;
-    private MockMvc mockMvc;
 
     @Before
     public void setUp() {
