@@ -4,7 +4,7 @@ message:
     cardFileNotReadable: "Can't read data from uploaded file!"
     learningRegimeNotValid: "Value of Learning Regime is not valid - {0}!"
     numbersOfCardsNegative: "Number of cards should be greater than 0!"
-    cardFieldsNotEmpty: "All of card fields should be filled!"
+    cardFieldsNotEmpty: "All of card's fields should be filled!"
     fileEmpty: "File is empty!"
     fileWrongFormat: "Invalid format of file!"
     fileDumpingFailed: "Dumping of file failed!"

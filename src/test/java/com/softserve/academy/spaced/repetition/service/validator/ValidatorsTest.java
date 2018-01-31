@@ -115,7 +115,7 @@ public class ValidatorsTest {
 
     @Test
     public void testEmailExists() {
-        final String EMAIL_ALREADY_EXISTS_MESSAGE = "Email already exists!";
+        final String EMAIL_ALREADY_EXISTS_MESSAGE = "Email already used!";
 
         user.getAccount().setEmail("admin@gmail.com");
         Set<ConstraintViolation<User>> violations = validator.validate(user, Request.class);
