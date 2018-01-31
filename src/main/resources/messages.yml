@@ -21,7 +21,7 @@ message:
     numberOfPostponedDaysMoreThanNextLevel: >
       Number of postponed days for this level should be less than number of
       postponed days for a next one!
-    emailNotExists: "Email doesn't exists!"
+    emailNotExist: "Email doesn't exist!"
     userNotFoundByEmail: "No user found with email {0}!"
     userNotAuthorised: "Operation is unavailable for unauthorized users!"
     ipAddressNotDetermined: "The IP address of a host could not be determined!"
