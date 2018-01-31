@@ -1,7 +1,7 @@
 package com.softserve.academy.spaced.repetition.controller;
 
 import com.softserve.academy.spaced.repetition.service.CardService;
-import com.softserve.academy.spaced.repetition.service.cardLoaders.CardLoadService;
+import com.softserve.academy.spaced.repetition.service.cardLoaders.impl.CardLoadService;
 import com.softserve.academy.spaced.repetition.utils.exceptions.EmptyFileException;
 import com.softserve.academy.spaced.repetition.utils.exceptions.NotAuthorisedUserException;
 import com.softserve.academy.spaced.repetition.utils.exceptions.NotOwnerOperationException;

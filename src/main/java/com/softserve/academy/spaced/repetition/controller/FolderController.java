@@ -1,9 +1,9 @@
 package com.softserve.academy.spaced.repetition.controller;
 
-import com.softserve.academy.spaced.repetition.controller.utils.dto.DTOBuilder;
-import com.softserve.academy.spaced.repetition.controller.utils.dto.impl.CardPublicDTO;
-import com.softserve.academy.spaced.repetition.controller.utils.dto.impl.DeckLinkByFolderDTO;
-import com.softserve.academy.spaced.repetition.controller.utils.dto.impl.DeckPublicDTO;
+import com.softserve.academy.spaced.repetition.controller.dto.builder.DTOBuilder;
+import com.softserve.academy.spaced.repetition.controller.dto.impl.CardPublicDTO;
+import com.softserve.academy.spaced.repetition.controller.dto.impl.DeckLinkByFolderDTO;
+import com.softserve.academy.spaced.repetition.controller.dto.impl.DeckPublicDTO;
 import com.softserve.academy.spaced.repetition.utils.audit.Auditable;
 import com.softserve.academy.spaced.repetition.utils.audit.AuditingAction;
 import com.softserve.academy.spaced.repetition.domain.Card;

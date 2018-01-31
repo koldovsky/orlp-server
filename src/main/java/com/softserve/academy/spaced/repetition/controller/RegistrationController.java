@@ -1,14 +1,14 @@
 package com.softserve.academy.spaced.repetition.controller;
 
 
-import com.softserve.academy.spaced.repetition.controller.utils.dto.impl.NewAccountPasswordDTO;
+import com.softserve.academy.spaced.repetition.controller.dto.impl.NewAccountPasswordDTO;
 import com.softserve.academy.spaced.repetition.service.AccountService;
 import com.softserve.academy.spaced.repetition.service.UserService;
 import com.softserve.academy.spaced.repetition.utils.audit.Auditable;
 import com.softserve.academy.spaced.repetition.utils.audit.AuditingAction;
 import com.softserve.academy.spaced.repetition.domain.Person;
 import com.softserve.academy.spaced.repetition.domain.User;
-import com.softserve.academy.spaced.repetition.controller.utils.dto.Request;
+import com.softserve.academy.spaced.repetition.controller.dto.annotations.Request;
 import com.softserve.academy.spaced.repetition.service.AccountVerificationByEmailService;
 import com.softserve.academy.spaced.repetition.service.RegistrationService;
 import com.softserve.academy.spaced.repetition.utils.exceptions.NotAuthorisedUserException;
