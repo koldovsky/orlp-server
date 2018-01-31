@@ -114,14 +114,14 @@ public class DomainFactory {
         return folder;
     }
 
-    public static Deck createDeck(Long deckId, String name, String description, String syntaxToHighLight,
+    public static Deck createDeck(Long deckId, String name, String description, String syntaxToHighlight,
                                   Category category, double rating, User deckOwner, List<Card> cards,
                                   List<DeckRating> deckRatings, Set<Folder> folders, List<DeckComment> deckComments) {
         Deck deck = new Deck();
         deck.setId(deckId);
         deck.setName(name);
         deck.setDescription(description);
-        deck.setSyntaxToHighlight(syntaxToHighLight);
+        deck.setSyntaxToHighlight(syntaxToHighlight);
         deck.setCategory(category);
         deck.setRating(rating);
         deck.setDeckOwner(deckOwner);

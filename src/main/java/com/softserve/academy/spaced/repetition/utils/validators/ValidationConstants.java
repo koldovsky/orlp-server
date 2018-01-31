@@ -50,7 +50,7 @@ public class ValidationConstants {
 
     public static final int PASS_MAX_SIZE_HASH = 60;
 
-    public static final int AUTH_TYPE_MAX_SIZE = 8;
+    public static final int AUTH_TYPE_MAX_SIZE = 15;
 
     public static final int AUTH_NAME_MAX_SIZE = 50;
 
