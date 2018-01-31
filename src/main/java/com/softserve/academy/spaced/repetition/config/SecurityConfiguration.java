@@ -1,7 +1,7 @@
 package com.softserve.academy.spaced.repetition.config;
 
-import com.softserve.academy.spaced.repetition.security.JwtAuthenticationEntryPoint;
-import com.softserve.academy.spaced.repetition.security.JwtAuthenticationFilter;
+import com.softserve.academy.spaced.repetition.security.authentification.JwtAuthenticationEntryPoint;
+import com.softserve.academy.spaced.repetition.security.authentification.JwtAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.web.DefaultErrorAttributes;

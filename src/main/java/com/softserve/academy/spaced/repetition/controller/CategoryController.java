@@ -1,11 +1,11 @@
 package com.softserve.academy.spaced.repetition.controller;
 
-import com.softserve.academy.spaced.repetition.controller.utils.dto.DTOBuilder;
-import com.softserve.academy.spaced.repetition.controller.utils.dto.Request;
-import com.softserve.academy.spaced.repetition.controller.utils.dto.impl.CategoryDTO;
-import com.softserve.academy.spaced.repetition.controller.utils.dto.impl.CategoryLinkDTO;
-import com.softserve.academy.spaced.repetition.controller.utils.dto.impl.CategoryPublicDTO;
-import com.softserve.academy.spaced.repetition.controller.utils.dto.impl.CategoryTopDTO;
+import com.softserve.academy.spaced.repetition.controller.dto.builder.DTOBuilder;
+import com.softserve.academy.spaced.repetition.controller.dto.annotations.Request;
+import com.softserve.academy.spaced.repetition.controller.dto.impl.CategoryDTO;
+import com.softserve.academy.spaced.repetition.controller.dto.impl.CategoryLinkDTO;
+import com.softserve.academy.spaced.repetition.controller.dto.impl.CategoryPublicDTO;
+import com.softserve.academy.spaced.repetition.controller.dto.impl.CategoryTopDTO;
 import com.softserve.academy.spaced.repetition.domain.Category;
 import com.softserve.academy.spaced.repetition.service.CategoryService;
 import com.softserve.academy.spaced.repetition.utils.audit.Auditable;

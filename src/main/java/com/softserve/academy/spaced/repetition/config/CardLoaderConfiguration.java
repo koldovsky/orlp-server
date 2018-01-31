@@ -1,9 +1,9 @@
 package com.softserve.academy.spaced.repetition.config;
 
-import com.softserve.academy.spaced.repetition.service.cardLoaders.AnkiCardUploader;
+import com.softserve.academy.spaced.repetition.service.cardLoaders.impl.AnkiCardUploader;
 import com.softserve.academy.spaced.repetition.service.cardLoaders.CardUploader;
 import com.softserve.academy.spaced.repetition.service.cardLoaders.DbConnector;
-import com.softserve.academy.spaced.repetition.service.cardLoaders.SqliteConnector;
+import com.softserve.academy.spaced.repetition.service.cardLoaders.impl.SqliteConnector;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
