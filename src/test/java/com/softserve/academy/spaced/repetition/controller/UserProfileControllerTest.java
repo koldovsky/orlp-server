@@ -1,6 +1,5 @@
 package com.softserve.academy.spaced.repetition.controller;
 
-import com.softserve.academy.spaced.repetition.controller.authorization.UserController;
 import com.softserve.academy.spaced.repetition.domain.Account;
 import com.softserve.academy.spaced.repetition.domain.Person;
 import com.softserve.academy.spaced.repetition.domain.User;
@@ -24,12 +23,12 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(MockitoJUnitRunner.class)
-public class UserControllerTest {
+public class UserProfileControllerTest {
 
     private MockMvc mockMvc;
 
     @InjectMocks
-    private UserController userController;
+    private UserProfileController userProfileController;
 
     @Mock
     private UserService userService;
@@ -37,7 +36,7 @@ public class UserControllerTest {
     @Before
     public void setUp() {
 
-        mockMvc = MockMvcBuilders.standaloneSetup(userController)
+        mockMvc = MockMvcBuilders.standaloneSetup(userProfileController)
                 .setControllerAdvice(new ExceptionHandlerController())
                 .build();
     }
