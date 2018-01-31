@@ -8,8 +8,12 @@ public class ValidationConstants {
     public static final int MAX_COURSE_AND_CARD_RATING = 5;
     public static final int PASSWORD_MIN_SIZE = 8;
     public static final int PASSWORD_MAX_SIZE = 20;
+    public static final int PASS_MAX_SIZE_HASH = 60;
     public static final int EMAIL_MIN_SIZE = 3;
     public static final int EMAIL_MAX_SIZE = 254;
+    public static final int AUTH_TYPE_MAX_SIZE = 15;
+    public static final int AUTH_NAME_MAX_SIZE = 50;
+    public static final int IMAGE_TYPE_MAX_SIZE = 6;
     public static final String EMAIL_PATTERN =
             "(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|\"+" +
                     "(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21\\x23-\\x5b\\x5d-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])*\")" +
@@ -20,5 +24,4 @@ public class ValidationConstants {
 
     private ValidationConstants() {
     }
-
 }

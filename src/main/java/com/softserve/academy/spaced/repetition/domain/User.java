@@ -10,7 +10,7 @@ import java.util.Objects;
 import java.util.Set;
 
 @Entity
-@Table(name = "User")
+@Table(name = "user")
 public class User implements EntityInterface {
 
     @Id

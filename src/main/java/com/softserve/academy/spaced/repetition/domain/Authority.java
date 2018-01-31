@@ -6,15 +6,17 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
+import static com.softserve.academy.spaced.repetition.utils.validators.ValidationConstants.*;
+
 @Entity
 @Table(name = "authority")
 public class Authority {
     @Id
-    @Column(name = "authority_id")
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "authority_id")
     private Long id;
 
-    @Column(name = "NAME", length = 50)
+    @Column(name = "name", length = AUTH_NAME_MAX_SIZE)
     @NotNull
     @Enumerated(EnumType.STRING)
     private AuthorityName name;

@@ -46,7 +46,7 @@ public class CommentDTO extends DTO<Comment> implements Comparable<CommentDTO> {
     }
 
     public ImageType getImageType() {
-        return getEntity().getPerson().getTypeImage();
+        return getEntity().getPerson().getImageType();
     }
 
     public String getImageBase64() {

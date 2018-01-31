@@ -3,6 +3,7 @@ package com.softserve.academy.spaced.repetition.domain;
 import com.softserve.academy.spaced.repetition.controller.utils.dto.EntityInterface;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "image")
@@ -13,17 +14,19 @@ public class Image implements EntityInterface {
     @Column(name = "image_id")
     private Long id;
 
-    @Column(name = "imagebase64", columnDefinition = "LONGTEXT")
-    private String imagebase64;
+    @Column(name = "image_base64", columnDefinition = "LONGTEXT")
+    private String imageBase64;
 
-    @Column(name = "type", nullable = false)
+    @Column(name = "type")
+    @NotNull
     private String type;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User createdBy;
 
-    @Column(name = "size", nullable = false)
+    @Column(name = "size")
+    @NotNull
     private Long size;
 
     @Column(name = "is_used")
@@ -41,13 +44,13 @@ public class Image implements EntityInterface {
         this.isImageUsed = isImageUsed;
     }
 
-    public Image(String imagebase64) {
-        this.imagebase64 = imagebase64;
+    public Image(String imageBase64) {
+        this.imageBase64 = imageBase64;
     }
 
 
-    public Image(String imagebase64, String type) {
-        this.imagebase64 = imagebase64;
+    public Image(String imageBase64, String type) {
+        this.imageBase64 = imageBase64;
         this.type = type;
     }
 
@@ -56,8 +59,8 @@ public class Image implements EntityInterface {
         this.createdBy = createdBy;
     }
 
-    public Image(String imagebase64, String type, User createdBy, Long size) {
-        this.imagebase64 = imagebase64;
+    public Image(String imageBase64, String type, User createdBy, Long size) {
+        this.imageBase64 = imageBase64;
         this.type = type;
         this.createdBy = createdBy;
         this.size = size;
@@ -72,12 +75,12 @@ public class Image implements EntityInterface {
         this.id = id;
     }
 
-    public String getImagebase64() {
-        return imagebase64;
+    public String getImageBase64() {
+        return imageBase64;
     }
 
-    public void setImagebase64(String imagebase64) {
-        this.imagebase64 = imagebase64;
+    public void setImageBase64(String imageBase64) {
+        this.imageBase64 = imageBase64;
     }
 
     public String getType() {
