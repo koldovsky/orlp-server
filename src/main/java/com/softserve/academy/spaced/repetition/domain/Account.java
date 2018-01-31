@@ -5,7 +5,7 @@ import com.softserve.academy.spaced.repetition.controller.utils.dto.Request;
 import com.softserve.academy.spaced.repetition.domain.enums.AccountStatus;
 import com.softserve.academy.spaced.repetition.domain.enums.AuthenticationType;
 import com.softserve.academy.spaced.repetition.domain.enums.LearningRegime;
-import com.softserve.academy.spaced.repetition.utils.validators.EmailNotExist;
+import com.softserve.academy.spaced.repetition.utils.validators.EmailNotUsed;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -35,7 +35,7 @@ public class Account implements EntityInterface {
     @NotNull(message = "{message.validation.fieldNotNull}", groups = Request.class)
     @Size(min = EMAIL_MIN_SIZE, max = EMAIL_MAX_SIZE, message = "{message.validation.fieldSizeLimits}", groups = Request.class)
     @Pattern(regexp = EMAIL_PATTERN, message = "{message.validation.emailWrongFormat}", groups = Request.class)
-    @EmailNotExist(groups = Request.class)
+    @EmailNotUsed(groups = Request.class)
     private String email;
 
     @Column(name = "AUTHENTICATIONTYPE", length = 8)

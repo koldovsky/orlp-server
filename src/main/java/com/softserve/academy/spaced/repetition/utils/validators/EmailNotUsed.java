@@ -8,7 +8,7 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Constraint(validatedBy = {EmailNotExistValidator.class})
-public @interface EmailNotExist {
+public @interface EmailNotUsed {
     String message() default "{message.validation.emailAlreadyExists}";
 
     Class<?>[] groups() default {};
