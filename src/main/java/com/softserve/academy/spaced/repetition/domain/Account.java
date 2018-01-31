@@ -53,9 +53,9 @@ public class Account implements EntityInterface {
     @NotNull
     private boolean deactivated;
 
-    @Column(name = "LASTPASSWORDRESETDATE")
-    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "last_password_reset_date")
     @NotNull
+    @Temporal(TemporalType.TIMESTAMP)
     private Date lastPasswordResetDate;
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
@@ -64,9 +64,9 @@ public class Account implements EntityInterface {
             inverseJoinColumns = {@JoinColumn(name = "authority_id")})
     private Set<Authority> authorities;
 
-    @NotNull
     @Column(name = "learning_regime",
             columnDefinition = "varchar(45) default 'CARDS_POSTPONING_USING_SPACED_REPETITION'")
+    @NotNull
     @Enumerated(value = EnumType.STRING)
     private LearningRegime learningRegime;
 
