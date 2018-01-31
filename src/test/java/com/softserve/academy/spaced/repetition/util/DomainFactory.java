@@ -46,7 +46,7 @@ public class DomainFactory {
         authority.setAccounts(accounts);
         return authority;
     }
-  
+
     public static Person createPerson(Long personId, String firstName, String lastName, ImageType imageType,
                                       String image, String imageBase64) {
         Person person = new Person();
@@ -70,7 +70,7 @@ public class DomainFactory {
         category.setDecks(decks);
         return category;
     }
-  
+
     public static Category createCategory(Long id, String name, String description, Image image) {
         Category category = new Category();
         category.setId(id);
@@ -97,7 +97,7 @@ public class DomainFactory {
         course.setCourseComments(courseComments);
         return course;
     }
-  
+
     public static CourseRating createCourseRating(Long id, String accountEmail, Course course, int rating) {
         CourseRating courseRating = new CourseRating();
         courseRating.setId(id);
@@ -152,7 +152,7 @@ public class DomainFactory {
         deckRating.setRating(rating);
         return deckRating;
     }
-  
+
     public static Card createCard(Long id, String title, String question, String answer, Deck deck) {
         Card card = new Card();
         card.setId(id);
@@ -163,7 +163,7 @@ public class DomainFactory {
         card.setDeck(deck);
         return card;
     }
-  
+
     public static CardRating createCardRating(Long id, String accountEmail, Card card, int rating) {
         CardRating cardRating = new CardRating();
         cardRating.setId(id);
@@ -220,5 +220,13 @@ public class DomainFactory {
         userCardQueue.setDateToRepeat(dateToRepeat);
         userCardQueue.setRememberingLevel(rememberingLevel);
         return userCardQueue;
+    }
+
+    public static CardImage createCardImage(Long cardImageId, String image, Card card) {
+        CardImage cardImage = new CardImage();
+        cardImage.setImage(image);
+        cardImage.setCard(card);
+        cardImage.setId(cardImageId);
+        return cardImage;
     }
 }
