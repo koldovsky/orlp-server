@@ -29,15 +29,11 @@ public class CardImageServiceTest {
     private CardImageServiceImpl cardImageService;
     private Card card;
     private CardImage cardImage;
-    private List<String> oneImageList;
     private List<String> imageList;
 
     @Before
     public void setUp() {
-        final Long CARD_ID = 1l;
-        oneImageList = new ArrayList<>();
-        oneImageList.add("base64");
-        oneImageList.add("imageInBase64");
+        final Long CARD_ID = 1L;;
         imageList = new ArrayList<>();
         imageList.add("imageInBase64");
         imageList.add("imageInBase64");
@@ -46,23 +42,14 @@ public class CardImageServiceTest {
                 "Java runs on a variety of platforms, such as Windows, Mac OS, and the\n" +
                         "    various versions of UNIX/Linux like HP-Unix, Sun Solaris, Redhat Linux, Ubuntu,\n" +
                         "    CentOS, etc.", null);
-        cardImage = DomainFactory.createCardImage(1l, "very long string", card);
+        cardImage = DomainFactory.createCardImage(1L, "very long string", card);
     }
 
     @Test
-    public void testSaveWithOneImages() {
+    public void testSaveImages() {
         when(cardImageRepository.save(cardImage)).thenReturn(cardImage);
-
-        cardImageService.addCardImage(oneImageList, card);
-        verify(cardImageRepository).save(any(CardImage.class));
-    }
-
-    @Test
-    public void testSaveWithManyImages() {
-        when(cardImageRepository.save(new CardImage(imageList.get(0), card))).thenReturn(cardImage);
 
         cardImageService.addCardImage(imageList, card);
         verify(cardImageRepository, times(2)).save(any(CardImage.class));
     }
-
 }

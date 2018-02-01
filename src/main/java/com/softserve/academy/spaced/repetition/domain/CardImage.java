@@ -12,10 +12,10 @@ public class CardImage implements EntityInterface {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "card_image_id", nullable = false)
+    @Column(name = "card_image_id")
     private Long id;
 
-    @Column(name = "imagebase64", columnDefinition = "LONGTEXT")
+    @Column(name = "image_base64", columnDefinition = "LONGTEXT")
     @NotNull
     private String image;
 

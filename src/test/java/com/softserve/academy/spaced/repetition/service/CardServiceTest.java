@@ -74,7 +74,7 @@ public class CardServiceTest {
     @Before
     public void setUp() throws Exception {
         imageList = new ArrayList<>();
-        imageList.add("base64");
+        imageList.add("imageInBase64");
         imageList.add("imageInBase64");
         final String MESSAGE_SOURCE_MESSAGE = "message";
         List<Card> cardList = new ArrayList<>();
