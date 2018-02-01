@@ -23,17 +23,11 @@ build:
         version: 3.5.2
     # Copy necessary JAR to separate directory
     - script:
-        name: copy-jar
+        name: Copy-jar
         code: |
           mkdir container/  
           cp ./target/*.jar container/
 
-
-    #mvn clean install
-    # Steps make up the actions in your pipeline
-    # Read more about steps on our dev center:
-    # http://devcenter.wercker.com/docs/steps/index.html
-    
 deploy:
   steps:
     - wercker/add-ssh-key:
