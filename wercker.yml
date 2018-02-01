@@ -50,4 +50,4 @@ deploy:
         name: Run redeploy-script
         code: |
           ssh $LOGIN@$REMOTE_HOST "cd ~/orlp-server/ && sh container_deploy.sh"
-          ssh $LOGIN@$REMOTE_HOST "cd ~/orlp-server/ && rm -f *.sh && rm -f *.jar"
+#          ssh $LOGIN@$REMOTE_HOST "cd ~/orlp-server/ && rm -f *.sh && rm -f *.jar"
