@@ -8,8 +8,6 @@ public class CardDTO {
     private String question;
     private String answer;
     private List<String> images;
-    private Integer cardId;
-    private Integer rating;
 
     public CardDTO() {
     }
@@ -45,27 +43,11 @@ public class CardDTO {
         this.answer = answer;
     }
 
-    public List<String> getImage() {
+    public List<String> getImages() {
         return images;
     }
 
-    public void setImage(List<String> image) {
+    public void setImages(List<String> image) {
         this.images = image;
-    }
-
-    public Integer getCardId() {
-        return cardId;
-    }
-
-    public void setCardId(Integer cardId) {
-        this.cardId = cardId;
-    }
-
-    public Integer getRating() {
-        return rating;
-    }
-
-    public void setRating(Integer rating) {
-        this.rating = rating;
     }
 }
