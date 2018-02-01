@@ -51,31 +51,3 @@ deploy:
         code: |
           ssh $LOGIN@$REMOTE_HOST "cd ~/orlp-server/ && sh container_deploy.sh"
           ssh $LOGIN@$REMOTE_HOST "cd ~/orlp-server/ && rm -f *.sh && rm -f *.jar"
-
-
-
-
-
-
-
-
-
-
-
-
-    - script :
-        name: Check if container is running
-        code: |
-          ssh $LOGIN@$REMOTE_HOST ""
-    - script :
-        name: Run the container
-        code: |
-          ssh $LOGIN@$REMOTE_HOST ""
-
-
-    - mannau/ftp-deploy:
-        destination: ftp://infolve.com/files
-        username: $USER
-        password: $PASSWORD
-        subfolder: container/
-
