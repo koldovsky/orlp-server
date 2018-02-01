@@ -25,6 +25,7 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
 @RestController
+@RequestMapping("/api/categories/{categoryId}/decks/{deckId}/comments")
 public class DeckCommentController {
     private static final Logger LOGGER = LoggerFactory.getLogger(DeckCommentController.class);
 
@@ -32,7 +33,7 @@ public class DeckCommentController {
     private DeckCommentService commentService;
 
     @Auditable(action = AuditingAction.VIEW_ALL_COMMENTS_FOR_DECK)
-    @GetMapping(value = "/api/category/{categoryId}/deck/{deckId}/comments")
+    @GetMapping
     public ResponseEntity<List<CommentDTO>> getAllCommentsForDeck(@PathVariable Long categoryId,
                                                                   @PathVariable Long deckId) {
         LOGGER.debug("View all comments for deck with id: {}", deckId);
@@ -46,7 +47,7 @@ public class DeckCommentController {
     }
 
     @Auditable(action = AuditingAction.VIEW_COMMENT_FOR_DECK)
-    @GetMapping(value = "/api/category/{categoryId}/deck/{deckId}/comments/{commentId}")
+    @GetMapping(value = "/{commentId}")
     public ResponseEntity<CommentDTO> getCommentById(@PathVariable Long categoryId,
                                                      @PathVariable Long deckId,
                                                      @PathVariable Long commentId) {
@@ -59,8 +60,7 @@ public class DeckCommentController {
     }
 
     @Auditable(action = AuditingAction.CREATE_COMMENT_FOR_DECK)
-    @PostMapping(value = "/api/category/{categoryId}/deck/{deckId}/comment")
-    @PreAuthorize(value = "@accessToUrlService.hasAccessToDeck(#categoryId)")
+    @PostMapping
     public ResponseEntity<CommentDTO> addCommentForDeck(@Validated @RequestBody ReplyToCommentDTO replyToCommentDTO,
                                                         @RequestBody String commentText,
                                                         @PathVariable Long categoryId,
@@ -75,7 +75,7 @@ public class DeckCommentController {
     }
 
     @Auditable(action = AuditingAction.EDIT_COMMENT_FOR_DECK)
-    @PutMapping(value = "/api/category/{categoryId}/deck/{deckId}/comment/{commentId}")
+    @PutMapping(value = "/{commentId}")
     @PreAuthorize(value = "@accessToUrlService.hasAccessToUpdateCommentForDeck(#commentId)")
     public ResponseEntity<CommentDTO> updateComment(@RequestBody String commentText,
                                                     @PathVariable Long categoryId,
@@ -90,7 +90,7 @@ public class DeckCommentController {
     }
 
     @Auditable(action = AuditingAction.DELETE_COMMENT_FOR_DECK)
-    @DeleteMapping(value = "/api/category/{categoryId}/deck/{deckId}/comment/{commentId}")
+    @DeleteMapping(value = "/{commentId}")
     @PreAuthorize(value = "@accessToUrlService.hasAccessToDeleteCommentForDeck(#commentId)")
     public ResponseEntity deleteComment(@PathVariable Long commentId, @PathVariable Long deckId) {
         LOGGER.debug("Deleted comment with id:{} for deck with id: {}", commentId, deckId);

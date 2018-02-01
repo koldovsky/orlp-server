@@ -19,22 +19,23 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
 @RestController
+@RequestMapping("api/courses/{courseId}/ratings")
 public class CourseRatingController {
 
     @Autowired
     private CourseRatingService courseRatingService;
 
-    @GetMapping("api/course/{courseId}/rating/{id}")
-    public ResponseEntity<CourseRatingPublicDTO> getCourseRatingById(@PathVariable Long courseId, @PathVariable Long id) {
+    @GetMapping("/{id}")
+    public ResponseEntity<CourseRatingPublicDTO> getCourseRatingById(@PathVariable Long id) {
         CourseRating courseRating = courseRatingService.getCourseRatingById(id);
         Link selfLink = linkTo(methodOn(CourseRatingController.class)
-                .getCourseRatingById(courseRating.getCourse().getId(), courseRating.getId())).withRel("courseRating");
+                .getCourseRatingById(courseRating.getId())).withRel("courseRating");
         CourseRatingPublicDTO courseRatingDTO = DTOBuilder
                 .buildDtoForEntity(courseRating, CourseRatingPublicDTO.class, selfLink);
         return new ResponseEntity<>(courseRatingDTO, HttpStatus.OK);
     }
 
-    @PostMapping("/api/private/course/{courseId}")
+    @PostMapping
     public ResponseEntity addCourseRating(@Validated(Request.class) @RequestBody RatingDTO ratingDTO,
                                           @PathVariable Long courseId)
             throws NotAuthorisedUserException, UserStatusException {
