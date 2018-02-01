@@ -14,13 +14,9 @@ fi
 
 if [ ! "$(docker ps -q -f name=$container_name)" ]; then
     echo "Container $container_name is not running. Starting $container_name ...";
-    docker run --name $container_name -it --net=orlp --add-host orlp-mysql:192.168.0.50 -p 8080:8080 --expose=1443 \
-    -e 'VIRTUAL_HOST=infolve.com:8080' -e 'VIRTUAL_PROTO=https' -v /home/wercker/orlp-server:/usr/src/myapp \
-    -w /usr/src/myapp java:8-jre java -jar Spaced.Repetition.jar;
+    docker run --name $container_name -it --net=orlp --add-host $mysql_container:192.168.0.50 -p 8080:8080 --expose=1443 -e 'VIRTUAL_HOST=infolve.com:8080' -e 'VIRTUAL_PROTO=https' -v /home/wercker/orlp-server:/usr/src/myapp -w /usr/src/myapp java:8-jre java -jar Spaced.Repetition.jar;
     else
     echo "$container_name already running. Restarting $container_name ...";
     docker container stop $container_name && docker container rm -f $container_name;
-    docker run --name $container_name -it --net=orlp --add-host orlp-mysql:192.168.0.50 -p 8080:8080 --expose=1443 \
-    -e 'VIRTUAL_HOST=infolve.com:8080' -e 'VIRTUAL_PROTO=https' -v /home/wercker/orlp-server:/usr/src/myapp \
-    -w /usr/src/myapp java:8-jre java -jar Spaced.Repetition.jar;
+    docker run --name $container_name -it --net=orlp --add-host $mysql_container:192.168.0.50 -p 8080:8080 --expose=1443 -e 'VIRTUAL_HOST=infolve.com:8080' -e 'VIRTUAL_PROTO=https' -v /home/wercker/orlp-server:/usr/src/myapp -w /usr/src/myapp java:8-jre java -jar Spaced.Repetition.jar;
 fi
