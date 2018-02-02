@@ -1,7 +1,7 @@
 package com.softserve.academy.spaced.repetition.controller;
 
-import com.softserve.academy.spaced.repetition.controller.dto.builder.DTOBuilder;
 import com.softserve.academy.spaced.repetition.controller.dto.annotations.Request;
+import com.softserve.academy.spaced.repetition.controller.dto.builder.DTOBuilder;
 import com.softserve.academy.spaced.repetition.controller.dto.impl.CommentDTO;
 import com.softserve.academy.spaced.repetition.controller.dto.impl.ReplyToCommentDTO;
 import com.softserve.academy.spaced.repetition.domain.Comment;
@@ -16,7 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Link;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -42,7 +41,7 @@ public class CourseCommentController {
         Link collectionLink = linkTo(methodOn(CourseCommentController.class)
                 .getAllCommentsByCourse(courseId)).withSelfRel();
         List<CommentDTO> listOfComments = DTOBuilder
-                .buildDtoListForCollection(courseCommentsList,CommentDTO.class, collectionLink);
+                .buildDtoListForCollection(courseCommentsList, CommentDTO.class, collectionLink);
         List<CommentDTO> commentsTree = CommentDTO.buildCommentsTree(listOfComments);
         return new ResponseEntity<>(commentsTree, HttpStatus.OK);
     }
@@ -60,7 +59,7 @@ public class CourseCommentController {
     }
 
     @Auditable(action = AuditingAction.CREATE_COMMENT_FOR_COURSE)
-    @PostMapping(value = "/comments")
+    @PostMapping
     public ResponseEntity<CommentDTO> addCommentByCourse(@Validated(Request.class) @RequestBody ReplyToCommentDTO replyToCommentDTO,
                                                          @PathVariable Long courseId) throws NotAuthorisedUserException {
         LOGGER.debug("Added comment to course with id: {}", courseId);
@@ -70,19 +69,6 @@ public class CourseCommentController {
                 .getCommentByCourse(courseId, courseComment.getId())).withSelfRel();
         CommentDTO courseCommentDTO = DTOBuilder.buildDtoForEntity(courseComment, CommentDTO.class, selfLink);
         return new ResponseEntity<>(courseCommentDTO, HttpStatus.CREATED);
-    }
-
-    @Auditable(action = AuditingAction.EDIT_COMMENT_FOR_COURSE)
-    @PutMapping(value = "/{courseCommentId}")
-    public ResponseEntity<CommentDTO> updateComment(@Validated(Request.class) @RequestBody String courseContentComment,
-                                                    @PathVariable Long courseId,
-                                                    @PathVariable Long courseCommentId) {
-        LOGGER.debug("Updated courseComment with id: {}", courseCommentId);
-        CourseComment courseComment = courseCommentService.updateCommentById(courseCommentId, courseContentComment);
-        Link selfLink = linkTo(methodOn(CourseCommentController.class)
-                .getCommentByCourse(courseId, courseCommentId)).withSelfRel();
-        CommentDTO courseCommentDTO = DTOBuilder.buildDtoForEntity(courseComment, CommentDTO.class, selfLink);
-        return new ResponseEntity<>(courseCommentDTO, HttpStatus.OK);
     }
 
     @Auditable(action = AuditingAction.DELETE_COMMENT_FOR_COURSE)

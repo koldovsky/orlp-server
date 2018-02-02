@@ -59,8 +59,8 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public Course getCourseById(Long category_id, Long course_id) {
-        return courseRepository.getCourseByCategoryIdAndId(category_id, course_id);
+    public Course getCourseById(Long course_id) {
+        return courseRepository.getCourseById(course_id);
     }
 
     @Override
@@ -144,7 +144,6 @@ public class CourseServiceImpl implements CourseService {
         userRepository.save(user);
     }
 
-
     @Override
     public void updateCourseAccess(Long course_id, Course courseAccess) {
         Course course = courseRepository.findOne(course_id);
@@ -175,7 +174,6 @@ public class CourseServiceImpl implements CourseService {
         course.getDecks().add(deckRepository.getDeckById(deckId));
         courseRepository.save(course);
     }
-
 
     @Override
     public Page<Course> getPageWithCourses(int pageNumber, String sortBy, boolean ascending) {

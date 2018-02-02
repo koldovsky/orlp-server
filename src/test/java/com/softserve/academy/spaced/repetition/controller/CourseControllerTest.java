@@ -50,10 +50,9 @@ public class CourseControllerTest {
 
     @Test
     public void getCourseById() throws Exception {
-        final long categoryId = 1L;
         final long courseId = 1L;
-        when(courseService.getCourseById(eq(categoryId), eq(courseId))).thenReturn(createCourse());
-        mockMvc.perform(get("/api/category/{category_id}/courses/{course_id}", categoryId, courseId)
+        when(courseService.getCourseById(eq(courseId))).thenReturn(createCourse());
+        mockMvc.perform(get("/api/courses/{course_id}", courseId)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -66,7 +65,7 @@ public class CourseControllerTest {
                         "  \"ownerId\": 1," +
                         "  \"categoryId\": 1," +
                         "  \"courseId\": 1," +
-                        "  \"links\":[{\"rel\":\"self\",\"href\":\"http://localhost/api/category/1/courses/1\"},{\"rel\":\"decks\",\"href\":\"http://localhost/api/category/1/courses/1/decks\"}]" +
+                        "  \"links\":[{\"rel\":\"self\",\"href\":\"http://localhost/api/courses/1\"},{\"rel\":\"decks\",\"href\":\"http://localhost/api/category/1/courses/1/decks\"}]" +
                         "}"));
     }
 
