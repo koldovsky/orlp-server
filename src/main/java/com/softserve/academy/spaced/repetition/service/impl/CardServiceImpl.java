@@ -1,19 +1,18 @@
 package com.softserve.academy.spaced.repetition.service.impl;
 
-import com.softserve.academy.spaced.repetition.domain.Card;
-import com.softserve.academy.spaced.repetition.domain.Deck;
-import com.softserve.academy.spaced.repetition.domain.enums.LearningRegime;
-import com.softserve.academy.spaced.repetition.domain.User;
 import com.softserve.academy.spaced.repetition.controller.dto.simpleDTO.CardFileDTO;
 import com.softserve.academy.spaced.repetition.controller.dto.simpleDTO.CardFileDTOList;
+import com.softserve.academy.spaced.repetition.domain.Card;
+import com.softserve.academy.spaced.repetition.domain.Deck;
+import com.softserve.academy.spaced.repetition.domain.User;
+import com.softserve.academy.spaced.repetition.domain.enums.LearningRegime;
+import com.softserve.academy.spaced.repetition.repository.CardRepository;
+import com.softserve.academy.spaced.repetition.repository.DeckRepository;
+import com.softserve.academy.spaced.repetition.service.*;
 import com.softserve.academy.spaced.repetition.utils.exceptions.EmptyFileException;
 import com.softserve.academy.spaced.repetition.utils.exceptions.NotAuthorisedUserException;
 import com.softserve.academy.spaced.repetition.utils.exceptions.NotOwnerOperationException;
 import com.softserve.academy.spaced.repetition.utils.exceptions.WrongFormatException;
-import com.softserve.academy.spaced.repetition.repository.CardRepository;
-import com.softserve.academy.spaced.repetition.repository.DeckRepository;
-import com.softserve.academy.spaced.repetition.service.*;
-import com.softserve.academy.spaced.repetition.service.UserCardQueueService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -32,6 +31,7 @@ import java.util.*;
 @Service
 public class CardServiceImpl implements CardService {
 
+    private final Locale locale = LocaleContextHolder.getLocale();
     @Autowired
     private CardRepository cardRepository;
     @Autowired
@@ -44,10 +44,10 @@ public class CardServiceImpl implements CardService {
     private UserCardQueueService userCardQueueService;
     @Autowired
     private DeckService deckService;
-
     @Autowired
     private MessageSource messageSource;
-    private final Locale locale = LocaleContextHolder.getLocale();
+    @Autowired
+    private CardImageService cardImageService;
 
     @Override
     @Transactional
@@ -82,7 +82,7 @@ public class CardServiceImpl implements CardService {
     }
 
     @Override
-    public void addCard(Card card, Long deckId) {
+    public void addCard(Card card, Long deckId, List<String> imageList) {
         if (card.getTitle().trim().isEmpty() || card.getAnswer().trim().isEmpty()
                 || card.getQuestion().trim().isEmpty()) {
             throw new IllegalArgumentException(messageSource.getMessage("message.exception.cardFieldsNotEmpty",
@@ -91,18 +91,20 @@ public class CardServiceImpl implements CardService {
         Deck deck = deckRepository.findOne(deckId);
         card.setDeck(deck);
         deck.getCards().add(cardRepository.save(card));
+        cardImageService.addCardImage(imageList, card);
     }
 
     @Override
-    public void updateCard(Long id, Card card) {
+    public void updateCard(Card card, Long cardId, List<String> imageList) {
         if (card.getTitle().trim().isEmpty() || card.getAnswer().trim().isEmpty()
                 || card.getQuestion().trim().isEmpty()) {
             throw new IllegalArgumentException(messageSource.getMessage("message.exception.cardFieldsNotEmpty",
                     new Object[]{}, locale));
         }
-        card.setId(id);
-        card.setDeck(cardRepository.findOne(id).getDeck());
+        card.setId(cardId);
+        card.setDeck(cardRepository.findOne(cardId).getDeck());
         cardRepository.save(card);
+        cardImageService.addCardImage(imageList, card);
     }
 
     @Override
@@ -142,20 +144,19 @@ public class CardServiceImpl implements CardService {
     @Transactional
     public void uploadCards(MultipartFile cardsFile, Long deckId) throws WrongFormatException, EmptyFileException,
             NotOwnerOperationException, NotAuthorisedUserException, IOException {
+
         if (deckService.getDeckUser(deckId) != null) {
-            if (!cardsFile.getContentType().equals("application/octet-stream")) {
-                throw new WrongFormatException();
-            } else if (cardsFile.isEmpty()) {
+            if (cardsFile.isEmpty())
                 throw new EmptyFileException(messageSource.getMessage("message.exception.fileEmpty",
                         new Object[]{}, locale));
-            }
             Yaml yaml = new Yaml();
             InputStream in = cardsFile.getInputStream();
             try {
                 CardFileDTOList cards = yaml.loadAs(in, CardFileDTOList.class);
-                for (CardFileDTO card : cards.getCards()) {
-                    addCard(new Card(card.getQuestion(), card.getAnswer(), card.getTitle()), deckId);
-                }
+
+                for (CardFileDTO card : cards.getCards())
+                    addCard(new Card(card.getTitle(), card.getQuestion(), card.getAnswer()), deckId, null);
+
             } catch (ParserException | ConstructorException ex) {
                 throw new IllegalArgumentException(messageSource.getMessage("message.exception.fileWrongFormat",
                         new Object[]{}, locale));
