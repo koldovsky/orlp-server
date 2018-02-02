@@ -28,18 +28,25 @@ public class CourseRatingController {
     @GetMapping("/{id}")
     public ResponseEntity<CourseRatingPublicDTO> getCourseRatingById(@PathVariable Long id) {
         CourseRating courseRating = courseRatingService.getCourseRatingById(id);
+        if (courseRating == null){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
         Link selfLink = linkTo(methodOn(CourseRatingController.class)
-                .getCourseRatingById(courseRating.getId())).withRel("courseRating");
+                .getCourseRatingById(courseRating.getId())).withSelfRel();
         CourseRatingPublicDTO courseRatingDTO = DTOBuilder
                 .buildDtoForEntity(courseRating, CourseRatingPublicDTO.class, selfLink);
         return new ResponseEntity<>(courseRatingDTO, HttpStatus.OK);
     }
 
     @PostMapping
-    public ResponseEntity addCourseRating(@Validated(Request.class) @RequestBody RatingDTO ratingDTO,
+    public ResponseEntity addCourseRating(@Validated(Request.class) @RequestBody CourseRating courseRating,
                                           @PathVariable Long courseId)
             throws NotAuthorisedUserException, UserStatusException {
-        courseRatingService.addCourseRating(ratingDTO.getRating(), courseId);
-        return new ResponseEntity(HttpStatus.CREATED);
+        courseRatingService.addCourseRating(courseRating.getRating(), courseId);
+        Link selfLink = linkTo(methodOn(CourseRatingController.class)
+                .getCourseRatingById(courseRating.getId())).withSelfRel();
+        CourseRatingPublicDTO courseRatingPublicDTO = DTOBuilder
+                .buildDtoForEntity(courseRating, CourseRatingPublicDTO.class, selfLink);
+        return new ResponseEntity<>(courseRatingPublicDTO, HttpStatus.CREATED);
     }
 }

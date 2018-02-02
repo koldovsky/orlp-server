@@ -27,11 +27,11 @@ public class CourseRatingServiceImpl implements CourseRatingService {
 
     @Override
     @Transactional
-    public void addCourseRating(int rating, Long courseId) throws NotAuthorisedUserException, UserStatusException {
+    public Course addCourseRating(int rating, Long courseId) throws NotAuthorisedUserException, UserStatusException {
         User user = userService.getAuthorizedUser();
         userService.isUserStatusActive(user);
         String email = user.getAccount().getEmail();
-        CourseRating courseRating = courseRatingRepository.findAllByAccountEmailAndCourse_Id(email, courseId);
+        CourseRating courseRating = courseRatingRepository.findAllByAccountEmailAndCourseId(email, courseId);
         if (courseRating == null) {
             courseRating = new CourseRating();
         }
@@ -40,9 +40,10 @@ public class CourseRatingServiceImpl implements CourseRatingService {
         courseRating.setCourse(course);
         courseRating.setRating(rating);
         courseRatingRepository.save(courseRating);
-        double courseAverageRating = courseRatingRepository.findRatingByCourse_Id(courseId);
+        double courseAverageRating = courseRatingRepository.findAverageRatingByCourseId(courseId);
         course.setRating(courseAverageRating);
-        courseRepository.save(course);
+        return course;
+
     }
 
     @Override
