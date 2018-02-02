@@ -57,12 +57,13 @@ public class DeckCommentController {
         return new ResponseEntity<>(commentDTO, HttpStatus.OK);
     }
 
+    //TODO preauthorize
     @Auditable(action = AuditingAction.CREATE_COMMENT_FOR_DECK)
     @PostMapping
     public ResponseEntity<CommentDTO> addCommentForDeck(@Validated @RequestBody ReplyToCommentDTO replyToCommentDTO,
                                                         @RequestBody String commentText,
                                                         @PathVariable Long deckId) throws NotAuthorisedUserException {
-        LOGGER.debug("Added comment to deck with id: {}", deckId);
+        LOGGER.debug("Adding comment to deck with id: {}", deckId);
         DeckComment comment = commentService
                 .addCommentForDeck(deckId, replyToCommentDTO.getCommentText(), replyToCommentDTO.getParentCommentId());
         Link selfLink = linkTo(methodOn(DeckCommentController.class)
@@ -71,13 +72,13 @@ public class DeckCommentController {
         return new ResponseEntity<>(commentDTO, HttpStatus.CREATED);
     }
 
+    //TODO preauthorize
     @Auditable(action = AuditingAction.EDIT_COMMENT_FOR_DECK)
     @PutMapping(value = "/{commentId}")
-    @PreAuthorize(value = "@accessToUrlService.hasAccessToUpdateCommentForDeck(#commentId)")
     public ResponseEntity<CommentDTO> updateComment(@RequestBody String commentText,
                                                     @PathVariable Long deckId,
                                                     @PathVariable Long commentId) {
-        LOGGER.debug("Updated comment with id: {}", commentId);
+        LOGGER.debug("Updating comment with id: {}", commentId);
         DeckComment comment = commentService.updateCommentById(commentId, commentText);
         Link selfLink = linkTo(methodOn(DeckCommentController.class)
                 .getCommentById(deckId, commentId)).withSelfRel();
@@ -85,11 +86,11 @@ public class DeckCommentController {
         return new ResponseEntity<>(commentDTO, HttpStatus.OK);
     }
 
+    //TODO preauthorize
     @Auditable(action = AuditingAction.DELETE_COMMENT_FOR_DECK)
     @DeleteMapping(value = "/{commentId}")
-    @PreAuthorize(value = "@accessToUrlService.hasAccessToDeleteCommentForDeck(#commentId)")
     public ResponseEntity deleteComment(@PathVariable Long commentId, @PathVariable Long deckId) {
-        LOGGER.debug("Deleted comment with id:{} for deck with id: {}", commentId, deckId);
+        LOGGER.debug("Deleting comment with id:{} for deck with id: {}", commentId, deckId);
         commentService.deleteCommentById(commentId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
