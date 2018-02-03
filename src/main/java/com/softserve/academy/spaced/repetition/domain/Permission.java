@@ -1,14 +1,8 @@
 package com.softserve.academy.spaced.repetition.domain;
 
-import javax.persistence.*;
-
 public class Permission {
 
-    private Long id;
-
     private Integer permissionMask;
-
-    private Authority authority;
 
     private EntityName entityName;
 
@@ -28,14 +22,6 @@ public class Permission {
         this.permissionMask = permissionMask;
     }
 
-    public Authority getAuthority() {
-        return authority;
-    }
-
-    public void setAuthority(Authority authority) {
-        this.authority = authority;
-    }
-
     public EntityName getEntityName() {
         return entityName;
     }
@@ -44,11 +30,4 @@ public class Permission {
         this.entityName = entityName;
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 }
