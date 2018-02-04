@@ -21,7 +21,7 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
 
     //Collection for permission matrix
     //In future will be replaced by using DB
-    private static final Map<AuthorityName, Set<Permission>> permissionMatrix = new HashMap<>();
+    private static final Map<String, Set<Permission>> permissionMatrix = new HashMap<>();
 
     static {
         Set<Permission> anonymousPermission = new HashSet<>();
@@ -37,9 +37,9 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
         //Collection of permissions for role ADMIN
         adminPermission.add(new Permission(DECK_COMMENT, setMask(CREATE, READ, UPDATE, DELETE)));
 
-        permissionMatrix.put(ROLE_ANONYMOUS, anonymousPermission);
-        permissionMatrix.put(ROLE_USER, userPermission);
-        permissionMatrix.put(ROLE_ADMIN, adminPermission);
+        permissionMatrix.put(ROLE_ANONYMOUS.name(), anonymousPermission);
+        permissionMatrix.put(ROLE_USER.name(), userPermission);
+        permissionMatrix.put(ROLE_ADMIN.name(), adminPermission);
     }
 
     @Override
