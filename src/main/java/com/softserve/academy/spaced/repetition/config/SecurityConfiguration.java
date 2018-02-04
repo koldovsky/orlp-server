@@ -1,8 +1,8 @@
 package com.softserve.academy.spaced.repetition.config;
 
 import com.softserve.academy.spaced.repetition.security.CustomPermissionEvaluator;
-import com.softserve.academy.spaced.repetition.security.JwtAuthenticationEntryPoint;
-import com.softserve.academy.spaced.repetition.security.JwtAuthenticationFilter;
+import com.softserve.academy.spaced.repetition.security.authentification.JwtAuthenticationEntryPoint;
+import com.softserve.academy.spaced.repetition.security.authentification.JwtAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.web.DefaultErrorAttributes;
@@ -11,8 +11,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.access.PermissionEvaluator;
-import org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler;
-import org.springframework.security.access.expression.method.MethodSecurityExpressionHandler;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -61,7 +59,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    public JwtAuthenticationFilter jwtAuthenticationFilter() {
+    public JwtAuthenticationFilter jwtAuthenticationFilter() throws Exception {
         return new JwtAuthenticationFilter();
     }
 

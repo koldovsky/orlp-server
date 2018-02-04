@@ -9,28 +9,33 @@ import com.softserve.academy.spaced.repetition.repository.UserCardQueueRepositor
 import com.softserve.academy.spaced.repetition.service.UserCardQueueService;
 import com.softserve.academy.spaced.repetition.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
 import java.util.Date;
+import java.util.Locale;
 
 import static com.softserve.academy.spaced.repetition.service.impl.AccountServiceImpl.NUMBER_OF_REMEMBERING_LEVELS;
 
 @Service
 public class UserCardQueueServiceImpl implements UserCardQueueService {
     private static final int DAY_IN_MILLISECONDS = 24 * 60 * 60 * 1000;
-    private final UserCardQueueRepository userCardQueueRepository;
-    private final UserService userService;
-    private final RememberingLevelRepository rememberingLevelRepository;
 
     @Autowired
-    public UserCardQueueServiceImpl(UserCardQueueRepository userCardQueueRepository, UserService userService,
-                                    RememberingLevelRepository rememberingLevelRepository) {
-        this.userCardQueueRepository = userCardQueueRepository;
-        this.userService = userService;
-        this.rememberingLevelRepository = rememberingLevelRepository;
-    }
+    private UserCardQueueRepository userCardQueueRepository;
+
+    @Autowired
+    private RememberingLevelRepository rememberingLevelRepository;
+
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private MessageSource messageSource;
+    private final Locale locale = LocaleContextHolder.getLocale();
 
     @Override
     @Transactional
@@ -41,7 +46,8 @@ public class UserCardQueueServiceImpl implements UserCardQueueService {
                 .anyMatch(UserCardQueueStatus.valueOf(status)::equals);
 
         if(!userCardQueueStatusFound) {
-            throw new IllegalArgumentException("Value of User Card Queue Status is not valid: " + status);
+            throw new IllegalArgumentException(messageSource.getMessage("message.exception.userCardQueueStatusNotValid",
+                    new Object[]{status}, locale));
         }
 
         UserCardQueueStatus userCardQueueStatus = UserCardQueueStatus.valueOf(status);

@@ -1,7 +1,7 @@
 package com.softserve.academy.spaced.repetition.domain;
 
 import com.softserve.academy.spaced.repetition.domain.enums.UserCardQueueStatus;
-import com.softserve.academy.spaced.repetition.controller.utils.dto.EntityInterface;
+import com.softserve.academy.spaced.repetition.controller.dto.annotations.EntityInterface;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -16,13 +16,16 @@ public class UserCardQueue implements EntityInterface {
     @Column(name = "user_card_queue_id")
     private Long id;
 
-    @Column(name = "user_id", nullable = false)
+    @Column(name = "user_id")
+    @NotNull
     private Long userId;
 
-    @Column(name = "card_id", nullable = false)
+    @Column(name = "card_id")
+    @NotNull
     private Long cardId;
 
-    @Column(name = "deck_id", nullable = false)
+    @Column(name = "deck_id")
+    @NotNull
     private Long deckId;
 
     @Column(name = "status")

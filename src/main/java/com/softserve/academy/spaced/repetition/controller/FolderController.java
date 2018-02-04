@@ -1,9 +1,9 @@
 package com.softserve.academy.spaced.repetition.controller;
 
-import com.softserve.academy.spaced.repetition.controller.utils.dto.DTOBuilder;
-import com.softserve.academy.spaced.repetition.controller.utils.dto.impl.CardPublicDTO;
-import com.softserve.academy.spaced.repetition.controller.utils.dto.impl.DeckLinkByFolderDTO;
-import com.softserve.academy.spaced.repetition.controller.utils.dto.impl.DeckPublicDTO;
+import com.softserve.academy.spaced.repetition.controller.dto.builder.DTOBuilder;
+import com.softserve.academy.spaced.repetition.controller.dto.impl.CardPublicDTO;
+import com.softserve.academy.spaced.repetition.controller.dto.impl.DeckLinkByFolderDTO;
+import com.softserve.academy.spaced.repetition.controller.dto.impl.DeckPublicDTO;
 import com.softserve.academy.spaced.repetition.utils.audit.Auditable;
 import com.softserve.academy.spaced.repetition.utils.audit.AuditingAction;
 import com.softserve.academy.spaced.repetition.domain.Card;
@@ -61,29 +61,6 @@ public class FolderController {
         List<Long> id = folderService.getAllDecksIdWithFolder();
 
         return new ResponseEntity<>(id, HttpStatus.OK);
-    }
-
-    @GetMapping("/api/private/user/folder/{folderId}/decks/{deckId}")
-    @PreAuthorize(value = "@accessToUrlService.hasAccessToDeckFromFolder(#folderId, #deckId)")
-    public ResponseEntity<DeckLinkByFolderDTO> getDeckByFolderId(@PathVariable Long folderId, @PathVariable Long deckId) {
-        Deck deck = deckService.getDeck(deckId);
-        Link selfLink = linkTo(methodOn(FolderController.class).getDeckByFolderId(folderId, deckId)).withSelfRel();
-        DeckLinkByFolderDTO linkDTO = DTOBuilder.buildDtoForEntity(deck, DeckLinkByFolderDTO.class, selfLink);
-
-        return new ResponseEntity<>(linkDTO, HttpStatus.OK);
-    }
-
-    @Auditable(action = AuditingAction.START_LEARNING_VIA_FOLDER)
-    @GetMapping("/api/private/user/folder/{folderId}/decks/{deckId}/cards")
-    @PreAuthorize(value = "@accessToUrlService.hasAccessToDeckFromFolder(#folderId, #deckId)")
-    public ResponseEntity<List<CardPublicDTO>> getCardsByFolderAndDeck(@PathVariable Long folderId,
-                                                                       @PathVariable Long deckId) {
-        List<Card> cards = deckService.getAllCardsByDeckId(deckId);
-        Link collectionLink = linkTo(methodOn(FolderController.class)
-                .getCardsByFolderAndDeck(folderId, deckId)).withSelfRel();
-        List<CardPublicDTO> cardsPublic = DTOBuilder.buildDtoListForCollection(cards, CardPublicDTO.class, collectionLink);
-
-        return new ResponseEntity<>(cardsPublic, HttpStatus.OK);
     }
 
     @Auditable(action = AuditingAction.DELETE_DECK)

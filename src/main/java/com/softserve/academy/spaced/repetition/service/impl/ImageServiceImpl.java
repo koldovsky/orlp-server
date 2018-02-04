@@ -12,13 +12,15 @@ import com.softserve.academy.spaced.repetition.utils.exceptions.NotAuthorisedUse
 import com.softserve.academy.spaced.repetition.utils.exceptions.NotOwnerOperationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartException;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
-
+import java.util.Locale;
 
 @Service
 public class ImageServiceImpl implements ImageService {
@@ -31,6 +33,9 @@ public class ImageServiceImpl implements ImageService {
     @Value("${app.images.userQuote}")
     private Long userQuote;
 
+    @Autowired
+    private MessageSource messageSource;
+    private final Locale locale = LocaleContextHolder.getLocale();
 
     @Override
     public Image addImageToDB(MultipartFile file)
@@ -53,11 +58,13 @@ public class ImageServiceImpl implements ImageService {
             throw new ImageRepositorySizeQuotaExceededException();
         }
         if (fileSize > maxFileSize) {
-            throw new MultipartException("File upload error: file is too large.");
+            throw new MultipartException(messageSource.getMessage("message.exception.fileSizeTooLarge",
+                    new Object[]{}, locale));
         } else {
             String imageType = file.getContentType();
             if (imageType == null || !imageType.split("/")[0].equalsIgnoreCase("image")) {
-                throw new IllegalArgumentException("File upload error: file is not an image");
+                throw new IllegalArgumentException(messageSource.getMessage("message.exception.imageFileWrongFormat",
+                        new Object[]{}, locale));
             }
         }
     }
@@ -70,7 +77,7 @@ public class ImageServiceImpl implements ImageService {
         for (Long existingId : idList) {
             if (id.equals(existingId)) {
                 Image image = imageRepository.findImageById(id);
-                String encodedFileContent = image.getImagebase64();
+                String encodedFileContent = image.getImageBase64();
                 imageContent = decodeFromBase64(encodedFileContent);
                 break;
             }

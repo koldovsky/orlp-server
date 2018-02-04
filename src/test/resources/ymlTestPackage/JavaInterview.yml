@@ -1,0 +1,6 @@
+'cards':
+- 'question': 'What are the supported platforms by Java Programming Language?'
+  'answer': 'Java runs on a variety of platforms, such as Windows, Mac OS, and the
+    various versions of UNIX/Linux like HP-Unix, Sun Solaris, Redhat Linux, Ubuntu,
+    CentOS, etc.'
+  'title': 'Card One'

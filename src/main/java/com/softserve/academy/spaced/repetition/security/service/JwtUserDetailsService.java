@@ -2,8 +2,8 @@ package com.softserve.academy.spaced.repetition.security.service;
 
 import com.softserve.academy.spaced.repetition.domain.Account;
 import com.softserve.academy.spaced.repetition.repository.AccountRepository;
-import com.softserve.academy.spaced.repetition.security.JwtUser;
-import com.softserve.academy.spaced.repetition.security.JwtUserFactory;
+import com.softserve.academy.spaced.repetition.security.authentification.JwtUser;
+import com.softserve.academy.spaced.repetition.security.authentification.JwtUserFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -27,7 +27,8 @@ public class JwtUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         Account account = accountRepository.findByEmail(email);
         if(account == null){
-            throw new UsernameNotFoundException(String.format(messageSource.getMessage("message.exception.noUserWithEmail", new Object[]{}, locale), email));
+            throw new UsernameNotFoundException(messageSource.getMessage("message.exception.userNotFoundByEmail",
+                    new Object[]{email}, locale));
         } else {
             JwtUser jwtUser = JwtUserFactory.create(account);
             return jwtUser;

@@ -2,14 +2,15 @@ package com.softserve.academy.spaced.repetition.service.impl;
 
 import com.softserve.academy.spaced.repetition.domain.*;
 import com.softserve.academy.spaced.repetition.domain.enums.*;
-import com.softserve.academy.spaced.repetition.controller.utils.dto.impl.PasswordDTO;
+import com.softserve.academy.spaced.repetition.controller.dto.impl.PasswordDTO;
+import com.softserve.academy.spaced.repetition.service.ImageService;
 import com.softserve.academy.spaced.repetition.utils.exceptions.ImageRepositorySizeQuotaExceededException;
 import com.softserve.academy.spaced.repetition.utils.exceptions.NotAuthorisedUserException;
 import com.softserve.academy.spaced.repetition.utils.exceptions.UserStatusException;
 import com.softserve.academy.spaced.repetition.repository.AuthorityRepository;
 import com.softserve.academy.spaced.repetition.repository.DeckRepository;
 import com.softserve.academy.spaced.repetition.repository.UserRepository;
-import com.softserve.academy.spaced.repetition.security.JwtUser;
+import com.softserve.academy.spaced.repetition.security.authentification.JwtUser;
 import com.softserve.academy.spaced.repetition.service.MailService;
 import com.softserve.academy.spaced.repetition.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,55 +31,25 @@ import static com.softserve.academy.spaced.repetition.domain.Account.INITIAL_CAR
 @Service
 public class UserServiceImpl implements UserService {
 
+    @Autowired
     private UserRepository userRepository;
 
+    @Autowired
     private DeckRepository deckRepository;
 
+    @Autowired
     private PasswordEncoder passwordEncoder;
 
-    private ImageServiceImpl imageService;
+    @Autowired
+    private ImageService imageService;
 
+    @Autowired
     private MailService mailService;
 
+    @Autowired
     private AuthorityRepository authorityRepository;
 
     int QUANTITY_USER_IN_PAGE = 20;
-
-    @Override
-    @Autowired
-    public void setAuthorityRepository(AuthorityRepository authorityRepository) {
-        this.authorityRepository = authorityRepository;
-    }
-
-    @Override
-    @Autowired
-    public void setUserRepository(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
-
-    @Override
-    @Autowired
-    public void setDeckRepository(DeckRepository deckRepository) {
-        this.deckRepository = deckRepository;
-    }
-
-    @Override
-    @Autowired
-    public void setPasswordEncoder(PasswordEncoder passwordEncoder) {
-        this.passwordEncoder = passwordEncoder;
-    }
-
-    @Override
-    @Autowired
-    public void setImageService(ImageServiceImpl imageService) {
-        this.imageService = imageService;
-    }
-
-    @Override
-    @Autowired
-    public void setMailService(MailService mailService) {
-        this.mailService = mailService;
-    }
 
     @Override
     public void addUser(User user) {
@@ -228,7 +199,7 @@ public class UserServiceImpl implements UserService {
         imageService.checkImageExtension(file);
         User user = getAuthorizedUser();
         user.getPerson().setImageBase64(imageService.encodeToBase64(file));
-        user.getPerson().setTypeImage(ImageType.BASE64);
+        user.getPerson().setImageType(ImageType.BASE64);
         return userRepository.save(user);
     }
 

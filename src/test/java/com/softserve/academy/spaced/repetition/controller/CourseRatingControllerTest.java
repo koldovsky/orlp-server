@@ -10,9 +10,12 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.context.MessageSource;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+
+import java.util.Locale;
 
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
@@ -31,12 +34,21 @@ public class CourseRatingControllerTest {
 
     @Mock
     private CourseRatingService courseRatingService;
+    @InjectMocks
+    private ExceptionHandlerController exceptionHandlerController;
+    @Mock
+    private MessageSource messageSource;
 
     @Before
     public void setUp() {
+        final String MESSAGE_SOURCE_MESSAGE = "message";
+
         mockMvc = MockMvcBuilders.standaloneSetup(courseRatingController)
-                .setControllerAdvice(new ExceptionHandlerController())
+                .setControllerAdvice(exceptionHandlerController)
                 .build();
+
+        when(messageSource.getMessage(any(String.class), any(Object[].class), any(Locale.class)))
+                .thenReturn(MESSAGE_SOURCE_MESSAGE);
     }
 
     @Test
@@ -78,6 +90,7 @@ public class CourseRatingControllerTest {
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isUnauthorized());
+        verify(messageSource).getMessage(any(String.class), any(Object[].class), any(Locale.class));
     }
 
     @Test

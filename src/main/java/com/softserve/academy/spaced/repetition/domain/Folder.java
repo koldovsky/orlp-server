@@ -1,12 +1,12 @@
 package com.softserve.academy.spaced.repetition.domain;
 
-import com.softserve.academy.spaced.repetition.controller.utils.dto.EntityInterface;
+import com.softserve.academy.spaced.repetition.controller.dto.annotations.EntityInterface;
 
 import javax.persistence.*;
 import java.util.Set;
 
 @Entity
-@Table(name = "Folder")
+@Table(name = "folder")
 public class Folder implements EntityInterface {
 
     @Id

@@ -1,7 +1,7 @@
 package com.softserve.academy.spaced.repetition.controller;
 
-import com.softserve.academy.spaced.repetition.controller.utils.dto.Request;
-import com.softserve.academy.spaced.repetition.controller.utils.dto.impl.PasswordDTO;
+import com.softserve.academy.spaced.repetition.controller.dto.annotations.Request;
+import com.softserve.academy.spaced.repetition.controller.dto.impl.PasswordDTO;
 import com.softserve.academy.spaced.repetition.domain.Person;
 import com.softserve.academy.spaced.repetition.service.UserService;
 import com.softserve.academy.spaced.repetition.utils.audit.Auditable;
@@ -20,7 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class UserProfileController {
 
     @Autowired
-    UserService userService;
+    private UserService userService;
 
     @Auditable(action = AuditingAction.EDIT_PERSONAL_DATA)
     @PutMapping(value = "/api/private/user/data")
