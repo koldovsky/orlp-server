@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import static com.softserve.academy.spaced.repetition.controller.dto.builder.DTOBuilder.buildDtoForEntity;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
@@ -28,25 +29,25 @@ public class CourseRatingController {
     @GetMapping("/{id}")
     public ResponseEntity<CourseRatingPublicDTO> getCourseRatingById(@PathVariable Long id) {
         CourseRating courseRating = courseRatingService.getCourseRatingById(id);
-        if (courseRating == null){
+        if (courseRating == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         Link selfLink = linkTo(methodOn(CourseRatingController.class)
                 .getCourseRatingById(courseRating.getId())).withSelfRel();
-        CourseRatingPublicDTO courseRatingDTO = DTOBuilder
-                .buildDtoForEntity(courseRating, CourseRatingPublicDTO.class, selfLink);
+        CourseRatingPublicDTO courseRatingDTO =
+                buildDtoForEntity(courseRating, CourseRatingPublicDTO.class, selfLink);
         return new ResponseEntity<>(courseRatingDTO, HttpStatus.OK);
     }
 
     @PostMapping
-    public ResponseEntity addCourseRating(@Validated(Request.class) @RequestBody CourseRating courseRating,
-                                          @PathVariable Long courseId)
+    @ResponseStatus(HttpStatus.CREATED)
+    public CourseRatingPublicDTO addCourseRating(@Validated(Request.class) @RequestBody CourseRating courseRating,
+                                                 @PathVariable Long courseId)
             throws NotAuthorisedUserException, UserStatusException {
         courseRatingService.addCourseRating(courseRating.getRating(), courseId);
-        Link selfLink = linkTo(methodOn(CourseRatingController.class)
-                .getCourseRatingById(courseRating.getId())).withSelfRel();
-        CourseRatingPublicDTO courseRatingPublicDTO = DTOBuilder
-                .buildDtoForEntity(courseRating, CourseRatingPublicDTO.class, selfLink);
-        return new ResponseEntity<>(courseRatingPublicDTO, HttpStatus.CREATED);
+        return buildDtoForEntity(courseRating, CourseRatingPublicDTO.class,
+                linkTo(methodOn(CourseRatingController.class)
+                        .getCourseRatingById(courseRating.getId())).withSelfRel());
+
     }
 }

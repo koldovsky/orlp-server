@@ -61,7 +61,6 @@ public class DeckCommentController {
     @Auditable(action = AuditingAction.CREATE_COMMENT_FOR_DECK)
     @PostMapping
     public ResponseEntity<CommentDTO> addCommentForDeck(@Validated @RequestBody ReplyToCommentDTO replyToCommentDTO,
-                                                        @RequestBody String commentText,
                                                         @PathVariable Long deckId) throws NotAuthorisedUserException {
         LOGGER.debug("Adding comment to deck with id: {}", deckId);
         DeckComment comment = commentService
