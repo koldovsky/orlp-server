@@ -1,8 +1,7 @@
 package com.softserve.academy.spaced.repetition.security;
 
-import com.softserve.academy.spaced.repetition.domain.Operations;
+import com.softserve.academy.spaced.repetition.domain.enums.Operations;
 import com.softserve.academy.spaced.repetition.domain.Permission;
-import com.softserve.academy.spaced.repetition.domain.enums.AuthorityName;
 import org.springframework.security.access.PermissionEvaluator;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -13,8 +12,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import static com.softserve.academy.spaced.repetition.domain.EntityName.DECK_COMMENT;
-import static com.softserve.academy.spaced.repetition.domain.Operations.*;
+import static com.softserve.academy.spaced.repetition.domain.enums.EntityName.DECK_COMMENT;
+import static com.softserve.academy.spaced.repetition.domain.enums.Operations.*;
 import static com.softserve.academy.spaced.repetition.domain.enums.AuthorityName.*;
 
 public class CustomPermissionEvaluator implements PermissionEvaluator {
@@ -29,13 +28,13 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
         Set<Permission> adminPermission = new HashSet<>();
 
         //Collection of permissions for role ANONYMOUS
-        anonymousPermission.add(new Permission(DECK_COMMENT, setMask(READ)));
+        anonymousPermission.add(new Permission(DECK_COMMENT, createMask(READ)));
 
         //Collection of permissions for role USER
-        userPermission.add(new Permission(DECK_COMMENT, setMask(CREATE, READ, UPDATE, DELETE)));
+        userPermission.add(new Permission(DECK_COMMENT, createMask(CREATE, READ, UPDATE, DELETE)));
 
         //Collection of permissions for role ADMIN
-        adminPermission.add(new Permission(DECK_COMMENT, setMask(CREATE, READ, UPDATE, DELETE)));
+        adminPermission.add(new Permission(DECK_COMMENT, createMask(CREATE, READ, UPDATE, DELETE)));
 
         permissionMatrix.put(ROLE_ANONYMOUS.name(), anonymousPermission);
         permissionMatrix.put(ROLE_USER.name(), userPermission);
@@ -44,11 +43,6 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
 
     @Override
     public boolean hasPermission(Authentication authentication, Object targetDomainObject, Object permission) {
-
-//        check on ownership will be used in future
-//        if ((permissionMask & (UPDATE | DELETE)) != 0) {
-//            return isOwnerOperation(authentication, (EntityClass) targetDomainObject);
-//        }
         return hasPrivilege(authentication, (String) targetDomainObject, Operations.valueOf((String) permission).getMask());
     }
 
@@ -65,13 +59,7 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
                 }
             }
         }
-
         return false;
     }
 
-//    will be used in future
-//    private boolean isOwnerOperation(Authentication authentication, EntityClass entityClass) {
-//            JwtUser jwtUser = (JwtUser) authentication.getPrincipal();
-//        return jwtUser.getId() == entityClass.getCreatedBy();
-//    }
 }

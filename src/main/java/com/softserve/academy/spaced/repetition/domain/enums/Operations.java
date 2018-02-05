@@ -1,4 +1,4 @@
-package com.softserve.academy.spaced.repetition.domain;
+package com.softserve.academy.spaced.repetition.domain.enums;
 
 /**
  * Enum of available operations in the application with theirs masks.
@@ -40,7 +40,7 @@ public enum Operations {
      * @param operations allowed operations
      * @return mask with allowed operations
      */
-    public static int setMask(Operations... operations) {
+    public static int createMask(Operations... operations) {
         int result = 0;
         for (Operations operation : operations) {
             result |= operation.getMask();

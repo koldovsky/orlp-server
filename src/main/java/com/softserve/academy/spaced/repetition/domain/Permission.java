@@ -1,5 +1,7 @@
 package com.softserve.academy.spaced.repetition.domain;
 
+import com.softserve.academy.spaced.repetition.domain.enums.EntityName;
+
 public class Permission {
 
     private Integer permissionMask;

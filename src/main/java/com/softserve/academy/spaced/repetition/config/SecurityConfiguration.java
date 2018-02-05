@@ -1,14 +1,19 @@
 package com.softserve.academy.spaced.repetition.config;
 
+import com.softserve.academy.spaced.repetition.security.CustomAuditorAware;
 import com.softserve.academy.spaced.repetition.security.CustomPermissionEvaluator;
 import com.softserve.academy.spaced.repetition.security.authentification.JwtAuthenticationEntryPoint;
 import com.softserve.academy.spaced.repetition.security.authentification.JwtAuthenticationFilter;
+import com.softserve.academy.spaced.repetition.security.authentification.JwtUser;
+import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.web.DefaultErrorAttributes;
 import org.springframework.boot.autoconfigure.web.ErrorAttributes;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.domain.AuditorAware;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.access.PermissionEvaluator;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -35,6 +40,7 @@ import java.util.Map;
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
+@EnableJpaAuditing(auditorAwareRef = "auditorProvider")
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     private final int MAX_AGE = 3600;
@@ -135,4 +141,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         return new CustomPermissionEvaluator();
     }
 
+    @Bean
+    public AuditorAware<Long> auditorProvider() {
+        return new CustomAuditorAware();
+    }
 }
