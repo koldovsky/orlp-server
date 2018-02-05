@@ -1,6 +1,5 @@
 package com.softserve.academy.spaced.repetition.service;
 
-import com.softserve.academy.spaced.repetition.controller.dto.impl.PasswordDTO;
 import com.softserve.academy.spaced.repetition.domain.*;
 import com.softserve.academy.spaced.repetition.domain.enums.AccountStatus;
 import com.softserve.academy.spaced.repetition.domain.enums.AuthenticationType;
@@ -269,104 +268,6 @@ public class UserServiceTest {
     }
 
     @Test
-    public void testEditPersonalData() throws NotAuthorisedUserException {
-        User result = userService.editPersonalData(person);
-        verify(securityContext).getAuthentication();
-        verify(authentication).getPrincipal();
-        verify(userRepository).findUserByAccountEmail(ACCOUNT_EMAIL);
-        verify(userRepository).save(user);
-        assertEquals(user, result);
-    }
-
-    @Test(expected = NotAuthorisedUserException.class)
-    public void testEditPersonalDataByNotAuthorisedUser() throws NotAuthorisedUserException {
-        when(authentication.getPrincipal()).thenReturn(AUTHENTICATION_NOT_AUTHORISED_USER);
-
-        userService.editPersonalData(person);
-        verify(securityContext).getAuthentication();
-        verify(authentication).getPrincipal();
-    }
-
-    @Test
-    public void testChangePassword() throws NotAuthorisedUserException {
-        final String CURRENT_PASSWORD = "current_password";
-        final String NEW_PASSWORD = "new_password";
-        PasswordDTO passwordDTO = new PasswordDTO(CURRENT_PASSWORD, NEW_PASSWORD);
-
-        when(passwordEncoder.encode(NEW_PASSWORD)).thenReturn(PASSWORD_ENCODER_ENCODED_PASSWORD);
-        doNothing().when(mailService).sendPasswordNotificationMail(user);
-
-        userService.changePassword(passwordDTO);
-        verify(securityContext).getAuthentication();
-        verify(authentication).getPrincipal();
-        verify(passwordEncoder).encode(NEW_PASSWORD);
-        verify(userRepository).save(user);
-        verify(mailService).sendPasswordNotificationMail(user);
-        assertEquals(user.getAccount().getPassword(), PASSWORD_ENCODER_ENCODED_PASSWORD);
-    }
-
-    @Test(expected = NotAuthorisedUserException.class)
-    public void testChangePasswordByNotAuthorisedUser() throws NotAuthorisedUserException {
-        when(authentication.getPrincipal()).thenReturn(AUTHENTICATION_NOT_AUTHORISED_USER);
-
-        userService.changePassword(null);
-        verify(securityContext).getAuthentication();
-        verify(authentication).getPrincipal();
-    }
-
-    @Test
-    public void testUploadImage() throws NotAuthorisedUserException, ImageRepositorySizeQuotaExceededException {
-        final String IMAGE_BASE64 = "image_base64";
-
-        when(imageService.encodeToBase64(multipartFile)).thenReturn(IMAGE_BASE64);
-
-        User result = userService.uploadImage(multipartFile);
-        verify(imageService).checkImageExtension(multipartFile);
-        verify(securityContext).getAuthentication();
-        verify(authentication).getPrincipal();
-        verify(userRepository).save(user);
-        assertEquals(user, result);
-    }
-
-    @Test(expected = NotAuthorisedUserException.class)
-    public void testUploadImageByNotAuthorisedUser() throws NotAuthorisedUserException, ImageRepositorySizeQuotaExceededException {
-        when(authentication.getPrincipal()).thenReturn(AUTHENTICATION_NOT_AUTHORISED_USER);
-
-        userService.uploadImage(multipartFile);
-        verify(imageService).checkImageExtension(multipartFile);
-        verify(securityContext).getAuthentication();
-        verify(authentication).getPrincipal();
-    }
-
-    @Test(expected = ImageRepositorySizeQuotaExceededException.class)
-    public void testUploadImageIfQuotaExceeded() throws NotAuthorisedUserException, ImageRepositorySizeQuotaExceededException {
-        doThrow(new ImageRepositorySizeQuotaExceededException()).when(imageService).checkImageExtension(multipartFile);
-
-        userService.uploadImage(multipartFile);
-        verify(imageService).checkImageExtension(multipartFile);
-    }
-
-    @Test
-    public void testGetDecodeImageContent() throws NotAuthorisedUserException {
-        when(imageService.decodeFromBase64(PERSON_IMAGE_BASE64)).thenReturn(null);
-
-        byte[] result = userService.getDecodedImageContent();
-        verify(securityContext).getAuthentication();
-        verify(authentication).getPrincipal();
-        verify(imageService).decodeFromBase64(PERSON_IMAGE_BASE64);
-        assertNull(result);
-    }
-
-    @Test(expected = NotAuthorisedUserException.class)
-    public void testGetDecodeImageContentByNotAuthorisedUser() throws NotAuthorisedUserException {
-        when(authentication.getPrincipal()).thenReturn(AUTHENTICATION_NOT_AUTHORISED_USER);
-
-        userService.getAuthorizedUser();
-        verify(securityContext).getAuthentication();
-        verify(authentication).getPrincipal();
-    }
-
-    @Test
     public void testActivateAccount() throws NotAuthorisedUserException {
         doNothing().when(mailService).sendActivationMail(ACCOUNT_EMAIL);
 
@@ -381,26 +282,6 @@ public class UserServiceTest {
         when(authentication.getPrincipal()).thenReturn(AUTHENTICATION_NOT_AUTHORISED_USER);
 
         userService.activateAccount();
-        verify(securityContext).getAuthentication();
-        verify(authentication).getPrincipal();
-    }
-
-    @Test
-    public void testDeleteAccount() throws NotAuthorisedUserException {
-        final boolean ACCOUNT_DEACTIVATED = true;
-
-        userService.deleteAccount();
-        verify(securityContext).getAuthentication();
-        verify(authentication).getPrincipal();
-        verify(userRepository).save(user);
-        assertEquals(user.getAccount().isDeactivated(), ACCOUNT_DEACTIVATED);
-    }
-
-    @Test(expected = NotAuthorisedUserException.class)
-    public void testDeleteAccountByNotAuthorisedUser() throws NotAuthorisedUserException {
-        when(authentication.getPrincipal()).thenReturn(AUTHENTICATION_NOT_AUTHORISED_USER);
-
-        userService.deleteAccount();
         verify(securityContext).getAuthentication();
         verify(authentication).getPrincipal();
     }

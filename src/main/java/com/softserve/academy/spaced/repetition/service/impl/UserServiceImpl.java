@@ -176,50 +176,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @Transactional
-    public User editPersonalData(Person person) throws NotAuthorisedUserException {
-        User user = getAuthorizedUser();
-        user.getPerson().setFirstName(person.getFirstName());
-        user.getPerson().setLastName(person.getLastName());
-        return userRepository.save(user);
-    }
-
-    @Override
-    @Transactional
-    public void changePassword(PasswordDTO passwordDTO) throws NotAuthorisedUserException {
-        User user = getAuthorizedUser();
-        user.getAccount().setPassword(passwordEncoder.encode(passwordDTO.getNewPassword()));
-        userRepository.save(user);
-        mailService.sendPasswordNotificationMail(user);
-    }
-
-    @Override
-    public User uploadImage(MultipartFile file) throws ImageRepositorySizeQuotaExceededException,
-            NotAuthorisedUserException {
-        imageService.checkImageExtension(file);
-        User user = getAuthorizedUser();
-        user.getPerson().setImageBase64(imageService.encodeToBase64(file));
-        user.getPerson().setImageType(ImageType.BASE64);
-        return userRepository.save(user);
-    }
-
-    @Override
-    public byte[] getDecodedImageContent() throws NotAuthorisedUserException {
-        User user = getAuthorizedUser();
-        String encodedFileContent = user.getPerson().getImageBase64();
-        return imageService.decodeFromBase64(encodedFileContent);
-    }
-
-    @Override
     public void activateAccount() throws NotAuthorisedUserException {
         mailService.sendActivationMail(getNoAuthenticatedUserEmail());
-    }
-
-    @Override
-    public void deleteAccount() throws NotAuthorisedUserException {
-        User user = getAuthorizedUser();
-        user.getAccount().setDeactivated(true);
-        userRepository.save(user);
     }
 
     @Override

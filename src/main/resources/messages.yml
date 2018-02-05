@@ -32,6 +32,7 @@ message:
     facebookDataGetError: "ERROR in getting FB graph data! {0}"
     facebookDataParseError: "ERROR in parsing FB graph data! {0}"
     tokenNotFound: "No token found!"
+    passwordNotMatchWithCurrent: "Incorrect current password!"
   database:
     connectionSuccessful: "Connection to {0} has been established."
   notification:

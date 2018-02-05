@@ -1,64 +1,81 @@
 package com.softserve.academy.spaced.repetition.controller;
 
 import com.softserve.academy.spaced.repetition.controller.dto.annotations.Request;
-import com.softserve.academy.spaced.repetition.controller.dto.impl.PasswordDTO;
+import com.softserve.academy.spaced.repetition.controller.dto.builder.DTOBuilder;
+import com.softserve.academy.spaced.repetition.controller.dto.impl.userProfileDTO.PersonalInfoDTO;
+import com.softserve.academy.spaced.repetition.controller.dto.impl.userProfileDTO.ProfileDataDTO;
+import com.softserve.academy.spaced.repetition.controller.dto.impl.userProfileDTO.ProfileImageDTO;
+import com.softserve.academy.spaced.repetition.controller.dto.simpleDTO.userProfileDTO.JsonImageDTO;
+import com.softserve.academy.spaced.repetition.controller.dto.simpleDTO.userProfileDTO.JsonPasswordDTO;
+import com.softserve.academy.spaced.repetition.controller.dto.simpleDTO.userProfileDTO.JsonPersonalInfoDTO;
 import com.softserve.academy.spaced.repetition.domain.Person;
-import com.softserve.academy.spaced.repetition.service.UserService;
+import com.softserve.academy.spaced.repetition.domain.User;
+import com.softserve.academy.spaced.repetition.service.UserProfileService;
 import com.softserve.academy.spaced.repetition.utils.audit.Auditable;
 import com.softserve.academy.spaced.repetition.utils.audit.AuditingAction;
 import com.softserve.academy.spaced.repetition.utils.exceptions.ImageRepositorySizeQuotaExceededException;
 import com.softserve.academy.spaced.repetition.utils.exceptions.NotAuthorisedUserException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.Link;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
+
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
 @RestController
+@RequestMapping("/api/profile")
 public class UserProfileController {
 
     @Autowired
-    private UserService userService;
+    private UserProfileService userProfileService;
+
+    @GetMapping
+    @ResponseStatus(HttpStatus.OK)
+    public ProfileDataDTO getProfileData() throws NotAuthorisedUserException {
+        User user = userProfileService.getProfileData();
+        Link self = linkTo(methodOn(UserProfileController.class).getProfileData()).withSelfRel();
+        return DTOBuilder.buildDtoForEntity(user, ProfileDataDTO.class, self);
+    }
 
     @Auditable(action = AuditingAction.EDIT_PERSONAL_DATA)
-    @PutMapping(value = "/api/private/user/data")
-    public ResponseEntity editPersonalData(@Validated(Request.class) @RequestBody Person person)
+    @PutMapping(value = "/personal-info")
+    @ResponseStatus(HttpStatus.OK)
+    public PersonalInfoDTO updatePersonalInfo(@Validated(Request.class) @RequestBody JsonPersonalInfoDTO personalInfo)
             throws NotAuthorisedUserException {
-        userService.editPersonalData(person);
-        return new ResponseEntity(HttpStatus.OK);
+        Person person = userProfileService.updatePersonalInfo(personalInfo);
+        return DTOBuilder.buildDtoForEntity(person, PersonalInfoDTO.class);
     }
 
     @Auditable(action = AuditingAction.CHANGE_PASSWORD)
-    @PutMapping(value = "/api/private/user/password-change")
-    public ResponseEntity changePassword(@Validated(Request.class) @RequestBody PasswordDTO passwordDTO)
-            throws NotAuthorisedUserException {
-        userService.changePassword(passwordDTO);
-        return new ResponseEntity(HttpStatus.OK);
+    @PutMapping(value = "/password")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void changePassword(@Validated(Request.class) @RequestBody JsonPasswordDTO passwordDTO)
+            throws NotAuthorisedUserException, IllegalArgumentException {
+        userProfileService.changePassword(passwordDTO);
     }
 
     @Auditable(action = AuditingAction.UPLOAD_IMAGE_PROFILE)
-    @PostMapping("/api/private/user/image")
-    public ResponseEntity uploadImageProfile(@RequestParam("file") MultipartFile file)
-            throws ImageRepositorySizeQuotaExceededException, NotAuthorisedUserException {
-        userService.uploadImage(file);
-        return new ResponseEntity(HttpStatus.OK);
+    @PostMapping("/image")
+    @ResponseStatus(HttpStatus.OK)
+    public ProfileImageDTO uploadProfileImage(@RequestBody JsonImageDTO imageDTO)
+            throws NotAuthorisedUserException, ImageRepositorySizeQuotaExceededException {
+        Person person = userProfileService.uploadProfileImage(imageDTO);
+        return DTOBuilder.buildDtoForEntity(person, ProfileImageDTO.class);
     }
 
-    @GetMapping(value = "/api/private/user/image", produces = {MediaType.IMAGE_JPEG_VALUE})
-    public ResponseEntity<byte[]> getProfileImage() throws NotAuthorisedUserException {
-        byte[] imageContentBytes = userService.getDecodedImageContent();
-        if (imageContentBytes == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(imageContentBytes);
+    @Auditable(action = AuditingAction.DELETE_PROFILE_IMAGE)
+    @DeleteMapping("/image")
+    @ResponseStatus(HttpStatus.OK)
+    public void deleteProfileImage() throws NotAuthorisedUserException {
+        userProfileService.deleteProfileImage();
     }
 
     @Auditable(action = AuditingAction.DELETE_PROFILE)
-    @GetMapping("/api/private/user/delete")
-    public ResponseEntity deleteProfile() throws NotAuthorisedUserException {
-        userService.deleteAccount();
-        return new ResponseEntity(HttpStatus.OK);
+    @DeleteMapping
+    @ResponseStatus(HttpStatus.OK)
+    public void deleteProfile() throws NotAuthorisedUserException {
+        userProfileService.deleteProfile();
     }
 }
