@@ -56,7 +56,7 @@ public class UserProfileController {
         userProfileService.changePassword(passwordDTO);
     }
 
-    @Auditable(action = AuditingAction.UPLOAD_IMAGE_PROFILE)
+    @Auditable(action = AuditingAction.UPLOAD_PROFILE_IMAGE)
     @PostMapping("/image")
     @ResponseStatus(HttpStatus.OK)
     public ProfileImageDTO uploadProfileImage(@RequestBody JsonImageDTO imageDTO)
