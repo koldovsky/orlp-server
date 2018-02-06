@@ -82,29 +82,22 @@ public class CardServiceImpl implements CardService {
     }
 
     @Override
-    public void addCard(Card card, Long deckId, List<String> imageList) {
-        if (card.getTitle().trim().isEmpty() || card.getAnswer().trim().isEmpty()
-                || card.getQuestion().trim().isEmpty()) {
-            throw new IllegalArgumentException(messageSource.getMessage("message.exception.cardFieldsNotEmpty",
-                    new Object[]{}, locale));
-        }
-        Deck deck = deckRepository.findOne(deckId);
-        card.setDeck(deck);
-        deck.getCards().add(cardRepository.save(card));
+    @Transactional
+    public Card addCard(Card card, Long deckId, List<String> imageList) {
+        card.setDeck(deckRepository.findOne(deckId));
+        cardRepository.save(card);
         cardImageService.addCardImage(imageList, card);
+        return card;
     }
 
     @Override
-    public void updateCard(Card card, Long cardId, List<String> imageList) {
-        if (card.getTitle().trim().isEmpty() || card.getAnswer().trim().isEmpty()
-                || card.getQuestion().trim().isEmpty()) {
-            throw new IllegalArgumentException(messageSource.getMessage("message.exception.cardFieldsNotEmpty",
-                    new Object[]{}, locale));
-        }
+    @Transactional
+    public Card updateCard(Card card, Long cardId, List<String> imageList) {
         card.setId(cardId);
         card.setDeck(cardRepository.findOne(cardId).getDeck());
         cardRepository.save(card);
         cardImageService.addCardImage(imageList, card);
+        return card;
     }
 
     @Override

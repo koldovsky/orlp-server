@@ -38,7 +38,7 @@ public interface CardService {
      * @param card   added card,must not be {@literal null}.
      * @param deckId must not be {@literal null}.
      */
-    void addCard(Card card, Long deckId, List<String> imageList);
+    Card addCard(Card card, Long deckId, List<String> imageList);
 
     /**
      * Updates card with the given identifier.
@@ -46,7 +46,7 @@ public interface CardService {
      * @param cardId must not be {@literal null}.
      * @param card   updated card, must not be {null}.
      */
-    void updateCard(Card card, Long cardId, List<String> imageList);
+    Card updateCard(Card card, Long cardId, List<String> imageList);
 
     /**
      * Returns cards for studying from deck with the given identifier.
