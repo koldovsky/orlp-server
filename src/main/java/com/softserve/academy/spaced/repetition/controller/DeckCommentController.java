@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import static com.softserve.academy.spaced.repetition.controller.dto.builder.DTOBuilder.buildDtoForEntity;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
@@ -31,6 +32,50 @@ public class DeckCommentController {
 
     @Autowired
     private DeckCommentService commentService;
+
+    @Auditable(action = AuditingAction.VIEW_COMMENT_FOR_DECK)
+    @GetMapping(value = "/{commentId}")
+    @ResponseStatus(HttpStatus.OK)
+    public CommentDTO getCommentById(@PathVariable Long deckId, @PathVariable Long commentId) {
+        LOGGER.debug("View comment with id {} for deck with id: {}", commentId, deckId);
+        return buildDtoForEntity(commentService.getCommentById(commentId), CommentDTO.class,
+                linkTo(methodOn(DeckCommentController.class).getCommentById(deckId, commentId)).withSelfRel());
+    }
+
+    //TODO preauthorize
+    @Auditable(action = AuditingAction.CREATE_COMMENT_FOR_DECK)
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public CommentDTO addCommentForDeck(@Validated @RequestBody ReplyToCommentDTO replyToCommentDTO,
+                                        @PathVariable Long deckId)
+            throws NotAuthorisedUserException {
+        LOGGER.debug("Adding comment to deck with id: {}", deckId);
+        DeckComment comment = commentService
+                .addCommentForDeck(deckId, replyToCommentDTO.getCommentText(), replyToCommentDTO.getParentCommentId());
+        return buildDtoForEntity(comment, CommentDTO.class, linkTo(methodOn(DeckCommentController.class)
+                .getCommentById(deckId, comment.getId())).withSelfRel());
+    }
+
+    //TODO preauthorize
+    @Auditable(action = AuditingAction.EDIT_COMMENT_FOR_DECK)
+    @PutMapping(value = "/{commentId}")
+    @ResponseStatus(HttpStatus.OK)
+    public CommentDTO updateComment(@RequestBody String commentText, @PathVariable Long deckId,
+                                    @PathVariable Long commentId) {
+        LOGGER.debug("Updating comment with id: {}", commentId);
+        DeckComment comment = commentService.updateCommentById(commentId, commentText);
+        return buildDtoForEntity(comment, CommentDTO.class, linkTo(methodOn(DeckCommentController.class)
+                .getCommentById(deckId, commentId)).withSelfRel());
+    }
+
+    //TODO preauthorize
+    @Auditable(action = AuditingAction.DELETE_COMMENT_FOR_DECK)
+    @DeleteMapping(value = "/{commentId}")
+    public ResponseEntity deleteComment(@PathVariable Long commentId, @PathVariable Long deckId) {
+        LOGGER.debug("Deleting comment with id:{} for deck with id: {}", commentId, deckId);
+        commentService.deleteCommentById(commentId);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
 
     @Auditable(action = AuditingAction.VIEW_ALL_COMMENTS_FOR_DECK)
     @GetMapping
@@ -43,54 +88,5 @@ public class DeckCommentController {
                 .buildDtoListForCollection(commentsList, CommentDTO.class, collectionLink);
         List<CommentDTO> commentsTree = CommentDTO.buildCommentsTree(listOfComments);
         return new ResponseEntity<>(commentsTree, HttpStatus.OK);
-    }
-
-    @Auditable(action = AuditingAction.VIEW_COMMENT_FOR_DECK)
-    @GetMapping(value = "/{commentId}")
-    public ResponseEntity<CommentDTO> getCommentById(@PathVariable Long deckId,
-                                                     @PathVariable Long commentId) {
-        LOGGER.debug("View comment with id {} for deck with id: {}", commentId, deckId);
-        DeckComment comment = commentService.getCommentById(commentId);
-        Link selfLink = linkTo(methodOn(DeckCommentController.class)
-                .getCommentById(deckId, commentId)).withSelfRel();
-        CommentDTO commentDTO = DTOBuilder.buildDtoForEntity(comment, CommentDTO.class, selfLink);
-        return new ResponseEntity<>(commentDTO, HttpStatus.OK);
-    }
-
-    //TODO preauthorize
-    @Auditable(action = AuditingAction.CREATE_COMMENT_FOR_DECK)
-    @PostMapping
-    public ResponseEntity<CommentDTO> addCommentForDeck(@Validated @RequestBody ReplyToCommentDTO replyToCommentDTO,
-                                                        @PathVariable Long deckId) throws NotAuthorisedUserException {
-        LOGGER.debug("Adding comment to deck with id: {}", deckId);
-        DeckComment comment = commentService
-                .addCommentForDeck(deckId, replyToCommentDTO.getCommentText(), replyToCommentDTO.getParentCommentId());
-        Link selfLink = linkTo(methodOn(DeckCommentController.class)
-                .getCommentById(deckId, comment.getId())).withSelfRel();
-        CommentDTO commentDTO = DTOBuilder.buildDtoForEntity(comment, CommentDTO.class, selfLink);
-        return new ResponseEntity<>(commentDTO, HttpStatus.CREATED);
-    }
-
-    //TODO preauthorize
-    @Auditable(action = AuditingAction.EDIT_COMMENT_FOR_DECK)
-    @PutMapping(value = "/{commentId}")
-    public ResponseEntity<CommentDTO> updateComment(@RequestBody String commentText,
-                                                    @PathVariable Long deckId,
-                                                    @PathVariable Long commentId) {
-        LOGGER.debug("Updating comment with id: {}", commentId);
-        DeckComment comment = commentService.updateCommentById(commentId, commentText);
-        Link selfLink = linkTo(methodOn(DeckCommentController.class)
-                .getCommentById(deckId, commentId)).withSelfRel();
-        CommentDTO commentDTO = DTOBuilder.buildDtoForEntity(comment, CommentDTO.class, selfLink);
-        return new ResponseEntity<>(commentDTO, HttpStatus.OK);
-    }
-
-    //TODO preauthorize
-    @Auditable(action = AuditingAction.DELETE_COMMENT_FOR_DECK)
-    @DeleteMapping(value = "/{commentId}")
-    public ResponseEntity deleteComment(@PathVariable Long commentId, @PathVariable Long deckId) {
-        LOGGER.debug("Deleting comment with id:{} for deck with id: {}", commentId, deckId);
-        commentService.deleteCommentById(commentId);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
