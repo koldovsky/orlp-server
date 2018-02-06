@@ -71,9 +71,8 @@ public class CategoryController {
         return new ResponseEntity<>(sortedCategoriesDTOS, HttpStatus.OK);
     }
 
-    //TODO Add delete category (Roman Somyk)
     @Auditable(action = AuditingAction.CREATE_CATEGORY)
-    @PostMapping("/api/admin/add/categories")
+    @PostMapping("/api/admin/categories")
     public ResponseEntity<CategoryPublicDTO> addCategory(@Validated(Request.class) @RequestBody CategoryDTO categoryDTO) {
         Category category = categoryService
                 .addCategory(categoryDTO.getName(), categoryDTO.getDescription(), categoryDTO.getImage());
@@ -83,13 +82,20 @@ public class CategoryController {
     }
 
     @Auditable(action = AuditingAction.EDIT_CATEGORY)
-    @PutMapping("/api/admin/add/categories/{id}")
-    public ResponseEntity<CategoryPublicDTO> updateCategory(@Validated(Request.class) @RequestBody Category category,
+    @PutMapping("/api/categories/{id}")
+    public ResponseEntity<CategoryPublicDTO> updateCategory(@Validated(Request.class) @RequestBody CategoryDTO categoryDTO,
                                                             @PathVariable Long id) {
-        category = categoryService.updateCategory(category, id);
+        System.out.println(categoryDTO.toString()+" "+id);
+        Category category = categoryService.updateCategory(categoryDTO, id);
         Link selfLink = linkTo(methodOn(CategoryController.class).getCategoryById(category.getId())).withSelfRel();
-        CategoryPublicDTO categoryDTO = DTOBuilder.buildDtoForEntity(category, CategoryPublicDTO.class, selfLink);
-        return new ResponseEntity<>(categoryDTO, HttpStatus.OK);
+        CategoryPublicDTO categoryPublicDTO = DTOBuilder.buildDtoForEntity(category, CategoryPublicDTO.class, selfLink);
+        return new ResponseEntity<>(categoryPublicDTO, HttpStatus.OK);
     }
-
+    //TODO Add delete category (Roman Somyk)
+    @Auditable(action = AuditingAction.DELETE_CATEGORY)
+    @DeleteMapping(value = "/api/admin/categories/{id}")
+    public ResponseEntity deleteCategory(@PathVariable Long id) {
+        categoryService.deleteCategory(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
 }

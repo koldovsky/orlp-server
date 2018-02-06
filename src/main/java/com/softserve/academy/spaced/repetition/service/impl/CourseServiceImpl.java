@@ -21,7 +21,6 @@ import java.util.Set;
 
 @Service
 public class CourseServiceImpl implements CourseService {
-    public static final int TOP_COURSES = 4;
 
     private final static int QUANTITY_COURSES_IN_PAGE = 12;
     @Autowired
@@ -179,13 +178,13 @@ public class CourseServiceImpl implements CourseService {
     public Page<Course> getPageWithCourses(int pageNumber, String sortBy, boolean ascending) {
         PageRequest request = new PageRequest(pageNumber - 1, QUANTITY_COURSES_IN_PAGE, ascending
                 ? Sort.Direction.ASC : Sort.Direction.DESC, sortBy);
-        return courseRepository.findAll(request);
+        return courseRepository.findAllByPublishedTrue(request);
     }
 
     @Override
     public Page<Course> getPageWithCoursesByCategory(long categoryId, int pageNumber, String sortBy, boolean ascending) {
         PageRequest request = new PageRequest(pageNumber - 1, QUANTITY_COURSES_IN_PAGE, ascending
                 ? Sort.Direction.ASC : Sort.Direction.DESC, sortBy);
-        return courseRepository.findAllByCategoryEquals(categoryRepository.findOne(categoryId), request);
+        return courseRepository.findAllByCategoryEqualsAndPublishedTrue(categoryRepository.findOne(categoryId), request);
     }
 }

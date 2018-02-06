@@ -34,7 +34,7 @@ public class DeckController {
     private FolderService folderService;
 
     @Auditable(action = AuditingAction.VIEW_DECKS_VIA_CATEGORY)
-    @GetMapping(value = "/api/category/{categoryId}/decks")
+    @GetMapping(value = "/api/categories/{categoryId}/decks")
     @PreAuthorize(value = "@accessToUrlService.hasAccessToDeck(#categoryId)")
     public ResponseEntity<Page<DeckLinkByCategoryDTO>> getAllDecksByCategoryId(@PathVariable Long categoryId,
                                                                                @RequestParam(name = "p", defaultValue = "1")
@@ -128,7 +128,7 @@ public class DeckController {
     }
 
     @Auditable(action = AuditingAction.CREATE_DECK_IN_CATEGORY)
-    @PostMapping(value = "/api/category/{category_id}/decks")
+    @PostMapping(value = "/api/categories/{category_id}/decks")
     @PreAuthorize(value = "@accessToUrlService.hasAccessToDeck(#category_id)")
     public ResponseEntity<DeckPublicDTO> addDeckToCategory(@Validated(Request.class) @RequestBody Deck deck,
                                                            @PathVariable Long category_id) {

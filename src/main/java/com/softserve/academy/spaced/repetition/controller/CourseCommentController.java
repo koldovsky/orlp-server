@@ -35,11 +35,11 @@ public class CourseCommentController {
 
     @Auditable(action = AuditingAction.VIEW_ALL_COMMENTS_FOR_COURSE)
     @GetMapping
-    public ResponseEntity<List<CommentDTO>> getAllCommentsByCourse(@PathVariable Long courseId) {
+    public ResponseEntity<List<CommentDTO>> getAllCommentsByCourseId(@PathVariable Long courseId) {
         LOGGER.debug("View all comments for course with id: {}", courseId);
         List<Comment> courseCommentsList = courseCommentService.getAllCommentsForCourse(courseId);
         Link collectionLink = linkTo(methodOn(CourseCommentController.class)
-                .getAllCommentsByCourse(courseId)).withSelfRel();
+                .getAllCommentsByCourseId(courseId)).withSelfRel();
         List<CommentDTO> listOfComments = DTOBuilder
                 .buildDtoListForCollection(courseCommentsList, CommentDTO.class, collectionLink);
         List<CommentDTO> commentsTree = CommentDTO.buildCommentsTree(listOfComments);
@@ -48,32 +48,32 @@ public class CourseCommentController {
 
     @Auditable(action = AuditingAction.VIEW_COMMENT_FOR_COURSE)
     @GetMapping(value = "/{courseCommentId}")
-    public ResponseEntity<CommentDTO> getCommentByCourse(@PathVariable Long courseId,
-                                                         @PathVariable Long courseCommentId) {
+    public ResponseEntity<CommentDTO> getCommentByCourseId(@PathVariable Long courseId,
+                                                           @PathVariable Long courseCommentId) {
         LOGGER.debug("View comment with id {} for course with id: {}", courseCommentId, courseId);
         CourseComment courseComment = courseCommentService.getCommentById(courseCommentId);
         Link selfLink = linkTo(methodOn(CourseCommentController.class)
-                .getCommentByCourse(courseId, courseCommentId)).withSelfRel();
+                .getCommentByCourseId(courseId, courseCommentId)).withSelfRel();
         CommentDTO courseCommentDTO = DTOBuilder.buildDtoForEntity(courseComment, CommentDTO.class, selfLink);
         return new ResponseEntity<>(courseCommentDTO, HttpStatus.OK);
     }
 
     @Auditable(action = AuditingAction.CREATE_COMMENT_FOR_COURSE)
     @PostMapping
-    public ResponseEntity<CommentDTO> addCommentByCourse(@Validated(Request.class) @RequestBody ReplyToCommentDTO replyToCommentDTO,
+    public ResponseEntity<CommentDTO> addCommentToCourse(@Validated(Request.class) @RequestBody ReplyToCommentDTO replyToCommentDTO,
                                                          @PathVariable Long courseId) throws NotAuthorisedUserException {
         LOGGER.debug("Added comment to course with id: {}", courseId);
         CourseComment courseComment = courseCommentService
                 .addCommentForCourse(courseId, replyToCommentDTO.getCommentText(), replyToCommentDTO.getParentCommentId());
         Link selfLink = linkTo(methodOn(CourseCommentController.class)
-                .getCommentByCourse(courseId, courseComment.getId())).withSelfRel();
+                .getCommentByCourseId(courseId, courseComment.getId())).withSelfRel();
         CommentDTO courseCommentDTO = DTOBuilder.buildDtoForEntity(courseComment, CommentDTO.class, selfLink);
         return new ResponseEntity<>(courseCommentDTO, HttpStatus.CREATED);
     }
 
     @Auditable(action = AuditingAction.DELETE_COMMENT_FOR_COURSE)
     @DeleteMapping(value = "/{courseCommentId}")
-    public ResponseEntity deleteComment(@PathVariable Long courseCommentId) {
+    public ResponseEntity deleteCommentById(@PathVariable Long courseCommentId) {
         LOGGER.debug("Deleted comment with id:{}", courseCommentId);
         courseCommentService.deleteCommentById(courseCommentId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);

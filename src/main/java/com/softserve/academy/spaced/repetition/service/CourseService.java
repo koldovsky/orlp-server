@@ -37,7 +37,7 @@ public interface CourseService {
     List<Deck> getAllDecksByCourseId(Long categoryId, Long courseId);
 
     /**
-     * Find user in category with the given identifier of course.
+     * Find course with the given identifier.
      *
      * @param courseId   must not be {@literal null}.
      * @return course with given identifiers
