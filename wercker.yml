@@ -1,0 +1,47 @@
+# This references a standard debian container from the
+# Docker Hub https://registry.hub.docker.com/_/debian/
+# Read more about containers on our dev center
+# http://devcenter.wercker.com/docs/containers/index.html
+box: maven
+# You can also use services such as databases. Read more on our dev center:
+# http://devcenter.wercker.com/docs/services/index.html
+# services:
+    # - postgres
+    # http://devcenter.wercker.com/docs/services/postgresql.html
+
+    # - mongo
+    # http://devcenter.wercker.com/docs/services/mongodb.html
+
+# This is the build pipeline. Pipelines are the core of wercker
+# Read more about pipelines on our dev center
+# http://devcenter.wercker.com/docs/pipelines/index.html
+
+build:
+  steps:
+    - java/maven:
+        goals: clean package
+        version: 3.5.2
+    # Copy necessary JAR to separate directory
+    - script:
+        name: Copy-jar
+        code: |
+          mkdir container/  
+          cp ./target/*.jar container/
+
+deploy:
+  steps:
+    - wercker/add-ssh-key:
+        keyname: SSH_KEY
+    - add-to-known_hosts:
+        hostname: $REMOTE_HOST
+    - script :
+        name: Copy .jar and script to remote host
+        code: |
+          ssh $LOGIN@$REMOTE_HOST "cd ~/orlp-server/ && rm -f *.jar && rm -f *.sh"
+          scp ./container/*.jar $LOGIN@$REMOTE_HOST:~/orlp-server/
+          scp container_deploy.sh $LOGIN@$REMOTE_HOST:~/orlp-server/
+    - script:
+        name: Run redeploy-script
+        code: |
+          ssh $LOGIN@$REMOTE_HOST "cd ~/orlp-server/ && sh container_deploy.sh"
+#          ssh $LOGIN@$REMOTE_HOST "cd ~/orlp-server/ && rm -f *.sh && rm -f *.jar"
