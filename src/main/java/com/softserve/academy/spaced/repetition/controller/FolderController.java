@@ -37,7 +37,7 @@ public class FolderController {
     public ResponseEntity<DeckPublicDTO> addDeckToFolder(@PathVariable Long deckId) throws NotAuthorisedUserException {
         Deck deck = folderService.addDeck(deckId);
         Link selfLink = linkTo(methodOn(DeckController.class)
-                .getDeckByCategoryId(deck.getCategory().getId(), deckId)).withSelfRel();
+                .getDeckByCategoryId(deckId)).withSelfRel();
         DeckPublicDTO deckPublicDTO = DTOBuilder.buildDtoForEntity(deck, DeckPublicDTO.class, selfLink);
 
         return new ResponseEntity<>(deckPublicDTO, HttpStatus.OK);
