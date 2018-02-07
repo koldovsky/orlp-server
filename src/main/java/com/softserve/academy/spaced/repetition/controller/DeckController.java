@@ -36,7 +36,7 @@ public class DeckController {
 
     //TODO preauthorize
     @Auditable(action = AuditingAction.VIEW_DECKS_VIA_CATEGORY)
-    @GetMapping(value = "/api/category/{categoryId}/decks")
+    @GetMapping(value = "/api/categories/{categoryId}/decks")
     public ResponseEntity<Page<DeckLinkByCategoryDTO>> getAllDecksByCategoryId(@PathVariable Long categoryId,
                                                                                @RequestParam(name = "p", defaultValue = "1")
                                                                                        int pageNumber,
@@ -74,7 +74,7 @@ public class DeckController {
     }
 
     //TODO preauthorize
-    @GetMapping(value = "/api/category/{categoryId}/decks/{deckId}")
+    @GetMapping(value = "/api/categories/{categoryId}/decks/{deckId}")
     public ResponseEntity<DeckLinkByCategoryDTO> getDeckByCategoryId(@PathVariable Long categoryId,
                                                                      @PathVariable Long deckId) {
         Deck deck = deckService.getDeck(deckId);
@@ -83,8 +83,17 @@ public class DeckController {
         return new ResponseEntity<>(linkDTO, HttpStatus.OK);
     }
 
+    @GetMapping(value = "/api/decks/{deckId}")
+    @ResponseStatus(HttpStatus.OK)
+    public DeckPublicDTO getDeckById(@PathVariable Long deckId) {
+        Deck deck = deckService.getDeck(deckId);
+        return buildDtoForEntity(deck, DeckPublicDTO.class,
+                linkTo(methodOn(DeckController.class)
+                        .getDeckById(deckId)).withSelfRel());
+    }
+
     //TODO preauthorize
-    @GetMapping(value = "/api/category/{categoryId}/courses/{courseId}/decks/{deckId}")
+    @GetMapping(value = "/api/categories/{categoryId}/courses/{courseId}/decks/{deckId}")
     public ResponseEntity<DeckLinkByCourseDTO> getDeckByCourseId(@PathVariable Long categoryId,
                                                                  @PathVariable Long courseId,
                                                                  @PathVariable Long deckId) {
@@ -97,7 +106,7 @@ public class DeckController {
 
     //TODO preauthorize
     @Auditable(action = AuditingAction.START_LEARNING_DECK_VIA_CATEGORY)
-    @GetMapping(value = "/api/category/{categoryId}/decks/{deckId}/cards")
+    @GetMapping(value = "/api/categories/{categoryId}/decks/{deckId}/cards")
     public ResponseEntity<List<CardPublicDTO>> getCardsByCategoryAndDeck(@PathVariable Long categoryId,
                                                                          @PathVariable Long deckId) {
         List<Card> cards = deckService.getAllCardsByDeckId(deckId);
@@ -117,7 +126,7 @@ public class DeckController {
 
     //TODO preauthorize
     @Auditable(action = AuditingAction.START_LEARNING_DECK_VIA_COURSE)
-    @GetMapping(value = "/api/category/{categoryId}/courses/{courseId}/decks/{deckId}/cards")
+    @GetMapping(value = "/api/categories/{categoryId}/courses/{courseId}/decks/{deckId}/cards")
     public ResponseEntity<List<CardPublicDTO>> getCardsByCourseAndDeck(@PathVariable Long categoryId,
                                                                        @PathVariable Long courseId,
                                                                        @PathVariable Long deckId) {
@@ -130,7 +139,7 @@ public class DeckController {
 
     //TODO preauthorize
     @Auditable(action = AuditingAction.CREATE_DECK_IN_CATEGORY)
-    @PostMapping(value = "/api/category/{category_id}/decks")
+    @PostMapping(value = "/api/categories/{category_id}/decks")
     public ResponseEntity<DeckPublicDTO> addDeckToCategory(@Validated(Request.class) @RequestBody Deck deck,
                                                            @PathVariable Long category_id) {
         deckService.addDeckToCategory(deck, category_id);
@@ -141,7 +150,7 @@ public class DeckController {
 
     //TODO preauthorize
     @Auditable(action = AuditingAction.CREATE_DECK_IN_COURSE)
-    @PostMapping(value = "/api/category/{categoryId}/courses/{courseId}/decks")
+    @PostMapping(value = "/api/categories/{categoryId}/courses/{courseId}/decks")
     public ResponseEntity<DeckPublicDTO> addDeckToCourse(@Validated(Request.class) @RequestBody Deck deck,
                                                          @PathVariable Long categoryId,
                                                          @PathVariable Long courseId) {
@@ -234,7 +243,7 @@ public class DeckController {
     }
 
     @Auditable(action = AuditingAction.CREATE_DECK_USER)
-    @PostMapping(value = "/api/private/category/{categoryId}/decks")
+    @PostMapping(value = "/api/private/categories/{categoryId}/decks")
     public ResponseEntity<DeckPrivateDTO> addDeckForUser(@Validated(Request.class) @RequestBody Deck deck,
                                                          @PathVariable Long categoryId)
             throws NotAuthorisedUserException, NotOwnerOperationException {
@@ -246,7 +255,7 @@ public class DeckController {
     }
 
     @Auditable(action = AuditingAction.EDIT_DECK_USER)
-    @PutMapping(value = "/api/private/category/{categoryId}/deck/{deckId}")
+    @PutMapping(value = "/api/private/categories/{categoryId}/deck/{deckId}")
     public ResponseEntity<DeckPrivateDTO> updateDeckForUser(@Validated(Request.class) @RequestBody Deck deck,
                                                             @PathVariable Long deckId,
                                                             @PathVariable Long categoryId)
