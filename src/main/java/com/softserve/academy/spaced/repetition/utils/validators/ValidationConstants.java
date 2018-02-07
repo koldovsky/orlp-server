@@ -1,7 +1,9 @@
 package com.softserve.academy.spaced.repetition.utils.validators;
 
 public class ValidationConstants {
-
+    public static final int MAX_SHOW_DECK_SIZE = 10;
+    public static final int MAX_CARD_TITLE_SIZE = 50;
+    public static final int MAX_CARD_IMAGE_LIST_SIZE = 5;
     public static final int PERSON_FIELD_MIN_SIZE = 2;
     public static final int PERSON_FIELD_MAX_SIZE = 15;
     public static final int MIN_COURSE_AND_CARD_RATING = 1;
