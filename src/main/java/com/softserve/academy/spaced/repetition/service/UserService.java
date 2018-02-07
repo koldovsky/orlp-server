@@ -195,13 +195,6 @@ public interface UserService {
     void deleteAccount() throws NotAuthorisedUserException;
 
     /**
-     * Gets the status of the authorised user
-     *
-     * @throws UserStatusException if the user`s status is not active.
-     */
-    void getUserStatus() throws UserStatusException;
-
-    /**
      * Initializes a new user.
      *
      * @param account            user`s account.
@@ -220,4 +213,5 @@ public interface UserService {
      * @throws UserStatusException if user is no active.
      */
     void isUserStatusActive(User user) throws UserStatusException;
+
 }

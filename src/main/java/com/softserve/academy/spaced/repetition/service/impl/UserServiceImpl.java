@@ -218,18 +218,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public void deleteAccount() throws NotAuthorisedUserException {
         User user = getAuthorizedUser();
-        user.getAccount().setDeactivated(true);
+        user.getAccount().setStatus(AccountStatus.DELETED);
         userRepository.save(user);
-    }
-
-    @Override
-    @PreAuthorize("isAuthenticated()")
-    public void getUserStatus() throws UserStatusException {
-        JwtUser jwtUser = (JwtUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        User user = userRepository.findUserByAccountEmail(jwtUser.getUsername());
-        if (user.getAccount().getStatus().isNotActive()) {
-            throw new UserStatusException(user.getAccount().getStatus());
-        }
     }
 
     @Override

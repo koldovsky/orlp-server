@@ -5,6 +5,7 @@ public class ValidationConstants {
     public static final int PERSON_FIELD_MIN_SIZE = 2;
     public static final int PERSON_FIELD_MAX_SIZE = 15;
     public static final int MIN_COURSE_AND_CARD_RATING = 1;
+    public static final int MIN_NUMBER_OF_CARDS = 1;
     public static final int MAX_COURSE_AND_CARD_RATING = 5;
     public static final int PASSWORD_MIN_SIZE = 8;
     public static final int PASSWORD_MAX_SIZE = 20;
