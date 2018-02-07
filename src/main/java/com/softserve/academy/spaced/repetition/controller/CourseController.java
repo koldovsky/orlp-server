@@ -88,7 +88,6 @@ public class CourseController {
     }
 
     @PreAuthorize(value = "hasPermission('COURSE','READ')")
-    @PostAuthorize("principal.id==returnObject.body.id")
     @GetMapping(value = "/api/category/{category_id}/courses/{course_id}")
     public ResponseEntity<CourseLinkDTO> getCourseById(@PathVariable Long category_id, @PathVariable Long course_id) {
         Course course = courseService.getCourseById(category_id, course_id);
@@ -109,6 +108,7 @@ public class CourseController {
 
     @Auditable(action = AuditingAction.CREATE_COURSE)
     @PutMapping(value = "/api/user/{user_id}/courses/{course_id}")
+    @PreAuthorize("hasPermission('COURSE','UPDATE') && principal.id==#course.createdBy")
     public void updateCourse(@PathVariable Long course_id, @Validated(Request.class) @RequestBody Course course) {
         courseService.updateCourse(course_id, course);
     }

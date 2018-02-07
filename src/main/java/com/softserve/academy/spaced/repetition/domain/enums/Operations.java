@@ -4,11 +4,10 @@ package com.softserve.academy.spaced.repetition.domain.enums;
  * Enum of available operations in the application with theirs masks.
  */
 public enum Operations {
-    CREATE(0b00001),
-    READ(0b00010),
-    UPDATE(0b00100),
-    DELETE(0b01000),
-    ADMINISTRATE(0b10000);
+    CREATE(0b0001),
+    READ(0b0010),
+    UPDATE(0b0100),
+    DELETE(0b1000);
 
     /**
      * Integer value of operation. You can write 32(4*8) operations.

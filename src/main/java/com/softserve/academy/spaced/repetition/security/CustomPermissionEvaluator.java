@@ -12,6 +12,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import static com.softserve.academy.spaced.repetition.domain.enums.EntityName.COURSE;
 import static com.softserve.academy.spaced.repetition.domain.enums.EntityName.DECK_COMMENT;
 import static com.softserve.academy.spaced.repetition.domain.enums.Operations.*;
 import static com.softserve.academy.spaced.repetition.domain.enums.AuthorityName.*;
@@ -20,6 +21,7 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
 
     //Collection for permission matrix
     //In future will be replaced by using DB
+    //TODO create entity in DB for Permission matrix
     private static final Map<String, Set<Permission>> permissionMatrix = new HashMap<>();
 
     static {
@@ -32,9 +34,11 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
 
         //Collection of permissions for role USER
         userPermission.add(new Permission(DECK_COMMENT, createMask(CREATE, READ, UPDATE, DELETE)));
+        userPermission.add(new Permission(COURSE, createMask(CREATE, READ, UPDATE, DELETE)));
 
         //Collection of permissions for role ADMIN
         adminPermission.add(new Permission(DECK_COMMENT, createMask(CREATE, READ, UPDATE, DELETE)));
+        userPermission.add(new Permission(COURSE, createMask(CREATE, READ, UPDATE, DELETE)));
 
         permissionMatrix.put(ROLE_ANONYMOUS.name(), anonymousPermission);
         permissionMatrix.put(ROLE_USER.name(), userPermission);
