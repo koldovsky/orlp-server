@@ -59,8 +59,8 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public Course getCourseById(Long category_id, Long course_id) {
-        return courseRepository.getCourseByCategoryIdAndId(category_id, course_id);
+    public Course getCourseById(Long course_id) {
+        return courseRepository.getCourseById(course_id);
     }
 
     @Override

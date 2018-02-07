@@ -18,6 +18,8 @@ public interface CourseRepository extends JpaRepository<Course, Long> {
 
     Course getCourseByCategoryIdAndId(Long categoryId, Long courseId);
 
+    Course getCourseById(Long courseId);
+
     List<Course> findTop4ByOrderByRating();
 
     @Query(value = "SELECT c FROM Course c WHERE c.category.id = :category_id AND c.id = :course_id")
