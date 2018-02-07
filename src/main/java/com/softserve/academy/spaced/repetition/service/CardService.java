@@ -20,7 +20,6 @@ public interface CardService {
      *
      * @param deckId must not be {@literal null}.
      * @return all cards with the given deck's id (by default 10)
-     * @throws NotAuthorisedUserException if user is not authorised
      */
     List<Card> getLearningCards(Long deckId);
 

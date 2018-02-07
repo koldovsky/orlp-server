@@ -19,7 +19,7 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
 @RestController
-@RequestMapping("/api/decks/{deckId}/cards/{cardId}/rate")
+@RequestMapping("api/decks/{deckId}/cards/{cardId}/rate")
 public class CardRatingController {
 
     @Autowired

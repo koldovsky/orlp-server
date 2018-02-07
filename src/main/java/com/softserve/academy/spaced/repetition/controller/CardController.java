@@ -23,7 +23,7 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
 @RestController
-@RequestMapping("/api/decks/{deckId}")
+@RequestMapping("api/decks/{deckId}/")
 public class CardController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CardController.class);
@@ -32,28 +32,28 @@ public class CardController {
     private CardService cardService;
 
     @ResponseStatus(HttpStatus.OK)
-    @GetMapping(value = "/cards")
+    @GetMapping(value = "cards")
     public List<CardPublicDTO> getCardsByDeck(@PathVariable Long deckId) {
         return DTOBuilder.buildDtoListForCollection(cardService.findAllByDeckId(deckId), CardPublicDTO.class,
                 linkTo(methodOn(CardController.class).getCardsByDeck(deckId)).withSelfRel());
     }
 
     @ResponseStatus(HttpStatus.OK)
-    @GetMapping("/learn")
+    @GetMapping("learn")
     public List<CardPublicDTO> getLearningCards(@PathVariable Long deckId) {
         return buildDtoListForCollection(cardService.getLearningCards(deckId),
                 CardPublicDTO.class, linkTo(methodOn(CardController.class).getCardsByDeck(deckId)).withSelfRel());
     }
 
     @ResponseStatus(HttpStatus.OK)
-    @GetMapping("/learn/additional")
+    @GetMapping("learn/additional")
     public List<CardPublicDTO> getAdditionalLearningCards(@PathVariable Long deckId)
             throws NotAuthorisedUserException {
         return buildDtoListForCollection(cardService.getAdditionalLearningCards(deckId), CardPublicDTO.class,
                 linkTo(methodOn(CardController.class).getCardsByDeck(deckId)).withSelfRel());
     }
 
-    @GetMapping("/not-postponed")
+    @GetMapping("not-postponed")
     @ResponseStatus(HttpStatus.OK)
     public Boolean areThereNotPostponedCardsAvailable(@PathVariable Long deckId)
             throws NotAuthorisedUserException {
@@ -61,7 +61,7 @@ public class CardController {
     }
 
     @Auditable(action = AuditingAction.CREATE_CARD_VIA_CATEGORY_AND_DECK)
-    @PostMapping(value = "/cards")
+    @PostMapping(value = "cards")
     @ResponseStatus(HttpStatus.CREATED)
     public CardPublicDTO addCard(@PathVariable Long deckId, @Validated @RequestBody CardDTO card) {
         LOGGER.debug("Add card to deckId: {}", deckId);
@@ -72,7 +72,7 @@ public class CardController {
     }
 
     @Auditable(action = AuditingAction.EDIT_CARD_VIA_CATEGORY_AND_DECK)
-    @PutMapping(value = "/cards/{cardId}")
+    @PutMapping(value = "cards/{cardId}")
     @ResponseStatus(HttpStatus.OK)
     public CardPublicDTO updateCard(@PathVariable Long deckId,
                                     @PathVariable Long cardId,
@@ -86,12 +86,12 @@ public class CardController {
 
     @Auditable(action = AuditingAction.DELETE_CARD)
     @ResponseStatus(HttpStatus.OK)
-    @DeleteMapping(value = "/cards/{cardId}")
+    @DeleteMapping(value = "cards/{cardId}")
     public void deleteCard(@PathVariable Long cardId) {
         cardService.deleteCard(cardId);
     }
 
-    @GetMapping(value = "/cards/{cardId}")
+    @GetMapping(value = "cards/{cardId}")
     @ResponseStatus(HttpStatus.OK)
     public CardPublicDTO getCardById(@PathVariable Long deckId, @PathVariable Long cardId) {
         return buildDtoForEntity(cardService.getCard(cardId), CardPublicDTO.class,
