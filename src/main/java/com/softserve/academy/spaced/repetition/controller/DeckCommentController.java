@@ -57,18 +57,6 @@ public class DeckCommentController {
     }
 
     //TODO preauthorize
-    @Auditable(action = AuditingAction.EDIT_COMMENT_FOR_DECK)
-    @PutMapping(value = "/{commentId}")
-    @ResponseStatus(HttpStatus.OK)
-    public CommentDTO updateComment(@RequestBody String commentText, @PathVariable Long deckId,
-                                    @PathVariable Long commentId) {
-        LOGGER.debug("Updating comment with id: {}", commentId);
-        DeckComment comment = commentService.updateCommentById(commentId, commentText);
-        return buildDtoForEntity(comment, CommentDTO.class, linkTo(methodOn(DeckCommentController.class)
-                .getCommentById(deckId, commentId)).withSelfRel());
-    }
-
-    //TODO preauthorize
     @Auditable(action = AuditingAction.DELETE_COMMENT_FOR_DECK)
     @DeleteMapping(value = "/{commentId}")
     public ResponseEntity deleteComment(@PathVariable Long commentId, @PathVariable Long deckId) {
