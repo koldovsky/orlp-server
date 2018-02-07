@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
@@ -31,9 +30,6 @@ public class CourseController {
 
     @Autowired
     private CourseService courseService;
-
-    @Autowired
-    private UserService userService;
 
     @Auditable(action = AuditingAction.VIEW_COURSES_VIA_CATEGORY)
     @GetMapping(value = "/api/categories/{category_id}/courses")
@@ -105,7 +101,7 @@ public class CourseController {
     }
 
     @Auditable(action = AuditingAction.CREATE_COURSE)
-    @PutMapping(value = "/api/cabinet/{user_id}/courses/{course_id}")
+    @PutMapping(value = "/api/cabinet/courses/{course_id}")
     public ResponseEntity updateCourse(@PathVariable Long course_id, @Validated(Request.class) @RequestBody Course course) {
         courseService.updateCourse(course_id, course);
         return new ResponseEntity(HttpStatus.OK);

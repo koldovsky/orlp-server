@@ -223,7 +223,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @PreAuthorize("isAuthenticated()")
     public void getUserStatus() throws UserStatusException {
         JwtUser jwtUser = (JwtUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User user = userRepository.findUserByAccountEmail(jwtUser.getUsername());

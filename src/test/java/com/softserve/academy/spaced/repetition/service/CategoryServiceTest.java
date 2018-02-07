@@ -85,15 +85,6 @@ public class CategoryServiceTest {
     }
 
     @Test
-    public void testUpdateCategory() {
-//        when(categoryRepository.save(category)).thenReturn(category);
-//
-//        Category result = categoryService.updateCategory(category, CATEGORY_ID);
-//        verify(categoryRepository).save(category);
-//        assertEquals(category, result);
-    }
-
-    @Test
     public void testGetSortedCategories() {
         final int PAGE_NUMBER = 1;
         final boolean PAGE_ASCENDING_ORDER = true;

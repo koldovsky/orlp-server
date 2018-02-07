@@ -269,14 +269,14 @@ public class CourseServiceTest {
         assertNull(result);
     }
 
-//    @Test
-//    public void testGetPageWithCoursesByCategory() {
-//        when(courseRepository.findAllByCategoryEquals(any(Category.class), any(PageRequest.class)))
-//                .thenReturn(null);
-//
-//        Page<Course> result = courseService.getPageWithCoursesByCategory(CATEGORY_ID, PAGE_NUMBER
-//                , PAGE_SORT_BY, PAGE_ASCENDING_ORDER);
-//        verify(courseRepository).findAllByCategoryEquals(any(Category.class), any(PageRequest.class));
-//        assertNull(result);
-//    }
+    @Test
+    public void testGetPageWithCoursesByCategory() {
+        when(courseRepository.findAllByCategoryEqualsAndPublishedTrue(any(Category.class), any(PageRequest.class)))
+                .thenReturn(null);
+
+        Page<Course> result = courseService.getPageWithCoursesByCategory(CATEGORY_ID, PAGE_NUMBER
+                , PAGE_SORT_BY, PAGE_ASCENDING_ORDER);
+        verify(courseRepository).findAllByCategoryEqualsAndPublishedTrue(any(Category.class), any(PageRequest.class));
+        assertNull(result);
+    }
 }
