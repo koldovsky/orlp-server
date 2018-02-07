@@ -7,8 +7,4 @@ public enum EntityName{
 
    DECK_COMMENT,
    COURSE;
-
-   public static String nam(EntityName o) {
-      return o.name();
-   }
 }
