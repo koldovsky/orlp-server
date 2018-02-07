@@ -27,7 +27,7 @@ public class CourseRatingServiceImpl implements CourseRatingService {
 
     @Override
     @Transactional
-    public Course addCourseRating(int rating, Long courseId) throws NotAuthorisedUserException, UserStatusException {
+    public CourseRating addCourseRating(int rating, Long courseId) throws NotAuthorisedUserException, UserStatusException {
         User user = userService.getAuthorizedUser();
         userService.isUserStatusActive(user);
         String email = user.getAccount().getEmail();
@@ -42,8 +42,7 @@ public class CourseRatingServiceImpl implements CourseRatingService {
         courseRatingRepository.save(courseRating);
         double courseAverageRating = courseRatingRepository.findAverageRatingByCourseId(courseId);
         course.setRating(courseAverageRating);
-        return course;
-
+        return courseRating;
     }
 
     @Override

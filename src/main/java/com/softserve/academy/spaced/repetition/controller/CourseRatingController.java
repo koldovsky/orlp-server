@@ -44,7 +44,7 @@ public class CourseRatingController {
     public CourseRatingPublicDTO addCourseRating(@Validated(Request.class) @RequestBody CourseRating courseRating,
                                                  @PathVariable Long courseId)
             throws NotAuthorisedUserException, UserStatusException {
-        courseRatingService.addCourseRating(courseRating.getRating(), courseId);
+        courseRating = courseRatingService.addCourseRating(courseRating.getRating(), courseId);
         return buildDtoForEntity(courseRating, CourseRatingPublicDTO.class,
                 linkTo(methodOn(CourseRatingController.class)
                         .getCourseRatingById(courseRating.getId())).withSelfRel());

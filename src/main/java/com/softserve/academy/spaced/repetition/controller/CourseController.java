@@ -85,7 +85,6 @@ public class CourseController {
     }
 
     @GetMapping(value = "/api/courses/{course_id}")
-    @PreAuthorize(value = "@accessToUrlService.hasAccessToCourse(#category_id, #course_id)")
     public ResponseEntity<CourseLinkDTO> getCourseById(@PathVariable Long course_id) {
         Course course = courseService.getCourseById(course_id);
         Link selfLink = linkTo(methodOn(CourseController.class).getCourseById(course_id)).withSelfRel();

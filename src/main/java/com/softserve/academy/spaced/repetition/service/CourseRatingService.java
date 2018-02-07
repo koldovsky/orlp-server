@@ -18,7 +18,7 @@ public interface CourseRatingService {
      * @throws NotAuthorisedUserException if user is not authorised
      * @throws UserStatusException        if users status is not active
      */
-    Course addCourseRating(int rating, Long courseId) throws NotAuthorisedUserException, UserStatusException;
+    CourseRating addCourseRating(int rating, Long courseId) throws NotAuthorisedUserException, UserStatusException;
 
     /**
      * Gets rating of course with the given identifier.
