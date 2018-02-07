@@ -121,7 +121,7 @@ public class CourseController {
     }
 
     @Auditable(action = AuditingAction.ADD_COURSE)
-    @PutMapping("/api/cabinet/courses/{course_id}")
+    @PostMapping("/api/cabinet/courses/{course_id}")
     public ResponseEntity addCourse(@PathVariable Long course_id) throws NotAuthorisedUserException {
         courseService.updateListOfCoursesOfTheAuthorizedUser(course_id);
         return new ResponseEntity(HttpStatus.OK);

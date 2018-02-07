@@ -63,7 +63,6 @@ public class CourseControllerTest {
                         "  \"image\": \"http://localhost/api/service/image/14\"," +
                         "  \"published\": true," +
                         "  \"ownerId\": 1," +
-                        "  \"categoryId\": 1," +
                         "  \"courseId\": 1," +
                         "  \"links\":[{\"rel\":\"self\",\"href\":\"http://localhost/api/courses/1\"},{\"rel\":\"decks\",\"href\":\"http://localhost/api/category/1/courses/1/decks\"}]" +
                         "}"));
@@ -130,10 +129,10 @@ public class CourseControllerTest {
     }
 
     @Test
-    public void getCoursesByPageAndCategory() throws Exception {
+    public void getCoursesByPageAndCategoryId() throws Exception {
         final int categoryId = 2;
         when(courseService.getPageWithCoursesByCategory(categoryId, 1, "name", true)).thenReturn(createCoursesBySelectedCategory());
-        mockMvc.perform(get("/api/category/" + categoryId + "/courses?p=" + NUMBER_PAGE + "&sortBy=" + SORT_BY + "&asc=" + true)
+        mockMvc.perform(get("/api/categories/" + categoryId + "/courses?p=" + NUMBER_PAGE + "&sortBy=" + SORT_BY + "&asc=" + true)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
