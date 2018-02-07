@@ -1,5 +1,6 @@
 message:
   exception:
+    userStatus: "Account with this email is - {0}!"
     fileNotFound: "Such file not found!"
     cardFileNotReadable: "Can't read data from uploaded file!"
     learningRegimeNotValid: "Value of Learning Regime is not valid - {0}!"

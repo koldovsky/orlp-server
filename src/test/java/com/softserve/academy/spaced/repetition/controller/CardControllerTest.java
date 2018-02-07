@@ -1,6 +1,7 @@
 package com.softserve.academy.spaced.repetition.controller;
 
 
+import com.softserve.academy.spaced.repetition.controller.handler.ExceptionHandlerController;
 import com.softserve.academy.spaced.repetition.domain.*;
 import com.softserve.academy.spaced.repetition.service.CardService;
 import com.softserve.academy.spaced.repetition.service.UserService;

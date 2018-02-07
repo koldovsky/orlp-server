@@ -1,8 +1,9 @@
 package com.softserve.academy.spaced.repetition.controller;
 
-import com.softserve.academy.spaced.repetition.utils.audit.AuditingAction;
+import com.softserve.academy.spaced.repetition.controller.handler.ExceptionHandlerController;
 import com.softserve.academy.spaced.repetition.domain.Audit;
 import com.softserve.academy.spaced.repetition.service.AuditService;
+import com.softserve.academy.spaced.repetition.utils.audit.AuditingAction;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -11,6 +12,7 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
@@ -20,6 +22,12 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+
 
 @RunWith(MockitoJUnitRunner.class)
 public class AuditControllerTest {
@@ -40,15 +48,15 @@ public class AuditControllerTest {
 
     @Test
     public void getAuditByPage() throws Exception {
-//        int numberPage =1 ;
-//        String sortBy = "id";
-//        boolean ascending = true;
-//        when(auditService.getAuditByPage(numberPage,sortBy,ascending)).thenReturn(createAudit());
-//        mockMvc.perform(get("/api/admin/audit?p=1&sortBy=id&asc=true")
-//                .accept(MediaType.APPLICATION_JSON)
-//                .contentType(MediaType.APPLICATION_JSON))
-//                .andExpect(status().isOk())
-//                .andExpect(content().json("{\"content\":[{\"time\":\"Sun Apr 09 18:49:17 EET 19\",\"accountEmail\":\"admin@gmail.com\",\"action\":\"VIEW_TOP_CATEGORIES\",\"ipAddress\":\"0:0:0:0:0:0:0:1\",\"role\":\"ROLE_ADMIN\",\"links\":[{\"rel\":\"self\",\"href\":\"http://localhost/api/admin/audit?pageNumber=1&sortBy=id&ascending=true\"}]},{\"time\":\"Sun Apr 09 18:49:17 EET 19\",\"accountEmail\":\"admin@gmail.com\",\"action\":\"VIEW_TOP_COURSES\",\"ipAddress\":\"0:0:0:0:0:0:0:1\",\"role\":\"ROLE_ADMIN\",\"links\":[{\"rel\":\"self\",\"href\":\"http://localhost/api/admin/audit?pageNumber=1&sortBy=id&ascending=true\"}]},{\"time\":\"Sun Apr 09 18:50:01 EET 19\",\"accountEmail\":\"admin@gmail.com\",\"action\":\"VIEW_ALL_CATEGORIES\",\"ipAddress\":\"0:0:0:0:0:0:0:1\",\"role\":\"ROLE_ADMIN\",\"links\":[{\"rel\":\"self\",\"href\":\"http://localhost/api/admin/audit?pageNumber=1&sortBy=id&ascending=true\"}]},{\"time\":\"Sun Apr 09 18:50:02 EET 19\",\"accountEmail\":\"admin@gmail.com\",\"action\":\"VIEW_TOP_CATEGORIES\",\"ipAddress\":\"0:0:0:0:0:0:0:1\",\"role\":\"ROLE_ADMIN\",\"links\":[{\"rel\":\"self\",\"href\":\"http://localhost/api/admin/audit?pageNumber=1&sortBy=id&ascending=true\"}]},{\"time\":\"Sun Apr 09 18:50:04 EET 19\",\"accountEmail\":\"admin@gmail.com\",\"action\":\"VIEW_TOP_COURSES\",\"ipAddress\":\"0:0:0:0:0:0:0:1\",\"role\":\"ROLE_ADMIN\",\"links\":[{\"rel\":\"self\",\"href\":\"http://localhost/api/admin/audit?pageNumber=1&sortBy=id&ascending=true\"}]},{\"time\":\"Sun Apr 09 18:50:24 EET 19\",\"accountEmail\":\"admin@gmail.com\",\"action\":\"VIEW_ALL_CATEGORIES\",\"ipAddress\":\"0:0:0:0:0:0:0:1\",\"role\":\"ROLE_ADMIN\",\"links\":[{\"rel\":\"self\",\"href\":\"http://localhost/api/admin/audit?pageNumber=1&sortBy=id&ascending=true\"}]},{\"time\":\"Sun Apr 09 18:50:25 EET 19\",\"accountEmail\":\"admin@gmail.com\",\"action\":\"VIEW_DECKS_ADMIN\",\"ipAddress\":\"0:0:0:0:0:0:0:1\",\"role\":\"ROLE_ADMIN\",\"links\":[{\"rel\":\"self\",\"href\":\"http://localhost/api/admin/audit?pageNumber=1&sortBy=id&ascending=true\"}]},{\"time\":\"Sun Apr 09 18:50:35 EET 19\",\"accountEmail\":\"admin@gmail.com\",\"action\":\"VIEW_ALL_USERS_ADMIN\",\"ipAddress\":\"0:0:0:0:0:0:0:1\",\"role\":\"ROLE_ADMIN\",\"links\":[{\"rel\":\"self\",\"href\":\"http://localhost/api/admin/audit?pageNumber=1&sortBy=id&ascending=true\"}]},{\"time\":\"Sun Apr 09 18:51:14 EET 19\",\"accountEmail\":\"admin@gmail.com\",\"action\":\"VIEW_ALL_USERS_ADMIN\",\"ipAddress\":\"0:0:0:0:0:0:0:1\",\"role\":\"ROLE_ADMIN\",\"links\":[{\"rel\":\"self\",\"href\":\"http://localhost/api/admin/audit?pageNumber=1&sortBy=id&ascending=true\"}]},{\"time\":\"Sun Apr 09 18:51:18 EET 19\",\"accountEmail\":\"admin@gmail.com\",\"action\":\"VIEW_ALL_USERS_ADMIN\",\"ipAddress\":\"0:0:0:0:0:0:0:1\",\"role\":\"ROLE_ADMIN\",\"links\":[{\"rel\":\"self\",\"href\":\"http://localhost/api/admin/audit?pageNumber=1&sortBy=id&ascending=true\"}]}],\"totalPages\":1,\"totalElements\":10,\"last\":true,\"size\":0,\"number\":0,\"numberOfElements\":10,\"sort\":null,\"first\":true}"));
+        int numberPage = 1;
+        String sortBy = "id";
+        boolean ascending = true;
+        when(auditService.getAuditByPage(numberPage, sortBy, ascending)).thenReturn(createAudit());
+        mockMvc.perform(get("/api/admin/audit?p=1&sortBy=id&asc=true")
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().json("{\"content\":[{\"time\":\"Sun Apr 09 18:49:17 EET 19\",\"accountEmail\":\"admin@gmail.com\",\"action\":\"VIEW_TOP_CATEGORIES\",\"ipAddress\":\"0:0:0:0:0:0:0:1\",\"role\":\"ROLE_ADMIN\",\"links\":[{\"rel\":\"self\",\"href\":\"http://localhost/api/admin/audit?pageNumber=1&sortBy=id&ascending=true\"}]},{\"time\":\"Sun Apr 09 18:49:17 EET 19\",\"accountEmail\":\"admin@gmail.com\",\"action\":\"VIEW_TOP_COURSES\",\"ipAddress\":\"0:0:0:0:0:0:0:1\",\"role\":\"ROLE_ADMIN\",\"links\":[{\"rel\":\"self\",\"href\":\"http://localhost/api/admin/audit?pageNumber=1&sortBy=id&ascending=true\"}]},{\"time\":\"Sun Apr 09 18:50:01 EET 19\",\"accountEmail\":\"admin@gmail.com\",\"action\":\"VIEW_ALL_CATEGORIES\",\"ipAddress\":\"0:0:0:0:0:0:0:1\",\"role\":\"ROLE_ADMIN\",\"links\":[{\"rel\":\"self\",\"href\":\"http://localhost/api/admin/audit?pageNumber=1&sortBy=id&ascending=true\"}]},{\"time\":\"Sun Apr 09 18:50:02 EET 19\",\"accountEmail\":\"admin@gmail.com\",\"action\":\"VIEW_TOP_CATEGORIES\",\"ipAddress\":\"0:0:0:0:0:0:0:1\",\"role\":\"ROLE_ADMIN\",\"links\":[{\"rel\":\"self\",\"href\":\"http://localhost/api/admin/audit?pageNumber=1&sortBy=id&ascending=true\"}]},{\"time\":\"Sun Apr 09 18:50:04 EET 19\",\"accountEmail\":\"admin@gmail.com\",\"action\":\"VIEW_TOP_COURSES\",\"ipAddress\":\"0:0:0:0:0:0:0:1\",\"role\":\"ROLE_ADMIN\",\"links\":[{\"rel\":\"self\",\"href\":\"http://localhost/api/admin/audit?pageNumber=1&sortBy=id&ascending=true\"}]},{\"time\":\"Sun Apr 09 18:50:24 EET 19\",\"accountEmail\":\"admin@gmail.com\",\"action\":\"VIEW_ALL_CATEGORIES\",\"ipAddress\":\"0:0:0:0:0:0:0:1\",\"role\":\"ROLE_ADMIN\",\"links\":[{\"rel\":\"self\",\"href\":\"http://localhost/api/admin/audit?pageNumber=1&sortBy=id&ascending=true\"}]},{\"time\":\"Sun Apr 09 18:50:25 EET 19\",\"accountEmail\":\"admin@gmail.com\",\"action\":\"VIEW_DECKS_ADMIN\",\"ipAddress\":\"0:0:0:0:0:0:0:1\",\"role\":\"ROLE_ADMIN\",\"links\":[{\"rel\":\"self\",\"href\":\"http://localhost/api/admin/audit?pageNumber=1&sortBy=id&ascending=true\"}]},{\"time\":\"Sun Apr 09 18:50:35 EET 19\",\"accountEmail\":\"admin@gmail.com\",\"action\":\"VIEW_ALL_USERS_ADMIN\",\"ipAddress\":\"0:0:0:0:0:0:0:1\",\"role\":\"ROLE_ADMIN\",\"links\":[{\"rel\":\"self\",\"href\":\"http://localhost/api/admin/audit?pageNumber=1&sortBy=id&ascending=true\"}]},{\"time\":\"Sun Apr 09 18:51:14 EET 19\",\"accountEmail\":\"admin@gmail.com\",\"action\":\"VIEW_ALL_USERS_ADMIN\",\"ipAddress\":\"0:0:0:0:0:0:0:1\",\"role\":\"ROLE_ADMIN\",\"links\":[{\"rel\":\"self\",\"href\":\"http://localhost/api/admin/audit?pageNumber=1&sortBy=id&ascending=true\"}]},{\"time\":\"Sun Apr 09 18:51:18 EET 19\",\"accountEmail\":\"admin@gmail.com\",\"action\":\"VIEW_ALL_USERS_ADMIN\",\"ipAddress\":\"0:0:0:0:0:0:0:1\",\"role\":\"ROLE_ADMIN\",\"links\":[{\"rel\":\"self\",\"href\":\"http://localhost/api/admin/audit?pageNumber=1&sortBy=id&ascending=true\"}]}],\"totalPages\":1,\"totalElements\":10,\"last\":true,\"size\":0,\"number\":0,\"numberOfElements\":10,\"sort\":null,\"first\":true}"));
     }
 
     private Page<Audit> createAudit() throws ParseException {

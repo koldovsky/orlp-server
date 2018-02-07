@@ -9,6 +9,11 @@ public class UserStatusException  extends  ApplicationException{
        this.accountStatus = accountStatus;
     }
 
+    @Override
+    public synchronized Throwable fillInStackTrace() {
+        return this;
+    }
+
     public AccountStatus getAccountStatus() {
         return accountStatus;
     }
