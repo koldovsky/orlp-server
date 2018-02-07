@@ -112,10 +112,10 @@ public class CourseServiceTest {
 
     @Test
     public void testGetCourseById() {
-        when(courseRepository.getCourseByCategoryIdAndId(CATEGORY_ID, COURSE_ID)).thenReturn(course);
+        when(courseRepository.getCourseById(COURSE_ID)).thenReturn(course);
 
-        Course result = courseService.getCourseById(CATEGORY_ID, COURSE_ID);
-        verify(courseRepository).getCourseByCategoryIdAndId(CATEGORY_ID, COURSE_ID);
+        Course result = courseService.getCourseById(COURSE_ID);
+        verify(courseRepository).getCourseById(COURSE_ID);
         assertEquals(course, result);
     }
 

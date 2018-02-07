@@ -39,11 +39,10 @@ public interface CourseService {
     /**
      * Find user in category with the given identifiers of category and course.
      *
-     * @param categoryId must not be {@literal null}.
      * @param courseId   must not be {@literal null}.
      * @return course with given identifiers
      */
-    Course getCourseById(Long categoryId, Long courseId);
+    Course getCourseById(Long courseId);
 
     /**
      * Adds course to category with the given identifier
