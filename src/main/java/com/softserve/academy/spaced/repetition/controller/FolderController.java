@@ -33,11 +33,11 @@ public class FolderController {
     private DeckService deckService;
 
     @Auditable(action = AuditingAction.ADD_DECK_TO_FOLDER)
-    @PutMapping("/api/user/folder/add/deck")
+    @PutMapping("/api/user/folder/add/deck/{deckId}")
     public ResponseEntity<DeckPublicDTO> addDeckToFolder(@PathVariable Long deckId) throws NotAuthorisedUserException {
         Deck deck = folderService.addDeck(deckId);
         Link selfLink = linkTo(methodOn(DeckController.class)
-                .getDeckById(deckId)).withSelfRel();
+                .getDeckByCategoryId(deck.getCategory().getId(), deckId)).withSelfRel();
         DeckPublicDTO deckPublicDTO = DTOBuilder.buildDtoForEntity(deck, DeckPublicDTO.class, selfLink);
 
         return new ResponseEntity<>(deckPublicDTO, HttpStatus.OK);

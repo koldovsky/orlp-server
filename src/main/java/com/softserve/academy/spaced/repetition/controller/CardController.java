@@ -175,6 +175,17 @@ public class CardController {
         cardService.deleteCard(cardId);
     }
 
+    @GetMapping("/api/category/{categoryId}/decks/{deckId}/learn/cards")
+    public ResponseEntity<List<CardPublicDTO>> getLearningCards(@PathVariable long categoryId, @PathVariable long deckId)
+            throws NotAuthorisedUserException {
+        List<Card> learningCards = cardService.getCardsQueue(deckId);
+        Link collectionLink = linkTo(methodOn(DeckController.class)
+                .getCardsByCategoryAndDeck(categoryId, deckId)).withSelfRel();
+        List<CardPublicDTO> cards = DTOBuilder
+                .buildDtoListForCollection(learningCards, CardPublicDTO.class, collectionLink);
+        return new ResponseEntity<>(cards, HttpStatus.OK);
+    }
+
     @GetMapping(value = "/api/card/{cardId}")
     @PreAuthorize(value = "@accessToUrlService.hasAccessToCard(#cardId)")
     public ResponseEntity<CardPublicDTO> getCardById(@PathVariable Long cardId) {
