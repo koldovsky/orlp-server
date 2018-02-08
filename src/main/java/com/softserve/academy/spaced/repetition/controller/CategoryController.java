@@ -94,7 +94,6 @@ public class CategoryController {
     @Auditable(action = AuditingAction.DELETE_CATEGORY)
     @DeleteMapping(value = "/api/categories/{id}")
     public ResponseEntity deleteCategory(@PathVariable Long id) {
-        System.out.println(id);
         categoryService.deleteCategory(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

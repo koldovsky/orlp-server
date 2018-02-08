@@ -2,7 +2,9 @@ package com.softserve.academy.spaced.repetition.controller;
 
 import com.softserve.academy.spaced.repetition.controller.dto.annotations.Request;
 import com.softserve.academy.spaced.repetition.controller.dto.impl.PasswordDTO;
+import com.softserve.academy.spaced.repetition.domain.Course;
 import com.softserve.academy.spaced.repetition.domain.Person;
+import com.softserve.academy.spaced.repetition.service.CourseService;
 import com.softserve.academy.spaced.repetition.service.UserService;
 import com.softserve.academy.spaced.repetition.utils.audit.Auditable;
 import com.softserve.academy.spaced.repetition.utils.audit.AuditingAction;
@@ -21,6 +23,9 @@ public class UserProfileController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    CourseService courseService;
 
     @Auditable(action = AuditingAction.EDIT_PERSONAL_DATA)
     @PutMapping(value = "/api/private/user/data")
@@ -60,5 +65,13 @@ public class UserProfileController {
     public ResponseEntity deleteProfile() throws NotAuthorisedUserException {
         userService.deleteAccount();
         return new ResponseEntity(HttpStatus.OK);
+    }
+
+    @Auditable(action = AuditingAction.CREATE_PRIVATE_COURSE)
+    @PostMapping("/api/category/{category_id}/private/user/create/course")
+    public ResponseEntity<Course> createPrivateCourse(@Validated(Request.class) @RequestBody Course privateCourse,
+                                                      @PathVariable Long category_id) throws NotAuthorisedUserException {
+        courseService.createPrivateCourse(privateCourse, category_id);
+        return new ResponseEntity<>(privateCourse, HttpStatus.OK);
     }
 }
