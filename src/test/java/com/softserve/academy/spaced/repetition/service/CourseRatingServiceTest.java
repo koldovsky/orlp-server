@@ -59,7 +59,6 @@ public class CourseRatingServiceTest {
         when(courseRepository.findOne(COURSE_ID)).thenReturn(course);
         when(courseRatingRepository.save(courseRating)).thenReturn(courseRating);
         when(courseRatingRepository.findAverageRatingByCourseId(COURSE_ID)).thenReturn(1.0);
-        when(courseRepository.save(course)).thenReturn(course);
 
         courseRatingService.addCourseRating(RATING_OF_COURSE_RATING, COURSE_RATING_ID);
         verify(userService).getAuthorizedUser();
@@ -68,7 +67,6 @@ public class CourseRatingServiceTest {
         verify(courseRepository).findOne(COURSE_RATING_ID);
         verify(courseRatingRepository).save(courseRating);
         verify(courseRatingRepository).findAverageRatingByCourseId(COURSE_RATING_ID);
-        verify(courseRepository).save(course);
     }
 
     @Test(expected = NotAuthorisedUserException.class)

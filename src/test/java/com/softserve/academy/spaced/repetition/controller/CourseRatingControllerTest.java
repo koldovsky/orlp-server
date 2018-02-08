@@ -54,11 +54,11 @@ public class CourseRatingControllerTest {
     @Test
     public void getCourseRatingById() throws Exception {
         when(courseRatingService.getCourseRatingById(eq(77L))).thenReturn(createCourseRating());
-        mockMvc.perform(get("/api/course/{courseId}/rating/{id}", 5L, 77L)
+        mockMvc.perform(get("api/courses/{courseId}/ratings/{id}",5L, 77L)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(content().json("{\"rating\":3,\"accountEmail\":\"email@email\",\"courseId\":5,\"links\":[{\"rel\":\"self\",\"href\":\"http://localhost/api/course/5/rating/77\"}]}"));
+                .andExpect(content().json("{\"rating\":3,\"accountEmail\":\"email@email\",\"courseId\":5,\"links\":[{\"rel\":\"self\",\"href\":\"http://localhost/api/courses/5/ratings/77\"}]}"));
     }
 
     private CourseRating createCourseRating() {
@@ -95,14 +95,14 @@ public class CourseRatingControllerTest {
 
     @Test
     public void testNegativeAddCourseRating() throws Exception {
-        mockMvc.perform(post("/api/private/course/{courseId}", 5L)
-                .content("{\"rating\":0}")
+        mockMvc.perform(post("/api/courses/{courseId}", 5L)
+                .content("{\"ratings\":0}")
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
 
-        mockMvc.perform(post("/api/private/course/{courseId}", 5L)
-                .content("{\"rating\":6}")
+        mockMvc.perform(post("/api/courses/{courseId}", 5L)
+                .content("{\"ratings\":6}")
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());

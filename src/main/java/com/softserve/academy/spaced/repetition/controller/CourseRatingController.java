@@ -29,9 +29,6 @@ public class CourseRatingController {
     @GetMapping("/{id}")
     public ResponseEntity<CourseRatingPublicDTO> getCourseRatingById(@PathVariable Long id) {
         CourseRating courseRating = courseRatingService.getCourseRatingById(id);
-        if (courseRating == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
         Link selfLink = linkTo(methodOn(CourseRatingController.class)
                 .getCourseRatingById(courseRating.getId())).withSelfRel();
         CourseRatingPublicDTO courseRatingDTO =
