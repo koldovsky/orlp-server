@@ -37,13 +37,24 @@ public class Card implements EntityInterface {
     @OneToMany(mappedBy = "card", cascade = CascadeType.ALL)
     private List<CardRating> cardRatings;
 
+    @OneToMany(mappedBy = "card", cascade = CascadeType.ALL)
+    private List<CardImage> cardImages;
+
     public Card() {
     }
 
-    public Card(String question, String answer, String title) {
+    public Card(String title, String question, String answer) {
         this.title = title;
         this.question = question;
         this.answer = answer;
+    }
+
+    public Card(String title, String question, String answer, Deck deck, List<CardImage> cardImages) {
+        this.title = title;
+        this.question = question;
+        this.answer = answer;
+        this.deck = deck;
+        this.cardImages = cardImages;
     }
 
     public Card(Long id, String question, String answer, String title) {
@@ -107,6 +118,14 @@ public class Card implements EntityInterface {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public List<CardImage> getCardImages() {
+        return cardImages;
+    }
+
+    public void setCardImages(List<CardImage> cardImages) {
+        this.cardImages = cardImages;
     }
 
     @Override

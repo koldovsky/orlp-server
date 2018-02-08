@@ -387,13 +387,13 @@ public class UserServiceTest {
 
     @Test
     public void testDeleteAccount() throws NotAuthorisedUserException {
-        final boolean ACCOUNT_DEACTIVATED = true;
+        final AccountStatus ACCOUNT_STATUS = AccountStatus.DELETED;
 
         userService.deleteAccount();
         verify(securityContext).getAuthentication();
         verify(authentication).getPrincipal();
         verify(userRepository).save(user);
-        assertEquals(user.getAccount().isDeactivated(), ACCOUNT_DEACTIVATED);
+        assertEquals(user.getAccount().getStatus(), ACCOUNT_STATUS);
     }
 
     @Test(expected = NotAuthorisedUserException.class)
@@ -403,24 +403,6 @@ public class UserServiceTest {
         userService.deleteAccount();
         verify(securityContext).getAuthentication();
         verify(authentication).getPrincipal();
-    }
-
-    @Test
-    public void testGetUserStatus() throws UserStatusException {
-        userService.getUserStatus();
-        verify(securityContext).getAuthentication();
-        verify(authentication).getPrincipal();
-        verify(userRepository).findUserByAccountEmail(ACCOUNT_EMAIL);
-    }
-
-    @Test(expected = UserStatusException.class)
-    public void testGetUserStatusIfStatusNotActive() throws UserStatusException {
-        account.setStatus(ACCOUNT_STATUS_BLOCKED);
-
-        userService.getUserStatus();
-        verify(securityContext).getAuthentication();
-        verify(authentication).getPrincipal();
-        verify(userRepository).findUserByAccountEmail(ACCOUNT_EMAIL);
     }
 
     @Test
