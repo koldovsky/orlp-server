@@ -1,12 +1,21 @@
 package com.softserve.academy.spaced.repetition.controller.dto.simpleDTO;
 
+import com.softserve.academy.spaced.repetition.utils.validators.ValidationConstants;
+import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.NotBlank;
+
+import javax.validation.constraints.Size;
 import java.util.List;
 
 public class CardDTO {
-
+    @Length(max = ValidationConstants.MAX_CARD_TITLE_SIZE)
+    @NotBlank
     private String title;
+
     private String question;
+    @NotBlank
     private String answer;
+    @Size(max = ValidationConstants.MAX_CARD_IMAGE_LIST_SIZE)
     private List<String> images;
 
     public CardDTO() {

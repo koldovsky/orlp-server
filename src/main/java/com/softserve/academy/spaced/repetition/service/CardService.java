@@ -20,9 +20,8 @@ public interface CardService {
      *
      * @param deckId must not be {@literal null}.
      * @return all cards with the given deck's id (by default 10)
-     * @throws NotAuthorisedUserException if user is not authorised
      */
-    List<Card> getLearningCards(Long deckId) throws NotAuthorisedUserException;
+    List<Card> getLearningCards(Long deckId);
 
     /**
      * Retrieves an card with the given identifier.
@@ -46,7 +45,7 @@ public interface CardService {
      * @param cardId must not be {@literal null}.
      * @param card   updated card, must not be {null}.
      */
-    void updateCard(Card card, Long cardId, List<String> imageList);
+    Card updateCard(Card card, Long cardId, List<String> imageList);
 
     /**
      * Returns cards for studying from deck with the given identifier.
@@ -111,4 +110,5 @@ public interface CardService {
      */
     void downloadCardsTemplate(OutputStream outputStream);
 
+    List<Card> findAllByDeckId(Long deckId);
 }

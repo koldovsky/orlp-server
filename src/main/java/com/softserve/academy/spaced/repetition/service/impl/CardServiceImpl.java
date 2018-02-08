@@ -3,7 +3,6 @@ package com.softserve.academy.spaced.repetition.service.impl;
 import com.softserve.academy.spaced.repetition.controller.dto.simpleDTO.CardFileDTO;
 import com.softserve.academy.spaced.repetition.controller.dto.simpleDTO.CardFileDTOList;
 import com.softserve.academy.spaced.repetition.domain.Card;
-import com.softserve.academy.spaced.repetition.domain.Deck;
 import com.softserve.academy.spaced.repetition.domain.User;
 import com.softserve.academy.spaced.repetition.domain.enums.LearningRegime;
 import com.softserve.academy.spaced.repetition.repository.CardRepository;
@@ -13,6 +12,7 @@ import com.softserve.academy.spaced.repetition.utils.exceptions.EmptyFileExcepti
 import com.softserve.academy.spaced.repetition.utils.exceptions.NotAuthorisedUserException;
 import com.softserve.academy.spaced.repetition.utils.exceptions.NotOwnerOperationException;
 import com.softserve.academy.spaced.repetition.utils.exceptions.WrongFormatException;
+import com.softserve.academy.spaced.repetition.utils.validators.ValidationConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -51,7 +51,7 @@ public class CardServiceImpl implements CardService {
 
     @Override
     @Transactional
-    public List<Card> getLearningCards(Long deckId) throws NotAuthorisedUserException {
+    public List<Card> getLearningCards(Long deckId) {
         try {
             User user = userService.getAuthorizedUser();
             final int cardsNumber = accountService.getCardsNumber();
@@ -72,7 +72,7 @@ public class CardServiceImpl implements CardService {
             }
             return learningCards;
         } catch (NotAuthorisedUserException e) {
-            return cardRepository.findAllByDeckId(deckId).subList(0, accountService.getCardsNumber());
+            return cardRepository.findAllByDeckId(deckId).subList(0, ValidationConstants.MAX_SHOW_DECK_SIZE);
         }
     }
 
@@ -82,29 +82,21 @@ public class CardServiceImpl implements CardService {
     }
 
     @Override
+    @Transactional
     public void addCard(Card card, Long deckId, List<String> imageList) {
-        if (card.getTitle().trim().isEmpty() || card.getAnswer().trim().isEmpty()
-                || card.getQuestion().trim().isEmpty()) {
-            throw new IllegalArgumentException(messageSource.getMessage("message.exception.cardFieldsNotEmpty",
-                    new Object[]{}, locale));
-        }
-        Deck deck = deckRepository.findOne(deckId);
-        card.setDeck(deck);
-        deck.getCards().add(cardRepository.save(card));
+        card.setDeck(deckRepository.findOne(deckId));
+        cardRepository.save(card);
         cardImageService.addCardImage(imageList, card);
     }
 
     @Override
-    public void updateCard(Card card, Long cardId, List<String> imageList) {
-        if (card.getTitle().trim().isEmpty() || card.getAnswer().trim().isEmpty()
-                || card.getQuestion().trim().isEmpty()) {
-            throw new IllegalArgumentException(messageSource.getMessage("message.exception.cardFieldsNotEmpty",
-                    new Object[]{}, locale));
-        }
+    @Transactional
+    public Card updateCard(Card card, Long cardId, List<String> imageList) {
         card.setId(cardId);
         card.setDeck(cardRepository.findOne(cardId).getDeck());
         cardRepository.save(card);
         cardImageService.addCardImage(imageList, card);
+        return card;
     }
 
     @Override
@@ -197,5 +189,10 @@ public class CardServiceImpl implements CardService {
             throw new IllegalArgumentException(messageSource.getMessage("message.exception.fileCopyFailed",
                     new Object[]{}, locale));
         }
+    }
+
+    @Override
+    public List<Card> findAllByDeckId(Long deckId) {
+        return cardRepository.findAllByDeckId(deckId);
     }
 }

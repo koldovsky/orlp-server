@@ -25,10 +25,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -136,15 +133,13 @@ public class CardServiceTest {
 
     @Test
     public void testGetLearningCardsByNotAuthorisedUser() throws NotAuthorisedUserException {
+        Card cards[] = {new Card(), new Card(), new Card(), new Card(), new Card(), new Card(), new Card(), new Card()
+                , new Card(), new Card(), new Card(), new Card()};
         when(userService.getAuthorizedUser()).thenThrow(new NotAuthorisedUserException());
-        when(cardRepository.findAllByDeckId(DECK_ID)).thenReturn(new ArrayList<>());
-        when(accountService.getCardsNumber()).thenReturn(0);
+        when(cardRepository.findAllByDeckId(DECK_ID)).thenReturn(Arrays.asList(cards));
 
-        List<Card> result = cardService.getLearningCards(DECK_ID);
-        verify(userService).getAuthorizedUser();
+        cardService.getLearningCards(DECK_ID);
         verify(cardRepository).findAllByDeckId(DECK_ID);
-        verify(accountService).getCardsNumber();
-        assertNotNull(result);
     }
 
     @Test

@@ -106,14 +106,6 @@ public class DeckController {
         return new ResponseEntity<>(cardsPublic, HttpStatus.OK);
     }
 
-    @GetMapping(value = "/api/decks/{deckId}/cards")
-    public ResponseEntity<List<CardPublicDTO>> getCardsByDeck(@PathVariable Long deckId) {
-        List<Card> cards = deckService.getAllCardsByDeckId(deckId);
-        Link collectionLink = linkTo(methodOn(DeckController.class).getCardsByDeck(deckId)).withSelfRel();
-        List<CardPublicDTO> cardsPublic = DTOBuilder.buildDtoListForCollection(cards, CardPublicDTO.class, collectionLink);
-        return new ResponseEntity<>(cardsPublic, HttpStatus.OK);
-    }
-
     @Auditable(action = AuditingAction.START_LEARNING_DECK_VIA_COURSE)
     @GetMapping(value = "/api/category/{categoryId}/courses/{courseId}/decks/{deckId}/cards")
     @PreAuthorize(value = "@accessToUrlService.hasAccessToDeck(#categoryId, #courseId, #deckId)")
