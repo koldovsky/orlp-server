@@ -22,7 +22,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping(value = "/api")
+@RequestMapping(value = "api")
 public class RegistrationController {
     private static final Logger LOGGER = LoggerFactory.getLogger(RegistrationController.class);
 
@@ -44,33 +44,33 @@ public class RegistrationController {
         return new ResponseEntity<>(user.getPerson(), HttpStatus.CREATED);
     }
 
-    @RequestMapping(value = "/registrationConfirm", method = RequestMethod.POST)
+    @RequestMapping(value = "/registration-confirm", method = RequestMethod.POST)
     public ResponseEntity confirmRegistration(@RequestBody String token) {
         verificationService.accountVerification(token);
         return new ResponseEntity(HttpStatus.OK);
     }
 
-    @PutMapping(value = "api/verification/token")
+    @PutMapping(value = "/verification/token")
     public ResponseEntity<String> verificationToken(@RequestBody String token) {
         LOGGER.debug("Token verification");
         String emailFromToken = verificationService.getAccountEmail(token);
         return ResponseEntity.ok(emailFromToken);
     }
 
-    @GetMapping("api/confirmation-mail")
+    @GetMapping("/confirmation-mail")
     public ResponseEntity sendConfirmationMail() throws NotAuthorisedUserException {
         userService.activateAccount();
         return new ResponseEntity(HttpStatus.OK);
     }
 
-    @PutMapping(value = "api/reset/password")
+    @PutMapping(value = "/reset/password")
     public ResponseEntity<String> sendResetPasswordMail(@RequestBody String email) {
         LOGGER.debug("Send reset password mail to email: {}", email);
         String accountStatus = accountService.checkAccountStatusAndSendMail(email);
         return ResponseEntity.ok(accountStatus);
     }
 
-    @PutMapping(value = "api/create/password")
+    @PutMapping(value = "/create/password")
     public ResponseEntity createNewPasswordForUser(@Validated(Request.class) @RequestBody
                                                            NewAccountPasswordDTO newAccountPasswordDTO) {
         LOGGER.debug("Created new password for: {}", newAccountPasswordDTO.getEmail());
