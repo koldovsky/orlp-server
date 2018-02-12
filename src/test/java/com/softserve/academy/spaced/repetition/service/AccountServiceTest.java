@@ -39,15 +39,12 @@ public class AccountServiceTest {
     private final String PASSWORD = "pass";
     private final String EMAIL = "account@test.com";
     private final Integer CARDS_NUMBER = 10;
-    private final String LEARNING_REGIME = "BAD_NORMAL_GOOD_STATUS_DEPENDING";
     @Mock
     private AccountRepository accountRepository;
     @Mock
     private RememberingLevelRepository rememberingLevelRepository;
     @Mock
     private UserService userService;
-    @Mock
-    private NumberOfPostponedDaysValidator numberOfPostponedDaysValidator;
     @Mock
     private MailService mailService;
     @Mock
@@ -70,41 +67,35 @@ public class AccountServiceTest {
     }
 
     @Test
-    public void testUpdateAccount() {
-        accountService.updateAccount(account);
+    public void testUpdateAccount() throws NotAuthorisedUserException {
+        accountService.updateAccountDetails(account);
         verify(accountRepository).save(account);
     }
 
-    @Test
-    public void testGetLearningRegime() throws NotAuthorisedUserException {
-        LearningRegime result = accountService.getLearningRegime();
+
+    @Test(expected = NotAuthorisedUserException.class)
+    public void testUpdateAccountByNotAuthorisedUser() throws NotAuthorisedUserException {
+        when(userService.getAuthorizedUser()).thenThrow(new NotAuthorisedUserException());
+        accountService.updateAccountDetails(account);
+
+
         verify(userService).getAuthorizedUser();
-        assertEquals(LearningRegime.BAD_NORMAL_GOOD_STATUS_DEPENDING, result);
+    }
+
+
+    @Test
+    public void testGetAccountDetails() throws NotAuthorisedUserException {
+        Account result = accountService.getAccountDetails();
+
+        verify(userService).getAuthorizedUser();
+        assertEquals(this.account, result);
     }
 
     @Test(expected = NotAuthorisedUserException.class)
-    public void testGetLearningRegimeByNotAuthorisedUser() throws NotAuthorisedUserException {
+    public void testGetAccountDetailsByNotAuthorisedUser() throws NotAuthorisedUserException {
         when(userService.getAuthorizedUser()).thenThrow(new NotAuthorisedUserException());
 
-        accountService.getLearningRegime();
-        verify(userService).getAuthorizedUser();
-    }
-
-    @Test
-    public void testUpdateLearningRegime() throws NotAuthorisedUserException, IllegalArgumentException {
-        when(accountRepository.findOne(ACCOUNT_ID)).thenReturn(account);
-
-        accountService.updateLearningRegime(LEARNING_REGIME);
-        verify(accountRepository).findOne(ACCOUNT_ID);
-        verify(userService).getAuthorizedUser();
-        verify(accountRepository).save(account);
-    }
-
-    @Test(expected = NotAuthorisedUserException.class)
-    public void updateLearningRegimeByNotAuthorisedUser() throws NotAuthorisedUserException, IllegalArgumentException {
-        when(userService.getAuthorizedUser()).thenThrow(new NotAuthorisedUserException());
-
-        accountService.updateLearningRegime(LEARNING_REGIME);
+        accountService.getAccountDetails();
         verify(userService).getAuthorizedUser();
     }
 
@@ -120,53 +111,6 @@ public class AccountServiceTest {
 
         accountService.getCardsNumber();
         verify(userService).getAuthorizedUser();
-    }
-
-    @Test
-    public void testUpdateCardsNumber() throws NotAuthorisedUserException {
-        accountService.updateCardsNumber(CARDS_NUMBER);
-        verify(userService).getAuthorizedUser();
-        verify(accountRepository).save(account);
-    }
-
-    @Test(expected = NotAuthorisedUserException.class)
-    public void updateCardsNumber() throws NotAuthorisedUserException {
-        when(userService.getAuthorizedUser()).thenThrow(new NotAuthorisedUserException());
-
-        accountService.updateCardsNumber(CARDS_NUMBER);
-        verify(userService).getAuthorizedUser();
-    }
-
-    @Test
-    public void testGetRememberingLevels() throws NotAuthorisedUserException {
-        List<RememberingLevel> result = accountService.getRememberingLevels();
-        verify(userService).getAuthorizedUser();
-        assertNull(result);
-    }
-
-    @Test(expected = NotAuthorisedUserException.class)
-    public void testGetRememberingLevelsByNotAuthorisedUser() throws NotAuthorisedUserException {
-        when(userService.getAuthorizedUser()).thenThrow(new NotAuthorisedUserException());
-
-        accountService.updateCardsNumber(CARDS_NUMBER);
-        verify(userService).getAuthorizedUser();
-    }
-
-    @Test
-    public void testUpdateRememberingLevel() throws NotAuthorisedUserException {
-        RememberingLevel rememberingLevel = new RememberingLevel();
-        Long rememberingLevelId = 1L;
-        rememberingLevel.setId(rememberingLevelId);
-        rememberingLevel.setNumberOfPostponedDays(5);
-
-        when(rememberingLevelRepository.findOne(rememberingLevelId)).thenReturn(rememberingLevel);
-        doNothing().when(numberOfPostponedDaysValidator).validate(rememberingLevel, 5);
-        when(rememberingLevelRepository.save(rememberingLevel)).thenReturn(null);
-
-        accountService.updateRememberingLevel(rememberingLevelId, 5);
-        verify(rememberingLevelRepository).findOne(rememberingLevelId);
-        verify(numberOfPostponedDaysValidator).validate(rememberingLevel, 5);
-        verify(rememberingLevelRepository).save(rememberingLevel);
     }
 
     @Test

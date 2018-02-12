@@ -9,6 +9,9 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.softserve.academy.spaced.repetition.domain.*;
+import com.softserve.academy.spaced.repetition.domain.enums.AccountStatus;
+import com.softserve.academy.spaced.repetition.repository.UserRepository;
 import com.softserve.academy.spaced.repetition.security.DTO.ReCaptchaResponseDto;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -23,8 +26,6 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.test.annotation.Rollback;
 
-import com.softserve.academy.spaced.repetition.domain.Account;
-import com.softserve.academy.spaced.repetition.domain.Authority;
 import com.softserve.academy.spaced.repetition.domain.enums.AuthorityName;
 import com.softserve.academy.spaced.repetition.security.utils.JwtTokenUtil;
 import com.softserve.academy.spaced.repetition.security.authentification.JwtUser;
@@ -43,6 +44,8 @@ public class AuthenticationRestServiceTest {
     private UserDetailsService userDetailsService;
     @Mock
     private JwtTokenUtil jwtTokenUtil;
+    @Mock
+    UserRepository userRepository;
     @InjectMocks
     private AuthenticationRestService restService;
 
@@ -56,6 +59,7 @@ public class AuthenticationRestServiceTest {
         Account account = new Account();
         account.setEmail(email);
         account.setPassword(password);
+        account.setStatus(AccountStatus.ACTIVE);
         Set<Authority> authorities = new HashSet<>();
         authorities.add(new Authority(AuthorityName.ROLE_USER));
         account.setAuthorities(authorities);
@@ -65,6 +69,9 @@ public class AuthenticationRestServiceTest {
         when(authenticationManager.authenticate(any())).thenReturn(authenticationToken);
         when(userDetailsService.loadUserByUsername(anyString())).thenReturn(jwtUser);
         when(jwtTokenUtil.generateToken(any(), any())).thenReturn("Test token");
+
+        when(userRepository.findUserByAccountEmail(any())).thenReturn(new User(account, new Person(), new Folder()));
+
         HttpHeaders headers = restService.getAuthHeaders(email, password, captcha, null);
         assertTrue(headers.containsKey("Set-Cookie"));
 

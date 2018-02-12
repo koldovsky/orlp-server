@@ -1,5 +1,6 @@
 package com.softserve.academy.spaced.repetition.controller.dto.impl;
 
+import com.softserve.academy.spaced.repetition.controller.CardController;
 import com.softserve.academy.spaced.repetition.controller.dto.builder.DTO;
 import com.softserve.academy.spaced.repetition.controller.DeckController;
 import com.softserve.academy.spaced.repetition.domain.Deck;
@@ -11,7 +12,7 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 public class DeckPrivateDTO extends DTO<Deck> {
     public DeckPrivateDTO(Deck deck, Link link) {
         super(deck, link);
-        add(linkTo(methodOn(DeckController.class).getCardsByDeck(getEntity().getId())).withRel("cards"));
+        add(linkTo(methodOn(CardController.class).getCardsByDeck(getEntity().getId())).withRel("cards"));
     }
 
     public Long getDeckId() { return getEntity().getId(); }
