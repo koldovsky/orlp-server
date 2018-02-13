@@ -8,6 +8,8 @@ import com.softserve.academy.spaced.repetition.domain.CourseRating;
 import com.softserve.academy.spaced.repetition.service.CourseRatingService;
 import com.softserve.academy.spaced.repetition.utils.exceptions.NotAuthorisedUserException;
 import com.softserve.academy.spaced.repetition.utils.exceptions.UserStatusException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Link;
 import org.springframework.http.HttpStatus;
@@ -23,17 +25,19 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 @RequestMapping("api/courses/{courseId}/ratings")
 public class CourseRatingController {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(CourseRatingController.class);
+
     @Autowired
     private CourseRatingService courseRatingService;
 
     @GetMapping("/{id}")
-    public ResponseEntity<CourseRatingPublicDTO> getCourseRatingById(@PathVariable Long id) {
+    @ResponseStatus(HttpStatus.OK)
+    public CourseRatingPublicDTO getCourseRatingById(@PathVariable Long courseId,
+                                                     @PathVariable Long id) {
+        LOGGER.debug("View rating with id {}", id);
         CourseRating courseRating = courseRatingService.getCourseRatingById(id);
-        Link selfLink = linkTo(methodOn(CourseRatingController.class)
-                .getCourseRatingById(courseRating.getId())).withSelfRel();
-        CourseRatingPublicDTO courseRatingDTO =
-                buildDtoForEntity(courseRating, CourseRatingPublicDTO.class, selfLink);
-        return new ResponseEntity<>(courseRatingDTO, HttpStatus.OK);
+        return buildDtoForEntity(courseRating, CourseRatingPublicDTO.class,
+                linkTo(methodOn(CourseRatingController.class).getCourseRatingById(courseId, courseRating.getId())).withSelfRel());
     }
 
     @PostMapping
@@ -41,10 +45,10 @@ public class CourseRatingController {
     public CourseRatingPublicDTO addCourseRating(@Validated(Request.class) @RequestBody CourseRating courseRating,
                                                  @PathVariable Long courseId)
             throws NotAuthorisedUserException, UserStatusException {
+        LOGGER.debug("Adding rating to course with id: {}", courseId);
         courseRating = courseRatingService.addCourseRating(courseRating.getRating(), courseId);
         return buildDtoForEntity(courseRating, CourseRatingPublicDTO.class,
-                linkTo(methodOn(CourseRatingController.class)
-                        .getCourseRatingById(courseRating.getId())).withSelfRel());
+                linkTo(methodOn(CourseRatingController.class).getCourseRatingById(courseId, courseRating.getId())).withSelfRel());
 
     }
 }
