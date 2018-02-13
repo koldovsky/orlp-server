@@ -9,7 +9,7 @@ import javax.validation.constraints.NotNull;
 
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
-public abstract class EntityOwnership {
+public abstract class EntityForOwnership {
     @NotNull
     @CreatedBy
     Long createdBy;

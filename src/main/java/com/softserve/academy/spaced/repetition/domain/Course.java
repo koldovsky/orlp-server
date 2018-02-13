@@ -9,7 +9,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "course")
-public class Course extends EntityOwnership implements EntityInterface {
+public class Course extends EntityForOwnership implements EntityInterface {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
