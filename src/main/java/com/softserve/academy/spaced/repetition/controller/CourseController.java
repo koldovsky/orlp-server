@@ -51,6 +51,7 @@ public class CourseController {
         return new ResponseEntity<>(courseLinkDTOS, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasPermission('COURSE','READ')")
     @Auditable(action = AuditingAction.VIEW_COURSES)
     @GetMapping(value = "/api/courses")
     public ResponseEntity<Page<CourseLinkDTO>> getAllCourses(@RequestParam(name = "p", defaultValue = "1") int pageNumber,
@@ -65,6 +66,7 @@ public class CourseController {
         return new ResponseEntity<>(courseLinkDTOS, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasPermission('COURSE','READ')")
     @GetMapping(value = "/api/courses/ordered")
     public ResponseEntity<List<CourseLinkDTO>> getAllCoursesOrderByRating() {
         List<Course> courseList = courseService.getAllOrderedCourses();
@@ -74,6 +76,7 @@ public class CourseController {
         return new ResponseEntity<>(decks, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasPermission('COURSE','READ')")
     @Auditable(action = AuditingAction.VIEW_TOP_COURSES)
     @GetMapping("/api/course/top")
     public ResponseEntity<List<CourseLinkDTO>> getTopCourse() {
@@ -87,7 +90,7 @@ public class CourseController {
         return new ResponseEntity<>(courses, HttpStatus.OK);
     }
 
-    @PreAuthorize(value = "hasPermission('COURSE','READ')")
+    @PreAuthorize("hasPermission('COURSE','READ')")
     @GetMapping(value = "/api/category/{category_id}/courses/{course_id}")
     public ResponseEntity<CourseLinkDTO> getCourseById(@PathVariable Long category_id, @PathVariable Long course_id) {
         Course course = courseService.getCourseById(category_id, course_id);
@@ -98,7 +101,7 @@ public class CourseController {
 
     @Auditable(action = AuditingAction.CREATE_COURSE)
     @PostMapping(value = "/api/category/{category_id}/courses")
-    @PreAuthorize(value = "@accessToUrlService.hasAccessToCategory(#category_id)")
+    @PreAuthorize("hasPermission('COURSE','CREATE')")
     public ResponseEntity<CoursePublicDTO> addCourse(@RequestBody Course course, @PathVariable Long category_id) {
         courseService.addCourse(course, category_id);
         Link selfLink = linkTo(methodOn(CourseController.class).getCourseById(category_id, course.getId())).withSelfRel();
@@ -113,12 +116,15 @@ public class CourseController {
         courseService.updateCourse(course_id, course);
     }
 
+    //TODO please read comment in delete mapping
     @Auditable(action = AuditingAction.DELETE_COURSE)
     @DeleteMapping(value = "/api/user/global/courses/{course_id}")
+    @PreAuthorize("@courseServiceImpl.getCourseById(1L,1L).createdBy==principle.id && hasPermission('COURSE','DELETE')")//maybe not better way (think about other way)
     public void deleteGlobalCourse(@PathVariable Long course_id) throws NotAuthorisedUserException {
         courseService.deleteGlobalCourse(course_id);
     }
 
+    @PreAuthorize("@courseServiceImpl.getCourseById(1L,1L).createdBy==principle.id && hasPermission('COURSE','CREATE')")
     @DeleteMapping(value = "/api/user/local/courses/{course_id}")
     public void deleteLocalCourse(@PathVariable Long course_id) throws NotAuthorisedUserException {
         courseService.deleteLocalCourse(course_id);
@@ -126,12 +132,14 @@ public class CourseController {
 
     @Auditable(action = AuditingAction.ADD_COURSE)
     @PutMapping("/api/user/courses/{course_id}")
+    @PreAuthorize("hasPermission('COURSE','CREATE')")
     public ResponseEntity addCourse(@PathVariable Long course_id) throws NotAuthorisedUserException {
         Course course = courseService.updateListOfCoursesOfTheAuthorizedUser(course_id);
         return new ResponseEntity(HttpStatus.OK);
     }
 
     @Auditable(action = AuditingAction.ADD_COURSE)
+    @PreAuthorize("hasPermission('COURSE','UPDATE')")
     @PutMapping("/api/user/courses/{course_id}/update/access")
     public ResponseEntity updateCourseAccess(@PathVariable Long course_id,
                                              @Validated(Request.class) @RequestBody Course course) {
@@ -140,6 +148,7 @@ public class CourseController {
     }
 
     @Auditable(action = AuditingAction.ADD_COURSE)
+    @PreAuthorize("hasPermission('COURSE','CREATE')")
     @PutMapping("/api/category/courses/{courseId}/decks/{deckId}")
     public ResponseEntity addDeckToCourse(@Validated(Request.class) @PathVariable Long courseId,
                                           @PathVariable Long deckId,
@@ -148,6 +157,7 @@ public class CourseController {
         return new ResponseEntity(HttpStatus.OK);
     }
 
+    @PreAuthorize("hasPermission('COURSE','READ')")
     @GetMapping("/api/private/user/courses")
     public ResponseEntity<List<Long>> getIdAllCoursesOfTheCurrentUser() throws NotAuthorisedUserException {
         List<Long> id = courseService.getAllCoursesIdOfTheCurrentUser();
@@ -155,6 +165,7 @@ public class CourseController {
     }
 
     @Auditable(action = AuditingAction.CREATE_PRIVATE_COURSE)
+    @PreAuthorize("hasPermission('COURSE','CREATE')")
     @PostMapping("/api/category/{category_id}/private/user/create/course")
     public ResponseEntity<Course> createPrivateCourse(@Validated(Request.class) @RequestBody Course privateCourse,
                                                       @PathVariable Long category_id) throws NotAuthorisedUserException {
