@@ -1,6 +1,7 @@
 package com.softserve.academy.spaced.repetition.service;
 
 import com.softserve.academy.spaced.repetition.domain.Image;
+import com.softserve.academy.spaced.repetition.domain.User;
 import com.softserve.academy.spaced.repetition.utils.exceptions.CanNotBeDeletedException;
 import com.softserve.academy.spaced.repetition.utils.exceptions.ImageRepositorySizeQuotaExceededException;
 import com.softserve.academy.spaced.repetition.utils.exceptions.NotAuthorisedUserException;
@@ -90,7 +91,6 @@ public interface ImageService {
      */
     void setImageStatusNotInUse(Long imageId);
 
-
     /**
      * Gets images for authorized user.
      *
@@ -98,4 +98,15 @@ public interface ImageService {
      * @throws NotAuthorisedUserException if user is not authorised
      */
     List<Image> getImagesForCurrentUser() throws NotAuthorisedUserException;
+
+    /**
+     * Check if user quota not exceeded, encoded string is a image and
+     * encoded string size limit not exceeded.
+     *
+     * @param user user to which image will be added.
+     * @param imageBase64 encoded string of image in base64.
+     * @return return false if some check, that described above, will be false.
+     * @throws ImageRepositorySizeQuotaExceededException if user quota is exceeded.
+     */
+    boolean isImageCanBeAddedToProfile(User user, String imageBase64) throws ImageRepositorySizeQuotaExceededException;
 }
