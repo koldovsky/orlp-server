@@ -1,4 +1,4 @@
-package com.softserve.academy.spaced.repetition.controller;
+package com.softserve.academy.spaced.repetition.controller.handler;
 
 import com.softserve.academy.spaced.repetition.controller.dto.simpleDTO.FieldErrorDTO;
 import com.softserve.academy.spaced.repetition.controller.dto.simpleDTO.ValidationMessageDTO;
@@ -35,18 +35,6 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
     @Autowired
     private MessageSource messageSource;
     private final Locale locale = LocaleContextHolder.getLocale();
-
-    private static final EnumMap<AccountStatus,
-            ResponseEntity<MessageDTO>> USER_STATUS_ERROR_RESPONSE = new EnumMap<>(AccountStatus.class);
-
-    static {
-        USER_STATUS_ERROR_RESPONSE.put(AccountStatus.DELETED,
-                new ResponseEntity<>(new MessageDTO("Account with this email is deleted"),
-                        HttpStatus.LOCKED));
-        USER_STATUS_ERROR_RESPONSE.put(AccountStatus.BLOCKED,
-                new ResponseEntity<>(new MessageDTO("Account with this email is blocked"),
-                        HttpStatus.FORBIDDEN));
-    }
 
     @ExceptionHandler(MultipartException.class)
     @ResponseStatus(HttpStatus.FORBIDDEN)
@@ -113,9 +101,11 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(UserStatusException.class)
+    @ResponseStatus(HttpStatus.LOCKED)
     @ResponseBody
     MessageDTO handleUserStatusException(UserStatusException userStatusException) {
-        return USER_STATUS_ERROR_RESPONSE.get(userStatusException.getAccountStatus()).getBody();
+        return new MessageDTO(messageSource.getMessage("message.exception.userStatus",
+                new Object[]{userStatusException.getAccountStatus().name()}, locale));
     }
 
     @ExceptionHandler(IllegalArgumentException.class)

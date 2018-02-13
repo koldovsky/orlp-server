@@ -144,43 +144,6 @@ public interface UserService {
     Page<User> getUsersByPage(int pageNumber, String sortBy, boolean ascending);
 
     /**
-     * Sets new personal data.
-     *
-     * @param person new personal data that will be set.
-     * @return managed by admin user.
-     * @throws NotAuthorisedUserException if unauthorized user sets new personal data.
-     */
-    User editPersonalData(Person person) throws NotAuthorisedUserException;
-
-    /**
-     * Sets new password.
-     *
-     * @param passwordDTO new password.
-     * @throws NotAuthorisedUserException if unauthorized user sets new password.
-     */
-    void changePassword(PasswordDTO passwordDTO) throws NotAuthorisedUserException;
-
-    /**
-     * Uploads users profile image.
-     *
-     * @param file image which will be set.
-     * @return managed by admin user.
-     * @throws ImageRepositorySizeQuotaExceededException image size is to large.
-     * @throws NotAuthorisedUserException                unauthorized user sets image.
-     */
-
-    User uploadImage(MultipartFile file) throws ImageRepositorySizeQuotaExceededException,
-            NotAuthorisedUserException;
-
-    /**
-     * Gets byte array of profile image.
-     *
-     * @return byte array of profile image.
-     * @throws NotAuthorisedUserException unauthorized user gets profile image.
-     */
-    byte[] getDecodedImageContent() throws NotAuthorisedUserException;
-
-    /**
      * Activates new account.
      *
      * @throws NotAuthorisedUserException unauthorized user used this operation.
@@ -193,13 +156,6 @@ public interface UserService {
      * @throws NotAuthorisedUserException unauthorized user used this operation.
      */
     void deleteAccount() throws NotAuthorisedUserException;
-
-    /**
-     * Gets the status of the authorised user
-     *
-     * @throws UserStatusException if the user`s status is not active.
-     */
-    void getUserStatus() throws UserStatusException;
 
     /**
      * Initializes a new user.
@@ -220,4 +176,5 @@ public interface UserService {
      * @throws UserStatusException if user is no active.
      */
     void isUserStatusActive(User user) throws UserStatusException;
+
 }

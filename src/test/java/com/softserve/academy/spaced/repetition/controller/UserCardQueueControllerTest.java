@@ -1,5 +1,6 @@
 package com.softserve.academy.spaced.repetition.controller;
 
+import com.softserve.academy.spaced.repetition.controller.handler.ExceptionHandlerController;
 import com.softserve.academy.spaced.repetition.domain.enums.UserCardQueueStatus;
 import com.softserve.academy.spaced.repetition.utils.exceptions.NotAuthorisedUserException;
 import com.softserve.academy.spaced.repetition.service.UserCardQueueService;
@@ -56,7 +57,7 @@ public class UserCardQueueControllerTest {
 
     @Test
     public void testSetStatusGood() throws Exception {
-        mockMvc.perform(put("/api/private/decks/{deckId}/cards/{cardId}/queue", DECK_ID, CARD_ID)
+        mockMvc.perform(put("/api/decks/{deckId}/cards/{cardId}/queue", DECK_ID, CARD_ID)
                 .content("GOOD")
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON))
@@ -69,7 +70,7 @@ public class UserCardQueueControllerTest {
     public void testSetStatusIncorrect() throws Exception {
         doThrow(IllegalArgumentException.class).when(userCardQueueService)
                 .updateUserCardQueue(DECK_ID, CARD_ID, "Incorrect");
-        mockMvc.perform(put("/api/private/decks/{deckId}/cards/{cardId}/queue", DECK_ID, CARD_ID)
+        mockMvc.perform(put("/api/decks/{deckId}/cards/{cardId}/queue", DECK_ID, CARD_ID)
                 .content("Incorrect")
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON))
@@ -80,7 +81,7 @@ public class UserCardQueueControllerTest {
     public void testUpdateUserCardQueueNotAuthorizedUserException() throws Exception {
         doThrow(NotAuthorisedUserException.class).when(userCardQueueService).updateUserCardQueue(eq(DECK_ID),
                 eq(CARD_ID), eq(UserCardQueueStatus.GOOD.getStatus()));
-        mockMvc.perform(put("/api/private/decks/{deckId}/cards/{cardId}/queue", DECK_ID, CARD_ID)
+        mockMvc.perform(put("/api/decks/{deckId}/cards/{cardId}/queue", DECK_ID, CARD_ID)
                 .content("GOOD")
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON))
@@ -90,7 +91,7 @@ public class UserCardQueueControllerTest {
 
     @Test
     public void testCountCardsThatNeedRepeatingWhenThereAreNone() throws Exception {
-        mockMvc.perform(get("/api/private/decks/{deckId}/cards-that-need-repeating/count", DECK_ID)
+        mockMvc.perform(get("/api/decks/{deckId}/cards-that-need-repeating/count", DECK_ID)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -102,7 +103,7 @@ public class UserCardQueueControllerTest {
     @Test
     public void testCountCardsThatNeedRepeatingWhenThereAreSome() throws Exception {
         when(userCardQueueService.countCardsThatNeedRepeating(eq(DECK_ID))).thenReturn(5L);
-        mockMvc.perform(get("/api/private/decks/{deckId}/cards-that-need-repeating/count", DECK_ID)
+        mockMvc.perform(get("/api/decks/{deckId}/cards-that-need-repeating/count", DECK_ID)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -114,7 +115,7 @@ public class UserCardQueueControllerTest {
     @Test
     public void testCountCardsThatNeedRepeatingNotAuthorizedUserException() throws Exception {
         doThrow(NotAuthorisedUserException.class).when(userCardQueueService).countCardsThatNeedRepeating(eq(DECK_ID));
-        mockMvc.perform(get("/api/private/decks/{deckId}/cards-that-need-repeating/count", DECK_ID)
+        mockMvc.perform(get("/api/decks/{deckId}/cards-that-need-repeating/count", DECK_ID)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isUnauthorized());

@@ -1,5 +1,6 @@
 message:
   exception:
+    userStatus: "Account with this email is - {0}!"
     fileNotFound: "Such file not found!"
     cardFileNotReadable: "Can't read data from uploaded file!"
     learningRegimeNotValid: "Value of Learning Regime is not valid - {0}!"
@@ -32,6 +33,7 @@ message:
     facebookDataGetError: "ERROR in getting FB graph data! {0}"
     facebookDataParseError: "ERROR in parsing FB graph data! {0}"
     tokenNotFound: "No token found!"
+    passwordNotMatchWithCurrent: "Incorrect current password!"
   database:
     connectionSuccessful: "Connection to {0} has been established."
   notification:
