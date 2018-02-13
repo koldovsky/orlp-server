@@ -21,7 +21,6 @@ import java.util.Set;
 
 @Service
 public class CourseServiceImpl implements CourseService {
-    public static final int TOP_COURSES = 4;
 
     private final static int QUANTITY_COURSES_IN_PAGE = 12;
     @Autowired
@@ -144,12 +143,12 @@ public class CourseServiceImpl implements CourseService {
         userRepository.save(user);
     }
 
-
     @Override
-    public void updateCourseAccess(Long course_id, Course courseAccess) {
+    public Course updateCourseAccess(Long course_id, Course courseAccess) {
         Course course = courseRepository.findOne(course_id);
         course.setPublished(courseAccess.isPublished());
         courseRepository.save(course);
+        return course;
     }
 
     @Override
@@ -166,7 +165,7 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public void addDeckToCourse(Long courseId, Long deckId) {
+    public Course addDeckToCourse(Long courseId, Long deckId) {
         Course course = courseRepository.findOne(courseId);
         if (course.getDecks().stream().anyMatch(deck -> deck.getId().equals(deckId))) {
             throw new IllegalArgumentException(messageSource.getMessage("message.exception.deckAlreadyExists",
@@ -174,20 +173,20 @@ public class CourseServiceImpl implements CourseService {
         }
         course.getDecks().add(deckRepository.getDeckById(deckId));
         courseRepository.save(course);
+        return course;
     }
-
 
     @Override
     public Page<Course> getPageWithCourses(int pageNumber, String sortBy, boolean ascending) {
         PageRequest request = new PageRequest(pageNumber - 1, QUANTITY_COURSES_IN_PAGE, ascending
                 ? Sort.Direction.ASC : Sort.Direction.DESC, sortBy);
-        return courseRepository.findAll(request);
+        return courseRepository.findAllByPublishedTrue(request);
     }
 
     @Override
     public Page<Course> getPageWithCoursesByCategory(long categoryId, int pageNumber, String sortBy, boolean ascending) {
         PageRequest request = new PageRequest(pageNumber - 1, QUANTITY_COURSES_IN_PAGE, ascending
                 ? Sort.Direction.ASC : Sort.Direction.DESC, sortBy);
-        return courseRepository.findAllByCategoryEquals(categoryRepository.findOne(categoryId), request);
+        return courseRepository.findAllByCategoryEqualsAndPublishedTrue(categoryRepository.findOne(categoryId), request);
     }
 }

@@ -32,6 +32,8 @@ public interface CourseRepository extends JpaRepository<Course, Long> {
 
     List<Course> findAllByPublishedTrue();
 
-    Page<Course> findAllByCategoryEquals(Category category, Pageable pageable);
+    Page<Course> findAllByCategoryEqualsAndPublishedTrue(Category category, Pageable pageable);
+
+    Page<Course> findAllByPublishedTrue(Pageable pageable);
 
 }
