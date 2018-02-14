@@ -18,4 +18,6 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
 
     @Query(value = "SELECT c.name, c.description, c.image FROM Category c WHERE c.id = :category_id")
     List<Category> hasAccessToCategory(@Param("category_id") Long category_id);
+
+    void deleteCategoryById(Long categoryId);
 }

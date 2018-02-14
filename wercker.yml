@@ -1,8 +1,9 @@
+
+box: maven
 # This references a standard debian container from the
 # Docker Hub https://registry.hub.docker.com/_/debian/
 # Read more about containers on our dev center
 # http://devcenter.wercker.com/docs/containers/index.html
-box: maven
 # You can also use services such as databases. Read more on our dev center:
 # http://devcenter.wercker.com/docs/services/index.html
 # services:
@@ -28,7 +29,7 @@ build:
           mkdir container/  
           cp ./target/*.jar container/
 
-deploy:
+deploy-to-production:
   steps:
     - wercker/add-ssh-key:
         keyname: SSH_KEY
@@ -44,4 +45,5 @@ deploy:
         name: Run redeploy-script
         code: |
           ssh $LOGIN@$REMOTE_HOST "cd ~/orlp-server/ && sh container_deploy.sh"
+
 #          ssh $LOGIN@$REMOTE_HOST "cd ~/orlp-server/ && rm -f *.sh && rm -f *.jar"
