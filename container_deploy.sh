@@ -15,11 +15,10 @@ mysql_container="orlp-mysql";
 # sleep 3;
 
 if [ ! "$(docker ps -aq -f name=$container_name)" ]; then
-    echo "Container $container_name is not running. Starting $container_name ...";
- run --name $container_name -d --restart=always --net=orlp --add-host orlp-mysql:192.168.0.50 --expose=80 -e 'VIRTUAL_HOST=api.infolve.com' -e 'LETSENCRYPT_EMAIL=holovko.oleksandr@gmail.com' -e 'LETSENCRYPT_HOST=api.infolve.com' -v /home/wercker/orlp-server:/usr/src/myapp -w /usr/src/myapp java:8-jre java -jar Spaced.Repetition.jar;
-    docker run --name $container_name -d --net=orlp --add-host orlp-mysql:192.168.0.50 --expose=80 --expose=443 -e 'VIRTUAL_HOST=api.infolve.com' -e 'LETSENCRYPT_EMAIL=holovko.oleksandr@gmail.com' -e 'LETSENCRYPT_HOST=api.infolve.com' -v /home/wercker/orlp-server:/usr/src/myapp -w /usr/src/myapp java:8-jre java -jar Spaced.Repetition.jar;
+    	echo "Container $container_name is not running. Starting $container_name ...";
+    	docker run --name $container_name -d --restart=always --net=orlp --add-host orlp-mysql:192.168.0.50 --expose=80 -e 'VIRTUAL_HOST=api.infolve.com' -e 'LETSENCRYPT_EMAIL=holovko.oleksandr@gmail.com' -e 'LETSENCRYPT_HOST=api.infolve.com' -v /home/wercker/orlp-server:/usr/src/myapp -w /usr/src/myapp java:8-jre java -jar Spaced.Repetition.jar;
     else
-    echo "$container_name already running. Restarting $container_name ...";
-    docker container stop $container_name && docker container rm -f $container_name;
-    docker run --name $container_name -d --net=orlp --add-host orlp-mysql:192.168.0.50 --expose=80 --expose=443 -e 'VIRTUAL_HOST=api.infolve.com' -e 'LETSENCRYPT_EMAIL=holovko.oleksandr@gmail.com' -e 'LETSENCRYPT_HOST=api.infolve.com' -v /home/wercker/orlp-server:/usr/src/myapp -w /usr/src/myapp java:8-jre java -jar Spaced.Repetition.jar;
+    	echo "$container_name already running. Restarting $container_name ...";
+    	docker container stop $container_name && docker container rm -f $container_name;
+    	docker run --name $container_name -d --restart=always --net=orlp --add-host orlp-mysql:192.168.0.50 --expose=443 -e 'VIRTUAL_HOST=api.infolve.com' -e 'LETSENCRYPT_EMAIL=holovko.oleksandr@gmail.com' -e 'LETSENCRYPT_HOST=api.infolve.com' -v /home/wercker/orlp-server:/usr/src/myapp -w /usr/src/myapp java:8-jre java -jar Spaced.Repetition.jar;
 fi
