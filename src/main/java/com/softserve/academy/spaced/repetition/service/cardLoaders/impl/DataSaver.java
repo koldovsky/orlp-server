@@ -17,21 +17,21 @@ public class DataSaver {
     @Autowired
     private CardRepository cardRepository;
 
-    public void save(Map <String, String> map, Long deckId) {
-        Iterator <Map.Entry <String, String>> iterator = map.entrySet().iterator();
+    public void save(Map<String, String> map, Long deckId) {
+        Iterator<Map.Entry<String, String>> iterator = map.entrySet().iterator();
         while (iterator.hasNext()) {
-            Map.Entry <String, String> elem = iterator.next();
+            Map.Entry<String, String> elem = iterator.next();
             if (ifCarExistsInDb(elem.getKey())) {
                 Card card = new Card();
                 card.setAnswer(elem.getKey());
                 card.setQuestion(elem.getValue());
-                cardService.addCard(card, deckId);
+                cardService.addCard(card, deckId, null);
             }
         }
     }
 
     private boolean ifCarExistsInDb(String question) {
-        List <Card> questionsInDb = cardRepository.findAllByQuestion(question);
+        List<Card> questionsInDb = cardRepository.findAllByQuestion(question);
         if (questionsInDb.isEmpty()) {
             return true;
         }

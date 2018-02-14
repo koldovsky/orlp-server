@@ -15,11 +15,12 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
 @RestController
+@RequestMapping("api")
 public class UserCardQueueController {
     @Autowired
     private UserCardQueueService userCardQueueService;
 
-    @PutMapping("/api/private/decks/{deckId}/cards/{cardId}/queue")
+    @PutMapping("/decks/{deckId}/cards/{cardId}/queue")
     @PreAuthorize(value = "@accessToUrlService.hasAccessToCard(#deckId, #cardId)")
     public ResponseEntity updateUserCardQueue(@PathVariable Long deckId,
                                               @PathVariable Long cardId,
@@ -29,12 +30,12 @@ public class UserCardQueueController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/api/private/decks/{deckId}/cards-that-need-repeating/count")
+    @GetMapping("/decks/{deckId}/cards-that-need-repeating/count")
     public ResponseEntity<Long> countCardsThatNeedRepeating(@PathVariable Long deckId) throws NotAuthorisedUserException {
         return ResponseEntity.ok(userCardQueueService.countCardsThatNeedRepeating(deckId));
     }
 
-    @GetMapping("api/user/card/queue/{userCardQueueId}")
+    @GetMapping("/user/card/queue/{userCardQueueId}")
     public ResponseEntity<UserCardQueuePublicDTO> getUserCardQueueById(@PathVariable Long userCardQueueId) {
         UserCardQueue userCardQueue = userCardQueueService.getUserCardQueueById(userCardQueueId);
         Link selfLink = linkTo(methodOn(UserCardQueueController.class).getUserCardQueueById(userCardQueueId)).withSelfRel();

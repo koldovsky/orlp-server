@@ -1,5 +1,6 @@
 package com.softserve.academy.spaced.repetition.controller;
 
+import com.softserve.academy.spaced.repetition.controller.handler.ExceptionHandlerController;
 import com.softserve.academy.spaced.repetition.domain.Course;
 import com.softserve.academy.spaced.repetition.domain.CourseRating;
 import com.softserve.academy.spaced.repetition.utils.exceptions.NotAuthorisedUserException;
@@ -54,11 +55,12 @@ public class CourseRatingControllerTest {
     @Test
     public void getCourseRatingById() throws Exception {
         when(courseRatingService.getCourseRatingById(eq(77L))).thenReturn(createCourseRating());
-        mockMvc.perform(get("/api/course/{courseId}/rating/{id}", 5L, 77L)
+        mockMvc.perform(get("/api/courses/{courseId}/ratings/{id}",5L, 77L)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(content().json("{\"rating\":3,\"accountEmail\":\"email@email\",\"courseId\":5,\"links\":[{\"rel\":\"self\",\"href\":\"http://localhost/api/course/5/rating/77\"}]}"));
+                .andExpect(content().json("{\"rating\":3,\"accountEmail\":\"email@email\",\"courseId\":5,\"links\":[{\"rel\":\"self\",\"href\":\"http://localhost/api/courses/5/ratings/77\"}]}"));
+        verify(courseRatingService).getCourseRatingById(eq(77L));
     }
 
     private CourseRating createCourseRating() {
@@ -69,40 +71,48 @@ public class CourseRatingControllerTest {
         return courseRating;
     }
 
-
     @Test
     public void testAddCourseRating() throws Exception {
-        mockMvc.perform(post("/api/private/course/{courseId}", 5L)
+        final Course course = new Course();
+        course.setId(5L);
+        final CourseRating courseRating = new CourseRating();
+        courseRating.setRating(3);
+        courseRating.setCourse(course);
+        courseRating.setAccountEmail("email@email");
+
+        when(courseRatingService.addCourseRating(eq(3), eq(5L))).thenReturn(courseRating);
+        mockMvc.perform(post("/api/courses/{courseId}/ratings", 5L)
                 .content("{\"rating\":3,\"accountEmail\":\"email@email\",\"course\":{\"id\":5}}")
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated());
-
+        verify(courseRatingService).addCourseRating(eq(3), eq(5L));
         verify(courseRatingService, times(1)).addCourseRating(eq(3), eq(5L));
     }
 
     @Test
     public void testNotAuthorizedAddCourseRating() throws Exception {
-        doThrow(NotAuthorisedUserException.class).when(courseRatingService).addCourseRating(eq(3), eq(5L));
+        when(courseRatingService.addCourseRating(eq(3), eq(5L))).thenThrow(new NotAuthorisedUserException());
 
-        mockMvc.perform(post("/api/private/course/{courseId}", 5L)
+        mockMvc.perform(post("/api/courses/{courseId}/ratings", 5L)
                 .content("{\"rating\":3,\"accountEmail\":\"email@email\",\"courseId\":5}")
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isUnauthorized());
+        verify(courseRatingService).addCourseRating(eq(3), eq(5L));
         verify(messageSource).getMessage(any(String.class), any(Object[].class), any(Locale.class));
     }
 
     @Test
     public void testNegativeAddCourseRating() throws Exception {
-        mockMvc.perform(post("/api/private/course/{courseId}", 5L)
-                .content("{\"rating\":0}")
+        mockMvc.perform(post("/api/courses/{courseId}/ratings", 5L)
+                .content("{\"ratings\": \"0\" }")
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
 
-        mockMvc.perform(post("/api/private/course/{courseId}", 5L)
-                .content("{\"rating\":6}")
+        mockMvc.perform(post("/api/courses/{courseId}/ratings", 5L)
+                .content("{\"ratings\": \"6\" }")
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());

@@ -25,10 +25,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -62,14 +59,20 @@ public class CardServiceTest {
     private OutputStream outputStream;
     @Mock
     private MessageSource messageSource;
+    @Mock
+    private CardImageService cardImageService;
     @InjectMocks
     private CardServiceImpl cardService;
     private Deck deck;
     private User user;
     private Card card;
+    private List<String> imageList;
 
     @Before
     public void setUp() throws Exception {
+        imageList = new ArrayList<>();
+        imageList.add("imageInBase64");
+        imageList.add("imageInBase64");
         final String MESSAGE_SOURCE_MESSAGE = "message";
         List<Card> cardList = new ArrayList<>();
         cardList.add(card);
@@ -130,15 +133,13 @@ public class CardServiceTest {
 
     @Test
     public void testGetLearningCardsByNotAuthorisedUser() throws NotAuthorisedUserException {
+        Card cards[] = {new Card(), new Card(), new Card(), new Card(), new Card(), new Card(), new Card(), new Card()
+                , new Card(), new Card(), new Card(), new Card()};
         when(userService.getAuthorizedUser()).thenThrow(new NotAuthorisedUserException());
-        when(cardRepository.findAllByDeckId(DECK_ID)).thenReturn(new ArrayList<>());
-        when(accountService.getCardsNumber()).thenReturn(0);
+        when(cardRepository.findAllByDeckId(DECK_ID)).thenReturn(Arrays.asList(cards));
 
-        List<Card> result = cardService.getLearningCards(DECK_ID);
-        verify(userService).getAuthorizedUser();
+        cardService.getLearningCards(DECK_ID);
         verify(cardRepository).findAllByDeckId(DECK_ID);
-        verify(accountService).getCardsNumber();
-        assertNotNull(result);
     }
 
     @Test
@@ -149,20 +150,47 @@ public class CardServiceTest {
     }
 
     @Test
-    public void testAddCard() {
+    public void testAddCardWithoutImage() {
         when(deckRepository.findOne(DECK_ID)).thenReturn(deck);
+        doNothing().when(cardImageService).addCardImage(null, card);
 
-        cardService.addCard(card, DECK_ID);
+        cardService.addCard(card, DECK_ID, null);
         verify(deckRepository).findOne(DECK_ID);
         verify(cardRepository).save(card);
+        verify(cardImageService).addCardImage(null, card);
     }
 
     @Test
-    public void testUpdateCard() {
-        cardService.updateCard(CARD_ID, card);
+    public void testAddCardWithImage() {
+        when(deckRepository.findOne(DECK_ID)).thenReturn(deck);
+        doNothing().when(cardImageService).addCardImage(imageList, card);
+
+        cardService.addCard(card, DECK_ID, imageList);
+        verify(deckRepository).findOne(DECK_ID);
+        verify(cardRepository).save(card);
+        verify(cardImageService).addCardImage(imageList, card);
+    }
+
+    @Test
+    public void testUpdateCardWithoutImage() {
+        doNothing().when(cardImageService).addCardImage(null, card);
+
+        cardService.updateCard(card, CARD_ID, null);
         verify(cardRepository).findOne(DECK_ID);
         verify(cardRepository).save(card);
+        verify(cardImageService).addCardImage(null, card);
     }
+
+    @Test
+    public void testUpdateCardWithImage() {
+        doNothing().when(cardImageService).addCardImage(imageList, card);
+
+        cardService.updateCard(card, CARD_ID, imageList);
+        verify(cardRepository).findOne(DECK_ID);
+        verify(cardRepository).save(card);
+        verify(cardImageService).addCardImage(imageList, card);
+    }
+
 
     @Test
     public void testGetCardsQueueWithOutStatus() throws NotAuthorisedUserException {
@@ -268,7 +296,6 @@ public class CardServiceTest {
                 .getResource("ymlTestPackage/JavaInterview.yml").toURI());
 
         FileInputStream fileStream = new FileInputStream(file);
-        when(cardsFile.getContentType()).thenReturn("application/octet-stream");
         when(cardsFile.isEmpty()).thenReturn(false);
         when(cardsFile.getInputStream()).thenReturn(fileStream);
         when(deckRepository.findOne(DECK_ID)).thenReturn(deck);
@@ -276,21 +303,10 @@ public class CardServiceTest {
 
         cardService.uploadCards(cardsFile, DECK_ID);
         verify(deckService).getDeckUser(DECK_ID);
-        verify(cardsFile).getContentType();
         verify(cardsFile).isEmpty();
         verify(cardsFile).getInputStream();
         verify(deckRepository).findOne(DECK_ID);
 
-    }
-
-    @Test(expected = WrongFormatException.class)
-    public void testUploadCardsWrongFormat() throws WrongFormatException, EmptyFileException, NotOwnerOperationException,
-            NotAuthorisedUserException, IOException {
-        when(cardsFile.getContentType()).thenReturn("application/octet-strea");
-
-        cardService.uploadCards(cardsFile, DECK_ID);
-        verify(deckService).getDeckUser(DECK_ID);
-        verify(cardsFile).getContentType();
     }
 
     @Test(expected = EmptyFileException.class)

@@ -1,6 +1,7 @@
 package com.softserve.academy.spaced.repetition.service.impl;
 
 
+import com.softserve.academy.spaced.repetition.controller.dto.impl.CategoryDTO;
 import com.softserve.academy.spaced.repetition.domain.Category;
 import com.softserve.academy.spaced.repetition.domain.Image;
 import com.softserve.academy.spaced.repetition.repository.CategoryRepository;
@@ -37,7 +38,6 @@ public class CategoryServiceImpl implements CategoryService {
     public Category getCategoryById(Long id) {
         Category category = categoryRepository.findById(id);
         return category;
-
     }
 
     @Override
@@ -55,9 +55,11 @@ public class CategoryServiceImpl implements CategoryService {
         return categoryRepository.save(category);
     }
 
-    @Override
-    public Category updateCategory(Category category, Long id) {
-        category.setId(id);
+    public Category updateCategory(CategoryDTO categoryDTO, Long id) {
+        Category category = categoryRepository.findById(id);
+        category.setName(categoryDTO.getName());
+        category.setDescription(categoryDTO.getDescription());
+        category.setImage(categoryDTO.getImage());
         return categoryRepository.save(category);
     }
 
@@ -66,6 +68,15 @@ public class CategoryServiceImpl implements CategoryService {
         PageRequest request = new PageRequest(pageNumber - 1, QUANTITY_CATEGORIES_IN_PAGE, ascending
                 ? Sort.Direction.ASC : Sort.Direction.DESC, sortBy);
         return categoryRepository.findAll(request);
+    }
+
+    @Override
+    @Transactional
+    public void deleteCategory(Long categoryId) {
+        Category category = categoryRepository.findById(categoryId);
+        if (category.getCourses().isEmpty()) {
+            categoryRepository.deleteCategoryById(categoryId);
+        }
     }
 }
 

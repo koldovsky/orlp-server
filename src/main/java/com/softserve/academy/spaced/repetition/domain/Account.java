@@ -8,6 +8,7 @@ import com.softserve.academy.spaced.repetition.domain.enums.LearningRegime;
 import com.softserve.academy.spaced.repetition.utils.validators.annotations.EmailNotUsed;
 
 import javax.persistence.*;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
@@ -72,6 +73,7 @@ public class Account implements EntityInterface {
 
     @Column(name = "cards_number", columnDefinition = "int default 10")
     @NotNull
+    @Min(value = MIN_NUMBER_OF_CARDS, message = "{message.exception.numbersOfCardsNegative}", groups = Request.class)
     private Integer cardsNumber;
 
     @OneToMany(mappedBy = "account", fetch = FetchType.LAZY)

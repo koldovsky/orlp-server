@@ -1,6 +1,7 @@
 package com.softserve.academy.spaced.repetition.controller;
 
 
+import com.softserve.academy.spaced.repetition.controller.handler.ExceptionHandlerController;
 import com.softserve.academy.spaced.repetition.domain.*;
 import com.softserve.academy.spaced.repetition.service.CardService;
 import com.softserve.academy.spaced.repetition.service.UserService;
@@ -50,7 +51,8 @@ public class CardControllerTest {
     @Test
     public void getCardById() throws Exception {
         when(cardService.getCard(eq(1L))).thenReturn(createCard());
-        mockMvc.perform(get("/api/card/{cardId}", 1L)
+        when(cardService.getLearningCards(1L)).thenReturn(createLearningCards());
+        mockMvc.perform(get("/api/decks/{deckId}/cards/{cardId}", 1L, 1L)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -62,7 +64,7 @@ public class CardControllerTest {
                         "  \"title\": \"Card 1\"," +
                         "   \"links\": [{" +
                         "        \"rel\":\"self\"," +
-                        "          \"href\":\"http://localhost/api/card/1\"" +
+                        "          \"href\":\"http://localhost/api/decks/1/cards/1\"" +
                         "      }]" +
                         "}"));
     }
