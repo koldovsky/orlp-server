@@ -60,4 +60,16 @@ You can check all opportunities of the API in the Swagger (it was included to th
 - [**Askold Baran**](https://github.com/askoldbaran)
 - [**Taras Predzymyrskyi**](https://github.com/tararas124)
 
+***The DevOps Team***
+- [**Oleksandr Holovko**](https://github.com/oholovko)
+- [**Zakhar Salamin**](https://github.com/zakharSal)
+- [**Sofia Mykytuk**](https://github.com/SofiiaMyk)
+- [**Zenoviy Kharkhalis**](https://github.com/ZenykK)
 
+## Built With
+
+* [Maven](https://maven.apache.org/) - Dependency Management
+* [Node JS](https://nodejs.org/uk/) - The web framework used
+* [Wercker](http://www.wercker.com/) - CI/CD framework used
+
+Added at: Demo test commit
