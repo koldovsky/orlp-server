@@ -50,5 +50,5 @@ logging:
 flyway:
   baseline-version: 1.1
   baseline-on-migrate: true
-#server:
-#  port: 80
+server:
+  port: 80
