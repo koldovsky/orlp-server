@@ -3,14 +3,12 @@
 container_name="orlp-server";
 mysql_container="orlp-mysql";
 
-# if [ ! "$(docker ps -aq -f name=$mysql_container)" ]; then
-#     echo "Container $mysql_container is not running. Starting $mysql_container ...";
-#     docker run --name $mysql_container --net=orlp --ip=192.168.0.50 -h $mysql_container --expose=3306 -e MYSQL_ROOT_PASSWORD=123456 -d mysql:latest
-#     else
-#     echo "$mysql_container already running. Restarting $mysql_container ...";
-#     docker container stop $mysql_container && docker container rm -f $mysql_container;
-#     docker run --name $mysql_container --net=orlp --ip=192.168.0.50 -h $mysql_container --expose=3306 -e MYSQL_ROOT_PASSWORD=123456 -d mysql:latest
-# fi
+if [ ! "$(docker ps -aq -f name=$mysql_container)" ]; then
+    echo "Container $mysql_container is not running. Starting $mysql_container ...";
+    docker run --name $mysql_container --net=orlp --ip=192.168.0.50 -h $mysql_container --expose=3306 -e MYSQL_ROOT_PASSWORD=123456 -d mysql:latest
+    else
+    echo "$mysql_container already running ...";
+fi
 
 # sleep 3;
 
