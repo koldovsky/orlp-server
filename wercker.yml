@@ -12,6 +12,12 @@ build:
         code: |
           mkdir container/  
           cp ./target/*.jar container/
+  # Notify about the step status to slack
+  after-steps:
+    - slack-notifier:
+        url: $SLACK_URL
+        channel: notifications
+        username: Wercker Event Notifier
 
 deploy-to-production:
   steps:
@@ -29,4 +35,9 @@ deploy-to-production:
         name: Run redeploy-script
         code: |
           ssh $LOGIN@$REMOTE_HOST "cd ~/orlp-server/ && sh container_deploy.sh"
-
+  # Notify about the step status to slack
+  after-steps:
+    - slack-notifier:
+        url: $SLACK_URL
+        channel: notifications
+        username: Wercker Event Notifier

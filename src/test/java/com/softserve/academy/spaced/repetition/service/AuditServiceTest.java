@@ -34,7 +34,6 @@ public class AuditServiceTest {
     @Mock
     private AuditRepository auditRepository;
     private Audit audit;
-    private List<Audit> audits;
 
     @Before
     public void setUp() {
@@ -42,7 +41,6 @@ public class AuditServiceTest {
         final String EMAIL = "account@test.com";
         final String IP = "1.1.1.1";
         final String ROLE = "ROLE_USER";
-        audits = createAuditList();
         AuditingAction action;
         action = AuditingAction.VIEW_ALL_COMMENTS_FOR_COURSE;
         audit = DomainFactory.createAudit(AUDIT_ID, EMAIL, action, new Date(), IP, ROLE);
@@ -52,106 +50,6 @@ public class AuditServiceTest {
         List<Audit> auditList = new ArrayList<>();
         auditList.add(audit);
         return auditList;
-    }
-
-    @Test
-    public void testGetFullAuditList() {
-        when(auditRepository.findAll()).thenReturn(audits);
-
-        List<Audit> result = auditService.getFullAuditList();
-        verify(auditRepository).findAll();
-        assertEquals(audits, result);
-    }
-
-    @Test
-    public void testGetAuditListSortedByAccountEmailAsc() {
-        when(auditRepository.findAllByOrderByAccountEmail()).thenReturn(audits);
-
-        List<Audit> result = auditService.getAuditListSortedByAccountEmailAsc();
-        verify(auditRepository).findAllByOrderByAccountEmail();
-        assertEquals(audits, result);
-
-    }
-
-    @Test
-    public void testGetAuditListSortedByAccountEmailDesc() {
-        when(auditRepository.findAllByOrderByAccountEmailDesc()).thenReturn(audits);
-
-        List<Audit> result = auditService.getAuditListSortedByAccountEmailDesc();
-        verify(auditRepository).findAllByOrderByAccountEmailDesc();
-        assertEquals(audits, result);
-    }
-
-    @Test
-    public void testGetAuditListSortedByActionAsc() {
-        when(auditRepository.findAllByOrderByAction()).thenReturn(audits);
-
-        List<Audit> result = auditService.getAuditListSortedByActionAsc();
-        verify(auditRepository).findAllByOrderByAction();
-        assertEquals(audits, result);
-    }
-
-    @Test
-    public void testGetAuditListSortedByActionAscDesc() {
-        when(auditRepository.findAllByOrderByActionDesc()).thenReturn(audits);
-
-        List<Audit> result = auditService.getAuditListSortedByActionAscDesc();
-        verify(auditRepository).findAllByOrderByActionDesc();
-        assertEquals(audits, result);
-    }
-
-    @Test
-    public void testGetAuditListSortedByIpAddressAsc() {
-        when(auditRepository.findAllByOrderByIpAddress()).thenReturn(audits);
-
-        List<Audit> result = auditService.getAuditListSortedByIpAddressAsc();
-        verify(auditRepository).findAllByOrderByIpAddress();
-        assertEquals(audits, result);
-    }
-
-    @Test
-    public void testGetAuditListSortedByIpAddressDesc() {
-        when(auditRepository.findAllByOrderByIpAddressDesc()).thenReturn(audits);
-
-        List<Audit> result = auditService.getAuditListSortedByIpAddressDesc();
-        verify(auditRepository).findAllByOrderByIpAddressDesc();
-        assertEquals(audits, result);
-    }
-
-    @Test
-    public void testGetAuditListSortedByTimeAsc() {
-        when(auditRepository.findAllByOrderByTime()).thenReturn(audits);
-
-        List<Audit> result = auditService.getAuditListSortedByTimeAsc();
-        verify(auditRepository).findAllByOrderByTime();
-        assertEquals(audits, result);
-    }
-
-    @Test
-    public void testGetAuditListSortedByTimeDesc() {
-        when(auditRepository.findAllByOrderByTimeDesc()).thenReturn(audits);
-
-        List<Audit> result = auditService.getAuditListSortedByTimeDesc();
-        verify(auditRepository).findAllByOrderByTimeDesc();
-        assertEquals(audits, result);
-    }
-
-    @Test
-    public void testGetAuditListSortedByRoleAsc() {
-        when(auditRepository.findAllByOrderByRole()).thenReturn(audits);
-
-        List<Audit> result = auditService.getAuditListSortedByRoleAsc();
-        verify(auditRepository).findAllByOrderByRole();
-        assertEquals(audits, result);
-    }
-
-    @Test
-    public void testGetAuditListSortedByRoleDesc() {
-        when(auditRepository.findAllByOrderByRoleDesc()).thenReturn(audits);
-
-        List<Audit> result = auditService.getAuditListSortedByRoleDesc();
-        verify(auditRepository).findAllByOrderByRoleDesc();
-        assertEquals(audits, result);
     }
 
     @Test

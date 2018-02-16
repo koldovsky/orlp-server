@@ -69,6 +69,33 @@ public class ImageServiceImpl implements ImageService {
         }
     }
 
+    @Override
+    public boolean isImageCanBeAddedToProfile(User user, String imageBase64) throws ImageRepositorySizeQuotaExceededException {
+        if(isUserImageQuotaExceeded(user)) {
+            throw new ImageRepositorySizeQuotaExceededException();
+        }
+        if(isEncodedStringNotImage(imageBase64)) {
+           throw new IllegalArgumentException(messageSource.getMessage(("message.exception.imageFileWrongFormat"),
+                   new Object[]{}, locale));
+        }
+        if(isEncodedStringExceedMaxSize(imageBase64)) {
+            throw new MultipartException(messageSource.getMessage(("message.exception.fileSizeTooLarge"),
+                    new Object[]{}, locale));
+        }
+        return true;
+    }
+
+    private boolean isUserImageQuotaExceeded(User user) {
+        return getUsersLimitInBytesForImagesLeft(user.getId()) > userQuote;
+    }
+
+    private boolean isEncodedStringNotImage(String imageBase64) {
+        return !imageBase64.startsWith("data:image/");
+    }
+
+    private boolean isEncodedStringExceedMaxSize(String imageBase64) {
+        return imageBase64.length() > maxFileSize;
+    }
 
     @Override
     public byte[] getDecodedImageContentByImageId(Long id) {

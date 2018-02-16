@@ -1,12 +1,15 @@
 package com.softserve.academy.spaced.repetition.security.service;
 
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
+import com.softserve.academy.spaced.repetition.domain.User;
 import com.softserve.academy.spaced.repetition.domain.enums.AuthorityName;
+import com.softserve.academy.spaced.repetition.repository.UserRepository;
 import com.softserve.academy.spaced.repetition.security.DTO.ReCaptchaResponseDto;
 import com.softserve.academy.spaced.repetition.security.utils.FacebookAuthUtil;
 import com.softserve.academy.spaced.repetition.security.utils.GoogleAuthUtil;
 import com.softserve.academy.spaced.repetition.security.utils.JwtTokenUtil;
 import com.softserve.academy.spaced.repetition.security.authentification.JwtUser;
+import com.softserve.academy.spaced.repetition.utils.exceptions.UserStatusException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
@@ -48,11 +51,12 @@ public class AuthenticationRestService {
     private ReCaptchaApiService reCaptchaApiService;
     @Autowired
     private AuthenticationManager authenticationManager;
-
+    @Autowired
+    private UserRepository userRepository;
     @Value("${app.jwt.header}")
     private String tokenHeader;
 
-    public HttpHeaders getAuthHeaders(String email, String password, String captcha, Device device) {
+    public HttpHeaders getAuthHeaders(String email, String password, String captcha, Device device) throws UserStatusException {
         ReCaptchaResponseDto reCaptchaResponseDto = reCaptchaApiService.verify(captcha);
         if (!reCaptchaResponseDto.isSuccess()) {
             throw new BadCredentialsException("reCaptcha");
@@ -65,7 +69,7 @@ public class AuthenticationRestService {
         return addTokenToHeaderCookie(token);
     }
 
-    public HttpHeaders getFacebookHeaders(String idToken, Device device) {
+    public HttpHeaders getFacebookHeaders(String idToken, Device device) throws UserStatusException {
         String graph = facebookAuthUtil.getFBGraph(idToken);
         Map fbProfileData = facebookAuthUtil.getGraphData(graph);
         String email = (String) fbProfileData.get("email");
@@ -81,7 +85,7 @@ public class AuthenticationRestService {
         return addTokenToHeaderCookie(token);
     }
 
-    public HttpHeaders getGoogleHeaders(String idToken, Device device) {
+    public HttpHeaders getGoogleHeaders(String idToken, Device device) throws UserStatusException {
         GoogleIdToken googleIdToken = googleAuthUtil.getGoogleIdToken(idToken);
         String email = googleAuthUtil.getEmail(googleIdToken);
         if (!googleAuthUtil.checkIfExistUser(email)) {
@@ -95,7 +99,7 @@ public class AuthenticationRestService {
         return addTokenToHeaderCookie(token);
     }
 
-    public HttpHeaders getHeadersForRefreshToken(HttpServletRequest request) {
+    public HttpHeaders getHeadersForRefreshToken(HttpServletRequest request) throws UserStatusException {
         String token = getTokenFromRequest(request);
         String username = jwtTokenUtil.getUsernameFromToken(token);
         JwtUser user = (JwtUser) userDetailsService.loadUserByUsername(username);
@@ -149,10 +153,16 @@ public class AuthenticationRestService {
         return authentication;
     }
 
-    private void validateUser(UserDetails userDetails){
+
+    private void validateUser(UserDetails userDetails) throws UserStatusException {
+        User user = userRepository.findUserByAccountEmail(userDetails.getUsername());
+        if (user.getAccount().getStatus().isNotActive()) {
+            throw new UserStatusException(user.getAccount().getStatus());
+        }
         if(!userDetails.isAccountNonLocked()){
             throw new LockedException(messageSource.getMessage("message.exception.accountDeactivated",
                     new Object[]{}, locale));
         }
+
     }
 }
