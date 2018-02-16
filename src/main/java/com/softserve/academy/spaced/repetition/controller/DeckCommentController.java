@@ -48,7 +48,6 @@ public class DeckCommentController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public CommentDTO addCommentForDeck(@Validated @RequestBody ReplyToCommentDTO replyToCommentDTO,
-                                                        @RequestBody String commentText,
                                                         @PathVariable Long deckId) throws NotAuthorisedUserException {
         LOGGER.debug("Added comment to deck with id: {}", deckId);
         DeckComment comment = commentService

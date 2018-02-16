@@ -120,19 +120,6 @@ public class DeckController {
                 linkTo(methodOn(DeckController.class).getDeckById(deck.getId())).withSelfRel());
     }
 
-    @Auditable(action = AuditingAction.EDIT_DECK)
-    @PutMapping(value = "/api/user/{userId}/decks/{deckId}/{categoryId}")
-    public void updateDeck(@Validated(Request.class) @RequestBody Deck deck, @PathVariable Long deckId,
-                           @PathVariable Long categoryId) {
-        deckService.updateDeck(deck, deckId, categoryId);
-    }
-
-    @Auditable(action = AuditingAction.DELETE_DECK)
-    @DeleteMapping(value = "/api/user/{userId}/decks/{deckId}")
-    public void deleteDeck(@PathVariable Long deckId) {
-        deckService.deleteDeck(deckId);
-    }
-
     //TODO ok
     @Auditable(action = AuditingAction.VIEW_DECKS_ADMIN)
     @GetMapping(value = "/api/admin/decks")
@@ -141,19 +128,10 @@ public class DeckController {
                                                                                  @RequestParam(name = "asc") boolean ascending) {
         Page<DeckOfUserManagedByAdminDTO> deckOfUserManagedByAdminDTO = deckService
                 .getPageWithAllAdminDecks(pageNumber, sortBy, ascending).map((deck) -> {
-                    Link selfLink = linkTo(methodOn(DeckController.class).getOneDeckForAdmin(deck.getId())).withSelfRel();
+                    Link selfLink = linkTo(methodOn(DeckController.class).getDeckById(deck.getId())).withSelfRel();
                     return buildDtoForEntity(deck, DeckOfUserManagedByAdminDTO.class, selfLink);
                 });
         return new ResponseEntity<>(deckOfUserManagedByAdminDTO, HttpStatus.OK);
-    }
-//no
-    @Auditable(action = AuditingAction.VIEW_ONE_DECK_ADMIN)
-    @GetMapping(value = "/api/admin/decks/{deckId}")
-    @ResponseStatus(HttpStatus.OK)
-    public DeckOfUserManagedByAdminDTO getOneDeckForAdmin(@PathVariable Long deckId) {
-        Deck deck = deckService.getDeck(deckId);
-        return buildDtoForEntity(deck, DeckOfUserManagedByAdminDTO.class,
-                linkTo(methodOn(DeckController.class).getOneDeckForAdmin(deckId)).withSelfRel());
     }
 
     //TODO ok
@@ -165,7 +143,7 @@ public class DeckController {
         Deck deckNew = deckService.createNewDeckAdmin(deck);
         folderService.addDeck(deckNew.getId());
         return buildDtoForEntity(deckNew, DeckOfUserManagedByAdminDTO.class,
-                linkTo(methodOn(DeckController.class).getOneDeckForAdmin(deckNew.getId())).withSelfRel());
+                linkTo(methodOn(DeckController.class).getDeckById(deckNew.getId())).withSelfRel());
     }
 
     //TODO ???????????link
@@ -176,7 +154,7 @@ public class DeckController {
                                                           @PathVariable Long deckId) {
         Deck updatedDeck = deckService.updateDeckAdmin(deck, deckId);
         return buildDtoForEntity(updatedDeck, DeckOfUserManagedByAdminDTO.class,
-                linkTo(methodOn(DeckController.class).getOneDeckForAdmin(updatedDeck.getId())).withSelfRel());
+                linkTo(methodOn(DeckController.class).getDeckById(updatedDeck.getId())).withSelfRel());
     }
 
     //TODO ???????????link
@@ -226,7 +204,7 @@ public class DeckController {
 
     //TODO ok
     @Auditable(action = AuditingAction.VIEW_DECKS_USER)
-    @GetMapping(value = "/api/user/folder/decks/own")
+    @GetMapping(value = "/api/users/folders/decks/own")
     @ResponseStatus(HttpStatus.OK)
     public List<DeckPrivateDTO> getAllDecksForUser() throws NotAuthorisedUserException {
         List<Deck> decksList = deckService.getAllDecksByUser();
@@ -236,7 +214,7 @@ public class DeckController {
 
     //TODO ok
     @Auditable(action = AuditingAction.VIEW_ONE_DECK_USER)
-    @GetMapping(value = "/api/user/folder/decks/own/{deckId}")
+    @GetMapping(value = "/api/users/folders/decks/own/{deckId}")
     @ResponseStatus(HttpStatus.OK)
     public DeckPrivateDTO getOneDeckForUser(@PathVariable Long deckId)
             throws NotAuthorisedUserException, NotOwnerOperationException {
@@ -244,15 +222,8 @@ public class DeckController {
         return buildDtoForEntity(deck, DeckPrivateDTO.class,
                 linkTo(methodOn(DeckController.class).getOneDeckForUser(deckId)).withSelfRel());
     }
-//no
-    @GetMapping("/api/private/user/folder/{folderId}/decks/{deckId}")
-    @ResponseStatus(HttpStatus.OK)
-    public DeckLinkByFolderDTO getDeckByFolderId(@PathVariable Long deckId) {
-        Deck deck = deckService.getDeck(deckId);
-        return buildDtoForEntity(deck, DeckLinkByFolderDTO.class,
-                linkTo(methodOn(DeckController.class).getDeckByFolderId(deckId)).withSelfRel());
-    }
-//no
+
+    //no
     @Auditable(action = AuditingAction.START_LEARNING_VIA_FOLDER)
     @GetMapping("/api/private/user/folder/{folderId}/decks/{deckId}/cards")
     @ResponseStatus(HttpStatus.OK)
