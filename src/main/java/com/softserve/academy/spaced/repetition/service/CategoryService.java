@@ -1,5 +1,6 @@
 package com.softserve.academy.spaced.repetition.service;
 
+import com.softserve.academy.spaced.repetition.controller.dto.impl.CategoryDTO;
 import com.softserve.academy.spaced.repetition.domain.Category;
 import com.softserve.academy.spaced.repetition.domain.Image;
 import org.springframework.data.domain.Page;
@@ -49,7 +50,7 @@ public interface CategoryService {
      * @param categoryId must not be {@literal null}.
      * @return updated category
      */
-    Category updateCategory(Category category, Long categoryId);
+    Category updateCategory(CategoryDTO category, Long categoryId);
 
     /**
      * Return sorted categories on each page.
@@ -60,4 +61,6 @@ public interface CategoryService {
      * @return sorted category on each page (by default 8 categories on each page)
      */
     Page<Category> getSortedCategories(int pageNumber, String sortBy, boolean ascending);
+
+    void deleteCategory(Long categoryId);
 }
