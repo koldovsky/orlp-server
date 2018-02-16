@@ -34,8 +34,7 @@ public class DeckController {
     private FolderService folderService;
 
     @Auditable(action = AuditingAction.VIEW_DECKS_VIA_CATEGORY)
-    @GetMapping(value = "/api/category/{categoryId}/decks")
-    @PreAuthorize(value = "@accessToUrlService.hasAccessToDeck(#categoryId)")
+    @GetMapping(value = "api/category/{categoryId}/decks")
     public ResponseEntity<Page<DeckLinkByCategoryDTO>> getAllDecksByCategoryId(@PathVariable Long categoryId,
                                                                                @RequestParam(name = "p", defaultValue = "1")
                                                                                        int pageNumber,
