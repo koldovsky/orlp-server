@@ -75,7 +75,7 @@ public class DeckRatingServiceTest {
         verify(deckRepository).findOne(DECK_ID);
         verify(deckRatingRepository).save(deckRating);
         verify(deckRatingRepository).findAverageRatingByDeckId(DECK_ID);
-        verify(deckRepository).save(deck);
+        verify(deckRatingRepository).save(deckRating);
     }
 
     @Test(expected = NotAuthorisedUserException.class)

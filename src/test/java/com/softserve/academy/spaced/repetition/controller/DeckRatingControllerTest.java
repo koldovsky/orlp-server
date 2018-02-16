@@ -59,7 +59,7 @@ public class DeckRatingControllerTest {
     @Test
     public void getDeckRatingById() throws Exception {
         when(deckRatingService.getDeckRatingById(eq(77L))).thenReturn(createDeckRating());
-        mockMvc.perform(get("api/decks/{deckId}/ratings/{id}", 5L, 77L)
+        mockMvc.perform(get("/api/decks/{deckId}/ratings/{id}", 5L, 77L)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -77,8 +77,16 @@ public class DeckRatingControllerTest {
 
     @Test
     public void testAddDeckRating() throws Exception {
+        Deck deck = new Deck();
+        deck.setId(5L);
+        DeckRating deckRating = new DeckRating();
+        deckRating.setRating(3);
+        deckRating.setDeck(deck);
+        deckRating.setAccountEmail("email@email");
+
+        when(deckRatingService.addDeckRating(eq(3), eq(5L))).thenReturn(deckRating);
         mockMvc.perform(post("/api/decks/{deckId}", 5L)
-                .content("{\"ratings\":3,\"accountEmail\":\"email@email\",\"deck\":{\"id\":5}}")
+                .content("{\"rating\":3,\"accountEmail\":\"email@email\",\"deck\":{\"id\":5}}")
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated());
@@ -91,7 +99,7 @@ public class DeckRatingControllerTest {
         doThrow(NotAuthorisedUserException.class).when(deckRatingService).addDeckRating(eq(3), eq(5L));
 
         mockMvc.perform(post("/api/decks/{deckId}", 5L)
-                .content("{\"ratings\":3,\"accountEmail\":\"email@email\",\"deckId\":5}")
+                .content("{\"rating\":3,\"accountEmail\":\"email@email\",\"deckId\":5}")
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isUnauthorized());
@@ -101,13 +109,13 @@ public class DeckRatingControllerTest {
     @Test
     public void testNegativeAddDeckRating() throws Exception {
         mockMvc.perform(post("/api/decks/{deckId}", 5L)
-                .content("{\"ratings\":0}")
+                .content("{\"rating\":0}")
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
 
         mockMvc.perform(post("/api/decks/{deckId}", 5L)
-                .content("{\"ratings\":6}")
+                .content("{\"rating\":6}")
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
