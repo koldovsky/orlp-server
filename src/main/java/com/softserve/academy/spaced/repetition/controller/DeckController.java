@@ -34,7 +34,7 @@ public class DeckController {
     private FolderService folderService;
 
     @Auditable(action = AuditingAction.VIEW_DECKS_VIA_CATEGORY)
-    //TODO ok
+
     @GetMapping(value = "/api/categories/{categoryId}/decks")
     public ResponseEntity<Page<DeckLinkByCategoryDTO>> getAllDecksByCategoryId(@PathVariable Long categoryId,
                                                                                @RequestParam(name = "p", defaultValue = "1")
@@ -50,7 +50,6 @@ public class DeckController {
         return new ResponseEntity<>(deckByCategoryDTOS, HttpStatus.OK);
     }
 
-    //TODO ok
     @GetMapping(value = "/api/decks/ordered")
     @ResponseStatus(HttpStatus.OK)
     public List<DeckPublicDTO> getAllDecksOrderByRating() {
@@ -59,7 +58,6 @@ public class DeckController {
                 linkTo(methodOn(DeckController.class).getAllDecksOrderByRating()).withSelfRel());
     }
 
-    //no
     @Auditable(action = AuditingAction.VIEW_DECKS_VIA_COURSE)
     @GetMapping(value = "/api/category/{categoryId}/courses/{courseId}/decks")
     @ResponseStatus(HttpStatus.OK)
@@ -69,7 +67,6 @@ public class DeckController {
                 linkTo(methodOn(DeckController.class).getAllDecksByCourseId(categoryId, courseId)).withSelfRel());
     }
 
-    //TODO ok
     @GetMapping(value = "/api/decks/{deckId}")
     @ResponseStatus(HttpStatus.OK)
     public DeckPublicDTO getDeckById(@PathVariable Long deckId) {
@@ -78,7 +75,6 @@ public class DeckController {
                 linkTo(methodOn(DeckController.class).getDeckById(deckId)).withSelfRel());
     }
 
-    //no
     @Auditable(action = AuditingAction.START_LEARNING_DECK_VIA_CATEGORY)
     @GetMapping(value = "/api/category/{categoryId}/decks/{deckId}/cards")
     @ResponseStatus(HttpStatus.OK)
@@ -88,7 +84,6 @@ public class DeckController {
                 linkTo(methodOn(DeckController.class).getCardsByCategoryAndDeck(categoryId, deckId)).withSelfRel());
     }
 
-    //no
     @Auditable(action = AuditingAction.START_LEARNING_DECK_VIA_COURSE)
     @GetMapping(value = "/api/category/{categoryId}/courses/{courseId}/decks/{deckId}/cards")
     @ResponseStatus(HttpStatus.OK)
@@ -99,7 +94,6 @@ public class DeckController {
                 .getCardsByCourseAndDeck(categoryId, courseId, deckId)).withSelfRel());
     }
 
-    //no
     @Auditable(action = AuditingAction.CREATE_DECK_IN_CATEGORY)
     @PostMapping(value = "/api/categories/{category_id}/decks")
     @ResponseStatus(HttpStatus.CREATED)
@@ -110,7 +104,6 @@ public class DeckController {
                 linkTo(methodOn(DeckController.class).getDeckById(deck.getId())).withSelfRel());
     }
 
-    //TODO ok
     @Auditable(action = AuditingAction.CREATE_DECK_IN_COURSE)
     @PostMapping(value = "/api/courses/{courseId}/decks")
     @ResponseStatus(HttpStatus.CREATED)
@@ -120,7 +113,6 @@ public class DeckController {
                 linkTo(methodOn(DeckController.class).getDeckById(deck.getId())).withSelfRel());
     }
 
-    //TODO ok
     @Auditable(action = AuditingAction.VIEW_DECKS_ADMIN)
     @GetMapping(value = "/api/admin/decks")
     public ResponseEntity<Page<DeckOfUserManagedByAdminDTO>> getAllDecksForAdmin(@RequestParam(name = "p", defaultValue = "1") int pageNumber,
@@ -134,7 +126,6 @@ public class DeckController {
         return new ResponseEntity<>(deckOfUserManagedByAdminDTO, HttpStatus.OK);
     }
 
-    //TODO ok
     @Auditable(action = AuditingAction.CREATE_DECK_ADMIN)
     @PostMapping(value = "/api/admin/decks")
     @ResponseStatus(HttpStatus.CREATED)
@@ -146,7 +137,6 @@ public class DeckController {
                 linkTo(methodOn(DeckController.class).getDeckById(deckNew.getId())).withSelfRel());
     }
 
-    //TODO ???????????link
     @Auditable(action = AuditingAction.EDIT_DECK_ADMIN)
     @PutMapping(value = "/api/admin/decks/{deckId}")
     @ResponseStatus(HttpStatus.OK)
@@ -157,7 +147,6 @@ public class DeckController {
                 linkTo(methodOn(DeckController.class).getDeckById(updatedDeck.getId())).withSelfRel());
     }
 
-    //TODO ???????????link
     @Auditable(action = AuditingAction.DELETE_DECK_ADMIN)
     @DeleteMapping(value = "/api/admin/decks/{deckId}")
     @ResponseStatus(HttpStatus.OK)
@@ -166,7 +155,6 @@ public class DeckController {
         deckService.deleteDeck(deckId);
     }
 
-    //TODO ok
     @Auditable(action = AuditingAction.DELETE_DECK_USER)
     @DeleteMapping(value = "/api/decks/{deckId}")
     @ResponseStatus(HttpStatus.OK)
@@ -178,7 +166,6 @@ public class DeckController {
                 linkTo(methodOn(DeckController.class).getAllDecksForUser()).withSelfRel());
     }
 
-    //TODO ok
     @Auditable(action = AuditingAction.CREATE_DECK_USER)
     @PostMapping(value = "/api/categories/{categoryId}/decks")
     @ResponseStatus(HttpStatus.CREATED)
@@ -190,7 +177,6 @@ public class DeckController {
                 linkTo(methodOn(DeckController.class).getOneDeckForUser(deck.getId())).withSelfRel());
     }
 
-    //TODO ok
     @Auditable(action = AuditingAction.EDIT_DECK_USER)
     @PutMapping(value = "/api/categories/{categoryId}/decks/{deckId}")
     @ResponseStatus(HttpStatus.OK)
@@ -202,7 +188,6 @@ public class DeckController {
                 linkTo(methodOn(DeckController.class).getOneDeckForUser(updatedDeck.getId())).withSelfRel());
     }
 
-    //TODO ok
     @Auditable(action = AuditingAction.VIEW_DECKS_USER)
     @GetMapping(value = "/api/users/folders/decks/own")
     @ResponseStatus(HttpStatus.OK)
@@ -212,7 +197,6 @@ public class DeckController {
                 linkTo(methodOn(DeckController.class).getAllDecksForUser()).withSelfRel());
     }
 
-    //TODO ok
     @Auditable(action = AuditingAction.VIEW_ONE_DECK_USER)
     @GetMapping(value = "/api/users/folders/decks/own/{deckId}")
     @ResponseStatus(HttpStatus.OK)
@@ -223,7 +207,6 @@ public class DeckController {
                 linkTo(methodOn(DeckController.class).getOneDeckForUser(deckId)).withSelfRel());
     }
 
-    //no
     @Auditable(action = AuditingAction.START_LEARNING_VIA_FOLDER)
     @GetMapping("/api/private/user/folder/{folderId}/decks/{deckId}/cards")
     @ResponseStatus(HttpStatus.OK)

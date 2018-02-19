@@ -43,7 +43,7 @@ public class FolderController {
     }
 
     @Auditable(action = AuditingAction.VIEW_DECK_IN_FOLDER)
-    @GetMapping("/api/private/user/folder/{folderId}/decks")
+    @GetMapping("/api/user/folder/{folderId}/decks")
     @PreAuthorize(value = "@accessToUrlService.hasAccessToFolder(#folderId)")
     public ResponseEntity<List<DeckLinkByFolderDTO>> getAllDecksWithFolder(@PathVariable Long folderId) {
         List<Deck> deckList = folderService.getAllDecksByFolderId(folderId);
