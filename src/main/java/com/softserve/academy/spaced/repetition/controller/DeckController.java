@@ -76,12 +76,12 @@ public class DeckController {
     }
 
     @Auditable(action = AuditingAction.START_LEARNING_DECK_VIA_CATEGORY)
-    @GetMapping(value = "/api/category/{categoryId}/decks/{deckId}/cards")
+    @GetMapping(value = "/api/categories/decks/{deckId}/cards")
     @ResponseStatus(HttpStatus.OK)
-    public List<CardPublicDTO> getCardsByCategoryAndDeck(@PathVariable Long categoryId, @PathVariable Long deckId) {
+    public List<CardPublicDTO> getCardsByCategoryAndDeck(@PathVariable Long deckId) {
         List<Card> cards = deckService.getAllCardsByDeckId(deckId);
         return buildDtoListForCollection(cards, CardPublicDTO.class,
-                linkTo(methodOn(DeckController.class).getCardsByCategoryAndDeck(categoryId, deckId)).withSelfRel());
+                linkTo(methodOn(DeckController.class).getCardsByCategoryAndDeck(deckId)).withSelfRel());
     }
 
     @Auditable(action = AuditingAction.START_LEARNING_DECK_VIA_COURSE)
@@ -206,15 +206,4 @@ public class DeckController {
         return buildDtoForEntity(deck, DeckPrivateDTO.class,
                 linkTo(methodOn(DeckController.class).getOneDeckForUser(deckId)).withSelfRel());
     }
-
-    @Auditable(action = AuditingAction.START_LEARNING_VIA_FOLDER)
-    @GetMapping("/api/private/user/folder/{folderId}/decks/{deckId}/cards")
-    @ResponseStatus(HttpStatus.OK)
-    public List<CardPublicDTO> getCardsByFolderAndDeck(@PathVariable Long folderId,
-                                                       @PathVariable Long deckId) {
-        List<Card> cards = deckService.getAllCardsByDeckId(deckId);
-        return buildDtoListForCollection(cards, CardPublicDTO.class,
-                linkTo(methodOn(DeckController.class).getCardsByFolderAndDeck(folderId, deckId)).withSelfRel());
-    }
-
 }
