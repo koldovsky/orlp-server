@@ -43,6 +43,7 @@ public class DeckRatingServiceImpl implements DeckRatingService{
         deckRatingRepository.save(deckRating);
         double deckAverageRating = deckRatingRepository.findAverageRatingByDeckId(deckId);
         deck.setRating(deckAverageRating);
+        deckRepository.save(deck);
         return deckRating;
     }
 
