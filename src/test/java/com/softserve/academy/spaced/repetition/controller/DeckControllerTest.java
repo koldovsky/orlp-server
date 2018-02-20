@@ -58,33 +58,6 @@ public class DeckControllerTest {
     }
 
     @Test
-    public void getDecksById() throws Exception {
-        when(deckService.getDeck(eq(4L))).thenReturn(createDeck());
-        mockMvc.perform(get("/api/admin/decks/{deckId}", 4L)
-                .accept(MediaType.APPLICATION_JSON)
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(content().json("{\"name\": \"Java interview #4\"," +
-                        "  \"owner\": \"admin@gmail.com\"," +
-                        "  \"description\": \"Part 4\"," +
-                        "  \"deckId\": 4," +
-                        "  \"rating\": 0," +
-                        "  \"category\": \"Java\"," +
-                        "  \"categoryId\": 1," +
-                        "  \"links\": [{" +
-                        "        \"rel\":\"self\"," +
-                        "          \"href\":\"http://localhost/api/admin/decks/4\"" +
-                        "      }]" +
-                        "}"));
-    }
-
-    private Deck createDeck() {
-        Deck deck = createDeck(4L, "Java interview #4", "Part 4",
-                "admin@gmail.com", 0, 1L, "Java");
-        return deck;
-    }
-
-    @Test
     public void getDecksByPage() throws Exception {
         when(deckService.getPageWithAllAdminDecks(NUMBER_PAGE, ADMIN_DECKS_SORT_BY, true)).thenReturn(createDecks());
         mockMvc.perform(get("/api/admin/decks?p=" + NUMBER_PAGE + "&sortBy=" + ADMIN_DECKS_SORT_BY + "&asc=true")
