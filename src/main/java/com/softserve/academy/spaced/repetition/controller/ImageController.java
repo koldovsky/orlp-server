@@ -22,6 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
+import static com.softserve.academy.spaced.repetition.controller.dto.builder.DTOBuilder.buildDtoListForCollection;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
@@ -45,6 +46,7 @@ public class ImageController {
      */
     @Auditable(action = AuditingAction.UPLOAD_IMAGE)
     @PostMapping("/api/service/image")
+    @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<UploadingImageDTO> addImageToDB(@RequestParam("file") MultipartFile file)
             throws ImageRepositorySizeQuotaExceededException, NotAuthorisedUserException {
         Image image = imageService.addImageToDB(file);
@@ -62,11 +64,11 @@ public class ImageController {
      * @return list of imageDTOs
      */
     @GetMapping("/api/service/images/user")
-    public ResponseEntity<List<ImageDTO>> getAllImagesByUserId() throws NotAuthorisedUserException {
+    @ResponseStatus(HttpStatus.OK)
+    public List<ImageDTO> getAllImagesByUserId() throws NotAuthorisedUserException {
         List<Image> listId = imageService.getImagesForCurrentUser();
-        Link link = linkTo(methodOn(ImageController.class).getImageList()).withSelfRel();
-        List<ImageDTO> imageDTOList = DTOBuilder.buildDtoListForCollection(listId, ImageDTO.class, link);
-        return new ResponseEntity<>(imageDTOList, HttpStatus.OK);
+        return buildDtoListForCollection(listId, ImageDTO.class,
+                linkTo(methodOn(ImageController.class).getImageList()).withSelfRel());
     }
 
     /**
@@ -91,15 +93,15 @@ public class ImageController {
      */
     @Auditable(action = AuditingAction.VIEW_ALL_IMAGE_ADMIN)
     @GetMapping(value = "/api/admin/service/image")
-    public ResponseEntity<List<ImageDTO>> getImageList() {
+    @ResponseStatus(HttpStatus.OK)
+    public List<ImageDTO> getImageList() {
         List<Image> listId = imageRepository.getImagesWithoutContent();
-        Link link = linkTo(methodOn(ImageController.class).getImageList()).withSelfRel();
-        List<ImageDTO> imageDTOList = DTOBuilder.buildDtoListForCollection(listId, ImageDTO.class, link);
-        return new ResponseEntity<>(imageDTOList, HttpStatus.OK);
+        return buildDtoListForCollection(listId, ImageDTO.class,
+                linkTo(methodOn(ImageController.class).getImageList()).withSelfRel());
     }
 
     /**
-     * Delete the selected image
+     * Delete the selected imagelinkTo(methodOn(ImageController.class).getImageList()).withSelfRel()
      *
      * @param id - Image id, which we want to delete
      * @return - HttpStatus.OK if the operation of deleting was made successfull
