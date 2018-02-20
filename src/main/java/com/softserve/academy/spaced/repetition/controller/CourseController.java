@@ -7,11 +7,6 @@ import com.softserve.academy.spaced.repetition.controller.dto.impl.CourseLinkDTO
 import com.softserve.academy.spaced.repetition.controller.dto.impl.CoursePublicDTO;
 import com.softserve.academy.spaced.repetition.domain.Course;
 import com.softserve.academy.spaced.repetition.service.CourseService;
-import com.softserve.academy.spaced.repetition.service.UserService;
-import com.softserve.academy.spaced.repetition.utils.audit.Auditable;
-import com.softserve.academy.spaced.repetition.utils.audit.AuditingAction;
-import com.softserve.academy.spaced.repetition.domain.Course;
-import com.softserve.academy.spaced.repetition.service.CourseService;
 import com.softserve.academy.spaced.repetition.utils.audit.Auditable;
 import com.softserve.academy.spaced.repetition.utils.audit.AuditingAction;
 import com.softserve.academy.spaced.repetition.utils.exceptions.NotAuthorisedUserException;
@@ -20,7 +15,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.hateoas.Link;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -28,8 +22,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.softserve.academy.spaced.repetition.domain.enums.EntityName.COURSE;
-import static com.softserve.academy.spaced.repetition.domain.enums.Operations.READ;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 

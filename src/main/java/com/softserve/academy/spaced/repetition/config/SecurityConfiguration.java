@@ -4,8 +4,6 @@ import com.softserve.academy.spaced.repetition.security.CustomAuditorAware;
 import com.softserve.academy.spaced.repetition.security.CustomPermissionEvaluator;
 import com.softserve.academy.spaced.repetition.security.authentification.JwtAuthenticationEntryPoint;
 import com.softserve.academy.spaced.repetition.security.authentification.JwtAuthenticationFilter;
-import com.softserve.academy.spaced.repetition.security.authentification.JwtUser;
-import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.web.DefaultErrorAttributes;
