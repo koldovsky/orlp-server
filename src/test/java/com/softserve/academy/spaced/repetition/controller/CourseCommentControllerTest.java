@@ -1,5 +1,6 @@
 package com.softserve.academy.spaced.repetition.controller;
 
+import com.softserve.academy.spaced.repetition.controller.handler.ExceptionHandlerController;
 import com.softserve.academy.spaced.repetition.domain.Comment;
 import com.softserve.academy.spaced.repetition.domain.CourseComment;
 import com.softserve.academy.spaced.repetition.domain.Person;
@@ -69,8 +70,8 @@ public class CourseCommentControllerTest {
     public void getCommentByCourse() throws Exception {
         when(courseCommentService.getCommentById(eq(COMMENT_ID)))
                 .thenReturn(createCourseComment("Admin", "Admin", "Good course", COMMENT_ID, null));
-        mockMvc.perform(get("/api/category/{categoryId}/courses/{courseId}/comments/{courseCommentId}"
-                , CATEGORY_ID, COURSE_ID, COMMENT_ID)
+        mockMvc.perform(get("/api/courses/{courseId}/comments/{courseCommentId}"
+                , COURSE_ID, COMMENT_ID)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -84,14 +85,14 @@ public class CourseCommentControllerTest {
                         "\"commentText\": \"Good course\"," +
                         "\"commentDate\": 1508281622000," +
                         "\"listOfChildComments\": null," +
-                        "\"links\":[{\"rel\":\"self\",\"href\": \"http://localhost/api/category/1/courses/1/comments/3\"}]}"));
+                        "\"links\":[{\"rel\":\"self\",\"href\": \"http://localhost/api/courses/1/comments/3\"}]}"));
     }
 
     @Test
     public void getAllCommentsByCourse() throws Exception {
         when(courseCommentService.getAllCommentsForCourse(eq(COURSE_ID))).thenReturn(createListOfComments());
-        mockMvc.perform(get("/api/category/{categoryId}/courses/{courseId}/comments"
-                , CATEGORY_ID, COURSE_ID)
+        mockMvc.perform(get("/api/courses/{courseId}/comments"
+                , COURSE_ID)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -106,7 +107,7 @@ public class CourseCommentControllerTest {
                         "\"commentText\": \"Good course\"," +
                         "\"commentDate\": 1508281622000," +
                         "\"listOfChildComments\": null," +
-                        "\"links\":[{\"rel\":\"self\",\"href\": \"http://localhost/api/category/1/courses/1/comments/3\"}]}," +
+                        "\"links\":[{\"rel\":\"self\",\"href\": \"http://localhost/api/courses/1/comments/3\"}]}," +
                         "{" +
                         "\"parentCommentId\": null," +
                         "\"image\": null," +
@@ -117,7 +118,7 @@ public class CourseCommentControllerTest {
                         "\"commentText\": \"Not bad\"," +
                         "\"commentDate\": 1508281622000," +
                         "\"listOfChildComments\": null," +
-                        "\"links\":[{\"rel\":\"self\",\"href\": \"http://localhost/api/category/1/courses/1/comments/1\"}]}," +
+                        "\"links\":[{\"rel\":\"self\",\"href\": \"http://localhost/api/courses/1/comments/1\"}]}," +
                         "{" +
                         "\"parentCommentId\": null," +
                         "\"image\": null," +
@@ -127,27 +128,14 @@ public class CourseCommentControllerTest {
                         "\"commentId\": 2," +
                         "\"commentText\": \"Cool\"," +
                         "\"commentDate\": 1508281622000," +
-                        "\"links\":[{\"rel\":\"self\",\"href\": \"http://localhost/api/category/1/courses/1/comments/2\"}]}]"
+                        "\"links\":[{\"rel\":\"self\",\"href\": \"http://localhost/api/courses/1/comments/2\"}]}]"
                 ));
     }
 
     @Test
-    public void updateComment() throws Exception {
-        when(courseCommentService.updateCommentById(eq(COMMENT_ID), eq("Good course")))
-                .thenReturn(createCourseComment("Admin", "Admin", "Good course", COMMENT_ID, null));
-        mockMvc.perform(put("/api/category/{categoryId}/courses/{courseId}/comments/{courseCommentId}"
-                , CATEGORY_ID, COURSE_ID, COMMENT_ID)
-                .content("Good course")
-                .accept(MediaType.APPLICATION_JSON)
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
-
-    }
-
-    @Test
     public void testDeleteComment() throws Exception {
-        mockMvc.perform(delete("/api/category/{categoryId}/courses/{courseId}/comments/{courseCommentId}"
-                , CATEGORY_ID, COURSE_ID, COMMENT_ID)
+        mockMvc.perform(delete("/api/courses/{courseId}/comments/{courseCommentId}"
+                , COURSE_ID, COMMENT_ID)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
@@ -157,8 +145,8 @@ public class CourseCommentControllerTest {
     public void testAddComment() throws Exception {
         when(courseCommentService.addCommentForCourse(eq(COURSE_ID), eq("Good course"), eq(null)))
                 .thenReturn(createCourseComment("Admin", "Admin", "Good course", COMMENT_ID, null));
-        mockMvc.perform(post("/api/category/{categoryId}/courses/{courseId}/comments"
-                , CATEGORY_ID, COURSE_ID)
+        mockMvc.perform(post("/api/courses/{courseId}/comments"
+                , COURSE_ID)
                 .content("{\"commentText\": \"Good course\"}")
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON))

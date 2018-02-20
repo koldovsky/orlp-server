@@ -11,12 +11,7 @@ import java.util.Date;
 
 @Repository
 public interface AccountRepository extends JpaRepository<Account, Long> {
-    public Account findByEmail(String email);
-
-    public Account findById(long id);
-
-    @Query("UPDATE Account acc set acc.status = :status WHERE id = :account_id")
-    public void updateAccount(@Param("status") String status, @Param("account_id") long accountId);
+     Account findByEmail(String email);
 
     @Query("SELECT a.lastPasswordResetDate FROM Account a WHERE a.email = :email")
     Date getLastPasswordResetDate(@Param("email") String email);

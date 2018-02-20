@@ -1,5 +1,6 @@
 package com.softserve.academy.spaced.repetition.service;
 
+import com.softserve.academy.spaced.repetition.domain.Course;
 import com.softserve.academy.spaced.repetition.domain.CourseRating;
 import com.softserve.academy.spaced.repetition.utils.exceptions.NotAuthorisedUserException;
 import com.softserve.academy.spaced.repetition.utils.exceptions.UserStatusException;
@@ -17,7 +18,7 @@ public interface CourseRatingService {
      * @throws NotAuthorisedUserException if user is not authorised
      * @throws UserStatusException        if users status is not active
      */
-    void addCourseRating(int rating, Long courseId) throws NotAuthorisedUserException, UserStatusException;
+    CourseRating addCourseRating(int rating, Long courseId) throws NotAuthorisedUserException, UserStatusException;
 
     /**
      * Gets rating of course with the given identifier.

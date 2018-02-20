@@ -1,5 +1,6 @@
 package com.softserve.academy.spaced.repetition.domain;
 
+import com.softserve.academy.spaced.repetition.controller.dto.annotations.EntityInterface;
 import com.softserve.academy.spaced.repetition.domain.enums.ImageType;
 import com.softserve.academy.spaced.repetition.controller.dto.annotations.Request;
 
@@ -14,7 +15,7 @@ import static com.softserve.academy.spaced.repetition.utils.validators.Validatio
 
 @Entity
 @Table(name = "person")
-public class Person {
+public class Person implements EntityInterface {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -32,7 +33,6 @@ public class Person {
     @Size(min = PERSON_FIELD_MIN_SIZE, max = PERSON_FIELD_MAX_SIZE, message = "{message.validation.fieldSizeLimits}", groups = Request.class)
     @Pattern(regexp = SPECIAL_SYMBOLS_PATTERN, message = "{message.validation.fieldCantContainReservedSymbols}", groups = Request.class)
     private String lastName;
-
 
     @Column(name = "image_type", length = IMAGE_TYPE_MAX_SIZE)
     @NotNull
@@ -60,7 +60,7 @@ public class Person {
         this.image = image;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 

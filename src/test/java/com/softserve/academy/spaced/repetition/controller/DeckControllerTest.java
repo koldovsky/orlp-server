@@ -1,5 +1,6 @@
 package com.softserve.academy.spaced.repetition.controller;
 
+import com.softserve.academy.spaced.repetition.controller.handler.ExceptionHandlerController;
 import com.softserve.academy.spaced.repetition.domain.Account;
 import com.softserve.academy.spaced.repetition.domain.Category;
 import com.softserve.academy.spaced.repetition.domain.Deck;
@@ -133,7 +134,7 @@ public class DeckControllerTest {
     @Test
     public void getDecksByPageAndCategory() throws Exception {
         when(deckService.getPageWithDecksByCategory(CATEGORY_ID, NUMBER_PAGE, SORT_BY, false)).thenReturn(createDecksBySelectedCategory());
-        mockMvc.perform(get("/api/category/" + CATEGORY_ID + "/decks?p=" + NUMBER_PAGE + "&sortBy=" + SORT_BY + "&asc=" + false)
+        mockMvc.perform(get("/api/categories/" + CATEGORY_ID + "/decks?p=" + NUMBER_PAGE + "&sortBy=" + SORT_BY + "&asc=" + false)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())

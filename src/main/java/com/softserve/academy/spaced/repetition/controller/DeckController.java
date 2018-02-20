@@ -34,7 +34,7 @@ public class DeckController {
     private FolderService folderService;
 
     @Auditable(action = AuditingAction.VIEW_DECKS_VIA_CATEGORY)
-    @GetMapping(value = "/api/category/{categoryId}/decks")
+    @GetMapping(value = "/api/categories/{categoryId}/decks")
     @PreAuthorize(value = "@accessToUrlService.hasAccessToDeck(#categoryId)")
     public ResponseEntity<Page<DeckLinkByCategoryDTO>> getAllDecksByCategoryId(@PathVariable Long categoryId,
                                                                                @RequestParam(name = "p", defaultValue = "1")
@@ -106,14 +106,6 @@ public class DeckController {
         return new ResponseEntity<>(cardsPublic, HttpStatus.OK);
     }
 
-    @GetMapping(value = "/api/decks/{deckId}/cards")
-    public ResponseEntity<List<CardPublicDTO>> getCardsByDeck(@PathVariable Long deckId) {
-        List<Card> cards = deckService.getAllCardsByDeckId(deckId);
-        Link collectionLink = linkTo(methodOn(DeckController.class).getCardsByDeck(deckId)).withSelfRel();
-        List<CardPublicDTO> cardsPublic = DTOBuilder.buildDtoListForCollection(cards, CardPublicDTO.class, collectionLink);
-        return new ResponseEntity<>(cardsPublic, HttpStatus.OK);
-    }
-
     @Auditable(action = AuditingAction.START_LEARNING_DECK_VIA_COURSE)
     @GetMapping(value = "/api/category/{categoryId}/courses/{courseId}/decks/{deckId}/cards")
     @PreAuthorize(value = "@accessToUrlService.hasAccessToDeck(#categoryId, #courseId, #deckId)")
@@ -128,7 +120,7 @@ public class DeckController {
     }
 
     @Auditable(action = AuditingAction.CREATE_DECK_IN_CATEGORY)
-    @PostMapping(value = "/api/category/{category_id}/decks")
+    @PostMapping(value = "/api/categories/{category_id}/decks")
     @PreAuthorize(value = "@accessToUrlService.hasAccessToDeck(#category_id)")
     public ResponseEntity<DeckPublicDTO> addDeckToCategory(@Validated(Request.class) @RequestBody Deck deck,
                                                            @PathVariable Long category_id) {

@@ -1,29 +1,23 @@
 package com.softserve.academy.spaced.repetition.service.impl;
 
-import com.softserve.academy.spaced.repetition.domain.*;
+import com.softserve.academy.spaced.repetition.domain.Account;
+import com.softserve.academy.spaced.repetition.domain.RememberingLevel;
 import com.softserve.academy.spaced.repetition.domain.enums.AccountStatus;
 import com.softserve.academy.spaced.repetition.domain.enums.AuthenticationType;
-import com.softserve.academy.spaced.repetition.domain.enums.LearningRegime;
-import com.softserve.academy.spaced.repetition.utils.exceptions.NotAuthorisedUserException;
 import com.softserve.academy.spaced.repetition.repository.AccountRepository;
 import com.softserve.academy.spaced.repetition.repository.RememberingLevelRepository;
 import com.softserve.academy.spaced.repetition.service.AccountService;
 import com.softserve.academy.spaced.repetition.service.MailService;
 import com.softserve.academy.spaced.repetition.service.UserService;
-import com.softserve.academy.spaced.repetition.utils.validators.NumberOfPostponedDaysValidator;
+import com.softserve.academy.spaced.repetition.utils.exceptions.NotAuthorisedUserException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
-import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Arrays;
 import java.util.Date;
-import java.util.List;
-import java.util.Locale;
 
 @Service
 public class AccountServiceImpl implements AccountService {
@@ -36,76 +30,30 @@ public class AccountServiceImpl implements AccountService {
     @Autowired
     private UserService userService;
     @Autowired
-    private NumberOfPostponedDaysValidator numberOfPostponedDaysValidator;
-    @Autowired
     private MailService mailService;
     @Autowired
     private PasswordEncoder passwordEncoder;
-    @Autowired
-    private MessageSource messageSource;
-    private final Locale locale = LocaleContextHolder.getLocale();
 
     @Override
-    public void updateAccount(Account account) {
-        accountRepository.save(account);
+    @Transactional
+    public Account updateAccountDetails(Account acc) throws NotAuthorisedUserException {
+        Account account = userService.getAuthorizedUser().getAccount();
+        account.setRememberingLevels(acc.getRememberingLevels());
+        account.setCardsNumber(acc.getCardsNumber());
+        account.setLearningRegime(acc.getLearningRegime());
+        return accountRepository.save(account);
     }
 
     @Override
     @Transactional
-    public LearningRegime getLearningRegime() throws NotAuthorisedUserException {
-        return userService.getAuthorizedUser().getAccount().getLearningRegime();
-    }
-
-    @Override
-    @Transactional
-    public void updateLearningRegime(String learningRegime) throws NotAuthorisedUserException,
-            IllegalArgumentException {
-        boolean learningRegimeFound = Arrays.stream(LearningRegime.values())
-                .anyMatch(LearningRegime.valueOf(learningRegime)::equals);
-
-        if(!learningRegimeFound) {
-            throw new IllegalArgumentException(messageSource.getMessage("message.exception.learningRegimeNotValid",
-                    new Object[]{learningRegime}, locale));
-        }
-
-        LearningRegime regime = LearningRegime.valueOf(learningRegime);
-
-        Account account = accountRepository.findOne(userService.getAuthorizedUser().getAccount().getId());
-        account.setLearningRegime(regime);
-        accountRepository.save(account);
+    public Account getAccountDetails() throws NotAuthorisedUserException {
+        return userService.getAuthorizedUser().getAccount();
     }
 
     @Override
     @Transactional
     public int getCardsNumber() throws NotAuthorisedUserException {
         return userService.getAuthorizedUser().getAccount().getCardsNumber();
-    }
-
-    @Override
-    @Transactional
-    public void updateCardsNumber(Integer cardsNumber) throws NotAuthorisedUserException {
-        Account account = userService.getAuthorizedUser().getAccount();
-        if (cardsNumber < 1) {
-            throw new IllegalArgumentException(messageSource.getMessage("message.exception.numbersOfCardsNegative",
-                    new Object[]{}, locale));
-        }
-        account.setCardsNumber(cardsNumber);
-        accountRepository.save(account);
-    }
-
-    @Override
-    @Transactional
-    public List<RememberingLevel> getRememberingLevels() throws NotAuthorisedUserException {
-        return userService.getAuthorizedUser().getAccount().getRememberingLevels();
-    }
-
-    @Override
-    @Transactional
-    public void updateRememberingLevel(Long levelId, int numberOfPostponedDays) throws NotAuthorisedUserException {
-        RememberingLevel rememberingLevel = rememberingLevelRepository.findOne(levelId);
-        numberOfPostponedDaysValidator.validate(rememberingLevel, numberOfPostponedDays);
-        rememberingLevel.setNumberOfPostponedDays(numberOfPostponedDays);
-        rememberingLevelRepository.save(rememberingLevel);
     }
 
     @Override

@@ -1,8 +1,9 @@
 package com.softserve.academy.spaced.repetition.controller;
 
-import com.softserve.academy.spaced.repetition.utils.audit.AuditingAction;
+import com.softserve.academy.spaced.repetition.controller.handler.ExceptionHandlerController;
 import com.softserve.academy.spaced.repetition.domain.Audit;
 import com.softserve.academy.spaced.repetition.service.AuditService;
+import com.softserve.academy.spaced.repetition.utils.audit.AuditingAction;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -11,6 +12,7 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
@@ -20,6 +22,12 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+
 
 @RunWith(MockitoJUnitRunner.class)
 public class AuditControllerTest {
@@ -40,10 +48,10 @@ public class AuditControllerTest {
 
     @Test
     public void getAuditByPage() throws Exception {
-//        int numberPage =1 ;
+//        int numberPage = 1;
 //        String sortBy = "id";
 //        boolean ascending = true;
-//        when(auditService.getAuditByPage(numberPage,sortBy,ascending)).thenReturn(createAudit());
+//        when(auditService.getAuditByPage(numberPage, sortBy, ascending)).thenReturn(createAudit());
 //        mockMvc.perform(get("/api/admin/audit?p=1&sortBy=id&asc=true")
 //                .accept(MediaType.APPLICATION_JSON)
 //                .contentType(MediaType.APPLICATION_JSON))

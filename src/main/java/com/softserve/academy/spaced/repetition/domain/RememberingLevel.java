@@ -1,5 +1,6 @@
 package com.softserve.academy.spaced.repetition.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.softserve.academy.spaced.repetition.controller.dto.annotations.EntityInterface;
 
 import javax.persistence.*;
@@ -25,6 +26,7 @@ public class RememberingLevel implements EntityInterface {
     @ManyToOne
     @NotNull
     @JoinColumn(name = "account_id")
+    @JsonIgnore
     private Account account;
 
     public RememberingLevel() {

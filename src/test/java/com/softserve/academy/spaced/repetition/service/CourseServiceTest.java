@@ -112,10 +112,10 @@ public class CourseServiceTest {
 
     @Test
     public void testGetCourseById() {
-        when(courseRepository.getCourseByCategoryIdAndId(CATEGORY_ID, COURSE_ID)).thenReturn(course);
+        when(courseRepository.getCourseById(COURSE_ID)).thenReturn(course);
 
-        Course result = courseService.getCourseById(CATEGORY_ID, COURSE_ID);
-        verify(courseRepository).getCourseByCategoryIdAndId(CATEGORY_ID, COURSE_ID);
+        Course result = courseService.getCourseById(COURSE_ID);
+        verify(courseRepository).getCourseById(COURSE_ID);
         assertEquals(course, result);
     }
 
@@ -263,20 +263,20 @@ public class CourseServiceTest {
 
     @Test
     public void testGetPageWithCourses() {
-        when(courseRepository.findAll(any(PageRequest.class))).thenReturn(null);
+        when(courseRepository.findAllByPublishedTrue(any(PageRequest.class))).thenReturn(null);
         Page<Course> result = courseService.getPageWithCourses(PAGE_NUMBER, PAGE_SORT_BY, PAGE_ASCENDING_ORDER);
-        verify(courseRepository).findAll(any(PageRequest.class));
+        verify(courseRepository).findAllByPublishedTrue(any(PageRequest.class));
         assertNull(result);
     }
 
     @Test
     public void testGetPageWithCoursesByCategory() {
-        when(courseRepository.findAllByCategoryEquals(any(Category.class), any(PageRequest.class)))
+        when(courseRepository.findAllByCategoryEqualsAndPublishedTrue(any(Category.class), any(PageRequest.class)))
                 .thenReturn(null);
 
         Page<Course> result = courseService.getPageWithCoursesByCategory(CATEGORY_ID, PAGE_NUMBER
                 , PAGE_SORT_BY, PAGE_ASCENDING_ORDER);
-        verify(courseRepository).findAllByCategoryEquals(any(Category.class), any(PageRequest.class));
+        verify(courseRepository).findAllByCategoryEqualsAndPublishedTrue(any(Category.class), any(PageRequest.class));
         assertNull(result);
     }
 }
