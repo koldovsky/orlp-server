@@ -34,8 +34,7 @@ public class FolderController {
     public DeckPublicDTO addDeckToFolder(@PathVariable Long deckId) throws NotAuthorisedUserException {
         Deck deck = folderService.addDeck(deckId);
         return buildDtoForEntity(deck, DeckPublicDTO.class,
-                linkTo(methodOn(DeckController.class)
-                        .getDeckById(deckId)).withSelfRel());
+                linkTo(methodOn(DeckController.class).getDeckById(deckId)).withSelfRel());
     }
 
     @Auditable(action = AuditingAction.VIEW_DECK_IN_FOLDER)
@@ -47,7 +46,7 @@ public class FolderController {
                 linkTo(methodOn(FolderController.class).getAllDecksWithFolder(folderId)).withSelfRel());
     }
 
-    @GetMapping("/api/private/user/folder/decks/id")
+    @GetMapping("/api/user/folder/decksId")
     public ResponseEntity<List<Long>> getIdAllDecksInFolder() throws NotAuthorisedUserException {
         List<Long> id = folderService.getAllDecksIdWithFolder();
         return new ResponseEntity<>(id, HttpStatus.OK);
