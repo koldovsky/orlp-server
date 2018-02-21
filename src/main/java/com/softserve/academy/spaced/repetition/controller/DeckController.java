@@ -93,17 +93,7 @@ public class DeckController {
         return buildDtoListForCollection(cards, CardPublicDTO.class, linkTo(methodOn(DeckController.class)
                 .getCardsByCourseAndDeck(categoryId, courseId, deckId)).withSelfRel());
     }
-
-    @Auditable(action = AuditingAction.CREATE_DECK_IN_CATEGORY)
-    @PostMapping(value = "/api/categories/{category_id}/decks")
-    @ResponseStatus(HttpStatus.CREATED)
-    public DeckPublicDTO addDeckToCategory(@Validated(Request.class) @RequestBody Deck deck,
-                                           @PathVariable Long category_id) {
-        deckService.addDeckToCategory(deck, category_id);
-        return buildDtoForEntity(deck, DeckPublicDTO.class,
-                linkTo(methodOn(DeckController.class).getDeckById(deck.getId())).withSelfRel());
-    }
-
+    
     @Auditable(action = AuditingAction.CREATE_DECK_IN_COURSE)
     @PostMapping(value = "/api/courses/{courseId}/decks")
     @ResponseStatus(HttpStatus.CREATED)
