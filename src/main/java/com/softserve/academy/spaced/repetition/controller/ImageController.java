@@ -45,6 +45,7 @@ public class ImageController {
      */
     @Auditable(action = AuditingAction.UPLOAD_IMAGE)
     @PostMapping("/api/service/image")
+    //TODO insert security
     public ResponseEntity<UploadingImageDTO> addImageToDB(@RequestParam("file") MultipartFile file)
             throws ImageRepositorySizeQuotaExceededException, NotAuthorisedUserException {
         Image image = imageService.addImageToDB(file);
@@ -62,6 +63,7 @@ public class ImageController {
      * @return list of imageDTOs
      */
     @GetMapping("/api/service/images/user")
+    //TODO insert security
     public ResponseEntity<List<ImageDTO>> getAllImagesByUserId() throws NotAuthorisedUserException {
         List<Image> listId = imageService.getImagesForCurrentUser();
         Link link = linkTo(methodOn(ImageController.class).getImageList()).withSelfRel();
@@ -76,6 +78,7 @@ public class ImageController {
      * @return array of bytes that contain image content
      */
     @GetMapping(value = "/api/service/image/{id}", produces = {MediaType.IMAGE_JPEG_VALUE})
+    //TODO insert security
     public ResponseEntity<byte[]> getImageById(@PathVariable("id") Long id) {
         byte[] imageContentBytes = imageService.getDecodedImageContentByImageId(id);
         if (imageContentBytes == null) {
@@ -91,6 +94,7 @@ public class ImageController {
      */
     @Auditable(action = AuditingAction.VIEW_ALL_IMAGE_ADMIN)
     @GetMapping(value = "/api/admin/service/image")
+    //TODO insert security
     public ResponseEntity<List<ImageDTO>> getImageList() {
         List<Image> listId = imageRepository.getImagesWithoutContent();
         Link link = linkTo(methodOn(ImageController.class).getImageList()).withSelfRel();
@@ -110,6 +114,7 @@ public class ImageController {
      */
     @Auditable(action = AuditingAction.DELETE_IMAGE)
     @DeleteMapping(value = "/api/service/image/{id}")
+    //TODO insert security
     public ResponseEntity<?> deleteImage(@PathVariable("id") Long id) throws CanNotBeDeletedException,
             NotOwnerOperationException, NotAuthorisedUserException {
         imageService.deleteImage(id);

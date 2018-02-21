@@ -1,9 +1,9 @@
 package com.softserve.academy.spaced.repetition.controller;
 
-import com.softserve.academy.spaced.repetition.controller.dto.builder.DTOBuilder;
-import com.softserve.academy.spaced.repetition.controller.dto.simpleDTO.RatingDTO;
 import com.softserve.academy.spaced.repetition.controller.dto.annotations.Request;
+import com.softserve.academy.spaced.repetition.controller.dto.builder.DTOBuilder;
 import com.softserve.academy.spaced.repetition.controller.dto.impl.DeckRatingPublicDTO;
+import com.softserve.academy.spaced.repetition.controller.dto.simpleDTO.RatingDTO;
 import com.softserve.academy.spaced.repetition.domain.DeckRating;
 import com.softserve.academy.spaced.repetition.service.DeckRatingService;
 import com.softserve.academy.spaced.repetition.utils.exceptions.NotAuthorisedUserException;
@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Link;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,6 +27,7 @@ public class DeckRatingController {
     private DeckRatingService deckRatingService;
 
     @GetMapping("api/deck/{deckId}/rating/{id}")
+    @PreAuthorize("hasPermission('DECK_RATING','READ')")
     public ResponseEntity<DeckRatingPublicDTO> getDeckRatingById(@PathVariable Long deckId, @PathVariable Long id) {
         DeckRating deckRating = deckRatingService.getDeckRatingById(id);
         Link selfLink = linkTo(methodOn(DeckRatingController.class)
@@ -35,6 +37,7 @@ public class DeckRatingController {
     }
 
     @PostMapping("/api/private/deck/{deckId}")
+    @PreAuthorize("hasPermission('DECK_RATING','CREATE')")
     public ResponseEntity addDeckRating(@Validated(Request.class) @RequestBody RatingDTO ratingDTO,
                                         @PathVariable Long deckId)
             throws NotAuthorisedUserException, UserStatusException {

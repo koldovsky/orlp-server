@@ -36,6 +36,7 @@ public class DeckCommentController {
     @Auditable(action = AuditingAction.VIEW_COMMENT_FOR_DECK)
     @GetMapping(value = "/{commentId}")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasPermission('DECK_COMMENT','READ')")
     public CommentDTO getCommentById(@PathVariable Long deckId, @PathVariable Long commentId) {
         LOGGER.debug("View comment with id {} for deck with id: {}", commentId, deckId);
         DeckComment comment = commentService.getCommentById(commentId);
@@ -47,6 +48,7 @@ public class DeckCommentController {
     @Auditable(action = AuditingAction.CREATE_COMMENT_FOR_DECK)
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasPermission('DECK_COMMENT','CREATE')")
     public CommentDTO addCommentForDeck(@Validated @RequestBody ReplyToCommentDTO replyToCommentDTO,
                                                         @PathVariable Long deckId) throws NotAuthorisedUserException {
         LOGGER.debug("Added comment to deck with id: {}", deckId);
@@ -60,6 +62,7 @@ public class DeckCommentController {
     @Auditable(action = AuditingAction.DELETE_COMMENT_FOR_DECK)
     @DeleteMapping(value = "/{commentId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    //TODO insert security
     public void deleteComment(@PathVariable Long commentId, @PathVariable Long deckId) {
         LOGGER.debug("Deleted comment with id:{} for deck with id: {}", commentId, deckId);
         commentService.deleteCommentById(commentId);
@@ -67,6 +70,7 @@ public class DeckCommentController {
 
     @Auditable(action = AuditingAction.VIEW_ALL_COMMENTS_FOR_DECK)
     @GetMapping
+    @PreAuthorize("hasPermission('DECK_COMMENT','READ')")
     public ResponseEntity<List<CommentDTO>> getAllCommentsForDeck(@PathVariable Long deckId) {
         LOGGER.debug("View all comments for deck with id: {}", deckId);
         List<Comment> commentsList = commentService.getAllCommentsForDeck(deckId);

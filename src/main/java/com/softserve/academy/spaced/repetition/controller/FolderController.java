@@ -34,6 +34,7 @@ public class FolderController {
 
     @Auditable(action = AuditingAction.ADD_DECK_TO_FOLDER)
     @PutMapping("/api/user/folder/add/deck/{deckId}")
+    @PreAuthorize("hasPermission('FOLDER','UPDATE') && principal.id==#deck.createdBy")
     public ResponseEntity<DeckPublicDTO> addDeckToFolder(@PathVariable Long deckId) throws NotAuthorisedUserException {
         Deck deck = folderService.addDeck(deckId);
         Link selfLink = linkTo(methodOn(DeckController.class)
@@ -44,7 +45,7 @@ public class FolderController {
 
     @Auditable(action = AuditingAction.VIEW_DECK_IN_FOLDER)
     @GetMapping("/api/user/folder/{folderId}/decks")
-    @PreAuthorize(value = "@accessToUrlService.hasAccessToFolder(#folderId)")
+    @PreAuthorize("hasPermission('FOLDER','READ')")
     public ResponseEntity<List<DeckLinkByFolderDTO>> getAllDecksWithFolder(@PathVariable Long folderId) {
         List<Deck> deckList = folderService.getAllDecksByFolderId(folderId);
 
@@ -56,6 +57,7 @@ public class FolderController {
     }
 
     @GetMapping("/api/private/user/folder/decks/id")
+    @PreAuthorize("hasPermission('FOLDER','READ')")
     public ResponseEntity<List<Long>> getIdAllDecksInFolder() throws NotAuthorisedUserException {
         List<Long> id = folderService.getAllDecksIdWithFolder();
 
@@ -63,6 +65,7 @@ public class FolderController {
     }
 
     @Auditable(action = AuditingAction.DELETE_DECK)
+    //TODO insert security
     @DeleteMapping(value = "/api/user/folder/decks/{deckId}")
     public void deleteUserDeck(@PathVariable Long deckId) throws NotAuthorisedUserException {
         folderService.deleteDeck(deckId);

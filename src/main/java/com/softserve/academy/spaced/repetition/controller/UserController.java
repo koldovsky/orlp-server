@@ -30,6 +30,7 @@ public class UserController {
     UserService userService;
 
     @GetMapping("api/user/details")
+    //TODO insert security
     public ResponseEntity<UserDTO> getAuthorizedUserPublicInfo() throws NotAuthorisedUserException {
         User user = userService.getAuthorizedUser();
         Link link = linkTo(methodOn(UserController.class).getAuthorizedUserWithLinks()).withSelfRel();
@@ -38,6 +39,7 @@ public class UserController {
     }
 
     @GetMapping("api/user")
+    //TODO insert security
     public ResponseEntity<UserLinksDTO> getAuthorizedUserWithLinks() throws NotAuthorisedUserException {
         User user = userService.getAuthorizedUser();
         Link link = linkTo(methodOn(UserController.class).getAuthorizedUserWithLinks()).withSelfRel();
@@ -46,6 +48,7 @@ public class UserController {
     }
 
     @GetMapping(value = "/api/private/user/{userId}/courses")
+    @PreAuthorize("hasPermission('USER','READ') && principal.id==userId")
     public ResponseEntity<List<CourseLinkDTO>> getAllCoursesByUserId(@PathVariable Long userId) {
         Set<Course> set = userService.getAllCoursesByUserId(userId);
         List<Course> courseList = new ArrayList<>(set);

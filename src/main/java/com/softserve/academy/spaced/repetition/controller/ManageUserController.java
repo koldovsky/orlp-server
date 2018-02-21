@@ -13,6 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.hateoas.Link;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -33,6 +34,7 @@ public class ManageUserController {
      */
     @Auditable(action = AuditingAction.VIEW_ALL_USERS_ADMIN)
     @GetMapping("/api/admin/users")
+    @PreAuthorize("hasPermission('MANAGE_USER','READ')")
     public ResponseEntity<Page<UserManagedByAdminDTO>> getAllUsers(@RequestParam(name = "p", defaultValue = "1")
                                                                            int pageNumber,
                                                                    @RequestParam(name = "sortBy") String sortBy,
@@ -53,6 +55,7 @@ public class ManageUserController {
      */
     @Auditable(action = AuditingAction.VIEW_ONE_USER_ADMIN)
     @GetMapping("/api/admin/users/{id}")
+    @PreAuthorize("hasPermission('MANAGE_USER','READ')")
     public ResponseEntity<UserManagedByAdminDTO> getUserById(@PathVariable Long id) {
         User user = userService.getUserById(id);
         Link link = linkTo(methodOn(ManageUserController.class).getUserById(id)).withSelfRel();
@@ -68,6 +71,7 @@ public class ManageUserController {
      */
     @Auditable(action = AuditingAction.SET_ACCOUNT_BLOCKED)
     @PutMapping("/api/admin/users/{id}")
+    @PreAuthorize("hasPermission('MANAGE_USER','UPDATE')")
     public ResponseEntity<UserManagedByAdminDTO> setUsersStatusBlocked(@PathVariable Long id) {
         User userWithChangedStatus = userService.setUsersStatusBlocked(id);
         Link link = linkTo(methodOn(ManageUserController.class).setUsersStatusBlocked(id)).withSelfRel();
@@ -84,6 +88,7 @@ public class ManageUserController {
      */
     @Auditable(action = AuditingAction.SET_ACCOUNT_DELETED)
     @DeleteMapping("/api/admin/users/{id}")
+    @PreAuthorize("hasPermission('MANAGE_USER','DELETE')")
     public ResponseEntity<UserManagedByAdminDTO> setUsersStatusDeleted(@PathVariable Long id) {
         User userWithChangedStatus = userService.setUsersStatusDeleted(id);
         Link link = linkTo(methodOn(ManageUserController.class).setUsersStatusDeleted(id)).withSelfRel();
@@ -100,6 +105,7 @@ public class ManageUserController {
      */
     @Auditable(action = AuditingAction.SET_ACCOUNT_ACTIVE)
     @PostMapping("/api/admin/users/{id}")
+    @PreAuthorize("hasPermission('MANAGE_USER','UPDATE')")
     public ResponseEntity<UserManagedByAdminDTO> setUsersStatusActive(@PathVariable Long id) {
         User userWithChangedStatus = userService.setUsersStatusActive(id);
         Link link = linkTo(methodOn(ManageUserController.class).setUsersStatusActive(id)).withSelfRel();
@@ -117,6 +123,7 @@ public class ManageUserController {
      */
     @Auditable(action = AuditingAction.ADD_DECK_TO_USER_FOLDER_ADMIN)
     @PostMapping("/api/admin/users/{userId}/deck/{deckId}")
+    @PreAuthorize("hasPermission('MANAGE_USER','UPDATE)")
     public ResponseEntity<UserManagedByAdminDTO> addExistingDeckToUsersFolder(@PathVariable("userId") Long userId,
                                                                               @PathVariable("deckId") Long deckId) {
         User user = userService.addExistingDeckToUsersFolder(userId, deckId);
@@ -140,6 +147,7 @@ public class ManageUserController {
      */
     @Auditable(action = AuditingAction.REMOVE_DECK_FROM_USER_FOLDER_ADMIN)
     @DeleteMapping("/api/admin/users/{userId}/deck/{deckId}")
+    //TODO insert security
     public ResponseEntity<UserManagedByAdminDTO> removeDeckFromUsersFolder(@PathVariable("userId") Long userId,
                                                                            @PathVariable("deckId") Long deckId) {
         User user = userService.removeDeckFromUsersFolder(userId, deckId);
@@ -161,6 +169,7 @@ public class ManageUserController {
      */
     @Auditable(action = AuditingAction.VIEW_FOLDER_DECKS_ADMIN)
     @GetMapping("/api/admin/users/{userId}/decks")
+    @PreAuthorize("hasPermission('MANAGE_USER','READ')")
     public ResponseEntity<List<DeckOfUserManagedByAdminDTO>> getAllDecksFromUsersFolder(@PathVariable("userId") Long userId) {
         List<Deck> decksFromUsersFolder = userService.getAllDecksFromUsersFolder(userId);
         Link link = linkTo(methodOn(ManageUserController.class).getAllDecksFromUsersFolder(userId)).withSelfRel();

@@ -25,6 +25,7 @@ public class UserProfileLearningController {
     private AccountService accountService;
 
     @GetMapping("/learning-details")
+    //TODO insert security
     public ResponseEntity<AccountDTO> getLearningDetails() throws NotAuthorisedUserException {
         Account account = accountService.getAccountDetails();
         Link link = linkTo(methodOn(UserProfileLearningController.class).getLearningDetails()).withSelfRel();
@@ -32,6 +33,7 @@ public class UserProfileLearningController {
     }
 
     @PutMapping("/learning-details")
+    //TODO insert security
     public ResponseEntity<AccountDTO> updateLearningDetails(@RequestBody Account acc)
             throws NotAuthorisedUserException {
         Account account = accountService.updateAccountDetails(acc);

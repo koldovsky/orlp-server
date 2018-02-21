@@ -15,6 +15,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.hateoas.Link;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,6 +32,7 @@ public class CategoryController {
 
     @Auditable(action = AuditingAction.VIEW_ALL_CATEGORIES)
     @GetMapping("/api/categories")
+    @PreAuthorize("hasPermission('CATEGORY','READ')")
     public ResponseEntity<List<CategoryLinkDTO>> getAllCategories() {
         List<Category> categoryList = categoryService.getAllCategory();
         Link collectionLink = linkTo(methodOn(CategoryController.class).getAllCategories()).withRel("category");
@@ -41,6 +43,7 @@ public class CategoryController {
 
     @Auditable(action = AuditingAction.VIEW_CATEGORY)
     @GetMapping("/api/categories/{id}")
+    @PreAuthorize("hasPermission('CATEGORY','READ')")
     public ResponseEntity<CategoryLinkDTO> getCategoryById(@PathVariable Long id) {
         Category category = categoryService.getCategoryById(id);
         Link selfLink = linkTo(methodOn(CategoryController.class).getCategoryById(category.getId())).withRel("category");
@@ -50,6 +53,7 @@ public class CategoryController {
 
     @Auditable(action = AuditingAction.VIEW_TOP_CATEGORIES)
     @GetMapping("/api/categories/top")
+    @PreAuthorize("hasPermission('CATEGORY','READ')")
     public ResponseEntity<List<CategoryTopDTO>> getTopCategories() {
         List<Category> categoryList = categoryService.getTopCategory();
         Link collectionLink = linkTo(methodOn(CategoryController.class).getAllCategories()).withSelfRel();
@@ -59,6 +63,7 @@ public class CategoryController {
     }
 
     @GetMapping("/api/sortedCategoriesByPage/top")
+    @PreAuthorize("hasPermission('CATEGORY','READ')")
     public ResponseEntity<Page<CategoryTopDTO>> getTopSortedCategories(@RequestParam(name = "p") int pageNumber,
                                                                        @RequestParam(name = "sortBy") String sortBy,
                                                                        @RequestParam(name = "asc") boolean ascending) {
@@ -73,6 +78,7 @@ public class CategoryController {
 
     @Auditable(action = AuditingAction.CREATE_CATEGORY)
     @PostMapping("/api/admin/categories")
+    @PreAuthorize("hasPermission('CATEGORY','CREATE')")
     public ResponseEntity<CategoryPublicDTO> addCategory(@Validated(Request.class) @RequestBody CategoryDTO categoryDTO) {
         Category category = categoryService
                 .addCategory(categoryDTO.getName(), categoryDTO.getDescription(), categoryDTO.getImage());
@@ -83,6 +89,7 @@ public class CategoryController {
 
     @Auditable(action = AuditingAction.EDIT_CATEGORY)
     @PutMapping("/api/categories/{id}")
+    @PreAuthorize("hasPermission('CATEGORY','UPDATE')")
     public ResponseEntity<CategoryPublicDTO> updateCategory(@Validated(Request.class) @RequestBody CategoryDTO categoryDTO,
                                                             @PathVariable Long id) {
         Category category = categoryService.updateCategory(categoryDTO, id);
@@ -93,6 +100,7 @@ public class CategoryController {
 
     @Auditable(action = AuditingAction.DELETE_CATEGORY)
     @DeleteMapping(value = "/api/categories/{id}")
+    //TODO insert security
     public ResponseEntity deleteCategory(@PathVariable Long id) {
         categoryService.deleteCategory(id);
         return new ResponseEntity(HttpStatus.NO_CONTENT);

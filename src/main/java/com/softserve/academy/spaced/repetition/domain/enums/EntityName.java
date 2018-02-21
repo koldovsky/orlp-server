@@ -1,10 +1,24 @@
 package com.softserve.academy.spaced.repetition.domain.enums;
 
-import javax.persistence.*;
-import java.util.List;
-
 public enum EntityName{
-
+   AUDIT,
+   CARD,
+   CARD_IMAGE,
+   CARD_RATING,
+   CARDS_FILE,
+   CATEGORY,
+   COURSE_COMMENT,
+   COURSE,
+   COURSE_RATING,
    DECK_COMMENT,
-   COURSE;
+   DECK,
+   DECK_RATING,
+   FOLDER,
+   IMAGE,
+   MANAGE_USER,
+   REGISTRATION,
+   CARD_QUEUE,
+   USER,
+   PROFILE,
+   PROFILE_LEARNING
 }
