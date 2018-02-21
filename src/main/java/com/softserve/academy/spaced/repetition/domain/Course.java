@@ -8,7 +8,10 @@ import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Entity
-@Table(name = "course")
+@Table(name = "course", indexes = {
+        @Index(columnList = "name", name = "course_index"),
+        @Index(columnList = "description", name = "course_index")
+})
 public class Course implements EntityInterface {
 
     @Id

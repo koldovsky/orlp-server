@@ -57,8 +57,8 @@ public class AuthenticationRestService {
     private String tokenHeader;
 
     public HttpHeaders getAuthHeaders(String email, String password, String captcha, Device device) throws UserStatusException {
-//        ReCaptchaResponseDto reCaptchaResponseDto = reCaptchaApiService.verify(captcha);
-//        if (!reCaptchaResponseDto.isSuccess()) {       TODO fix capcha
+        ReCaptchaResponseDto reCaptchaResponseDto = reCaptchaApiService.verify(captcha);
+//        if (!reCaptchaResponseDto.isSuccess()) {
 //            throw new BadCredentialsException("reCaptcha");
 //        }
         Authentication authentication = getAuthenticationToken(email, password);

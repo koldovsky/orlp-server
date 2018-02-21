@@ -8,7 +8,10 @@ import java.util.List;
 import java.util.Set;
 
 @Entity
-@Table(name = "deck")
+@Table(name = "deck", indexes = {
+        @Index(columnList = "name", name = "deck_index"),
+        @Index(columnList = "description", name = "deck_index")
+})
 public class Deck implements EntityInterface {
 
     @Id

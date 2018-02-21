@@ -7,7 +7,10 @@ import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Entity
-@Table(name = "category")
+@Table(name = "category", indexes = {
+        @Index(columnList = "name", name = "category_index"),
+        @Index(columnList = "description", name = "category_index")
+})
 public class Category implements EntityInterface {
 
     @Id

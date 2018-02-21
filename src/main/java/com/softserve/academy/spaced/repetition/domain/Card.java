@@ -7,7 +7,10 @@ import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Entity
-@Table(name = "card")
+@Table(name = "card", indexes = {
+        @Index(columnList = "question", name = "card_index"),
+        @Index(columnList = "title", name = "card_index")
+})
 public class Card implements EntityInterface {
 
     @Id
@@ -19,7 +22,7 @@ public class Card implements EntityInterface {
     @NotNull
     private String title;
 
-    @Column(name = "question", columnDefinition = "LONGTEXT")
+    @Column(name = "question")
     @NotNull
     private String question;
 
