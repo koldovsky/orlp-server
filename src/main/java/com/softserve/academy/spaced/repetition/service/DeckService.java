@@ -24,10 +24,9 @@ public interface DeckService {
      * Adds a new deck to the course
      *
      * @param deck       the deck which will be added to the category.
-     * @param categoryId id of the category for which belongs the course.
      * @param courseId   course`s id to which the deck will be added.
      */
-    void addDeckToCourse(Deck deck, Long categoryId, Long courseId);
+    void addDeckToCourse(Deck deck, Long courseId);
 
     /**
      * Updates the deck
