@@ -123,7 +123,7 @@ public class ManageUserController {
      */
     @Auditable(action = AuditingAction.ADD_DECK_TO_USER_FOLDER_ADMIN)
     @PostMapping("/api/admin/users/{userId}/deck/{deckId}")
-    @PreAuthorize("hasPermission('MANAGE_USER','UPDATE)")
+    @PreAuthorize("hasPermission('MANAGE_USER','UPDATE')")
     public ResponseEntity<UserManagedByAdminDTO> addExistingDeckToUsersFolder(@PathVariable("userId") Long userId,
                                                                               @PathVariable("deckId") Long deckId) {
         User user = userService.addExistingDeckToUsersFolder(userId, deckId);

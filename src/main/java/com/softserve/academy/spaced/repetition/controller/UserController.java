@@ -30,7 +30,7 @@ public class UserController {
     UserService userService;
 
     @GetMapping("api/user/details")
-    //TODO insert security
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<UserDTO> getAuthorizedUserPublicInfo() throws NotAuthorisedUserException {
         User user = userService.getAuthorizedUser();
         Link link = linkTo(methodOn(UserController.class).getAuthorizedUserWithLinks()).withSelfRel();
@@ -39,7 +39,7 @@ public class UserController {
     }
 
     @GetMapping("api/user")
-    //TODO insert security
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<UserLinksDTO> getAuthorizedUserWithLinks() throws NotAuthorisedUserException {
         User user = userService.getAuthorizedUser();
         Link link = linkTo(methodOn(UserController.class).getAuthorizedUserWithLinks()).withSelfRel();

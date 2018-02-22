@@ -34,7 +34,7 @@ public class UserProfileController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    //TODO insert security
+    @PreAuthorize("isAuthenticated()")
     public ProfileDataDTO getProfileData() throws NotAuthorisedUserException {
         User user = userProfileService.getProfileData();
         Link self = linkTo(methodOn(UserProfileController.class).getProfileData()).withSelfRel();

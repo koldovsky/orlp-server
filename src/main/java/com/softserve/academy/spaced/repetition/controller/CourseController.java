@@ -15,6 +15,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.hateoas.Link;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -33,6 +34,7 @@ public class CourseController {
 
     @Auditable(action = AuditingAction.VIEW_COURSES_VIA_CATEGORY)
     @GetMapping(value = "/api/categories/{categoryId}/courses")
+    @PreAuthorize("hasPermission('COURSE','READ')")
     public ResponseEntity<Page<CourseLinkDTO>> getAllCoursesByCategoryId(@PathVariable Long categoryId,
                                                                          @RequestParam(name = "p", defaultValue = "1")
                                                                                  int pageNumber,
