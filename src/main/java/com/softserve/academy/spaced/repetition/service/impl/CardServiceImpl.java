@@ -26,7 +26,10 @@ import org.yaml.snakeyaml.constructor.ConstructorException;
 import org.yaml.snakeyaml.parser.ParserException;
 
 import java.io.*;
+import java.math.BigInteger;
 import java.util.*;
+
+import static java.util.stream.Collectors.toList;
 
 @Service
 public class CardServiceImpl implements CardService {
@@ -194,5 +197,13 @@ public class CardServiceImpl implements CardService {
     @Override
     public List<Card> findAllByDeckId(Long deckId) {
         return cardRepository.findAllByDeckId(deckId);
+    }
+
+    @Override
+    public List<Long> findCardsId(String searchString) {
+        return cardRepository.findCardsId(searchString)
+                .stream()
+                .map(BigInteger::longValue)
+                .collect(toList());
     }
 }

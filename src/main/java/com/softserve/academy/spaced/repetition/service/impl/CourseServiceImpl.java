@@ -14,10 +14,13 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
+
+import static java.util.stream.Collectors.toList;
 
 @Service
 public class CourseServiceImpl implements CourseService {
@@ -188,5 +191,12 @@ public class CourseServiceImpl implements CourseService {
         PageRequest request = new PageRequest(pageNumber - 1, QUANTITY_COURSES_IN_PAGE, ascending
                 ? Sort.Direction.ASC : Sort.Direction.DESC, sortBy);
         return courseRepository.findAllByCategoryEqualsAndPublishedTrue(categoryRepository.findOne(categoryId), request);
+    }
+
+    @Override
+    public List<Long> findCoursesId(String searchString) {
+        return courseRepository.findCoursesId(searchString).stream()
+                .map(BigInteger::longValue)
+                .collect(toList());
     }
 }

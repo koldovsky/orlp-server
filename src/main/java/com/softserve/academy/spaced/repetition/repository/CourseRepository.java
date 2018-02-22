@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigInteger;
 import java.util.List;
 
 @Repository
@@ -36,4 +37,7 @@ public interface CourseRepository extends JpaRepository<Course, Long> {
 
     Page<Course> findAllByPublishedTrue(Pageable pageable);
 
+    @Query(value = "SELECT c.course_id FROM course c WHERE c.name LIKE %:searchString% OR c.description LIKE %:searchString%",
+            nativeQuery = true)
+    List<BigInteger> findCoursesId(@Param("searchString") String searchString);
 }

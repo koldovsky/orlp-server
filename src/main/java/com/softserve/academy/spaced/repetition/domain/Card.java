@@ -22,7 +22,7 @@ public class Card implements EntityInterface {
     @NotNull
     private String title;
 
-    @Column(name = "question")
+    @Column(name = "question", columnDefinition = "NVARCHAR(400)")
     @NotNull
     private String question;
 

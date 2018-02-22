@@ -20,9 +20,12 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigInteger;
 import java.util.List;
 import java.util.Locale;
 import java.util.NoSuchElementException;
+
+import static java.util.stream.Collectors.toList;
 
 @Service
 public class DeckServiceImpl implements DeckService {
@@ -72,6 +75,14 @@ public class DeckServiceImpl implements DeckService {
     public List<Card> getAllCardsByDeckId(Long deckId) {
         Deck deck = deckRepository.findOne(deckId);
         return deck.getCards();
+    }
+
+    @Override
+    public List<Long> findDecksId(String searchString) {
+        return deckRepository.findDecksId(searchString)
+                .stream()
+                .map(BigInteger::longValue)
+                .collect(toList());
     }
 
     @Override

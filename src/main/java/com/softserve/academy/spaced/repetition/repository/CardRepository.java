@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigInteger;
 import java.util.Date;
 import java.util.List;
 
@@ -64,4 +65,8 @@ public interface CardRepository extends JpaRepository<Card, Long> {
             nativeQuery = true)
     List<Card> getPostponedCards(@Param("deckId") Long deckId, @Param("now") Date now,
                                  @Param("userId") Long userId, @Param("limit") int limit);
+
+    @Query(value = "SELECT c.card_id FROM card c WHERE c.question LIKE %:searchString% or c.title LIKE %:searchString%",
+            nativeQuery = true)
+    List<BigInteger> findCardsId(@Param("searchString") String searchString);
 }

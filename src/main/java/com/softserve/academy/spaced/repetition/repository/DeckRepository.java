@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigInteger;
 import java.util.List;
 
 @Repository
@@ -42,4 +43,8 @@ public interface DeckRepository extends JpaRepository<Deck, Long> {
     List<Deck> findAllByDeckOwnerIdEquals(Long userId);
 
     Page<Deck> findAllByCategoryEquals(Category category, Pageable pageable);
+
+    @Query(value = "SELECT d.deck_id FROM deck d WHERE d.name LIKE %:searchString% or d.description LIKE %:searchString%",
+            nativeQuery = true)
+    List<BigInteger> findDecksId(@Param("searchString") String searchString);
 }

@@ -111,4 +111,6 @@ public interface CardService {
     void downloadCardsTemplate(OutputStream outputStream);
 
     List<Card> findAllByDeckId(Long deckId);
+
+    List<Long> findCardsId(String searchString);
 }

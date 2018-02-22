@@ -153,4 +153,5 @@ public interface CourseService {
      */
     Page<Course> getPageWithCoursesByCategory(long categoryId, int pageNumber, String sortBy, boolean ascending);
 
+    List<Long> findCoursesId(String searchString);
 }
