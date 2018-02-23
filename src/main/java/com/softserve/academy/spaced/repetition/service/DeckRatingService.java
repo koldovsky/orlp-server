@@ -17,7 +17,7 @@ public interface DeckRatingService {
      * @throws NotAuthorisedUserException if unauthorized user writes comments.
      * @throws UserStatusException        if users status prevents to rate decks.
      */
-    void addDeckRating(int rating, Long deckId) throws NotAuthorisedUserException, UserStatusException;
+    DeckRating addDeckRating(int rating, Long deckId) throws NotAuthorisedUserException, UserStatusException;
 
     /**
      * Gets deck`s rating from entity

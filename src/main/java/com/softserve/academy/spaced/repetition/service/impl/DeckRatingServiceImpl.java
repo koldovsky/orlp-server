@@ -28,7 +28,7 @@ public class DeckRatingServiceImpl implements DeckRatingService{
 
     @Override
     @Transactional
-    public void addDeckRating(int rating, Long deckId) throws NotAuthorisedUserException, UserStatusException {
+    public DeckRating addDeckRating(int rating, Long deckId) throws NotAuthorisedUserException, UserStatusException {
         User user = userService.getAuthorizedUser();
         userService.isUserStatusActive(user);
         String email = user.getAccount().getEmail();
@@ -41,9 +41,10 @@ public class DeckRatingServiceImpl implements DeckRatingService{
         deckRating.setDeck(deck);
         deckRating.setRating(rating);
         deckRatingRepository.save(deckRating);
-        double deckAverageRating = deckRatingRepository.findRatingByDeckId(deckId);
+        double deckAverageRating = deckRatingRepository.findAverageRatingByDeckId(deckId);
         deck.setRating(deckAverageRating);
         deckRepository.save(deck);
+        return deckRating;
     }
 
     @Override
