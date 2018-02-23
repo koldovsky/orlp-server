@@ -40,6 +40,7 @@ public class AuditController {
                     .getFullAuditList(pageNumber, sortBy, ascending)).withSelfRel();
             return DTOBuilder.buildDtoForEntity(audit, AuditPublicDTO.class, selfLink);
         });
+
         return new ResponseEntity<>(auditPublicDTOS, HttpStatus.OK);
     }
 }

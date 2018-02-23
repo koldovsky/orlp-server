@@ -20,7 +20,7 @@ import static com.softserve.academy.spaced.repetition.utils.validators.Validatio
 
 @Entity
 @Table(name = "account")
-public class Account implements EntityInterface {
+public class Account extends EntityForOwnership implements EntityInterface {
     public static final int INITIAL_CARDS_NUMBER = 10;
 
     @Id

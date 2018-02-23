@@ -48,7 +48,7 @@ public class UserController {
     }
 
     @GetMapping(value = "/api/private/user/{userId}/courses")
-    @PreAuthorize("hasPermission('USER','READ') && principal.id==userId")
+    @PreAuthorize("hasPermission('USER','READ') && principal.id==#userId")
     public ResponseEntity<List<CourseLinkDTO>> getAllCoursesByUserId(@PathVariable Long userId) {
         Set<Course> set = userService.getAllCoursesByUserId(userId);
         List<Course> courseList = new ArrayList<>(set);

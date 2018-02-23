@@ -9,7 +9,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "deck")
-public class Deck implements EntityInterface {
+public class Deck extends EntityForOwnership implements EntityInterface {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

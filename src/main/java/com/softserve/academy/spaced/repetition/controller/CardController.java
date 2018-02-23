@@ -101,7 +101,7 @@ public class CardController {
 
     @GetMapping(value = "cards/{cardId}")
     @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasPermission('CARD','READ') && (principal.id==#card.createdBy) || (#card.createdBy==1)")
+//    @PreAuthorize("hasPermission('CARD','READ') && (principal.id==#card.createdBy) || (#card.createdBy==1)")
     public CardPublicDTO getCardById(@PathVariable Long deckId, @PathVariable Long cardId) {
         Card card = cardService.getCard(cardId);
         return buildDtoForEntity(card, CardPublicDTO.class,

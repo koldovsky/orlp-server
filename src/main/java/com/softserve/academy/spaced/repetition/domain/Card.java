@@ -8,7 +8,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "card")
-public class Card implements EntityInterface {
+public class Card extends EntityForOwnership implements EntityInterface {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
