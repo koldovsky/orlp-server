@@ -1,5 +1,8 @@
 INSERT INTO authority (name) VALUES ('ROLE_ANONYMOUS');
 
+ALTER TABLE category ADD created_by BIGINT DEFAULT 1;
+ALTER TABLE category CHANGE created_by created_by BIGINT NOT NULL;
+
 ALTER TABLE card ADD created_by BIGINT DEFAULT 1;
 ALTER TABLE card CHANGE created_by created_by BIGINT NOT NULL;
 

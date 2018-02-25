@@ -77,7 +77,8 @@ public class CourseCommentController {
 
     @Auditable(action = AuditingAction.DELETE_COMMENT_FOR_COURSE)
     @DeleteMapping(value = "/{courseCommentId}")
-    //TODO insert security
+    @PreAuthorize("hasPermission('COURSE_COMMENT','DELETE') ||" +
+            "@courseCommentServiceImpl.getCommentById(#courseCommentId).createdBy==principal.id")
     public ResponseEntity deleteCommentById(@PathVariable Long courseCommentId) {
         LOGGER.debug("Deleted comment with id:{}", courseCommentId);
         courseCommentService.deleteCommentById(courseCommentId);

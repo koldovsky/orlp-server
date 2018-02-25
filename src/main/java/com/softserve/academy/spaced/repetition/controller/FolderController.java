@@ -65,7 +65,8 @@ public class FolderController {
     }
 
     @Auditable(action = AuditingAction.DELETE_DECK)
-    //TODO insert security
+    @PreAuthorize("hasPermission('FOLDER','DELETE') && " +
+            "@deckServiceImpl.getDeck(#deckId).createdBy==principal.id")
     @DeleteMapping(value = "/api/user/folder/decks/{deckId}")
     public void deleteUserDeck(@PathVariable Long deckId) throws NotAuthorisedUserException {
         folderService.deleteDeck(deckId);

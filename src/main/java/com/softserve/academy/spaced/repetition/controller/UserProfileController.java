@@ -44,7 +44,7 @@ public class UserProfileController {
     @Auditable(action = AuditingAction.EDIT_PERSONAL_DATA)
     @PutMapping(value = "/personal-info")
     @ResponseStatus(HttpStatus.OK)
-    //TODO insert security
+    @PreAuthorize("hasPermission('PROFILE','UPDATE')")
     public PersonalInfoDTO updatePersonalInfo(@Validated(Request.class) @RequestBody JsonPersonalInfoDTO personalInfo)
             throws NotAuthorisedUserException {
         Person person = userProfileService.updatePersonalInfo(personalInfo);
@@ -54,7 +54,7 @@ public class UserProfileController {
     @Auditable(action = AuditingAction.CHANGE_PASSWORD)
     @PutMapping(value = "/password")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    //TODO insert security
+    @PreAuthorize("hasPermission('PROFILE','UPDATE')")
     public void changePassword(@Validated(Request.class) @RequestBody JsonPasswordDTO passwordDTO)
             throws NotAuthorisedUserException, IllegalArgumentException {
         userProfileService.changePassword(passwordDTO);
@@ -63,7 +63,7 @@ public class UserProfileController {
     @Auditable(action = AuditingAction.UPLOAD_PROFILE_IMAGE)
     @PostMapping("/image")
     @ResponseStatus(HttpStatus.OK)
-    //TODO insert security
+    @PreAuthorize("hasPermission('PROFILE','UPDATE')")
     public ProfileImageDTO uploadProfileImage(@RequestBody JsonImageDTO imageDTO)
             throws NotAuthorisedUserException, ImageRepositorySizeQuotaExceededException {
         Person person = userProfileService.uploadProfileImage(imageDTO);
@@ -73,7 +73,7 @@ public class UserProfileController {
     @Auditable(action = AuditingAction.DELETE_PROFILE_IMAGE)
     @DeleteMapping("/image")
     @ResponseStatus(HttpStatus.OK)
-    //TODO insert security
+    @PreAuthorize("hasPermission('PROFILE','DELETE')")
     public void deleteProfileImage() throws NotAuthorisedUserException {
         userProfileService.deleteProfileImage();
     }
@@ -81,7 +81,7 @@ public class UserProfileController {
     @Auditable(action = AuditingAction.DELETE_PROFILE)
     @DeleteMapping
     @ResponseStatus(HttpStatus.OK)
-    //TODO insert security
+    @PreAuthorize("hasPermission('PROFILE','DELETE')")
     public void deleteProfile() throws NotAuthorisedUserException {
         userProfileService.deleteProfile();
     }

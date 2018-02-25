@@ -51,10 +51,12 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
         userPermission.add(new Permission(COURSE_RATING, createMask(CREATE, READ)));
         userPermission.add(new Permission(DECK_COMMENT, createMask(CREATE, READ, UPDATE, DELETE)));
         userPermission.add(new Permission(DECK, createMask(CREATE, READ, UPDATE, DELETE)));
+        userPermission.add(new Permission(IMAGE, createMask(CREATE, READ, UPDATE, DELETE)));
         userPermission.add(new Permission(DECK_RATING, createMask(CREATE, READ, UPDATE, DELETE)));
         userPermission.add(new Permission(FOLDER, createMask(CREATE, READ, UPDATE, DELETE)));
         userPermission.add(new Permission(CARD_QUEUE, createMask(READ, UPDATE)));
         userPermission.add(new Permission(USER, createMask(READ, UPDATE)));
+        userPermission.add(new Permission(PROFILE, createMask(READ, UPDATE)));
 
         //Collection of permissions for role ADMIN
         adminPermission.add(new Permission(AUDIT, createMask(READ)));
@@ -66,11 +68,16 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
         adminPermission.add(new Permission(COURSE, createMask(CREATE, READ, UPDATE, DELETE)));
         adminPermission.add(new Permission(COURSE_COMMENT, createMask(CREATE, READ, UPDATE, DELETE)));
         adminPermission.add(new Permission(COURSE_RATING, createMask(CREATE, READ)));
+        adminPermission.add(new Permission(DECK, createMask(CREATE, READ, UPDATE, DELETE)));
+        adminPermission.add(new Permission(IMAGE, createMask(CREATE, READ, UPDATE, DELETE)));
+        adminPermission.add(new Permission(ADMIN_DECK, createMask(CREATE, READ, UPDATE, DELETE)));
         adminPermission.add(new Permission(DECK_COMMENT, createMask(CREATE, READ, UPDATE, DELETE)));
         adminPermission.add(new Permission(DECK_RATING, createMask(CREATE, READ, UPDATE, DELETE)));
         adminPermission.add(new Permission(FOLDER, createMask(CREATE, READ, UPDATE, DELETE)));
         adminPermission.add(new Permission(MANAGE_USER, createMask(CREATE, READ, UPDATE, DELETE)));
+        adminPermission.add(new Permission(USER, createMask(READ, UPDATE)));
         adminPermission.add(new Permission(CARD_QUEUE, createMask(READ, UPDATE)));
+        adminPermission.add(new Permission(PROFILE, createMask(READ, UPDATE)));
 
         permissionMatrix.put(ROLE_ANONYMOUS.name(), anonymousPermission);
         permissionMatrix.put(ROLE_USER.name(), userPermission);

@@ -17,8 +17,7 @@ public class CardImageController {
 
     @ResponseStatus(HttpStatus.OK)
     @DeleteMapping(value = "api/cardImage/{id}")
-    //TODO insert security
-//    @PreAuthorize("hasPermission('CARD_IMAGE','DELETE')")
+    @PreAuthorize("hasPermission('CARD_IMAGE','DELETE')")
     public void deleteCardImage(@PathVariable long id) {
         cardImageService.deleteById(id);
     }

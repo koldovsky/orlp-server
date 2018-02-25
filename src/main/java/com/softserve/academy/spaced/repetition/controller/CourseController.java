@@ -15,7 +15,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.hateoas.Link;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -49,9 +48,9 @@ public class CourseController {
         return new ResponseEntity<>(courseLinkDTOS, HttpStatus.OK);
     }
 
-    @PreAuthorize("hasPermission('COURSE','READ')")
     @Auditable(action = AuditingAction.VIEW_COURSES)
     @GetMapping(value = "/api/courses")
+    @PreAuthorize("hasPermission('COURSE','READ')")
     public ResponseEntity<Page<CourseLinkDTO>> getAllCourses(@RequestParam(name = "p", defaultValue = "1") int pageNumber,
                                                              @RequestParam(name = "sortBy") String sortBy,
                                                              @RequestParam(name = "asc") boolean ascending) {
@@ -64,8 +63,8 @@ public class CourseController {
         return new ResponseEntity<>(courseLinkDTOS, HttpStatus.OK);
     }
 
-    @PreAuthorize("hasPermission('COURSE','READ')")
     @GetMapping(value = "/api/courses/orders")
+    @PreAuthorize("hasPermission('COURSE','READ')")
     public ResponseEntity<List<CourseLinkDTO>> getAllCoursesOrderByRating() {
         List<Course> courseList = courseService.getAllOrderedCourses();
         Link collectionLink = linkTo(methodOn(CourseController.class).getAllCoursesOrderByRating()).withRel("courses");
@@ -74,9 +73,9 @@ public class CourseController {
         return new ResponseEntity<>(decks, HttpStatus.OK);
     }
 
-    @PreAuthorize("hasPermission('COURSE','READ')")
     @Auditable(action = AuditingAction.VIEW_TOP_COURSES)
     @GetMapping("/api/courses/top")
+    @PreAuthorize("hasPermission('COURSE','READ')")
     public ResponseEntity<List<CourseLinkDTO>> getTopCourse() {
         List<Course> courseList = courseService.getTopCourse();
         List<CourseLinkDTO> courses = new ArrayList<>();
@@ -88,8 +87,8 @@ public class CourseController {
         return new ResponseEntity<>(courses, HttpStatus.OK);
     }
 
-    @PreAuthorize("hasPermission('COURSE','READ')")
     @GetMapping(value = "/api/courses/{courseId}")
+    @PreAuthorize("hasPermission('COURSE','READ')")
     public ResponseEntity<CourseLinkDTO> getCourseById(@PathVariable Long courseId) {
         Course course = courseService.getCourseById(courseId);
         Link selfLink = linkTo(methodOn(CourseController.class).getCourseById(courseId)).withSelfRel();
@@ -117,9 +116,9 @@ public class CourseController {
         return new ResponseEntity<>(coursePublicDTO, HttpStatus.OK);
     }
 
-    //TODO please read comment in delete mapping
     @Auditable(action = AuditingAction.DELETE_COURSE)
-    @PreAuthorize("@courseServiceImpl.getCourseById(courseId).createdBy==principle.id && hasPermission('COURSE','DELETE')")//maybe not better way (think about other way)
+    @PreAuthorize("hasPermission('COURSE','DELETE') && " +
+            "@courseServiceImpl.getCourseById(courseId).createdBy==principle.id")
     @DeleteMapping(value = "/api/cabinet/global/courses/{courseId}")
     public ResponseEntity deleteGlobalCourse(@PathVariable Long courseId) throws NotAuthorisedUserException {
         courseService.deleteGlobalCourse(courseId);
@@ -127,7 +126,8 @@ public class CourseController {
     }
 
     @DeleteMapping(value = "/api/cabinet/local/courses/{courseId}")
-    @PreAuthorize("@courseServiceImpl.getCourseById(courseId).createdBy==principle.id && hasPermission('COURSE','CREATE')")
+    @PreAuthorize("hasPermission('COURSE','DELETE') && " +
+            "@courseServiceImpl.getCourseById(courseId).createdBy==principle.id")
     public ResponseEntity deleteLocalCourse(@PathVariable Long courseId) throws NotAuthorisedUserException {
         courseService.deleteLocalCourse(courseId);
         return new ResponseEntity(HttpStatus.OK);
@@ -144,10 +144,10 @@ public class CourseController {
     }
 
     @Auditable(action = AuditingAction.ADD_COURSE)
-    @PreAuthorize("hasPermission('COURSE','UPDATE')")
     @PutMapping("/api/cabinet/{courseId}/update/access")
+    @PreAuthorize("hasPermission('COURSE','DELETE') && #course.createdBy==principle.id")
     public ResponseEntity<CoursePublicDTO> updateCourseAccess(@PathVariable Long courseId,
-                                             @Validated(Request.class) @RequestBody Course course) {
+                                                              @Validated(Request.class) @RequestBody Course course) {
         courseService.updateCourseAccess(courseId, course);
         Link selfLink = linkTo(methodOn(CourseController.class).getCourseById(course.getId())).withSelfRel();
         CoursePublicDTO coursePublicDTO = DTOBuilder.buildDtoForEntity(course, CoursePublicDTO.class, selfLink);
@@ -165,18 +165,18 @@ public class CourseController {
         return new ResponseEntity<>(coursePublicDTO, HttpStatus.OK);
     }
 
-    @PreAuthorize("hasPermission('COURSE','READ')")
     @GetMapping("/api/private/cabinet/courses")
+    @PreAuthorize("hasPermission('COURSE','READ')")
     public ResponseEntity<List<Long>> getIdAllCoursesOfTheCurrentUser() throws NotAuthorisedUserException {
         List<Long> id = courseService.getAllCoursesIdOfTheCurrentUser();
         return new ResponseEntity<>(id, HttpStatus.OK);
     }
 
-    @PreAuthorize("hasPermission('COURSE','CREATE')")
     @Auditable(action = AuditingAction.CREATE_PRIVATE_COURSE)
     @PostMapping("/api/categories/{categoryId}/courses")
+    @PreAuthorize("hasPermission('COURSE','CREATE')")
     public ResponseEntity<CoursePublicDTO> createPrivateCourse(@Validated(Request.class) @RequestBody Course privateCourse,
-                                                      @PathVariable Long categoryId) throws NotAuthorisedUserException {
+                                                               @PathVariable Long categoryId) throws NotAuthorisedUserException {
         courseService.createPrivateCourse(privateCourse, categoryId);
         Link selfLink = linkTo(methodOn(CourseController.class).getCourseById(privateCourse.getId())).withSelfRel();
         CoursePublicDTO coursePublicDTO = DTOBuilder.buildDtoForEntity(privateCourse, CoursePublicDTO.class, selfLink);

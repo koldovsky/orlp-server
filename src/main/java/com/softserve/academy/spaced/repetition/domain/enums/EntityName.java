@@ -11,6 +11,7 @@ public enum EntityName{
    COURSE,
    COURSE_RATING,
    DECK_COMMENT,
+   ADMIN_DECK,
    DECK,
    DECK_RATING,
    FOLDER,

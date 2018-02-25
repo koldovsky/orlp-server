@@ -17,6 +17,7 @@ import org.springframework.hateoas.Link;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -45,7 +46,7 @@ public class ImageController {
      */
     @Auditable(action = AuditingAction.UPLOAD_IMAGE)
     @PostMapping("/api/service/image")
-    //TODO insert security
+    @PreAuthorize("hasPermission('IMAGE','UPDATE')")
     public ResponseEntity<UploadingImageDTO> addImageToDB(@RequestParam("file") MultipartFile file)
             throws ImageRepositorySizeQuotaExceededException, NotAuthorisedUserException {
         Image image = imageService.addImageToDB(file);
@@ -63,7 +64,7 @@ public class ImageController {
      * @return list of imageDTOs
      */
     @GetMapping("/api/service/images/user")
-    //TODO insert security
+    @PreAuthorize("hasPermission('IMAGE','READ')")
     public ResponseEntity<List<ImageDTO>> getAllImagesByUserId() throws NotAuthorisedUserException {
         List<Image> listId = imageService.getImagesForCurrentUser();
         Link link = linkTo(methodOn(ImageController.class).getImageList()).withSelfRel();
@@ -78,7 +79,7 @@ public class ImageController {
      * @return array of bytes that contain image content
      */
     @GetMapping(value = "/api/service/image/{id}", produces = {MediaType.IMAGE_JPEG_VALUE})
-    //TODO insert security
+    @PreAuthorize("hasPermission('IMAGE','READ')")
     public ResponseEntity<byte[]> getImageById(@PathVariable("id") Long id) {
         byte[] imageContentBytes = imageService.getDecodedImageContentByImageId(id);
         if (imageContentBytes == null) {
@@ -94,7 +95,7 @@ public class ImageController {
      */
     @Auditable(action = AuditingAction.VIEW_ALL_IMAGE_ADMIN)
     @GetMapping(value = "/api/admin/service/image")
-    //TODO insert security
+    @PreAuthorize("hasPermission('IMAGE','READ')")
     public ResponseEntity<List<ImageDTO>> getImageList() {
         List<Image> listId = imageRepository.getImagesWithoutContent();
         Link link = linkTo(methodOn(ImageController.class).getImageList()).withSelfRel();
@@ -114,7 +115,7 @@ public class ImageController {
      */
     @Auditable(action = AuditingAction.DELETE_IMAGE)
     @DeleteMapping(value = "/api/service/image/{id}")
-    //TODO insert security
+    @PreAuthorize("hasPermission('IMAGE','DELETE')")
     public ResponseEntity<?> deleteImage(@PathVariable("id") Long id) throws CanNotBeDeletedException,
             NotOwnerOperationException, NotAuthorisedUserException {
         imageService.deleteImage(id);

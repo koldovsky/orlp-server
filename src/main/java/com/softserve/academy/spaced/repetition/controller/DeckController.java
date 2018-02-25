@@ -151,7 +151,7 @@ public class DeckController {
     @Auditable(action = AuditingAction.EDIT_DECK_ADMIN)
     @PutMapping(value = "/api/admin/decks/{deckId}")
     @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasPermission('DECK','UPDATE')")
+    @PreAuthorize("hasPermission('ADMIN_DECK','UPDATE')")
     public DeckOfUserManagedByAdminDTO updateDeckForAdmin(@Validated(Request.class) @RequestBody Deck deck,
                                                           @PathVariable Long deckId) {
         Deck updatedDeck = deckService.updateDeckAdmin(deck, deckId);
@@ -162,7 +162,7 @@ public class DeckController {
     @Auditable(action = AuditingAction.DELETE_DECK_ADMIN)
     @DeleteMapping(value = "/api/admin/decks/{deckId}")
     @ResponseStatus(HttpStatus.OK)
-    //TODO insert security
+    @PreAuthorize("hasPermission('ADMIN_DECK','DELETE')")
     public void deleteDeckForAdmin(@PathVariable Long deckId) throws NotAuthorisedUserException {
         folderService.deleteDeckFromAllUsers(deckId);
         deckService.deleteDeck(deckId);
@@ -171,7 +171,8 @@ public class DeckController {
     @Auditable(action = AuditingAction.DELETE_DECK_USER)
     @DeleteMapping(value = "/api/decks/{deckId}")
     @ResponseStatus(HttpStatus.OK)
-    //TODO insert security
+    @PreAuthorize("hasPermission('DECK','DELETE') && " +
+            "@deckServiceImpl.getDeck(#deckId).createdBy==principal.id")
     public List<DeckPrivateDTO> deleteOwnDeckByUser(@PathVariable Long deckId)
             throws NotAuthorisedUserException, NotOwnerOperationException {
         deckService.deleteOwnDeck(deckId);
@@ -195,7 +196,7 @@ public class DeckController {
     @Auditable(action = AuditingAction.EDIT_DECK_USER)
     @PutMapping(value = "/api/categories/{categoryId}/decks/{deckId}")
     @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasPermission('DECK','UPDATE')")
+    @PreAuthorize("hasPermission('DECK','UPDATE') && #deck.createdBy==principal.id")
     public DeckPrivateDTO updateDeckForUser(@Validated(Request.class) @RequestBody Deck deck,
                                             @PathVariable Long deckId, @PathVariable Long categoryId)
             throws NotAuthorisedUserException, NotOwnerOperationException {
@@ -217,7 +218,7 @@ public class DeckController {
     @Auditable(action = AuditingAction.VIEW_ONE_DECK_USER)
     @GetMapping(value = "/api/users/folders/decks/own/{deckId}")
     @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasPermission('DECK','CREATE')")
+    @PreAuthorize("hasPermission('DECK','READ')")
     public DeckPrivateDTO getOneDeckForUser(@PathVariable Long deckId)
             throws NotAuthorisedUserException, NotOwnerOperationException {
         Deck deck = deckService.getDeckUser(deckId);

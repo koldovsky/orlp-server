@@ -62,7 +62,8 @@ public class DeckCommentController {
     @Auditable(action = AuditingAction.DELETE_COMMENT_FOR_DECK)
     @DeleteMapping(value = "/{commentId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    //TODO insert security
+    @PreAuthorize("hasPermission('DECK_COMMENT','DELETE') ||" +
+            "@deckCommentServiceImpl.getCommentById(#commentId).createdBy==principal.id")
     public void deleteComment(@PathVariable Long commentId, @PathVariable Long deckId) {
         LOGGER.debug("Deleted comment with id:{} for deck with id: {}", commentId, deckId);
         commentService.deleteCommentById(commentId);

@@ -89,7 +89,8 @@ public class CategoryController {
 
     @Auditable(action = AuditingAction.EDIT_CATEGORY)
     @PutMapping("/api/categories/{id}")
-    @PreAuthorize("hasPermission('CATEGORY','UPDATE')")
+    @PreAuthorize("hasPermission('CATEGORY','UPDATE') && " +
+            "@categoryServiceImpl.getCategoryById(#id).createdBy==principal.id")
     public ResponseEntity<CategoryPublicDTO> updateCategory(@Validated(Request.class) @RequestBody CategoryDTO categoryDTO,
                                                             @PathVariable Long id) {
         Category category = categoryService.updateCategory(categoryDTO, id);
@@ -100,7 +101,8 @@ public class CategoryController {
 
     @Auditable(action = AuditingAction.DELETE_CATEGORY)
     @DeleteMapping(value = "/api/categories/{id}")
-    //TODO insert security
+    @PreAuthorize("hasPermission('CATEGORY','DELETE') && " +
+            "@categoryServiceImpl.getCategoryById(#id).createdBy==principal.id")
     public ResponseEntity deleteCategory(@PathVariable Long id) {
         categoryService.deleteCategory(id);
         return new ResponseEntity(HttpStatus.NO_CONTENT);

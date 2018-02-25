@@ -147,7 +147,7 @@ public class ManageUserController {
      */
     @Auditable(action = AuditingAction.REMOVE_DECK_FROM_USER_FOLDER_ADMIN)
     @DeleteMapping("/api/admin/users/{userId}/deck/{deckId}")
-    //TODO insert security
+    @PreAuthorize("hasPermission('MANAGE_USER','DELETE')")
     public ResponseEntity<UserManagedByAdminDTO> removeDeckFromUsersFolder(@PathVariable("userId") Long userId,
                                                                            @PathVariable("deckId") Long deckId) {
         User user = userService.removeDeckFromUsersFolder(userId, deckId);

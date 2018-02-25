@@ -80,7 +80,8 @@ public class CardController {
     @Auditable(action = AuditingAction.EDIT_CARD_VIA_CATEGORY_AND_DECK)
     @PutMapping(value = "cards/{cardId}")
     @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasPermission('CARD','UPDATE') && principal.id==#card.createdBy")
+    @PreAuthorize("hasPermission('CARD','UPDATE') && " +
+            "@cardServiceImpl.getCard(#cardId).createdBy==principal.id")
     public CardPublicDTO updateCard(@PathVariable Long deckId,
                                     @PathVariable Long cardId,
                                     @Validated @RequestBody CardDTO card) {
@@ -91,17 +92,19 @@ public class CardController {
                 linkTo(methodOn(CardController.class).getCardById(deckId, cardId)).withSelfRel());
     }
 
-    //TODO add security
     @Auditable(action = AuditingAction.DELETE_CARD)
     @ResponseStatus(HttpStatus.OK)
     @DeleteMapping(value = "cards/{cardId}")
+    @PreAuthorize("hasPermission('CARD','DELETE') && " +
+            "@cardServiceImpl.getCard(#cardId).createdBy==principal.id")
     public void deleteCard(@PathVariable Long cardId) {
         cardService.deleteCard(cardId);
     }
 
     @GetMapping(value = "cards/{cardId}")
     @ResponseStatus(HttpStatus.OK)
-//    @PreAuthorize("hasPermission('CARD','READ') && (principal.id==#card.createdBy) || (#card.createdBy==1)")
+    @PreAuthorize("hasPermission('CARD','READ') || " +
+            "@cardServiceImpl.getCard(#cardId).createdBy==principal.id")
     public CardPublicDTO getCardById(@PathVariable Long deckId, @PathVariable Long cardId) {
         Card card = cardService.getCard(cardId);
         return buildDtoForEntity(card, CardPublicDTO.class,
