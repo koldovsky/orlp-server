@@ -91,6 +91,13 @@ public class DeckCommentServiceTest {
     }
 
     @Test
+    public void testUpdateCommentById() {
+        DeckComment result = deckCommentService.updateCommentById(DECK_COMMENT_ID, DECK_COMMENT_TEXT);
+        verify(commentRepository).findOne(DECK_COMMENT_ID);
+        assertEquals(deckComment, result);
+    }
+
+    @Test
     public void testDeleteCommentById() {
         deckCommentService.deleteCommentById(DECK_COMMENT_ID);
         verify(commentRepository).deleteComment(DECK_COMMENT_ID);
