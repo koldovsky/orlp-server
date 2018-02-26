@@ -71,5 +71,3 @@ You can check all opportunities of the API in the Swagger (it was included to th
 * [Maven](https://maven.apache.org/) - Dependency Management
 * [Node JS](https://nodejs.org/uk/) - The web framework used
 * [Wercker](http://www.wercker.com/) - CI/CD framework used
-
-Added at: Demo test commit
