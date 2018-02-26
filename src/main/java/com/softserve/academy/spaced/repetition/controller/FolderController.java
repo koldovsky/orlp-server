@@ -24,6 +24,7 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
 @RestController
+@RequestMapping("api/user/folder")
 public class FolderController {
 
     @Autowired
@@ -33,8 +34,9 @@ public class FolderController {
     private DeckService deckService;
 
     @Auditable(action = AuditingAction.ADD_DECK_TO_FOLDER)
-    @PutMapping("/api/user/folder/add/deck/{deckId}")
-    public ResponseEntity<DeckPublicDTO> addDeckToFolder(@PathVariable Long deckId) throws NotAuthorisedUserException {
+    @PutMapping("/add/deck/{deckId}")
+    @ResponseStatus(HttpStatus.OK)
+    public DeckPublicDTO addDeckToFolder(@PathVariable Long deckId) throws NotAuthorisedUserException {
         Deck deck = folderService.addDeck(deckId);
         Link selfLink = linkTo(methodOn(DeckController.class)
                 .getDeckByCategoryId(deck.getCategory().getId(), deckId)).withSelfRel();
@@ -44,9 +46,9 @@ public class FolderController {
     }
 
     @Auditable(action = AuditingAction.VIEW_DECK_IN_FOLDER)
-    @GetMapping("/api/private/user/folder/{folderId}/decks")
-    @PreAuthorize(value = "@accessToUrlService.hasAccessToFolder(#folderId)")
-    public ResponseEntity<List<DeckLinkByFolderDTO>> getAllDecksWithFolder(@PathVariable Long folderId) {
+    @GetMapping("/{folderId}/decks")
+    @ResponseStatus(HttpStatus.OK)
+    public List<DeckLinkByFolderDTO> getAllDecksWithFolder(@PathVariable Long folderId) {
         List<Deck> deckList = folderService.getAllDecksByFolderId(folderId);
 
         Link collectionLink = linkTo(methodOn(FolderController.class).getAllDecksWithFolder(folderId)).withSelfRel();
@@ -56,7 +58,7 @@ public class FolderController {
         return new ResponseEntity<>(decks, HttpStatus.OK);
     }
 
-    @GetMapping("/api/private/user/folder/decks/id")
+    @GetMapping("/decksId")
     public ResponseEntity<List<Long>> getIdAllDecksInFolder() throws NotAuthorisedUserException {
         List<Long> id = folderService.getAllDecksIdWithFolder();
 
@@ -64,7 +66,7 @@ public class FolderController {
     }
 
     @Auditable(action = AuditingAction.DELETE_DECK)
-    @DeleteMapping(value = "/api/user/folder/decks/{deckId}")
+    @DeleteMapping(value = "/decks/{deckId}")
     public void deleteUserDeck(@PathVariable Long deckId) throws NotAuthorisedUserException {
         folderService.deleteDeck(deckId);
     }
