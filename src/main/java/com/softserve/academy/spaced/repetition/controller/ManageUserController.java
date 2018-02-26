@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import static com.softserve.academy.spaced.repetition.controller.dto.builder.DTOBuilder.buildDtoForEntity;
+import static com.softserve.academy.spaced.repetition.controller.dto.builder.DTOBuilder.buildDtoListForCollection;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
@@ -41,7 +43,7 @@ public class ManageUserController {
         Page<UserManagedByAdminDTO> userManagedByAdminDTOS = userService
                 .getUsersByPage(pageNumber, sortBy, ascending).map((user) -> {
                     Link selfLink = linkTo(methodOn(ManageUserController.class).getUserById(user.getId())).withSelfRel();
-                    return DTOBuilder.buildDtoForEntity(user, UserManagedByAdminDTO.class, selfLink);
+                    return buildDtoForEntity(user, UserManagedByAdminDTO.class, selfLink);
                 });
         return new ResponseEntity<>(userManagedByAdminDTOS, HttpStatus.OK);
     }
@@ -57,9 +59,8 @@ public class ManageUserController {
     @ResponseStatus(HttpStatus.OK)
     public UserManagedByAdminDTO getUserById(@PathVariable Long id) {
         User user = userService.getUserById(id);
-        Link link = linkTo(methodOn(ManageUserController.class).getUserById(id)).withSelfRel();
-        UserManagedByAdminDTO userDTO = DTOBuilder.buildDtoForEntity(user, UserManagedByAdminDTO.class, link);
-        return new ResponseEntity<>(userDTO, HttpStatus.OK);
+        return buildDtoForEntity(user, UserManagedByAdminDTO.class,
+                linkTo(methodOn(ManageUserController.class).getUserById(id)).withSelfRel());
     }
 
     /**
@@ -73,10 +74,8 @@ public class ManageUserController {
     @ResponseStatus(HttpStatus.OK)
     public UserManagedByAdminDTO setUsersStatusBlocked(@PathVariable Long id) {
         User userWithChangedStatus = userService.setUsersStatusBlocked(id);
-        Link link = linkTo(methodOn(ManageUserController.class).setUsersStatusBlocked(id)).withSelfRel();
-        UserManagedByAdminDTO userManagedByAdminDTO = DTOBuilder
-                .buildDtoForEntity(userWithChangedStatus, UserManagedByAdminDTO.class, link);
-        return new ResponseEntity<>(userManagedByAdminDTO, HttpStatus.OK);
+        return buildDtoForEntity(userWithChangedStatus, UserManagedByAdminDTO.class,
+                linkTo(methodOn(ManageUserController.class).setUsersStatusBlocked(id)).withSelfRel());
     }
 
     /**
@@ -90,10 +89,8 @@ public class ManageUserController {
     @ResponseStatus(HttpStatus.OK)
     public UserManagedByAdminDTO setUsersStatusDeleted(@PathVariable Long id) {
         User userWithChangedStatus = userService.setUsersStatusDeleted(id);
-        Link link = linkTo(methodOn(ManageUserController.class).setUsersStatusDeleted(id)).withSelfRel();
-        UserManagedByAdminDTO userManagedByAdminDTO = DTOBuilder
-                .buildDtoForEntity(userWithChangedStatus, UserManagedByAdminDTO.class, link);
-        return new ResponseEntity<>(userManagedByAdminDTO, HttpStatus.OK);
+        return buildDtoForEntity(userWithChangedStatus, UserManagedByAdminDTO.class,
+                linkTo(methodOn(ManageUserController.class).setUsersStatusDeleted(id)).withSelfRel());
     }
 
     /**
@@ -107,10 +104,8 @@ public class ManageUserController {
     @ResponseStatus(HttpStatus.OK)
     public UserManagedByAdminDTO setUsersStatusActive(@PathVariable Long id) {
         User userWithChangedStatus = userService.setUsersStatusActive(id);
-        Link link = linkTo(methodOn(ManageUserController.class).setUsersStatusActive(id)).withSelfRel();
-        UserManagedByAdminDTO userManagedByAdminDTO = DTOBuilder
-                .buildDtoForEntity(userWithChangedStatus, UserManagedByAdminDTO.class, link);
-        return new ResponseEntity<>(userManagedByAdminDTO, HttpStatus.OK);
+        return buildDtoForEntity(userWithChangedStatus, UserManagedByAdminDTO.class,
+                linkTo(methodOn(ManageUserController.class).setUsersStatusActive(id)).withSelfRel());
     }
 
     /**
@@ -128,8 +123,8 @@ public class ManageUserController {
         if (user != null) {
             Link link = linkTo(methodOn(ManageUserController.class)
                     .addExistingDeckToUsersFolder(userId, deckId)).withSelfRel();
-            UserManagedByAdminDTO userManagedByAdminDTO = DTOBuilder
-                    .buildDtoForEntity(user, UserManagedByAdminDTO.class, link);
+            UserManagedByAdminDTO userManagedByAdminDTO =
+                    buildDtoForEntity(user, UserManagedByAdminDTO.class, link);
             return new ResponseEntity<>(userManagedByAdminDTO, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -150,8 +145,8 @@ public class ManageUserController {
         User user = userService.removeDeckFromUsersFolder(userId, deckId);
         if (user != null) {
             Link link = linkTo(methodOn(ManageUserController.class).getUserById(userId)).withSelfRel();
-            UserManagedByAdminDTO userManagedByAdminDTO = DTOBuilder
-                    .buildDtoForEntity(user, UserManagedByAdminDTO.class, link);
+            UserManagedByAdminDTO userManagedByAdminDTO =
+                    buildDtoForEntity(user, UserManagedByAdminDTO.class, link);
             return new ResponseEntity<UserManagedByAdminDTO>(userManagedByAdminDTO, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -169,9 +164,7 @@ public class ManageUserController {
     @ResponseStatus(HttpStatus.OK)
     public List<DeckOfUserManagedByAdminDTO> getAllDecksFromUsersFolder(@PathVariable("userId") Long userId) {
         List<Deck> decksFromUsersFolder = userService.getAllDecksFromUsersFolder(userId);
-        Link link = linkTo(methodOn(ManageUserController.class).getAllDecksFromUsersFolder(userId)).withSelfRel();
-        List<DeckOfUserManagedByAdminDTO> decksFromUsersFolderDTO = DTOBuilder
-                .buildDtoListForCollection(decksFromUsersFolder, DeckOfUserManagedByAdminDTO.class, link);
-        return new ResponseEntity<>(decksFromUsersFolderDTO, HttpStatus.OK);
+        return buildDtoListForCollection(decksFromUsersFolder, DeckOfUserManagedByAdminDTO.class,
+                linkTo(methodOn(ManageUserController.class).getAllDecksFromUsersFolder(userId)).withSelfRel());
     }
 }

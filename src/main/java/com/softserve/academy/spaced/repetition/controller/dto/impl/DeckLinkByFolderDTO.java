@@ -15,7 +15,7 @@ public class DeckLinkByFolderDTO extends DTO<Deck> {
         super(deck, link);
 
         Link linkCards = linkTo(methodOn(DeckController.class)
-                .getCardsByFolderAndDeck((long) -1, getEntity().getId())).withRel("cards");
+                .getCardsByCategoryAndDeck(getEntity().getId())).withRel("cards");
         add(getLinkWithReplacedParentPart(linkCards).withRel("cards"));
     }
 
