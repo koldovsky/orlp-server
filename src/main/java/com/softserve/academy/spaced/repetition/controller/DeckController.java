@@ -10,6 +10,8 @@ import com.softserve.academy.spaced.repetition.utils.audit.Auditable;
 import com.softserve.academy.spaced.repetition.utils.audit.AuditingAction;
 import com.softserve.academy.spaced.repetition.utils.exceptions.NotAuthorisedUserException;
 import com.softserve.academy.spaced.repetition.utils.exceptions.NotOwnerOperationException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.hateoas.Link;
@@ -27,6 +29,8 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
 @RestController
 public class DeckController {
+    private static final Logger LOGGER = LoggerFactory.getLogger(DeckCommentController.class);
+
     @Autowired
     private DeckService deckService;
 
@@ -41,6 +45,7 @@ public class DeckController {
                                                                                        int pageNumber,
                                                                                @RequestParam(name = "sortBy") String sortBy,
                                                                                @RequestParam(name = "asc") boolean ascending) {
+        LOGGER.debug("View all decks by category with id {}", categoryId);
         Page<DeckLinkByCategoryDTO> deckByCategoryDTOS = deckService
                 .getPageWithDecksByCategory(categoryId, pageNumber, sortBy, ascending).map((deck) -> {
                     Link selfLink = linkTo(methodOn(DeckController.class)
@@ -53,6 +58,7 @@ public class DeckController {
     @GetMapping(value = "/api/decks/ordered")
     @ResponseStatus(HttpStatus.OK)
     public List<DeckPublicDTO> getAllDecksOrderByRating() {
+        LOGGER.debug("View all decks ordered by rating");
         List<Deck> decksList = deckService.getAllOrderedDecks();
         return buildDtoListForCollection(decksList, DeckPublicDTO.class,
                 linkTo(methodOn(DeckController.class).getAllDecksOrderByRating()).withSelfRel());
@@ -62,6 +68,7 @@ public class DeckController {
     @GetMapping(value = "/api/category/{categoryId}/courses/{courseId}/decks")
     @ResponseStatus(HttpStatus.OK)
     public List<DeckLinkByCourseDTO> getAllDecksByCourseId(@PathVariable Long categoryId, @PathVariable Long courseId) {
+        LOGGER.debug("View all decks by course with id {}", courseId);
         List<Deck> decksList = deckService.getAllDecks(courseId);
         return buildDtoListForCollection(decksList, DeckLinkByCourseDTO.class,
                 linkTo(methodOn(DeckController.class).getAllDecksByCourseId(categoryId, courseId)).withSelfRel());
@@ -70,6 +77,7 @@ public class DeckController {
     @GetMapping(value = "/api/decks/{deckId}")
     @ResponseStatus(HttpStatus.OK)
     public DeckPublicDTO getDeckById(@PathVariable Long deckId) {
+        LOGGER.debug("View deck by id {}", deckId);
         Deck deck = deckService.getDeck(deckId);
         return buildDtoForEntity(deck, DeckPublicDTO.class,
                 linkTo(methodOn(DeckController.class).getDeckById(deckId)).withSelfRel());
@@ -79,6 +87,7 @@ public class DeckController {
     @GetMapping(value = "/api/categories/decks/{deckId}/cards")
     @ResponseStatus(HttpStatus.OK)
     public List<CardPublicDTO> getCardsByCategoryAndDeck(@PathVariable Long deckId) {
+        LOGGER.debug("View card by category and deck with id {}", deckId);
         List<Card> cards = deckService.getAllCardsByDeckId(deckId);
         return buildDtoListForCollection(cards, CardPublicDTO.class,
                 linkTo(methodOn(DeckController.class).getCardsByCategoryAndDeck(deckId)).withSelfRel());
@@ -89,6 +98,7 @@ public class DeckController {
     @ResponseStatus(HttpStatus.OK)
     public List<CardPublicDTO> getCardsByCourseAndDeck(@PathVariable Long categoryId, @PathVariable Long courseId,
                                                        @PathVariable Long deckId) {
+        LOGGER.debug("View card by course and deck with id {}", deckId);
         List<Card> cards = deckService.getAllCardsByDeckId(deckId);
         return buildDtoListForCollection(cards, CardPublicDTO.class, linkTo(methodOn(DeckController.class)
                 .getCardsByCourseAndDeck(categoryId, courseId, deckId)).withSelfRel());
@@ -98,6 +108,7 @@ public class DeckController {
     @PostMapping(value = "/api/courses/{courseId}/decks")
     @ResponseStatus(HttpStatus.CREATED)
     public DeckPublicDTO addDeckToCourse(@Validated(Request.class) @RequestBody Deck deck, @PathVariable Long courseId) {
+        LOGGER.debug("Adding deck to course with id {}", courseId);
         deckService.addDeckToCourse(deck, courseId);
         return buildDtoForEntity(deck, DeckPublicDTO.class,
                 linkTo(methodOn(DeckController.class).getDeckById(deck.getId())).withSelfRel());
@@ -108,6 +119,7 @@ public class DeckController {
     public ResponseEntity<Page<DeckOfUserManagedByAdminDTO>> getAllDecksForAdmin(@RequestParam(name = "p", defaultValue = "1") int pageNumber,
                                                                                  @RequestParam(name = "sortBy") String sortBy,
                                                                                  @RequestParam(name = "asc") boolean ascending) {
+        LOGGER.debug("View all decks for admin");
         Page<DeckOfUserManagedByAdminDTO> deckOfUserManagedByAdminDTO = deckService
                 .getPageWithAllAdminDecks(pageNumber, sortBy, ascending).map((deck) -> {
                     Link selfLink = linkTo(methodOn(DeckController.class).getDeckById(deck.getId())).withSelfRel();
@@ -121,6 +133,7 @@ public class DeckController {
     @ResponseStatus(HttpStatus.CREATED)
     public DeckOfUserManagedByAdminDTO addDeckForAdmin(@Validated(Request.class) @RequestBody Deck deck)
             throws NotAuthorisedUserException {
+        LOGGER.debug("Adding deck for admin");
         Deck deckNew = deckService.createNewDeckAdmin(deck);
         folderService.addDeck(deckNew.getId());
         return buildDtoForEntity(deckNew, DeckOfUserManagedByAdminDTO.class,
@@ -132,6 +145,7 @@ public class DeckController {
     @ResponseStatus(HttpStatus.OK)
     public DeckOfUserManagedByAdminDTO updateDeckForAdmin(@Validated(Request.class) @RequestBody Deck deck,
                                                           @PathVariable Long deckId) {
+        LOGGER.debug("Updating deck for admin by id {}", deckId);
         Deck updatedDeck = deckService.updateDeckAdmin(deck, deckId);
         return buildDtoForEntity(updatedDeck, DeckOfUserManagedByAdminDTO.class,
                 linkTo(methodOn(DeckController.class).getDeckById(updatedDeck.getId())).withSelfRel());
@@ -141,6 +155,7 @@ public class DeckController {
     @DeleteMapping(value = "/api/admin/decks/{deckId}")
     @ResponseStatus(HttpStatus.OK)
     public void deleteDeckForAdmin(@PathVariable Long deckId) throws NotAuthorisedUserException {
+        LOGGER.debug("Deleting deck for admin by id {}", deckId);
         folderService.deleteDeckFromAllUsers(deckId);
         deckService.deleteDeck(deckId);
     }
@@ -150,6 +165,7 @@ public class DeckController {
     @ResponseStatus(HttpStatus.OK)
     public List<DeckPrivateDTO> deleteOwnDeckByUser(@PathVariable Long deckId)
             throws NotAuthorisedUserException, NotOwnerOperationException {
+        LOGGER.debug("Deleting own users deck by id {}", deckId);
         deckService.deleteOwnDeck(deckId);
         List<Deck> decksList = deckService.getAllDecksByUser();
         return buildDtoListForCollection(decksList, DeckPrivateDTO.class,
@@ -161,6 +177,7 @@ public class DeckController {
     @ResponseStatus(HttpStatus.CREATED)
     public DeckPrivateDTO addDeckForUser(@Validated(Request.class) @RequestBody Deck deck, @PathVariable Long categoryId)
             throws NotAuthorisedUserException, NotOwnerOperationException {
+        LOGGER.debug("Adding deck by user to category with id {}", categoryId);
         deckService.createNewDeck(deck, categoryId);
         folderService.addDeck(deck.getId());
         return buildDtoForEntity(deck, DeckPrivateDTO.class,
@@ -173,6 +190,7 @@ public class DeckController {
     public DeckPrivateDTO updateDeckForUser(@Validated(Request.class) @RequestBody Deck deck,
                                             @PathVariable Long deckId, @PathVariable Long categoryId)
             throws NotAuthorisedUserException, NotOwnerOperationException {
+        LOGGER.debug("Updating deck with id {} for user in category with id {}", categoryId);
         Deck updatedDeck = deckService.updateOwnDeck(deck, deckId, categoryId);
         return buildDtoForEntity(updatedDeck, DeckPrivateDTO.class,
                 linkTo(methodOn(DeckController.class).getOneDeckForUser(updatedDeck.getId())).withSelfRel());
@@ -182,6 +200,7 @@ public class DeckController {
     @GetMapping(value = "/api/users/folders/decks/own")
     @ResponseStatus(HttpStatus.OK)
     public List<DeckPrivateDTO> getAllDecksForUser() throws NotAuthorisedUserException {
+        LOGGER.debug("View all decks for user");
         List<Deck> decksList = deckService.getAllDecksByUser();
         return buildDtoListForCollection(decksList, DeckPrivateDTO.class,
                 linkTo(methodOn(DeckController.class).getAllDecksForUser()).withSelfRel());
@@ -192,6 +211,7 @@ public class DeckController {
     @ResponseStatus(HttpStatus.OK)
     public DeckPrivateDTO getOneDeckForUser(@PathVariable Long deckId)
             throws NotAuthorisedUserException, NotOwnerOperationException {
+        LOGGER.debug("View one deck for user with id {}", deckId);
         Deck deck = deckService.getDeckUser(deckId);
         return buildDtoForEntity(deck, DeckPrivateDTO.class,
                 linkTo(methodOn(DeckController.class).getOneDeckForUser(deckId)).withSelfRel());
