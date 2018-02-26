@@ -126,7 +126,7 @@ public class DeckServiceTest {
 
     @Test
     public void testAddDeckToCourse() {
-        deckService.addDeckToCourse(deck, CATEGORY_ID, COURSE_ID);
+        deckService.addDeckToCourse(deck, COURSE_ID);
         verify(courseRepository).findOne(COURSE_ID);
         verify(deckRepository).save(deck);
     }

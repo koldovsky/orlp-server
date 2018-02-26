@@ -66,7 +66,7 @@ public class DeckRatingServiceTest {
     public void testAddDeckRating() throws NotAuthorisedUserException, UserStatusException {
         final double DECK_AVERAGE_RATING = 1D;
 
-        when(deckRatingRepository.findAverageRatingByDeckId(DECK_ID)).thenReturn(DECK_AVERAGE_RATING);
+        when(deckRatingRepository.findRatingByDeckId(DECK_ID)).thenReturn(DECK_AVERAGE_RATING);
 
         deckRatingService.addDeckRating(DECK_RATING_RATING, DECK_ID);
         verify(userService).getAuthorizedUser();
@@ -74,8 +74,8 @@ public class DeckRatingServiceTest {
         verify(deckRatingRepository).findAllByAccountEmailAndDeckId(ACCOUNT_EMAIL, DECK_ID);
         verify(deckRepository).findOne(DECK_ID);
         verify(deckRatingRepository).save(deckRating);
-        verify(deckRatingRepository).findAverageRatingByDeckId(DECK_ID);
-        verify(deckRatingRepository).save(deckRating);
+        verify(deckRatingRepository).findRatingByDeckId(DECK_ID);
+        verify(deckRepository).save(deck);
     }
 
     @Test(expected = NotAuthorisedUserException.class)
