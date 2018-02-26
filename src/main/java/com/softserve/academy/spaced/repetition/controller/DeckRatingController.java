@@ -8,6 +8,8 @@ import com.softserve.academy.spaced.repetition.domain.DeckRating;
 import com.softserve.academy.spaced.repetition.service.DeckRatingService;
 import com.softserve.academy.spaced.repetition.utils.exceptions.NotAuthorisedUserException;
 import com.softserve.academy.spaced.repetition.utils.exceptions.UserStatusException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Link;
 import org.springframework.http.HttpStatus;
@@ -20,7 +22,7 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
 @RestController
 public class DeckRatingController {
-
+    private static final Logger LOGGER = LoggerFactory.getLogger(CourseCommentController.class);
 
     @Autowired
     private DeckRatingService deckRatingService;
@@ -38,6 +40,7 @@ public class DeckRatingController {
     public ResponseEntity addDeckRating(@Validated(Request.class) @RequestBody RatingDTO ratingDTO,
                                         @PathVariable Long deckId)
             throws NotAuthorisedUserException, UserStatusException {
+        LOGGER.debug("Adding rating to deck with id: {}", deckId);
         deckRatingService.addDeckRating(ratingDTO.getRating(), deckId);
         return new ResponseEntity(HttpStatus.CREATED);
     }

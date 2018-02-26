@@ -26,7 +26,6 @@ import org.springframework.web.bind.annotation.*;
 public class RegistrationController {
     private static final Logger LOGGER = LoggerFactory.getLogger(RegistrationController.class);
 
-
     @Autowired
     private RegistrationService registrationService;
     @Autowired
