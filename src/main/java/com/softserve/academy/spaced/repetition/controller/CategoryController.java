@@ -10,6 +10,8 @@ import com.softserve.academy.spaced.repetition.domain.Category;
 import com.softserve.academy.spaced.repetition.service.CategoryService;
 import com.softserve.academy.spaced.repetition.utils.audit.Auditable;
 import com.softserve.academy.spaced.repetition.utils.audit.AuditingAction;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.hateoas.Link;
@@ -25,6 +27,7 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
 @RestController
 public class CategoryController {
+    private static final Logger LOGGER = LoggerFactory.getLogger(CardController.class);
 
     @Autowired
     private CategoryService categoryService;
@@ -74,6 +77,7 @@ public class CategoryController {
     @Auditable(action = AuditingAction.CREATE_CATEGORY)
     @PostMapping("/api/admin/categories")
     public ResponseEntity<CategoryPublicDTO> addCategory(@Validated(Request.class) @RequestBody CategoryDTO categoryDTO) {
+        LOGGER.debug("Adding category by admin");
         Category category = categoryService
                 .addCategory(categoryDTO.getName(), categoryDTO.getDescription(), categoryDTO.getImage());
         Link selfLink = linkTo(methodOn(CategoryController.class).getCategoryById(category.getId())).withSelfRel();
@@ -85,6 +89,7 @@ public class CategoryController {
     @PutMapping("/api/categories/{id}")
     public ResponseEntity<CategoryPublicDTO> updateCategory(@Validated(Request.class) @RequestBody CategoryDTO categoryDTO,
                                                             @PathVariable Long id) {
+        LOGGER.debug("Updating category with id: {}", id);
         Category category = categoryService.updateCategory(categoryDTO, id);
         Link selfLink = linkTo(methodOn(CategoryController.class).getCategoryById(category.getId())).withSelfRel();
         CategoryPublicDTO categoryPublicDTO = DTOBuilder.buildDtoForEntity(category, CategoryPublicDTO.class, selfLink);
@@ -94,6 +99,7 @@ public class CategoryController {
     @Auditable(action = AuditingAction.DELETE_CATEGORY)
     @DeleteMapping(value = "/api/categories/{id}")
     public ResponseEntity deleteCategory(@PathVariable Long id) {
+        LOGGER.debug("Deleting category with id: {}", id);
         categoryService.deleteCategory(id);
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }

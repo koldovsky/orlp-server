@@ -18,7 +18,6 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 @RestController
 @RequestMapping("/api/profile")
 public class UserProfileLearningController {
-
     private static final Logger LOGGER = LoggerFactory.getLogger(UserProfileLearningController.class);
 
     @Autowired
@@ -34,6 +33,7 @@ public class UserProfileLearningController {
     @PutMapping("/learning-details")
     public ResponseEntity<AccountDTO> updateLearningDetails(@RequestBody Account acc)
             throws NotAuthorisedUserException {
+        LOGGER.debug("Updating of learning details");
         Account account = accountService.updateAccountDetails(acc);
         Link link = linkTo(methodOn(UserProfileLearningController.class).getLearningDetails()).withSelfRel();
         return ResponseEntity.ok(DTOBuilder.buildDtoForEntity(account, AccountDTO.class, link));

@@ -8,6 +8,8 @@ import com.softserve.academy.spaced.repetition.domain.User;
 import com.softserve.academy.spaced.repetition.service.UserService;
 import com.softserve.academy.spaced.repetition.utils.audit.Auditable;
 import com.softserve.academy.spaced.repetition.utils.audit.AuditingAction;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.hateoas.Link;
@@ -25,6 +27,7 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 @RestController
 @RequestMapping("api/admin/users")
 public class ManageUserController {
+    private static final Logger LOGGER = LoggerFactory.getLogger(CourseCommentController.class);
 
     @Autowired
     private UserService userService;
@@ -119,6 +122,7 @@ public class ManageUserController {
     @PostMapping("/{userId}/deck/{deckId}")
     public ResponseEntity<UserManagedByAdminDTO> addExistingDeckToUsersFolder(@PathVariable("userId") Long userId,
                                                                               @PathVariable("deckId") Long deckId) {
+        LOGGER.debug("Adding existing deck with id: {} to user folder with id: {}", deckId, userId);
         User user = userService.addExistingDeckToUsersFolder(userId, deckId);
         if (user != null) {
             Link link = linkTo(methodOn(ManageUserController.class)
@@ -142,6 +146,7 @@ public class ManageUserController {
     @DeleteMapping("/{userId}/deck/{deckId}")
     public ResponseEntity<UserManagedByAdminDTO> removeDeckFromUsersFolder(@PathVariable("userId") Long userId,
                                                                            @PathVariable("deckId") Long deckId) {
+        LOGGER.debug("Deleting deck with id: {} from user folder with id: {}", deckId, userId);
         User user = userService.removeDeckFromUsersFolder(userId, deckId);
         if (user != null) {
             Link link = linkTo(methodOn(ManageUserController.class).getUserById(userId)).withSelfRel();
