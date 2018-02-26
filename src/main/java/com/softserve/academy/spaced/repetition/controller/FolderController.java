@@ -34,7 +34,7 @@ public class FolderController {
 
     @Auditable(action = AuditingAction.ADD_DECK_TO_FOLDER)
     @PutMapping("/api/user/folder/add/deck/{deckId}")
-    @PreAuthorize("hasPermission('FOLDER','UPDATE') && principal.id==#deck.createdBy")
+    @PreAuthorize("hasPermission('FOLDER','UPDATE') && principal.id==@deckServiceImpl.getDeck(#deckId).createdBy")
     public ResponseEntity<DeckPublicDTO> addDeckToFolder(@PathVariable Long deckId) throws NotAuthorisedUserException {
         Deck deck = folderService.addDeck(deckId);
         Link selfLink = linkTo(methodOn(DeckController.class)

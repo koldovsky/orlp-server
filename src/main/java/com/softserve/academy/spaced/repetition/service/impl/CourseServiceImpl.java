@@ -93,8 +93,9 @@ public class CourseServiceImpl implements CourseService {
         Set<Course> courses = user.getCourses();
         for (Course course : courses) {
             if (course.getId() == course_id) {
-                course.setPublished(false);
+//                course.setPublished(false);
                 courses.remove(course);
+                user.setCourses(courses);
                 break;
             }
         }

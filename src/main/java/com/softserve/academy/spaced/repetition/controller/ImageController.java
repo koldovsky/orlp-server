@@ -79,7 +79,7 @@ public class ImageController {
      * @return array of bytes that contain image content
      */
     @GetMapping(value = "/api/service/image/{id}", produces = {MediaType.IMAGE_JPEG_VALUE})
-    @PreAuthorize("hasPermission('IMAGE','READ')")
+    @PreAuthorize("hasPermission('IMAGE','READ') || !isAuthenticated()")
     public ResponseEntity<byte[]> getImageById(@PathVariable("id") Long id) {
         byte[] imageContentBytes = imageService.getDecodedImageContentByImageId(id);
         if (imageContentBytes == null) {

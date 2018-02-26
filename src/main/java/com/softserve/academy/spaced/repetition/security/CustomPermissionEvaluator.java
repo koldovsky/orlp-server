@@ -34,6 +34,7 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
         anonymousPermission.add(new Permission(CARDS_FILE, createMask(READ)));
         anonymousPermission.add(new Permission(CATEGORY, createMask(READ)));
         anonymousPermission.add(new Permission(COURSE, createMask(READ)));
+        anonymousPermission.add(new Permission(IMAGE, createMask(READ)));
         anonymousPermission.add(new Permission(COURSE_COMMENT, createMask(READ)));
         anonymousPermission.add(new Permission(COURSE_RATING, createMask(READ)));
         anonymousPermission.add(new Permission(DECK_COMMENT, createMask(READ)));
@@ -56,7 +57,7 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
         userPermission.add(new Permission(FOLDER, createMask(CREATE, READ, UPDATE, DELETE)));
         userPermission.add(new Permission(CARD_QUEUE, createMask(READ, UPDATE)));
         userPermission.add(new Permission(USER, createMask(READ, UPDATE)));
-        userPermission.add(new Permission(PROFILE, createMask(READ, UPDATE)));
+        userPermission.add(new Permission(PROFILE, createMask(READ, UPDATE, DELETE)));
 
         //Collection of permissions for role ADMIN
         adminPermission.add(new Permission(AUDIT, createMask(READ)));
@@ -77,7 +78,7 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
         adminPermission.add(new Permission(MANAGE_USER, createMask(CREATE, READ, UPDATE, DELETE)));
         adminPermission.add(new Permission(USER, createMask(READ, UPDATE)));
         adminPermission.add(new Permission(CARD_QUEUE, createMask(READ, UPDATE)));
-        adminPermission.add(new Permission(PROFILE, createMask(READ, UPDATE)));
+        adminPermission.add(new Permission(PROFILE, createMask(READ, UPDATE, DELETE)));
 
         permissionMatrix.put(ROLE_ANONYMOUS.name(), anonymousPermission);
         permissionMatrix.put(ROLE_USER.name(), userPermission);

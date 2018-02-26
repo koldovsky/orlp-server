@@ -117,8 +117,8 @@ public class CourseController {
     }
 
     @Auditable(action = AuditingAction.DELETE_COURSE)
-    @PreAuthorize("hasPermission('COURSE','DELETE') && " +
-            "@courseServiceImpl.getCourseById(courseId).createdBy==principle.id")
+    @PreAuthorize("hasPermission('COURSE','DELETE') &&" +
+            "@courseServiceImpl.getCourseById(#courseId).createdBy==principal.id")
     @DeleteMapping(value = "/api/cabinet/global/courses/{courseId}")
     public ResponseEntity deleteGlobalCourse(@PathVariable Long courseId) throws NotAuthorisedUserException {
         courseService.deleteGlobalCourse(courseId);
@@ -126,8 +126,8 @@ public class CourseController {
     }
 
     @DeleteMapping(value = "/api/cabinet/local/courses/{courseId}")
-    @PreAuthorize("hasPermission('COURSE','DELETE') && " +
-            "@courseServiceImpl.getCourseById(courseId).createdBy==principle.id")
+    @PreAuthorize("hasPermission('COURSE','DELETE') &&" +
+            "@courseServiceImpl.getCourseById(#courseId).createdBy==principal.id")
     public ResponseEntity deleteLocalCourse(@PathVariable Long courseId) throws NotAuthorisedUserException {
         courseService.deleteLocalCourse(courseId);
         return new ResponseEntity(HttpStatus.OK);
@@ -145,7 +145,7 @@ public class CourseController {
 
     @Auditable(action = AuditingAction.ADD_COURSE)
     @PutMapping("/api/cabinet/{courseId}/update/access")
-    @PreAuthorize("hasPermission('COURSE','DELETE') && #course.createdBy==principle.id")
+    @PreAuthorize("hasPermission('COURSE','UPDATE') && @courseServiceImpl.getCourseById(#courseId).createdBy==principal.id")
     public ResponseEntity<CoursePublicDTO> updateCourseAccess(@PathVariable Long courseId,
                                                               @Validated(Request.class) @RequestBody Course course) {
         courseService.updateCourseAccess(courseId, course);
