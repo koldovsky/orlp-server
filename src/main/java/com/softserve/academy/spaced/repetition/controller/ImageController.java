@@ -12,6 +12,8 @@ import com.softserve.academy.spaced.repetition.utils.exceptions.CanNotBeDeletedE
 import com.softserve.academy.spaced.repetition.utils.exceptions.ImageRepositorySizeQuotaExceededException;
 import com.softserve.academy.spaced.repetition.utils.exceptions.NotAuthorisedUserException;
 import com.softserve.academy.spaced.repetition.utils.exceptions.NotOwnerOperationException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Link;
 import org.springframework.http.HttpStatus;
@@ -23,11 +25,13 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
+import static com.softserve.academy.spaced.repetition.controller.dto.builder.DTOBuilder.buildDtoListForCollection;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
 @RestController
 public class ImageController {
+    private static final Logger LOGGER = LoggerFactory.getLogger(CourseCommentController.class);
 
     @Autowired
     private ImageService imageService;
@@ -46,9 +50,11 @@ public class ImageController {
      */
     @Auditable(action = AuditingAction.UPLOAD_IMAGE)
     @PostMapping("/api/service/image")
+    @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasPermission('IMAGE','UPDATE')")
     public ResponseEntity<UploadingImageDTO> addImageToDB(@RequestParam("file") MultipartFile file)
             throws ImageRepositorySizeQuotaExceededException, NotAuthorisedUserException {
+        LOGGER.debug("Adding image to DB");
         Image image = imageService.addImageToDB(file);
         Long imageId = image.getId();
         Link link = linkTo(methodOn(ImageController.class).getImageById(imageId)).withSelfRel();
@@ -64,12 +70,12 @@ public class ImageController {
      * @return list of imageDTOs
      */
     @GetMapping("/api/service/images/user")
+    @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasPermission('IMAGE','READ')")
-    public ResponseEntity<List<ImageDTO>> getAllImagesByUserId() throws NotAuthorisedUserException {
+    public List<ImageDTO> getAllImagesByUserId() throws NotAuthorisedUserException {
         List<Image> listId = imageService.getImagesForCurrentUser();
-        Link link = linkTo(methodOn(ImageController.class).getImageList()).withSelfRel();
-        List<ImageDTO> imageDTOList = DTOBuilder.buildDtoListForCollection(listId, ImageDTO.class, link);
-        return new ResponseEntity<>(imageDTOList, HttpStatus.OK);
+        return buildDtoListForCollection(listId, ImageDTO.class,
+                linkTo(methodOn(ImageController.class).getImageList()).withSelfRel());
     }
 
     /**
@@ -95,16 +101,16 @@ public class ImageController {
      */
     @Auditable(action = AuditingAction.VIEW_ALL_IMAGE_ADMIN)
     @GetMapping(value = "/api/admin/service/image")
+    @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasPermission('IMAGE','READ')")
-    public ResponseEntity<List<ImageDTO>> getImageList() {
+    public List<ImageDTO> getImageList() {
         List<Image> listId = imageRepository.getImagesWithoutContent();
-        Link link = linkTo(methodOn(ImageController.class).getImageList()).withSelfRel();
-        List<ImageDTO> imageDTOList = DTOBuilder.buildDtoListForCollection(listId, ImageDTO.class, link);
-        return new ResponseEntity<>(imageDTOList, HttpStatus.OK);
+        return buildDtoListForCollection(listId, ImageDTO.class,
+                linkTo(methodOn(ImageController.class).getImageList()).withSelfRel());
     }
 
     /**
-     * Delete the selected image
+     * Delete the selected imagelinkTo(methodOn(ImageController.class).getImageList()).withSelfRel()
      *
      * @param id - Image id, which we want to delete
      * @return - HttpStatus.OK if the operation of deleting was made successfull
@@ -118,6 +124,7 @@ public class ImageController {
     @PreAuthorize("hasPermission('IMAGE','DELETE')")
     public ResponseEntity<?> deleteImage(@PathVariable("id") Long id) throws CanNotBeDeletedException,
             NotOwnerOperationException, NotAuthorisedUserException {
+        LOGGER.debug("Deleting image with id: {}", id);
         imageService.deleteImage(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }

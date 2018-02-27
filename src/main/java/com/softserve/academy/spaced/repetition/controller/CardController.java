@@ -26,7 +26,6 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 @RestController
 @RequestMapping("api/decks/{deckId}/")
 public class CardController {
-
     private static final Logger LOGGER = LoggerFactory.getLogger(CardController.class);
 
     @Autowired
@@ -70,7 +69,7 @@ public class CardController {
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasPermission('CARD','CREATE')")
     public CardPublicDTO addCard(@PathVariable Long deckId, @Validated @RequestBody CardDTO card) {
-        LOGGER.debug("Add card to deckId: {}", deckId);
+        LOGGER.debug("Adding card to deck with Id: {}", deckId);
         Card newCard = new Card(card.getTitle(), card.getQuestion(), card.getAnswer());
         cardService.addCard(newCard, deckId, card.getImages());
         return buildDtoForEntity(newCard, CardPublicDTO.class,
@@ -98,6 +97,7 @@ public class CardController {
     @PreAuthorize("hasPermission('CARD','DELETE') && " +
             "@cardServiceImpl.getCard(#cardId).createdBy==principal.id")
     public void deleteCard(@PathVariable Long cardId) {
+        LOGGER.debug("Deleting card with id: {}", cardId);
         cardService.deleteCard(cardId);
     }
 
