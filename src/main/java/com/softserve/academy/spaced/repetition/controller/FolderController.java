@@ -56,7 +56,7 @@ public class FolderController {
         return new ResponseEntity<>(decks, HttpStatus.OK);
     }
 
-    @GetMapping("/api/private/user/folder/decks/id")
+    @GetMapping("/api/user/folder/decksId")
     @PreAuthorize("hasPermission('FOLDER','READ')")
     public ResponseEntity<List<Long>> getIdAllDecksInFolder() throws NotAuthorisedUserException {
         List<Long> id = folderService.getAllDecksIdWithFolder();

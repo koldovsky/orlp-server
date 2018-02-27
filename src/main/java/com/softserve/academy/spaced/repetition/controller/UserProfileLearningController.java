@@ -34,7 +34,7 @@ public class UserProfileLearningController {
     }
 
     @PutMapping("/learning-details")
-    @PreAuthorize("hasPermission('PROFILE_LEARNING','UPDATE') && #acc.createdBy==principal.id")
+    @PreAuthorize("hasPermission('PROFILE_LEARNING','UPDATE') || #acc.createdBy==principal.id")
     public ResponseEntity<AccountDTO> updateLearningDetails(@RequestBody Account acc)
             throws NotAuthorisedUserException {
         Account account = accountService.updateAccountDetails(acc);

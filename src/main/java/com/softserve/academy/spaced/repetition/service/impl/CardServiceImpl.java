@@ -93,6 +93,7 @@ public class CardServiceImpl implements CardService {
     @Transactional
     public Card updateCard(Card card, Long cardId, List<String> imageList) {
         card.setId(cardId);
+        card.setCreatedBy(cardRepository.findOne(cardId).getCreatedBy());
         card.setDeck(cardRepository.findOne(cardId).getDeck());
         cardRepository.save(card);
         cardImageService.addCardImage(imageList, card);
