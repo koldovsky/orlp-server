@@ -173,10 +173,11 @@ public class CardServiceTest {
 
     @Test
     public void testUpdateCardWithoutImage() {
+
         doNothing().when(cardImageService).addCardImage(null, card);
 
         cardService.updateCard(card, CARD_ID, null);
-        verify(cardRepository).findOne(DECK_ID);
+        verify(cardRepository,times(2)).findOne(DECK_ID);
         verify(cardRepository).save(card);
         verify(cardImageService).addCardImage(null, card);
     }
@@ -186,7 +187,7 @@ public class CardServiceTest {
         doNothing().when(cardImageService).addCardImage(imageList, card);
 
         cardService.updateCard(card, CARD_ID, imageList);
-        verify(cardRepository).findOne(DECK_ID);
+        verify(cardRepository,times(2)).findOne(DECK_ID);
         verify(cardRepository).save(card);
         verify(cardImageService).addCardImage(imageList, card);
     }
