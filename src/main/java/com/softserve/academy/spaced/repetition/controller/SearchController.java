@@ -28,10 +28,10 @@ public class SearchController {
     @ResponseStatus(HttpStatus.OK)
     public List<String> getLinksFromSearch(@PathVariable String searchString) {
         List<String> links = new ArrayList<>();
-        courseService.findCoursesId(searchString).forEach(deckId -> links.add(linkTo(methodOn(DeckController.class)
-                .getDeckById(deckId.longValueExact())).withSelfRel().getHref()));
         deckService.findDecksId(searchString).forEach(deckId -> links.add(linkTo(methodOn(DeckController.class)
                 .getDeckById(deckId.longValueExact())).withSelfRel().getHref()));
+        courseService.findCoursesId(searchString).forEach(courseId -> links.add(linkTo(methodOn(CourseController.class)
+                .getCourseById(courseId.longValueExact())).withSelfRel().getHref()));
         return links;
     }
 }
