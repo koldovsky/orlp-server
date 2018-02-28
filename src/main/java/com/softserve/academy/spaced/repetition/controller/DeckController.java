@@ -213,7 +213,8 @@ public class DeckController {
     @Auditable(action = AuditingAction.EDIT_DECK_USER)
     @PutMapping(value = "/api/categories/{categoryId}/decks/{deckId}")
     @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasPermission('DECK','UPDATE') && #deck.createdBy==principal.id")
+    @PreAuthorize("hasPermission('DECK','UPDATE')&& " +
+            "@deckServiceImpl.getDeck(#deckId).createdBy==principal.id")
     public DeckPrivateDTO updateDeckForUser(@Validated(Request.class) @RequestBody Deck deck,
                                             @PathVariable Long deckId, @PathVariable Long categoryId)
             throws NotAuthorisedUserException, NotOwnerOperationException {
