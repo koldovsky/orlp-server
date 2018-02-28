@@ -3,9 +3,10 @@ package com.softserve.academy.spaced.repetition.domain.enums;
 public enum EntityName{
    AUDIT,
    CARD,
+   ADMIN_CARD,
    CARD_IMAGE,
    CARD_RATING,
-   CARDS_FILE,
+   DECK_IMPORT,
    CATEGORY,
    COURSE_COMMENT,
    COURSE,

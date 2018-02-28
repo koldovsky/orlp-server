@@ -58,7 +58,7 @@ public class CardController {
 
     @GetMapping("not-postponed")
     @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasPermission('CARD','READ')")
+    @PreAuthorize("hasPermission('CARD','READ') && isAuthenticated()")
     public Boolean areThereNotPostponedCardsAvailable(@PathVariable Long deckId)
             throws NotAuthorisedUserException {
         return cardService.areThereNotPostponedCardsAvailable(deckId);
@@ -79,8 +79,8 @@ public class CardController {
     @Auditable(action = AuditingAction.EDIT_CARD_VIA_CATEGORY_AND_DECK)
     @PutMapping(value = "cards/{cardId}")
     @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasPermission('CARD','UPDATE') && " +
-            "@cardServiceImpl.getCard(#cardId).createdBy==principal.id")
+    @PreAuthorize("hasPermission('ADMIN_CARD','UPDATE') || (hasPermission('CARD','UPDATE') &&" +
+            "@cardServiceImpl.getCard(#cardId).createdBy==principal.id)")
     public CardPublicDTO updateCard(@PathVariable Long deckId,
                                     @PathVariable Long cardId,
                                     @Validated @RequestBody CardDTO card) {
@@ -94,8 +94,8 @@ public class CardController {
     @Auditable(action = AuditingAction.DELETE_CARD)
     @ResponseStatus(HttpStatus.OK)
     @DeleteMapping(value = "cards/{cardId}")
-    @PreAuthorize("hasPermission('CARD','DELETE') && " +
-            "@cardServiceImpl.getCard(#cardId).createdBy==principal.id")
+    @PreAuthorize("hasPermission('ADMIN_CARD','DELETE') || " +
+            "(hasPermission('CARD','DELETE') && @cardServiceImpl.getCard(#cardId).createdBy==principal.id)")
     public void deleteCard(@PathVariable Long cardId) {
         LOGGER.debug("Deleting card with id: {}", cardId);
         cardService.deleteCard(cardId);
@@ -103,8 +103,8 @@ public class CardController {
 
     @GetMapping(value = "cards/{cardId}")
     @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasPermission('CARD','READ') || " +
-            "@cardServiceImpl.getCard(#cardId).createdBy==principal.id")
+    @PreAuthorize("hasPermission('ADMIN_CARD','READ') || (hasPermission('CARD','READ') && " +
+            "@cardServiceImpl.getCard(#cardId).createdBy==principal.id)")
     public CardPublicDTO getCardById(@PathVariable Long deckId, @PathVariable Long cardId) {
         Card card = cardService.getCard(cardId);
         return buildDtoForEntity(card, CardPublicDTO.class,

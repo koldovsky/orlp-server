@@ -23,7 +23,7 @@ public class CardsFileController {
 
     @PostMapping("api/upload/deck/{deckId}/cards")
     @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasPermission('CARDS_FILE','CREATE')")
+    @PreAuthorize("hasPermission('DECK_IMPORT','CREATE')")
     public void uploadFile(@RequestParam("file") MultipartFile cardsFile, @PathVariable Long deckId)
             throws WrongFormatException, NotOwnerOperationException,
             NotAuthorisedUserException, EmptyFileException, IOException {
@@ -32,7 +32,7 @@ public class CardsFileController {
 
     @GetMapping("api/download/deck/{deckId}/cards")
     @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasPermission('CARDS_FILE','READ')")
+    @PreAuthorize("hasPermission('DECK_IMPORT','READ')")
     public void downloadFile(HttpServletResponse response, @PathVariable Long deckId) throws IOException {
         response.setContentType("application/octet-stream");
         response.setHeader("Content-Disposition", "attachment; filename=Cards.yml");
@@ -41,7 +41,7 @@ public class CardsFileController {
 
     @GetMapping("api/download/template/cards")
     @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasPermission('CARDS_FILE','READ')")
+    @PreAuthorize("hasPermission('DECK_IMPORT','READ')")
     public void downloadFileTemplate(HttpServletResponse response) throws IOException {
         response.setContentType("application/octet-stream");
         response.setHeader("Content-Disposition", "attachment; filename=CardsTemplate.yml");

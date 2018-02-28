@@ -31,7 +31,7 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
         //Collection of permissions for role ANONYMOUS
         anonymousPermission.add(new Permission(CARD, createMask(READ)));
         anonymousPermission.add(new Permission(CARD_RATING, createMask(READ)));
-        anonymousPermission.add(new Permission(CARDS_FILE, createMask(READ)));
+        anonymousPermission.add(new Permission(DECK_IMPORT, createMask(READ)));
         anonymousPermission.add(new Permission(CATEGORY, createMask(READ)));
         anonymousPermission.add(new Permission(COURSE, createMask(READ)));
         anonymousPermission.add(new Permission(IMAGE, createMask(READ)));
@@ -43,9 +43,10 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
 
         //Collection of permissions for role USER
         userPermission.add(new Permission(CARD, createMask(CREATE, READ, UPDATE, DELETE)));
+        userPermission.add(new Permission(ADMIN_CARD, createMask(CREATE, READ, UPDATE, DELETE)));
         userPermission.add(new Permission(CARD_IMAGE, createMask(DELETE)));
         userPermission.add(new Permission(CARD_RATING, createMask(READ, CREATE)));
-        userPermission.add(new Permission(CARDS_FILE, createMask(CREATE, READ)));
+        userPermission.add(new Permission(DECK_IMPORT, createMask(CREATE, READ)));
         userPermission.add(new Permission(CATEGORY, createMask(READ)));
         userPermission.add(new Permission(COURSE, createMask(CREATE, READ, UPDATE, DELETE)));
         userPermission.add(new Permission(COURSE_COMMENT, createMask(CREATE, READ, UPDATE, DELETE)));
@@ -64,7 +65,7 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
         adminPermission.add(new Permission(CARD, createMask(CREATE, READ, UPDATE, DELETE)));
         adminPermission.add(new Permission(CARD_RATING, createMask(CREATE, READ)));
         adminPermission.add(new Permission(CARD_IMAGE, createMask(DELETE)));
-        adminPermission.add(new Permission(CARDS_FILE, createMask(CREATE, READ)));
+        adminPermission.add(new Permission(DECK_IMPORT, createMask(CREATE, READ)));
         adminPermission.add(new Permission(CATEGORY, createMask(CREATE, READ, UPDATE, DELETE)));
         adminPermission.add(new Permission(COURSE, createMask(CREATE, READ, UPDATE, DELETE)));
         adminPermission.add(new Permission(COURSE_COMMENT, createMask(CREATE, READ, UPDATE, DELETE)));
