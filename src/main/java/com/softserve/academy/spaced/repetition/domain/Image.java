@@ -114,4 +114,5 @@ public class Image implements EntityInterface {
     public void setIsImageUsed(boolean imageUsed) {
         isImageUsed = imageUsed;
     }
+
 }

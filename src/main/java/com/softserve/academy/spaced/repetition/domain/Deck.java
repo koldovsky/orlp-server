@@ -8,7 +8,10 @@ import java.util.List;
 import java.util.Set;
 
 @Entity
-@Table(name = "deck")
+@Table(name = "deck", indexes = {
+        @Index(columnList = "name", name = "deck_index"),
+        @Index(columnList = "description", name = "deck_index")
+})
 public class Deck extends EntityForOwnership implements EntityInterface {
 
     @Id
@@ -140,6 +143,14 @@ public class Deck extends EntityForOwnership implements EntityInterface {
 
     public void setDeckComments(List<DeckComment> deckComments) {
         this.deckComments = deckComments;
+    }
+
+    public List<Course> getCourses() {
+        return courses;
+    }
+
+    public void setCourses(List<Course> courses) {
+        this.courses = courses;
     }
 
     @Override

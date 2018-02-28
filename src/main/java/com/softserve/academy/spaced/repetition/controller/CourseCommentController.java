@@ -3,7 +3,7 @@ package com.softserve.academy.spaced.repetition.controller;
 import com.softserve.academy.spaced.repetition.controller.dto.annotations.Request;
 import com.softserve.academy.spaced.repetition.controller.dto.builder.DTOBuilder;
 import com.softserve.academy.spaced.repetition.controller.dto.impl.CommentDTO;
-import com.softserve.academy.spaced.repetition.controller.dto.impl.ReplyToCommentDTO;
+import com.softserve.academy.spaced.repetition.controller.dto.simpleDTO.ReplyToCommentDTO;
 import com.softserve.academy.spaced.repetition.domain.Comment;
 import com.softserve.academy.spaced.repetition.domain.CourseComment;
 import com.softserve.academy.spaced.repetition.service.CourseCommentService;

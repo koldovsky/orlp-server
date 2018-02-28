@@ -2,7 +2,7 @@ package com.softserve.academy.spaced.repetition.controller;
 
 import com.softserve.academy.spaced.repetition.controller.dto.annotations.Request;
 import com.softserve.academy.spaced.repetition.controller.dto.builder.DTOBuilder;
-import com.softserve.academy.spaced.repetition.controller.dto.impl.CategoryDTO;
+import com.softserve.academy.spaced.repetition.controller.dto.simpleDTO.CategoryDTO;
 import com.softserve.academy.spaced.repetition.controller.dto.impl.CategoryLinkDTO;
 import com.softserve.academy.spaced.repetition.controller.dto.impl.CategoryPublicDTO;
 import com.softserve.academy.spaced.repetition.controller.dto.impl.CategoryTopDTO;
@@ -33,7 +33,6 @@ public class CategoryController {
     @Autowired
     private CategoryService categoryService;
 
-    @Auditable(action = AuditingAction.VIEW_ALL_CATEGORIES)
     @GetMapping("/api/categories")
     @PreAuthorize("hasPermission('CATEGORY','READ')")
     public ResponseEntity<List<CategoryLinkDTO>> getAllCategories() {
@@ -44,7 +43,6 @@ public class CategoryController {
         return new ResponseEntity<>(categories, HttpStatus.OK);
     }
 
-    @Auditable(action = AuditingAction.VIEW_CATEGORY)
     @GetMapping("/api/categories/{id}")
     @PreAuthorize("hasPermission('CATEGORY','READ')")
     public ResponseEntity<CategoryLinkDTO> getCategoryById(@PathVariable Long id) {
@@ -54,7 +52,6 @@ public class CategoryController {
         return new ResponseEntity<>(publicDTO, HttpStatus.OK);
     }
 
-    @Auditable(action = AuditingAction.VIEW_TOP_CATEGORIES)
     @GetMapping("/api/categories/top")
     @PreAuthorize("hasPermission('CATEGORY','READ')")
     public ResponseEntity<List<CategoryTopDTO>> getTopCategories() {
@@ -71,7 +68,7 @@ public class CategoryController {
                                                                        @RequestParam(name = "sortBy") String sortBy,
                                                                        @RequestParam(name = "asc") boolean ascending) {
         Page<CategoryTopDTO> sortedCategoriesDTOS = categoryService
-                .getSortedCategories(pageNumber, sortBy, ascending).map((category) -> {
+                .getSortedCategories(pageNumber, sortBy, ascending).map(category -> {
                     Link selfLink = linkTo(methodOn(CategoryController.class)
                             .getCategoryById(category.getId())).withRel("categories");
                     return DTOBuilder.buildDtoForEntity(category, CategoryTopDTO.class, selfLink);

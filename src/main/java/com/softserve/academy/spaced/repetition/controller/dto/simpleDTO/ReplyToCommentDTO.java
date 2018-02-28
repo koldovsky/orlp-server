@@ -1,4 +1,4 @@
-package com.softserve.academy.spaced.repetition.controller.dto.impl;
+package com.softserve.academy.spaced.repetition.controller.dto.simpleDTO;
 
 import com.softserve.academy.spaced.repetition.controller.dto.annotations.Request;
 import org.hibernate.validator.constraints.NotBlank;

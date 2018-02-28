@@ -23,7 +23,7 @@ public class Category extends EntityForOwnership implements EntityInterface {
     @NotNull
     private String description;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne()
     @JoinColumn(name = "image")
     private Image image;
 
@@ -106,5 +106,4 @@ public class Category extends EntityForOwnership implements EntityInterface {
     public void setImage(Image image) {
         this.image = image;
     }
-
 }

@@ -2,14 +2,12 @@ package com.softserve.academy.spaced.repetition.service.impl;
 
 import com.softserve.academy.spaced.repetition.domain.*;
 
-import com.softserve.academy.spaced.repetition.repository.CardRepository;
 import com.softserve.academy.spaced.repetition.repository.CategoryRepository;
 import com.softserve.academy.spaced.repetition.repository.CourseRepository;
 import com.softserve.academy.spaced.repetition.repository.DeckRepository;
 import com.softserve.academy.spaced.repetition.utils.exceptions.NotAuthorisedUserException;
 import com.softserve.academy.spaced.repetition.utils.exceptions.NotOwnerOperationException;
 import com.softserve.academy.spaced.repetition.service.DeckService;
-import com.softserve.academy.spaced.repetition.service.FolderService;
 import com.softserve.academy.spaced.repetition.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -20,9 +18,11 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigInteger;
 import java.util.List;
 import java.util.Locale;
 import java.util.NoSuchElementException;
+import java.util.Set;
 
 @Service
 public class DeckServiceImpl implements DeckService {
@@ -75,6 +75,11 @@ public class DeckServiceImpl implements DeckService {
     }
 
     @Override
+    public Set<BigInteger> findDecksId(String searchString) {
+        return deckRepository.findDecksId(searchString);
+    }
+
+    @Override
     @Transactional
     public void addDeckToCategory(Deck deck, Long categoryId) {
         Category category = categoryRepository.findOne(categoryId);
@@ -111,7 +116,7 @@ public class DeckServiceImpl implements DeckService {
     @Override
     @Transactional
     public void deleteDeck(Long deckId) {
-        deckRepository.deleteDeckById(deckId);
+        deckRepository.delete(deckId);
     }
 
     @Override

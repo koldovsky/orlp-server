@@ -8,8 +8,11 @@ import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Entity
-@Table(name = "course")
-public class Course extends EntityForOwnership implements EntityInterface {
+@Table(name = "course", indexes = {
+        @Index(columnList = "name", name = "course_index"),
+        @Index(columnList = "description", name = "course_index")
+})
+public class Course Course extends EntityForOwnership implements EntityInterface {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
