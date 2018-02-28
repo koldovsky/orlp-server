@@ -12,7 +12,7 @@ import java.util.Set;
         @Index(columnList = "name", name = "deck_index"),
         @Index(columnList = "description", name = "deck_index")
 })
-public class Deck implements EntityInterface {
+public class Deck extends EntityForOwnership implements EntityInterface {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

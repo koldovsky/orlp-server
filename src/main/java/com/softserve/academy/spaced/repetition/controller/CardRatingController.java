@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Link;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,6 +37,7 @@ public class CardRatingController {
      */
     @ResponseStatus(HttpStatus.OK)
     @GetMapping
+    @PreAuthorize("hasPermission('CARD_RATING','READ')")
     public CardRatingPublicDTO getCardRatingById(@PathVariable Long cardId) {
         CardRating cardRating = cardRatingService.getCardRatingById(cardId);
         Link selfLink = linkTo(methodOn(CardRatingController.class)
@@ -55,6 +57,7 @@ public class CardRatingController {
     @Auditable(action = AuditingAction.RATE_CARD)
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
+    @PreAuthorize("hasPermission('CARD_RATING','CREATE')")
     public CardRatingPublicDTO addCardRating(@Validated(Request.class) @RequestBody CardRating cardRating,
                                              @PathVariable Long cardId) throws NotAuthorisedUserException {
         LOGGER.debug("Adding rating to card by id: {}", cardId);

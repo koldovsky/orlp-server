@@ -20,6 +20,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Link;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,6 +37,7 @@ public class UserProfileController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("isAuthenticated()")
     public ProfileDataDTO getProfileData() throws NotAuthorisedUserException {
         User user = userProfileService.getProfileData();
         Link self = linkTo(methodOn(UserProfileController.class).getProfileData()).withSelfRel();
@@ -45,6 +47,7 @@ public class UserProfileController {
     @Auditable(action = AuditingAction.EDIT_PERSONAL_DATA)
     @PutMapping(value = "/personal-info")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasPermission('PROFILE','UPDATE')")
     public PersonalInfoDTO updatePersonalInfo(@Validated(Request.class) @RequestBody JsonPersonalInfoDTO personalInfo)
             throws NotAuthorisedUserException {
         LOGGER.debug("Updating personal information");
@@ -55,6 +58,7 @@ public class UserProfileController {
     @Auditable(action = AuditingAction.CHANGE_PASSWORD)
     @PutMapping(value = "/password")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PreAuthorize("hasPermission('PROFILE','UPDATE')")
     public void changePassword(@Validated(Request.class) @RequestBody JsonPasswordDTO passwordDTO)
             throws NotAuthorisedUserException, IllegalArgumentException {
         LOGGER.debug("Changing password");
@@ -64,6 +68,7 @@ public class UserProfileController {
     @Auditable(action = AuditingAction.UPLOAD_PROFILE_IMAGE)
     @PostMapping("/image")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasPermission('PROFILE','UPDATE')")
     public ProfileImageDTO uploadProfileImage(@RequestBody JsonImageDTO imageDTO)
             throws NotAuthorisedUserException, ImageRepositorySizeQuotaExceededException {
         LOGGER.debug("Updating image of profile");
@@ -74,6 +79,7 @@ public class UserProfileController {
     @Auditable(action = AuditingAction.DELETE_PROFILE_IMAGE)
     @DeleteMapping("/image")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasPermission('PROFILE','DELETE')")
     public void deleteProfileImage() throws NotAuthorisedUserException {
         LOGGER.debug("Deleting image of profile");
         userProfileService.deleteProfileImage();
@@ -82,6 +88,7 @@ public class UserProfileController {
     @Auditable(action = AuditingAction.DELETE_PROFILE)
     @DeleteMapping
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasPermission('PROFILE','DELETE')")
     public void deleteProfile() throws NotAuthorisedUserException {
         LOGGER.debug("Deleting of profile");
         userProfileService.deleteProfile();

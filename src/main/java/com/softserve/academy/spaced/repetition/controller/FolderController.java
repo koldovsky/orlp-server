@@ -1,6 +1,5 @@
 package com.softserve.academy.spaced.repetition.controller;
 
-import com.softserve.academy.spaced.repetition.controller.dto.builder.DTOBuilder;
 import com.softserve.academy.spaced.repetition.controller.dto.impl.DeckLinkByFolderDTO;
 import com.softserve.academy.spaced.repetition.controller.dto.impl.DeckPublicDTO;
 import com.softserve.academy.spaced.repetition.domain.Deck;
@@ -11,7 +10,6 @@ import com.softserve.academy.spaced.repetition.utils.exceptions.NotAuthorisedUse
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.hateoas.Link;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -35,6 +33,7 @@ public class FolderController {
     @Auditable(action = AuditingAction.ADD_DECK_TO_FOLDER)
     @PutMapping("/add/deck/{deckId}")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasPermission('FOLDER','UPDATE') && principal.id==@deckServiceImpl.getDeck(#deckId).createdBy")
     public DeckPublicDTO addDeckToFolder(@PathVariable Long deckId) throws NotAuthorisedUserException {
         LOGGER.debug("Adding deck with id: {} to folder", deckId);
         Deck deck = folderService.addDeck(deckId);
@@ -45,6 +44,7 @@ public class FolderController {
     @Auditable(action = AuditingAction.VIEW_DECK_IN_FOLDER)
     @GetMapping("/{folderId}/decks")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasPermission('FOLDER','READ')")
     public List<DeckLinkByFolderDTO> getAllDecksWithFolder(@PathVariable Long folderId) {
         List<Deck> deckList = folderService.getAllDecksByFolderId(folderId);
         return buildDtoListForCollection(deckList, DeckLinkByFolderDTO.class,
@@ -52,6 +52,7 @@ public class FolderController {
     }
 
     @GetMapping("/decksId")
+    @PreAuthorize("hasPermission('FOLDER','READ')")
     public ResponseEntity<List<Long>> getIdAllDecksInFolder() throws NotAuthorisedUserException {
         List<Long> id = folderService.getAllDecksIdWithFolder();
         return new ResponseEntity<>(id, HttpStatus.OK);
@@ -59,6 +60,8 @@ public class FolderController {
 
     @Auditable(action = AuditingAction.DELETE_DECK)
     @DeleteMapping(value = "/decks/{deckId}")
+    @PreAuthorize("hasPermission('FOLDER','DELETE') && " +
+            "@deckServiceImpl.getDeck(#deckId).createdBy==principal.id")
     public void deleteUserDeck(@PathVariable Long deckId) throws NotAuthorisedUserException {
         LOGGER.debug("Deleting deck with id: {}", deckId);
         folderService.deleteDeck(deckId);

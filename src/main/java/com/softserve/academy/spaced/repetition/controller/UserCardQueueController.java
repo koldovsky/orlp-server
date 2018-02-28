@@ -25,7 +25,6 @@ public class UserCardQueueController {
     private UserCardQueueService userCardQueueService;
 
     @PutMapping("/decks/{deckId}/cards/{cardId}/queue")
-    @PreAuthorize(value = "@accessToUrlService.hasAccessToCard(#deckId, #cardId)")
     public ResponseEntity updateUserCardQueue(@PathVariable Long deckId,
                                               @PathVariable Long cardId,
                                               @RequestBody String status)
@@ -36,11 +35,13 @@ public class UserCardQueueController {
     }
 
     @GetMapping("/decks/{deckId}/cards-that-need-repeating/count")
+    @PreAuthorize("hasPermission('CARD_QUEUE','READ')")
     public ResponseEntity<Long> countCardsThatNeedRepeating(@PathVariable Long deckId) throws NotAuthorisedUserException {
         return ResponseEntity.ok(userCardQueueService.countCardsThatNeedRepeating(deckId));
     }
 
     @GetMapping("/user/card/queue/{userCardQueueId}")
+    @PreAuthorize("hasPermission('CARD_QUEUE','READ')")
     public ResponseEntity<UserCardQueuePublicDTO> getUserCardQueueById(@PathVariable Long userCardQueueId) {
         UserCardQueue userCardQueue = userCardQueueService.getUserCardQueueById(userCardQueueId);
         Link selfLink = linkTo(methodOn(UserCardQueueController.class).getUserCardQueueById(userCardQueueId)).withSelfRel();

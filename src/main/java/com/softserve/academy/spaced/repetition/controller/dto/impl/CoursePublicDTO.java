@@ -25,4 +25,7 @@ public class CoursePublicDTO extends DTO<Course> {
     public String getImage() {
         return linkTo(methodOn(ImageController.class).getImageById(getEntity().getImage().getId())).withSelfRel().getHref();
     }
+    public Long getCreatedBy(){
+        return getEntity().getCreatedBy();
+    }
 }

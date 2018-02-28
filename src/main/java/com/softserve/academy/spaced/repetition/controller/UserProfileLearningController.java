@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Link;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
@@ -24,6 +25,7 @@ public class UserProfileLearningController {
     private AccountService accountService;
 
     @GetMapping("/learning-details")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<AccountDTO> getLearningDetails() throws NotAuthorisedUserException {
         Account account = accountService.getAccountDetails();
         Link link = linkTo(methodOn(UserProfileLearningController.class).getLearningDetails()).withSelfRel();
@@ -31,6 +33,7 @@ public class UserProfileLearningController {
     }
 
     @PutMapping("/learning-details")
+    @PreAuthorize("hasPermission('PROFILE_LEARNING','UPDATE') || #acc.createdBy==principal.id")
     public ResponseEntity<AccountDTO> updateLearningDetails(@RequestBody Account acc)
             throws NotAuthorisedUserException {
         LOGGER.debug("Updating of learning details");

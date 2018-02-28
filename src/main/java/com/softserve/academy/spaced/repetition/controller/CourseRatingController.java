@@ -1,7 +1,5 @@
 package com.softserve.academy.spaced.repetition.controller;
 
-import com.softserve.academy.spaced.repetition.controller.dto.builder.DTOBuilder;
-import com.softserve.academy.spaced.repetition.controller.dto.simpleDTO.RatingDTO;
 import com.softserve.academy.spaced.repetition.controller.dto.annotations.Request;
 import com.softserve.academy.spaced.repetition.controller.dto.impl.CourseRatingPublicDTO;
 import com.softserve.academy.spaced.repetition.domain.CourseRating;
@@ -11,9 +9,8 @@ import com.softserve.academy.spaced.repetition.utils.exceptions.UserStatusExcept
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.hateoas.Link;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,6 +29,7 @@ public class CourseRatingController {
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasPermission('COURSE_RATING','READ')")
     public CourseRatingPublicDTO getCourseRatingById(@PathVariable Long courseId,
                                                      @PathVariable Long id) {
         LOGGER.debug("View rating with id {}", id);
@@ -42,6 +40,7 @@ public class CourseRatingController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasPermission('COURSE_RATING','CREATE')")
     public CourseRatingPublicDTO addCourseRating(@Validated(Request.class) @RequestBody CourseRating courseRating,
                                                  @PathVariable Long courseId)
             throws NotAuthorisedUserException, UserStatusException {
