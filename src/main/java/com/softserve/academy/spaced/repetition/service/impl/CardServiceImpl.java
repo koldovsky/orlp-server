@@ -26,6 +26,7 @@ import org.yaml.snakeyaml.constructor.ConstructorException;
 import org.yaml.snakeyaml.parser.ParserException;
 
 import java.io.*;
+import java.math.BigInteger;
 import java.util.*;
 
 @Service
@@ -114,7 +115,7 @@ public class CardServiceImpl implements CardService {
     @Override
     @Transactional
     public void deleteCard(Long cardId) {
-        cardRepository.deleteCardById(cardId);
+        cardRepository.delete(cardId);
     }
 
     @Override

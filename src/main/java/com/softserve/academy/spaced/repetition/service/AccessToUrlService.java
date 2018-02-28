@@ -41,64 +41,6 @@ public interface AccessToUrlService {
     boolean hasAccessToCourse(Long categoryId);
 
     /**
-     * Checks on availability of deck that belong to course in category with the given identifiers in DB.
-     *
-     * @param categoryId must not be {@literal null}.
-     * @param courseId   must not be {@literal null}.
-     * @param deckId     must not be {@literal null}.
-     * @return true if it exist in DB
-     */
-    boolean hasAccessToDeck(Long categoryId, Long courseId, Long deckId);
-
-    /**
-     * Checks on availability of deck in category with the given identifiers in DB.
-     *
-     * @param categoryId must not be {@literal null}.
-     * @param deckId     must not be {@literal null}.
-     * @return true if it exist in DB
-     */
-    boolean hasAccessToDeckFromCategory(Long categoryId, Long deckId);
-
-    /**
-     * Checks on availability of category with the given identifier in DB.
-     *
-     * @param categoryId must not be {@literal null}.
-     * @return true if it exist in DB
-     */
-    boolean hasAccessToDeck(Long categoryId);
-
-    /**
-     * Checks on availability of card in deck with the given identifiers in DB.
-     *
-     * @param deckId must not be {@literal null}.
-     * @param cardId must not be {@literal null}.
-     * @return true if it exist in DB
-     */
-    boolean hasAccessToCard(Long deckId, Long cardId);
-
-    /**
-     * Checks on availability of card that belong to deck in category with the given identifiers in DB.
-     *
-     * @param categoryId must not be {@literal null}.
-     * @param deckId     must not be {@literal null}.
-     * @param cardId     true if it exist in DB
-     * @return true if it exist in DB
-     */
-    boolean hasAccessToCard(Long categoryId, Long deckId, Long cardId);
-
-    /**
-     * Checks on availability of card that belong to deck in course that belong to category
-     * with the given identifiers in DB.
-     *
-     * @param categoryId must not be {@literal null}.
-     * @param courseId   must not be {@literal null}.
-     * @param deckId     must not be {@literal null}.
-     * @param cardId     must not be {@literal null}.
-     * @return true if it exist in DB
-     */
-    boolean hasAccessToCard(Long categoryId, Long courseId, Long deckId, Long cardId);
-
-    /**
      * Checks on availability of folder with the given identifiers in DB.
      *
      * @param folderId must not be {@literal null}.

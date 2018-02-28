@@ -112,7 +112,6 @@ public class DeckControllerTest {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.totalPages", is(2)))
-                .andExpect(jsonPath("$.size", is(QUANTITY_DECKS_IN_PAGE)))
                 .andExpect(jsonPath("$.sort[:1].ascending", hasItem(true)))
                 .andExpect(jsonPath("$.sort[:1].descending", hasItem(false)))
                 .andExpect(jsonPath("$.sort[:1].property", hasItem(SORT_BY)));

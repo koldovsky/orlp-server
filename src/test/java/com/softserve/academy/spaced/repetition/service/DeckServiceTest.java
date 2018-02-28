@@ -74,7 +74,7 @@ public class DeckServiceTest {
         when(deckRepository.findOne(DECK_ID)).thenReturn(deck);
         when(deckRepository.save(deck)).thenReturn(deck);
         doNothing().when(deckRepository).delete(deck);
-        doNothing().when(deckRepository).deleteDeckById(DECK_ID);
+        doNothing().when(deckRepository).delete(DECK_ID);
         when(courseRepository.findOne(COURSE_ID)).thenReturn(course);
         when(categoryRepository.findOne(CATEGORY_ID)).thenReturn(category);
         when(categoryRepository.findById(CATEGORY_ID)).thenReturn(category);
@@ -151,7 +151,7 @@ public class DeckServiceTest {
     @Test
     public void testDeleteDeckById() {
         deckService.deleteDeck(DECK_ID);
-        verify(deckRepository).deleteDeckById(DECK_ID);
+        verify(deckRepository).delete(DECK_ID);
     }
 
     @Test
