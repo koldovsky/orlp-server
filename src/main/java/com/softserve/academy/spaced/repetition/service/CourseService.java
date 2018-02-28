@@ -5,7 +5,9 @@ import com.softserve.academy.spaced.repetition.domain.Deck;
 import com.softserve.academy.spaced.repetition.utils.exceptions.NotAuthorisedUserException;
 import org.springframework.data.domain.Page;
 
+import java.math.BigInteger;
 import java.util.List;
+import java.util.Set;
 
 /**
  * This interface works with course
@@ -153,5 +155,5 @@ public interface CourseService {
      */
     Page<Course> getPageWithCoursesByCategory(long categoryId, int pageNumber, String sortBy, boolean ascending);
 
-    List<Long> findCoursesId(String searchString);
+    Set<BigInteger> findCoursesId(String searchString);
 }

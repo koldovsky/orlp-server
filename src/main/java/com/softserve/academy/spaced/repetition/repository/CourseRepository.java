@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 
 import java.math.BigInteger;
 import java.util.List;
+import java.util.Set;
 
 @Repository
 public interface CourseRepository extends JpaRepository<Course, Long> {
@@ -39,5 +40,5 @@ public interface CourseRepository extends JpaRepository<Course, Long> {
 
     @Query(value = "SELECT c.course_id FROM course c WHERE c.name LIKE %:searchString% OR c.description LIKE %:searchString%",
             nativeQuery = true)
-    List<BigInteger> findCoursesId(@Param("searchString") String searchString);
+    Set<BigInteger> findCoursesId(@Param("searchString") String searchString);
 }

@@ -239,10 +239,10 @@ public class CardServiceTest {
 
     @Test
     public void testDeleteCard() {
-        doNothing().when(cardRepository).deleteCardById(CARD_ID);
+        doNothing().when(cardRepository).delete(CARD_ID);
 
         cardService.deleteCard(CARD_ID);
-        verify(cardRepository).deleteCardById(CARD_ID);
+        verify(cardRepository).delete(CARD_ID);
     }
 
     @Test

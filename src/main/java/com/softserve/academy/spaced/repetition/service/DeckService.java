@@ -6,7 +6,9 @@ import com.softserve.academy.spaced.repetition.utils.exceptions.NotAuthorisedUse
 import com.softserve.academy.spaced.repetition.utils.exceptions.NotOwnerOperationException;
 import org.springframework.data.domain.Page;
 
+import java.math.BigInteger;
 import java.util.List;
+import java.util.Set;
 
 /**
  * This interface proceeds all operations with decks.
@@ -180,5 +182,5 @@ public interface DeckService {
      */
     List<Card> getAllCardsByDeckId(Long deckId);
 
-    List<Long> findDecksId(String searchString);
+    Set<BigInteger> findDecksId(String searchString);
 }

@@ -7,10 +7,7 @@ import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Entity
-@Table(name = "category", indexes = {
-        @Index(columnList = "name", name = "category_index"),
-        @Index(columnList = "description", name = "category_index")
-})
+@Table(name = "category")
 public class Category implements EntityInterface {
 
     @Id
@@ -26,7 +23,7 @@ public class Category implements EntityInterface {
     @NotNull
     private String description;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne()
     @JoinColumn(name = "image")
     private Image image;
 
@@ -109,5 +106,4 @@ public class Category implements EntityInterface {
     public void setImage(Image image) {
         this.image = image;
     }
-
 }

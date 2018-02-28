@@ -20,12 +20,11 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
-import static java.util.stream.Collectors.toList;
-
 @Service
 public class CourseServiceImpl implements CourseService {
 
     private final static int QUANTITY_COURSES_IN_PAGE = 12;
+    private final Locale locale = LocaleContextHolder.getLocale();
     @Autowired
     private CourseRepository courseRepository;
     @Autowired
@@ -42,7 +41,6 @@ public class CourseServiceImpl implements CourseService {
     private DeckRepository deckRepository;
     @Autowired
     private MessageSource messageSource;
-    private final Locale locale = LocaleContextHolder.getLocale();
 
     @Override
     public List<Course> getAllCourses() {
@@ -194,9 +192,7 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public List<Long> findCoursesId(String searchString) {
-        return courseRepository.findCoursesId(searchString).stream()
-                .map(BigInteger::longValue)
-                .collect(toList());
+    public Set<BigInteger> findCoursesId(String searchString) {
+        return courseRepository.findCoursesId(searchString);
     }
 }

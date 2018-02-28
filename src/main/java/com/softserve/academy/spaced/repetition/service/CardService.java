@@ -9,6 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.math.BigInteger;
 import java.util.List;
 
 /**
@@ -111,6 +112,4 @@ public interface CardService {
     void downloadCardsTemplate(OutputStream outputStream);
 
     List<Card> findAllByDeckId(Long deckId);
-
-    List<Long> findCardsId(String searchString);
 }

@@ -29,8 +29,6 @@ import java.io.*;
 import java.math.BigInteger;
 import java.util.*;
 
-import static java.util.stream.Collectors.toList;
-
 @Service
 public class CardServiceImpl implements CardService {
 
@@ -117,7 +115,7 @@ public class CardServiceImpl implements CardService {
     @Override
     @Transactional
     public void deleteCard(Long cardId) {
-        cardRepository.deleteCardById(cardId);
+        cardRepository.delete(cardId);
     }
 
     @Override
@@ -197,13 +195,5 @@ public class CardServiceImpl implements CardService {
     @Override
     public List<Card> findAllByDeckId(Long deckId) {
         return cardRepository.findAllByDeckId(deckId);
-    }
-
-    @Override
-    public List<Long> findCardsId(String searchString) {
-        return cardRepository.findCardsId(searchString)
-                .stream()
-                .map(BigInteger::longValue)
-                .collect(toList());
     }
 }
