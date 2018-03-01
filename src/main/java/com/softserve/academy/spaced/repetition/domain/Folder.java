@@ -7,7 +7,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "folder")
-public class Folder extends EntityForOwnership implements EntityInterface {
+public class Folder implements EntityInterface {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

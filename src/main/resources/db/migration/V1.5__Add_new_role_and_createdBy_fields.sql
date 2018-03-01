@@ -18,8 +18,4 @@ ALTER TABLE deck_comment CHANGE created_by created_by BIGINT NOT NULL;
 ALTER TABLE deck ADD created_by BIGINT DEFAULT 1;
 ALTER TABLE deck CHANGE created_by created_by BIGINT NOT NULL;
 
-ALTER TABLE folder ADD created_by BIGINT DEFAULT 1;
-ALTER TABLE folder CHANGE created_by created_by BIGINT NOT NULL;
 
-ALTER TABLE account ADD created_by BIGINT DEFAULT 1;
-ALTER TABLE account CHANGE created_by created_by BIGINT NOT NULL;
