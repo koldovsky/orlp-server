@@ -18,27 +18,27 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import static com.softserve.academy.spaced.repetition.controller.dto.builder.DTOBuilder.buildDtoForEntity;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
 @RestController
+@RequestMapping("/api/decks/{deckId}")
 public class DeckRatingController {
     private static final Logger LOGGER = LoggerFactory.getLogger(CourseCommentController.class);
 
     @Autowired
     private DeckRatingService deckRatingService;
 
-    @GetMapping("api/deck/{deckId}/rating/{id}")
-    @PreAuthorize("hasPermission('DECK_RATING','READ')")
-    public ResponseEntity<DeckRatingPublicDTO> getDeckRatingById(@PathVariable Long deckId, @PathVariable Long id) {
+    @GetMapping("/ratings/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public DeckRatingPublicDTO getDeckRatingById(@PathVariable Long deckId, @PathVariable Long id) {
         DeckRating deckRating = deckRatingService.getDeckRatingById(id);
-        Link selfLink = linkTo(methodOn(DeckRatingController.class)
-                .getDeckRatingById(deckRating.getDeck().getId(), deckRating.getId())).withRel("deckRating");
-        DeckRatingPublicDTO deckRatingDTO = DTOBuilder.buildDtoForEntity(deckRating, DeckRatingPublicDTO.class, selfLink);
-        return new ResponseEntity<>(deckRatingDTO, HttpStatus.OK);
+        return buildDtoForEntity(deckRating, DeckRatingPublicDTO.class, linkTo(methodOn(DeckRatingController.class)
+                        .getDeckRatingById(deckRating.getDeck().getId(), deckRating.getId())).withSelfRel());
     }
 
-    @PostMapping("/api/private/deck/{deckId}")
+    @PostMapping
     @PreAuthorize("hasPermission('DECK_RATING','CREATE')")
     public ResponseEntity addDeckRating(@Validated(Request.class) @RequestBody RatingDTO ratingDTO,
                                         @PathVariable Long deckId)
