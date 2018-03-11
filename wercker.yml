@@ -18,8 +18,7 @@ build:
     - script:
         name: git-crypt unlock repository
         code: |
-            wget $GIT_CRYPT_LINK/$GIT_CRYPT_ARCHIVE -P /pipeline/git-crypt
-            cd /pipeline/git-crypt; mkdir git-crypt; tar -zxvf $GIT_CRYPT_ARCHIVE; cd $GIT_CRYPT_VERSION; sudo make; sudo make install PREFIX=/usr/local;
+            cd /pipeline/git-crypt; mkdir git-crypt; scp $LOGIN@$REMOTE_HOST:~/git-crypt/$GIT_CRYPT_ARCHIVE $GIT_CRYPT_ARCHIVE; tar -zxvf $GIT_CRYPT_ARCHIVE; cd $GIT_CRYPT_VERSION; sudo make; sudo make install PREFIX=/usr/local;
             cd $WERCKER_SOURCE_DIR; git-crypt unlock /pipeline/git-crypt/orlp-gitcrypt/orlpkey; git crypt status -e
     - java/maven:
         goals: clean package
