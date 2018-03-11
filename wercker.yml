@@ -1,23 +1,25 @@
-# This references a standard debian container from the
-# Docker Hub https://registry.hub.docker.com/_/debian/
-# Read more about containers on our dev center
-# http://devcenter.wercker.com/docs/containers/index.html
+
 box: maven
-# You can also use services such as databases. Read more on our dev center:
-# http://devcenter.wercker.com/docs/services/index.html
-# services:
-    # - postgres
-    # http://devcenter.wercker.com/docs/services/postgresql.html
-
-    # - mongo
-    # http://devcenter.wercker.com/docs/services/mongodb.html
-
-# This is the build pipeline. Pipelines are the core of wercker
-# Read more about pipelines on our dev center
-# http://devcenter.wercker.com/docs/pipelines/index.html
 
 build:
   steps:
+    - install-packages:
+        packages: unzip build-essential libssl-dev
+    - wercker/add-ssh-key:
+        keyname: SSH_KEY
+    - add-to-known_hosts:
+        hostname: $REMOTE_HOST
+    - script:
+        name: copy git-crypt key
+        code: |
+            mkdir -p /pipeline/git-crypt/orlp-gitcrypt; cd /pipeline/git-crypt/orlp-gitcrypt;
+            scp $LOGIN@$REMOTE_HOST:~/orlp-web/orlp-gitcrypt.zip orlp-gitcrypt.zip;
+            unzip -P $GIT_CRYPT_KEY orlp-gitcrypt.zip;
+    - script:
+        name: git-crypt unlock repository
+        code: |
+            cd /pipeline/git-crypt; mkdir git-crypt; scp $LOGIN@$REMOTE_HOST:~/git-crypt/$GIT_CRYPT_ARCHIVE $GIT_CRYPT_ARCHIVE; tar -zxvf $GIT_CRYPT_ARCHIVE; cd $GIT_CRYPT_VERSION; sudo make; sudo make install PREFIX=/usr/local;
+            cd $WERCKER_SOURCE_DIR; git-crypt unlock /pipeline/git-crypt/orlp-gitcrypt/orlpkey; git crypt status -e
     - java/maven:
         goals: clean package
         version: 3.5.2
@@ -27,8 +29,14 @@ build:
         code: |
           mkdir container/  
           cp ./target/*.jar container/
+  # Notify about the step status to slack
+  after-steps:
+    - slack-notifier:
+        url: $SLACK_URL
+        channel: notifications
+        username: Wercker Event Notifier
 
-deploy:
+deploy-to-production:
   steps:
     - wercker/add-ssh-key:
         keyname: SSH_KEY
@@ -44,4 +52,9 @@ deploy:
         name: Run redeploy-script
         code: |
           ssh $LOGIN@$REMOTE_HOST "cd ~/orlp-server/ && sh container_deploy.sh"
-#          ssh $LOGIN@$REMOTE_HOST "cd ~/orlp-server/ && rm -f *.sh && rm -f *.jar"
+  # Notify about the step status to slack
+  after-steps:
+    - slack-notifier:
+        url: $SLACK_URL
+        channel: notifications
+        username: Wercker Event Notifier
