@@ -3,14 +3,8 @@ box: maven
 
 build:
   steps:
-    - script:
-        name: install dependencies
-        code: |
-            apt-get update
-            apt-get install build-essential -y
-            npm install -g yarn
     - install-packages:
-        packages: unzip
+        packages: unzip build-essential
     - wercker/add-ssh-key:
         keyname: SSH_KEY
     - add-to-known_hosts:
