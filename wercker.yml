@@ -4,7 +4,7 @@ box: maven
 build:
   steps:
     - install-packages:
-        packages: unzip build-essential
+        packages: unzip build-essential libssl-dev
     - wercker/add-ssh-key:
         keyname: SSH_KEY
     - add-to-known_hosts:
