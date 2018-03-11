@@ -1,0 +1,2 @@
+*.gitcrypt filter=git-crypt diff=git-crypt
+application.yml filter=git-crypt diff=git-crypt

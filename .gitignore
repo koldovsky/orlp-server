@@ -127,3 +127,6 @@ fabric.properties
 /Spaced.Repetition.iml
 /orlp.log
 /com/softserve/academy/spaced/repetition/utils/logger/logs/log.txt
+
+# git-crypt
+*.gitcrypt
