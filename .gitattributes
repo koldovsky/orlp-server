@@ -1,3 +1,2 @@
-secretfile filter=git-crypt diff=git-crypt
-orlpkey filter=git-crypt diff=git-crypt
+*.gitcrypt filter=git-crypt diff=git-crypt
 application.yml filter=git-crypt diff=git-crypt

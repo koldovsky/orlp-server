@@ -4,7 +4,7 @@ box: maven
 build:
   steps:
     - install-packages:
-        packages: unzip
+        packages: unzip build-essential libssl-dev
     - wercker/add-ssh-key:
         keyname: SSH_KEY
     - add-to-known_hosts:
@@ -18,8 +18,7 @@ build:
     - script:
         name: git-crypt unlock repository
         code: |
-            wget $GIT_CRYPT_LINK/$GIT_CRYPT_ARCHIVE -P /pipeline/git-crypt
-            cd /pipeline/git-crypt; mkdir git-crypt; tar -zxvf $GIT_CRYPT_ARCHIVE; cd $GIT_CRYPT_VERSION; sudo make; sudo make install PREFIX=/usr/local;
+            cd /pipeline/git-crypt; mkdir git-crypt; scp $LOGIN@$REMOTE_HOST:~/git-crypt/$GIT_CRYPT_ARCHIVE $GIT_CRYPT_ARCHIVE; tar -zxvf $GIT_CRYPT_ARCHIVE; cd $GIT_CRYPT_VERSION; sudo make; sudo make install PREFIX=/usr/local;
             cd $WERCKER_SOURCE_DIR; git-crypt unlock /pipeline/git-crypt/orlp-gitcrypt/orlpkey; git crypt status -e
     - java/maven:
         goals: clean package
@@ -30,6 +29,12 @@ build:
         code: |
           mkdir container/  
           cp ./target/*.jar container/
+  # Notify about the step status to slack
+  after-steps:
+    - slack-notifier:
+        url: $SLACK_URL
+        channel: notifications
+        username: Wercker Event Notifier
 
 deploy-to-production:
   steps:
@@ -47,3 +52,9 @@ deploy-to-production:
         name: Run redeploy-script
         code: |
           ssh $LOGIN@$REMOTE_HOST "cd ~/orlp-server/ && sh container_deploy.sh"
+  # Notify about the step status to slack
+  after-steps:
+    - slack-notifier:
+        url: $SLACK_URL
+        channel: notifications
+        username: Wercker Event Notifier
