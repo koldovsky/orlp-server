@@ -56,7 +56,7 @@ deploy-to-production:
     - script:
         name: run docker container
         code: |
-           ssh $LOGIN@$REMOTE_HOST "docker run --name $container_name -d --restart=always --net=orlp --add-host orlp-mysql:192.168.0.50 --expose=80 -e 'VIRTUAL_HOST=$API_HOST' -e 'LETSENCRYPT_EMAIL=$LETSENCRYPT_EMAIL' -e 'LETSENCRYPT_HOST=$API_HOST' -v /home/wercker/orlp-server:/usr/src/myapp -w /usr/src/myapp java:8-jre java -Dserver.port=80 -jar Spaced.Repetition.jar"
+           ssh $LOGIN@$REMOTE_HOST "docker run --name orlp-server -d --restart=always --net=orlp --add-host orlp-mysql:192.168.0.50 --expose=80 -e 'VIRTUAL_HOST=$API_HOST' -e 'LETSENCRYPT_EMAIL=$LETSENCRYPT_EMAIL' -e 'LETSENCRYPT_HOST=$API_HOST' -v /home/wercker/orlp-server:/usr/src/myapp -w /usr/src/myapp java:8-jre java -Dserver.port=80 -jar Spaced.Repetition.jar"
   # Notify about the step status to slack
   after-steps:
     - slack-notifier:
