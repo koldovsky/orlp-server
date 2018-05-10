@@ -47,12 +47,12 @@ deploy-to-production:
         code: |
           ssh $LOGIN@$REMOTE_HOST "cd ~/orlp-server/ && rm -f *.jar && rm -f *.sh"
           scp ./container/*.jar $LOGIN@$REMOTE_HOST:~/orlp-server/
-          scp container_deploy.sh $LOGIN@$REMOTE_HOST:~/orlp-server/
+          # scp container_deploy.sh $LOGIN@$REMOTE_HOST:~/orlp-server/
     - script:
             name: stop docker container
             code: |
                 scp check_if_server_run.sh $LOGIN@$REMOTE_HOST:~/orlp-server/
-                ssh $LOGIN@$REMOTE_HOST "sh check_if_server_run.sh"
+                ssh $LOGIN@$REMOTE_HOST "cd ~/orlp-server/ && sh check_if_server_run.sh"
     - script:
         name: run docker container
         code: |
