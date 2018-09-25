@@ -1,6 +1,5 @@
 package com.softserve.academy.spaced.repetition.controller;
 
-import com.softserve.academy.spaced.repetition.controller.dto.builder.DTOBuilder;
 import com.softserve.academy.spaced.repetition.controller.dto.impl.DeckOfUserManagedByAdminDTO;
 import com.softserve.academy.spaced.repetition.controller.dto.impl.UserManagedByAdminDTO;
 import com.softserve.academy.spaced.repetition.domain.Deck;
@@ -40,7 +39,7 @@ public class ManageUserController {
                                                                    @RequestParam(name = "sortBy") String sortBy,
                                                                    @RequestParam(name = "asc") boolean ascending) {
         Page<UserManagedByAdminDTO> userManagedByAdminDTOS = userService
-                .getUsersByPage(pageNumber, sortBy, ascending).map((user) -> {
+                .getUsersByPage(pageNumber, sortBy, ascending).map(user -> {
                     Link selfLink = linkTo(methodOn(ManageUserController.class).getUserById(user.getId())).withSelfRel();
                     return buildDtoForEntity(user, UserManagedByAdminDTO.class, selfLink);
                 });
