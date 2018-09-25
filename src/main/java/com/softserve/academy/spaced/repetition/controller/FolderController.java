@@ -1,6 +1,5 @@
 package com.softserve.academy.spaced.repetition.controller;
 
-import com.softserve.academy.spaced.repetition.controller.dto.builder.DTOBuilder;
 import com.softserve.academy.spaced.repetition.controller.dto.impl.DeckLinkByFolderDTO;
 import com.softserve.academy.spaced.repetition.controller.dto.impl.DeckPublicDTO;
 import com.softserve.academy.spaced.repetition.domain.Deck;

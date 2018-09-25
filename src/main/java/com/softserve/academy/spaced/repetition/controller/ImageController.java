@@ -112,7 +112,7 @@ public class ImageController {
      */
     @Auditable(action = AuditingAction.DELETE_IMAGE)
     @DeleteMapping(value = "/api/service/image/{id}")
-    public ResponseEntity<?> deleteImage(@PathVariable("id") Long id) throws CanNotBeDeletedException,
+    public ResponseEntity deleteImage(@PathVariable("id") Long id) throws CanNotBeDeletedException,
             NotOwnerOperationException, NotAuthorisedUserException {
         imageService.deleteImage(id);
         return new ResponseEntity<>(HttpStatus.OK);
