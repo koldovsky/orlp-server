@@ -1,7 +1,5 @@
 package com.softserve.academy.spaced.repetition.controller;
 
-import com.softserve.academy.spaced.repetition.controller.dto.builder.DTOBuilder;
-import com.softserve.academy.spaced.repetition.controller.dto.simpleDTO.RatingDTO;
 import com.softserve.academy.spaced.repetition.controller.dto.annotations.Request;
 import com.softserve.academy.spaced.repetition.controller.dto.impl.CourseRatingPublicDTO;
 import com.softserve.academy.spaced.repetition.domain.CourseRating;
@@ -11,9 +9,7 @@ import com.softserve.academy.spaced.repetition.utils.exceptions.UserStatusExcept
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.hateoas.Link;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -49,6 +45,5 @@ public class CourseRatingController {
         courseRating = courseRatingService.addCourseRating(courseRating.getRating(), courseId);
         return buildDtoForEntity(courseRating, CourseRatingPublicDTO.class,
                 linkTo(methodOn(CourseRatingController.class).getCourseRatingById(courseId, courseRating.getId())).withSelfRel());
-
     }
 }
