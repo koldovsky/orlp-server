@@ -21,7 +21,6 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 @RestController
 public class DeckRatingController {
 
-
     @Autowired
     private DeckRatingService deckRatingService;
 
