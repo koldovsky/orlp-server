@@ -33,7 +33,7 @@ public class AuditController {
                                                                          int pageNumber,
                                                                  @RequestParam(name = "sortBy") String sortBy,
                                                                  @RequestParam(name = "asc") boolean ascending) {
-        Page<AuditPublicDTO> auditPublicDTOS = auditService.getAuditByPage(pageNumber, sortBy, ascending).map((audit) -> {
+        Page<AuditPublicDTO> auditPublicDTOS = auditService.getAuditByPage(pageNumber, sortBy, ascending).map(audit -> {
             Link selfLink = linkTo(methodOn(AuditController.class)
                     .getFullAuditList(pageNumber, sortBy, ascending)).withSelfRel();
             return DTOBuilder.buildDtoForEntity(audit, AuditPublicDTO.class, selfLink);
