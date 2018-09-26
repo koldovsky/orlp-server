@@ -42,7 +42,7 @@ public class DeckController {
                                                                                @RequestParam(name = "sortBy") String sortBy,
                                                                                @RequestParam(name = "asc") boolean ascending) {
         Page<DeckLinkByCategoryDTO> deckByCategoryDTOS = deckService
-                .getPageWithDecksByCategory(categoryId, pageNumber, sortBy, ascending).map((deck) -> {
+                .getPageWithDecksByCategory(categoryId, pageNumber, sortBy, ascending).map(deck -> {
                     Link selfLink = linkTo(methodOn(DeckController.class)
                             .getAllDecksByCategoryId(categoryId, pageNumber, sortBy, ascending)).withRel("deck");
                     return buildDtoForEntity(deck, DeckLinkByCategoryDTO.class, selfLink);
@@ -93,7 +93,7 @@ public class DeckController {
         return buildDtoListForCollection(cards, CardPublicDTO.class, linkTo(methodOn(DeckController.class)
                 .getCardsByCourseAndDeck(categoryId, courseId, deckId)).withSelfRel());
     }
-    
+
     @Auditable(action = AuditingAction.CREATE_DECK_IN_COURSE)
     @PostMapping(value = "/api/courses/{courseId}/decks")
     @ResponseStatus(HttpStatus.CREATED)
@@ -105,11 +105,12 @@ public class DeckController {
 
     @Auditable(action = AuditingAction.VIEW_DECKS_ADMIN)
     @GetMapping(value = "/api/admin/decks")
-    public ResponseEntity<Page<DeckOfUserManagedByAdminDTO>> getAllDecksForAdmin(@RequestParam(name = "p", defaultValue = "1") int pageNumber,
+    public ResponseEntity<Page<DeckOfUserManagedByAdminDTO>> getAllDecksForAdmin(@RequestParam(name = "p", defaultValue = "1")
+                                                                                         int pageNumber,
                                                                                  @RequestParam(name = "sortBy") String sortBy,
                                                                                  @RequestParam(name = "asc") boolean ascending) {
         Page<DeckOfUserManagedByAdminDTO> deckOfUserManagedByAdminDTO = deckService
-                .getPageWithAllAdminDecks(pageNumber, sortBy, ascending).map((deck) -> {
+                .getPageWithAllAdminDecks(pageNumber, sortBy, ascending).map(deck -> {
                     Link selfLink = linkTo(methodOn(DeckController.class).getDeckById(deck.getId())).withSelfRel();
                     return buildDtoForEntity(deck, DeckOfUserManagedByAdminDTO.class, selfLink);
                 });

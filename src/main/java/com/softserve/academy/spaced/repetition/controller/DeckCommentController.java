@@ -3,19 +3,18 @@ package com.softserve.academy.spaced.repetition.controller;
 import com.softserve.academy.spaced.repetition.controller.dto.builder.DTOBuilder;
 import com.softserve.academy.spaced.repetition.controller.dto.impl.CommentDTO;
 import com.softserve.academy.spaced.repetition.controller.dto.impl.ReplyToCommentDTO;
-import com.softserve.academy.spaced.repetition.utils.audit.Auditable;
-import com.softserve.academy.spaced.repetition.utils.audit.AuditingAction;
 import com.softserve.academy.spaced.repetition.domain.Comment;
 import com.softserve.academy.spaced.repetition.domain.DeckComment;
-import com.softserve.academy.spaced.repetition.utils.exceptions.NotAuthorisedUserException;
 import com.softserve.academy.spaced.repetition.service.DeckCommentService;
+import com.softserve.academy.spaced.repetition.utils.audit.Auditable;
+import com.softserve.academy.spaced.repetition.utils.audit.AuditingAction;
+import com.softserve.academy.spaced.repetition.utils.exceptions.NotAuthorisedUserException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Link;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -48,7 +47,7 @@ public class DeckCommentController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public CommentDTO addCommentForDeck(@Validated @RequestBody ReplyToCommentDTO replyToCommentDTO,
-                                                        @PathVariable Long deckId) throws NotAuthorisedUserException {
+                                        @PathVariable Long deckId) throws NotAuthorisedUserException {
         LOGGER.debug("Added comment to deck with id: {}", deckId);
         DeckComment comment = commentService
                 .addCommentForDeck(deckId, replyToCommentDTO.getCommentText(), replyToCommentDTO.getParentCommentId());
