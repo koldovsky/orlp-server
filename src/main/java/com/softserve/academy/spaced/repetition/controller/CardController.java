@@ -53,16 +53,16 @@ public class CardController {
                 linkTo(methodOn(CardController.class).getCardsByDeck(deckId)).withSelfRel());
     }
 
-    @GetMapping("not-postponed")
     @ResponseStatus(HttpStatus.OK)
+    @GetMapping("not-postponed")
     public Boolean areThereNotPostponedCardsAvailable(@PathVariable Long deckId)
             throws NotAuthorisedUserException {
         return cardService.areThereNotPostponedCardsAvailable(deckId);
     }
 
     @Auditable(action = AuditingAction.CREATE_CARD_VIA_CATEGORY_AND_DECK)
-    @PostMapping(value = "cards")
     @ResponseStatus(HttpStatus.CREATED)
+    @PostMapping(value = "cards")
     public CardPublicDTO addCard(@PathVariable Long deckId, @Validated @RequestBody CardDTO card) {
         LOGGER.debug("Add card to deckId: {}", deckId);
         Card newCard = new Card(card.getTitle(), card.getQuestion(), card.getAnswer());
@@ -72,8 +72,8 @@ public class CardController {
     }
 
     @Auditable(action = AuditingAction.EDIT_CARD_VIA_CATEGORY_AND_DECK)
-    @PutMapping(value = "cards/{cardId}")
     @ResponseStatus(HttpStatus.OK)
+    @PutMapping(value = "cards/{cardId}")
     public CardPublicDTO updateCard(@PathVariable Long deckId,
                                     @PathVariable Long cardId,
                                     @Validated @RequestBody CardDTO card) {
@@ -91,8 +91,8 @@ public class CardController {
         cardService.deleteCard(cardId);
     }
 
-    @GetMapping(value = "cards/{cardId}")
     @ResponseStatus(HttpStatus.OK)
+    @GetMapping(value = "cards/{cardId}")
     public CardPublicDTO getCardById(@PathVariable Long deckId, @PathVariable Long cardId) {
         return buildDtoForEntity(cardService.getCard(cardId), CardPublicDTO.class,
                 linkTo(methodOn(CardController.class).getCardById(deckId, cardId)).withSelfRel());
