@@ -1,52 +1,13 @@
-spring:
-  datasource:
-    url: jdbc:mysql://localhost/orlp?createDatabaseIfNotExist=true&useSSL=false
-    username: root
-    password: 123456
-    driver-class-name: com.mysql.jdbc.Driver
-  jpa:
-    show-sql: false
-    hibernate:
-      ddl-auto: validate
-      naming-strategy: org.hibernate.cfg.ImprovedNamingStrategy
-  mail:
-    host: smtp.gmail.com
-    port: 587
-    username: infolve.team@gmail.com
-    password: z0935152261
-app:
-  jwt:
-    header: Authentication
-    secret: K&Mcq(\*cy(<9bUa)|E'(@]G$ao~'Vm1h@upwRWECrLvw~>M1J{26}g6ZAr;2}i
-    expiration: 604800
-    route:
-      authentication:
-        path: api/auth
-        refresh: refresh
-  reCaptcha:
-    secretKey: 6Lds0nEUAAAAAAwmGZ-LYor3LaGIThfBRYThTv0w
-    url: https://www.google.com/recaptcha/api/siteverify
-  social:
-    google:
-      client-id: 109414995516-fftdn22fnpfdh80fgfsvpq1ht97hdkl5.apps.googleusercontent.com
-      client-secret: se5lxgYcg2xXeghejled31Ge
-      path: api/auth/google
-    facebook:
-      client-id: 439882899718340
-      client-secret: 94d6144f54723938f384ddb0a09daf81
-      path: api/auth/facebook
-  images:
-    maxSize: 1048576
-    userQuote: 10485760
-  origin:
-    url: https://infolve.com:443
-logging:
-  file: orlp.log
-  level:
-    com.softserve.academy.spaced.repetition: INFO
-    org.springframework: ERROR
-    org.hibernate: ERROR
-    springfox.documentation: ERROR
-flyway:
-  baseline-version: 1.1
-  baseline-on-migrate: true
+GITCRYPT V��hx�?Vk�P׋pR�]cHv��U�V:�a���s���h��:��z��q����e�fZ.�� B����V&ڐ�M/�i�Zh�Ԃ�d\�]��iD[�!�h�V�D��ь0�Ka?����=>��)��_�9co��OF7K� ?�EU c�KE�H�j�O{ū]�Axj2���ß+^U���k�~�0�ՓH9�[,|J�1|�P��Y��Ɗ[js	c��z`D/���A��b����sGn�jT�:�4^�c�>���1}!}�U����}�&�6�o~�=#�VvgMV���^�a#�p֟��^h<�N���zy
+�?�M"A�{�M�|���q�͓F�v��Ps+���Ķt��Dg���t�𧃑5��n�j hb_����X�a���G*�fa'f�Fy?N��TB���'2I	G!E=a���ށ�S�0M	o
+�� />�m	�Y�a��P�ܯ�Ɠ�
+neX�L��	�tX%�/�\�C�膉_>�������r<�\���!�n��C�4�P
+��~<������e���� j�	)�زx6;�D_ :�2�ǐ��_d��c���SIj/EG
+�;>&TgnMV���0��bcn��>��Mvv.������M<9����fu{%��m�q&��<t�����%7t���P�>����b����,Iyb��]��W�暧�����JFo-솼q\{;Zb��?���6f���g����q�����7���{�}�3ZB��rz�U�'"�?|k�"h��Y7��%�E�lxߣ��yG[0�by���C�.�����@� B v,�U��D9���Ub��h�f�\C��@1�
+l�^͓)g����aG�j򶋕Io�Ю7t���P��hh�Ϣ_ �jy�.&��A�*�25���S��9��\�ʇTu��Oɓ!�t�c�Ŗ���GL'�$��ܧŤK������Fx�W��Q;��n��������.��8��a�!�u�"��8�uC��q�:�^ ��q��}
+�K�v�t��<��:,:��Sk�#;�Ʒ)�Z�a��h���k������F���}`�R%��'
+�i�P��	����G���|���-��A�4���Ұ�r��������dU<y�`YJW���Fk���1ק�V��P��I��{r�FLu���ۧH�L˺A}F�c��XOw�V�6��?K0��M��9�ܢO�-�Cy��?�����js����o�i"k��V캢
+�na�RM�,*�e�f�����T��k�f�!��H��ң�R1TgX�^��������AJX(�Ӿ�l��!�N���a� ���~�'
+`�XW4Jŷ��䌚n���b/@�=~��}ө�>��men�4k+��ݼ��H\�x�aԪ�
+G�
+Z@�Ԧ��N���\;�Ic>�]��(&L�3�Ї �Z����]�@ƝV'���׾>��*}���K�����Z]�I�%�V�/բs��'{~C�Fl��#,$=
