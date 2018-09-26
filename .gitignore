@@ -130,3 +130,6 @@ fabric.properties
 
 # git-crypt
 *.gitcrypt
+
+# application.yml settings
+/src/main/resources/application.yml
