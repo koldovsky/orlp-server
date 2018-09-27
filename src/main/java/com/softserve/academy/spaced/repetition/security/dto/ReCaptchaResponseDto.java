@@ -3,6 +3,7 @@ package com.softserve.academy.spaced.repetition.security.DTO;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+
 import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)

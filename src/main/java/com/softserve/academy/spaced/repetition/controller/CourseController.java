@@ -1,13 +1,11 @@
 package com.softserve.academy.spaced.repetition.controller;
 
-
 import com.softserve.academy.spaced.repetition.controller.dto.annotations.Request;
 import com.softserve.academy.spaced.repetition.controller.dto.builder.DTOBuilder;
 import com.softserve.academy.spaced.repetition.controller.dto.impl.CourseLinkDTO;
 import com.softserve.academy.spaced.repetition.controller.dto.impl.CoursePublicDTO;
 import com.softserve.academy.spaced.repetition.domain.Course;
 import com.softserve.academy.spaced.repetition.service.CourseService;
-import com.softserve.academy.spaced.repetition.service.UserService;
 import com.softserve.academy.spaced.repetition.utils.audit.Auditable;
 import com.softserve.academy.spaced.repetition.utils.audit.AuditingAction;
 import com.softserve.academy.spaced.repetition.utils.exceptions.NotAuthorisedUserException;
@@ -39,7 +37,7 @@ public class CourseController {
                                                                          @RequestParam(name = "sortBy") String sortBy,
                                                                          @RequestParam(name = "asc") boolean ascending) {
         Page<CourseLinkDTO> courseLinkDTOS = courseService
-                .getPageWithCoursesByCategory(categoryId, pageNumber, sortBy, ascending).map((course) -> {
+                .getPageWithCoursesByCategory(categoryId, pageNumber, sortBy, ascending).map(course -> {
                     Link selfLink = linkTo(methodOn(CourseController.class)
                             .getAllCoursesByCategoryId(categoryId, pageNumber, sortBy, ascending)).withSelfRel();
                     return DTOBuilder.buildDtoForEntity(course, CourseLinkDTO.class, selfLink);
@@ -53,7 +51,7 @@ public class CourseController {
                                                              @RequestParam(name = "sortBy") String sortBy,
                                                              @RequestParam(name = "asc") boolean ascending) {
         Page<CourseLinkDTO> courseLinkDTOS = courseService
-                .getPageWithCourses(pageNumber, sortBy, ascending).map((course) -> {
+                .getPageWithCourses(pageNumber, sortBy, ascending).map(course -> {
                     Link selfLink = linkTo(methodOn(CourseController.class)
                             .getCourseById(course.getId())).withSelfRel();
                     return DTOBuilder.buildDtoForEntity(course, CourseLinkDTO.class, selfLink);
