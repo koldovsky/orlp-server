@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,7 +37,7 @@ public class RegistrationController {
     private AccountService accountService;
 
     @Auditable(action = AuditingAction.SIGN_UP)
-    @RequestMapping(value = "/registration", method = RequestMethod.POST)
+    @PostMapping(value = "/registration")
     @PreAuthorize("!isAuthenticated()")
     public ResponseEntity<Person> addUser(@Validated(Request.class) @RequestBody User userFromClient) {
         User user = registrationService.registerNewUser(userFromClient);
@@ -44,7 +45,7 @@ public class RegistrationController {
         return new ResponseEntity<>(user.getPerson(), HttpStatus.CREATED);
     }
 
-    @RequestMapping(value = "/registration-confirm", method = RequestMethod.POST)
+    @PostMapping(value = "/registration-confirm")
     public ResponseEntity confirmRegistration(@RequestBody String token) {
         verificationService.accountVerification(token);
         return new ResponseEntity(HttpStatus.OK);

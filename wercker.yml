@@ -20,7 +20,7 @@ build:
         code: |
             cd /pipeline/git-crypt; mkdir git-crypt; scp $LOGIN@$REMOTE_HOST:~/git-crypt/$GIT_CRYPT_ARCHIVE $GIT_CRYPT_ARCHIVE; tar -zxvf $GIT_CRYPT_ARCHIVE; cd $GIT_CRYPT_VERSION; sudo make; sudo make install PREFIX=/usr/local;
             cd $WERCKER_SOURCE_DIR; git-crypt unlock /pipeline/git-crypt/orlp-gitcrypt/orlpkey; git crypt status -e
-    - java/maven:
+    - wercker/maven:
         goals: clean package
         version: 3.5.2
     # Copy necessary JAR to separate directory
@@ -30,11 +30,11 @@ build:
           mkdir container/  
           cp ./target/*.jar container/
   # Notify about the step status to slack
-  after-steps:
-    - slack-notifier:
-        url: $SLACK_URL
-        channel: notifications
-        username: Wercker Event Notifier
+  #after-steps:
+   # - slack-notifier:
+    #    url: $SLACK_URL
+     #   channel: notifications
+      #  username: Wercker Event Notifier
 
 deploy-to-production:
   steps:
@@ -51,10 +51,10 @@ deploy-to-production:
     - script:
         name: Run redeploy-script
         code: |
-          ssh $LOGIN@$REMOTE_HOST "cd ~/orlp-server/ && sh container_deploy.sh"
+           ssh $LOGIN@$REMOTE_HOST "cd ~/orlp-server/ && sh container_deploy.sh"
   # Notify about the step status to slack
-  after-steps:
-    - slack-notifier:
-        url: $SLACK_URL
-        channel: notifications
-        username: Wercker Event Notifier
+  #after-steps:
+   # - slack-notifier:
+    #    url: $SLACK_URL
+     #   channel: notifications
+      #  username: Wercker Event Notifier

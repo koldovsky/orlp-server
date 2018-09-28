@@ -1,6 +1,5 @@
 package com.softserve.academy.spaced.repetition.controller;
 
-
 import com.softserve.academy.spaced.repetition.controller.dto.annotations.Request;
 import com.softserve.academy.spaced.repetition.controller.dto.impl.CardRatingPublicDTO;
 import com.softserve.academy.spaced.repetition.domain.CardRating;

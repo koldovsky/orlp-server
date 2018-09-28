@@ -26,6 +26,7 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 @RestController
 @RequestMapping("api/decks/{deckId}/")
 public class CardController {
+
     private static final Logger LOGGER = LoggerFactory.getLogger(CardController.class);
 
     @Autowired
