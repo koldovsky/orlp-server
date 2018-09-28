@@ -1,23 +1,11 @@
 package com.softserve.academy.spaced.repetition.service;
 
-import com.softserve.academy.spaced.repetition.controller.dto.impl.PasswordDTO;
 import com.softserve.academy.spaced.repetition.domain.*;
 import com.softserve.academy.spaced.repetition.domain.enums.AccountStatus;
 import com.softserve.academy.spaced.repetition.domain.enums.AuthenticationType;
-import com.softserve.academy.spaced.repetition.controller.dto.impl.PasswordDTO;
-import com.softserve.academy.spaced.repetition.utils.exceptions.ImageRepositorySizeQuotaExceededException;
-import com.softserve.academy.spaced.repetition.utils.exceptions.NotAuthorisedUserException;
-import com.softserve.academy.spaced.repetition.utils.exceptions.UserStatusException;
-import com.softserve.academy.spaced.repetition.repository.AuthorityRepository;
-import com.softserve.academy.spaced.repetition.repository.DeckRepository;
-import com.softserve.academy.spaced.repetition.repository.UserRepository;
-import com.softserve.academy.spaced.repetition.service.impl.ImageServiceImpl;
-import com.softserve.academy.spaced.repetition.utils.exceptions.ImageRepositorySizeQuotaExceededException;
 import com.softserve.academy.spaced.repetition.utils.exceptions.NotAuthorisedUserException;
 import com.softserve.academy.spaced.repetition.utils.exceptions.UserStatusException;
 import org.springframework.data.domain.Page;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Set;

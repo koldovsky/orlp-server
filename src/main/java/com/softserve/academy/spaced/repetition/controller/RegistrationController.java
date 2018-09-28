@@ -1,7 +1,7 @@
 package com.softserve.academy.spaced.repetition.controller;
 
 
-import com.softserve.academy.spaced.repetition.controller.dto.impl.NewAccountPasswordDTO;
+import com.softserve.academy.spaced.repetition.controller.dto.simpleDTO.NewAccountPasswordDTO;
 import com.softserve.academy.spaced.repetition.service.AccountService;
 import com.softserve.academy.spaced.repetition.service.UserService;
 import com.softserve.academy.spaced.repetition.utils.audit.Auditable;
@@ -17,6 +17,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,6 +38,7 @@ public class RegistrationController {
 
     @Auditable(action = AuditingAction.SIGN_UP)
     @PostMapping(value = "/registration")
+    @PreAuthorize("!isAuthenticated()")
     public ResponseEntity<Person> addUser(@Validated(Request.class) @RequestBody User userFromClient) {
         User user = registrationService.registerNewUser(userFromClient);
         registrationService.sendConfirmationEmailMessage(user);

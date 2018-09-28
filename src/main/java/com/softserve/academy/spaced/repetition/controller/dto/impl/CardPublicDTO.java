@@ -44,4 +44,8 @@ public class CardPublicDTO extends DTO<Card> {
         return getEntity().getCardImages();
     }
 
+    public Long getCreatedBy(){
+        return getEntity().getCreatedBy();
+    }
+
 }

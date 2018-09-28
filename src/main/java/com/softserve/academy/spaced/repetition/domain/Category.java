@@ -8,7 +8,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "category")
-public class Category implements EntityInterface {
+public class Category extends EntityForOwnership implements EntityInterface {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -23,7 +23,7 @@ public class Category implements EntityInterface {
     @NotNull
     private String description;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne()
     @JoinColumn(name = "image")
     private Image image;
 
@@ -106,5 +106,4 @@ public class Category implements EntityInterface {
     public void setImage(Image image) {
         this.image = image;
     }
-
 }
