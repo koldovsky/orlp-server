@@ -2,9 +2,7 @@ package com.softserve.academy.spaced.repetition.service.impl;
 
 import com.softserve.academy.spaced.repetition.domain.*;
 import com.softserve.academy.spaced.repetition.domain.enums.*;
-import com.softserve.academy.spaced.repetition.controller.dto.impl.PasswordDTO;
 import com.softserve.academy.spaced.repetition.service.ImageService;
-import com.softserve.academy.spaced.repetition.utils.exceptions.ImageRepositorySizeQuotaExceededException;
 import com.softserve.academy.spaced.repetition.utils.exceptions.NotAuthorisedUserException;
 import com.softserve.academy.spaced.repetition.utils.exceptions.UserStatusException;
 import com.softserve.academy.spaced.repetition.repository.AuthorityRepository;
@@ -17,12 +15,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.*;
 
@@ -109,7 +105,7 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
         return user;
     }
-
+    //TODO: Move to separate class
     @Override
     public String getNoAuthenticatedUserEmail() throws NotAuthorisedUserException {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -120,7 +116,7 @@ public class UserServiceImpl implements UserService {
             throw new NotAuthorisedUserException();
         }
     }
-
+    //TODO: Move to separate class
     @Override
     public User getAuthorizedUser() throws NotAuthorisedUserException {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();

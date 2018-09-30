@@ -10,6 +10,10 @@ public class DeckPublicDTO extends DTO<Deck> {
         super(deck, link);
     }
 
+    public Long getDeckId() {
+        return getEntity().getId();
+    }
+
     public String getName() {
         return getEntity().getName();
     }
@@ -18,9 +22,11 @@ public class DeckPublicDTO extends DTO<Deck> {
         return getEntity().getDescription();
     }
 
-    public double getRating(){
+    public double getRating() {
         return getEntity().getRating();
     }
 
-    public String getSynthax() {return getEntity().getSyntaxToHighlight();}
+    public String getSynthax() {
+        return getEntity().getSyntaxToHighlight();
+    }
 }

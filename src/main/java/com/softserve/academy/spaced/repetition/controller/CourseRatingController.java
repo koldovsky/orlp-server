@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,6 +29,7 @@ public class CourseRatingController {
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasPermission('COURSE_RATING','READ')")
     public CourseRatingPublicDTO getCourseRatingById(@PathVariable Long courseId,
                                                      @PathVariable Long id) {
         LOGGER.debug("View rating with id {}", id);
@@ -38,6 +40,7 @@ public class CourseRatingController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasPermission('COURSE_RATING','CREATE')")
     public CourseRatingPublicDTO addCourseRating(@Validated(Request.class) @RequestBody CourseRating courseRating,
                                                  @PathVariable Long courseId)
             throws NotAuthorisedUserException, UserStatusException {
@@ -45,5 +48,6 @@ public class CourseRatingController {
         courseRating = courseRatingService.addCourseRating(courseRating.getRating(), courseId);
         return buildDtoForEntity(courseRating, CourseRatingPublicDTO.class,
                 linkTo(methodOn(CourseRatingController.class).getCourseRatingById(courseId, courseRating.getId())).withSelfRel());
+
     }
 }

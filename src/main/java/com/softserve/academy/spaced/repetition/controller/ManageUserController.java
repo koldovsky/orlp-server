@@ -7,11 +7,14 @@ import com.softserve.academy.spaced.repetition.domain.User;
 import com.softserve.academy.spaced.repetition.service.UserService;
 import com.softserve.academy.spaced.repetition.utils.audit.Auditable;
 import com.softserve.academy.spaced.repetition.utils.audit.AuditingAction;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.hateoas.Link;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,7 +25,9 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
 @RestController
+@RequestMapping("api/admin/users")
 public class ManageUserController {
+    private static final Logger LOGGER = LoggerFactory.getLogger(CourseCommentController.class);
 
     @Autowired
     private UserService userService;
@@ -33,7 +38,8 @@ public class ManageUserController {
      * @return list of managed by admin usersDTO
      */
     @Auditable(action = AuditingAction.VIEW_ALL_USERS_ADMIN)
-    @GetMapping("/api/admin/users")
+    @GetMapping
+    @PreAuthorize("hasPermission('MANAGE_USER','READ')")
     public ResponseEntity<Page<UserManagedByAdminDTO>> getAllUsers(@RequestParam(name = "p", defaultValue = "1")
                                                                            int pageNumber,
                                                                    @RequestParam(name = "sortBy") String sortBy,
@@ -53,8 +59,9 @@ public class ManageUserController {
      * @return managed by admin usersDTO
      */
     @Auditable(action = AuditingAction.VIEW_ONE_USER_ADMIN)
-    @GetMapping("/api/admin/users/{id}")
+    @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasPermission('MANAGE_USER','READ')")
     public UserManagedByAdminDTO getUserById(@PathVariable Long id) {
         User user = userService.getUserById(id);
         return buildDtoForEntity(user, UserManagedByAdminDTO.class,
@@ -68,8 +75,9 @@ public class ManageUserController {
      * @return managed by admin usersDTO
      */
     @Auditable(action = AuditingAction.SET_ACCOUNT_BLOCKED)
-    @PutMapping("/api/admin/users/{id}")
+    @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasPermission('MANAGE_USER','UPDATE')")
     public UserManagedByAdminDTO setUsersStatusBlocked(@PathVariable Long id) {
         User userWithChangedStatus = userService.setUsersStatusBlocked(id);
         return buildDtoForEntity(userWithChangedStatus, UserManagedByAdminDTO.class,
@@ -83,8 +91,9 @@ public class ManageUserController {
      * @return managed by admin usersDTO
      */
     @Auditable(action = AuditingAction.SET_ACCOUNT_DELETED)
-    @DeleteMapping("/api/admin/users/{id}")
+    @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasPermission('MANAGE_USER','DELETE')")
     public UserManagedByAdminDTO setUsersStatusDeleted(@PathVariable Long id) {
         User userWithChangedStatus = userService.setUsersStatusDeleted(id);
         return buildDtoForEntity(userWithChangedStatus, UserManagedByAdminDTO.class,
@@ -98,8 +107,9 @@ public class ManageUserController {
      * @return managed by admin usersDTO
      */
     @Auditable(action = AuditingAction.SET_ACCOUNT_ACTIVE)
-    @PostMapping("/api/admin/users/{id}")
+    @PostMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasPermission('MANAGE_USER','UPDATE')")
     public UserManagedByAdminDTO setUsersStatusActive(@PathVariable Long id) {
         User userWithChangedStatus = userService.setUsersStatusActive(id);
         return buildDtoForEntity(userWithChangedStatus, UserManagedByAdminDTO.class,
@@ -114,9 +124,11 @@ public class ManageUserController {
      * @return managed by admin usersDTO
      */
     @Auditable(action = AuditingAction.ADD_DECK_TO_USER_FOLDER_ADMIN)
-    @PostMapping("/api/admin/users/{userId}/deck/{deckId}")
+    @PostMapping("/{userId}/deck/{deckId}")
+    @PreAuthorize("hasPermission('MANAGE_USER','UPDATE')")
     public ResponseEntity<UserManagedByAdminDTO> addExistingDeckToUsersFolder(@PathVariable("userId") Long userId,
                                                                               @PathVariable("deckId") Long deckId) {
+        LOGGER.debug("Adding existing deck with id: {} to user folder with id: {}", deckId, userId);
         User user = userService.addExistingDeckToUsersFolder(userId, deckId);
         if (user != null) {
             Link link = linkTo(methodOn(ManageUserController.class)
@@ -137,9 +149,11 @@ public class ManageUserController {
      * @return managed by admin usersDTO
      */
     @Auditable(action = AuditingAction.REMOVE_DECK_FROM_USER_FOLDER_ADMIN)
-    @DeleteMapping("/api/admin/users/{userId}/deck/{deckId}")
+    @DeleteMapping("/{userId}/deck/{deckId}")
+    @PreAuthorize("hasPermission('MANAGE_USER','DELETE')")
     public ResponseEntity<UserManagedByAdminDTO> removeDeckFromUsersFolder(@PathVariable("userId") Long userId,
                                                                            @PathVariable("deckId") Long deckId) {
+        LOGGER.debug("Deleting deck with id: {} from user folder with id: {}", deckId, userId);
         User user = userService.removeDeckFromUsersFolder(userId, deckId);
         if (user != null) {
             Link link = linkTo(methodOn(ManageUserController.class).getUserById(userId)).withSelfRel();
@@ -158,8 +172,9 @@ public class ManageUserController {
      * @return managed by admin usersDTO
      */
     @Auditable(action = AuditingAction.VIEW_FOLDER_DECKS_ADMIN)
-    @GetMapping("/api/admin/users/{userId}/decks")
+    @GetMapping("/{userId}/decks")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasPermission('MANAGE_USER','READ')")
     public List<DeckOfUserManagedByAdminDTO> getAllDecksFromUsersFolder(@PathVariable("userId") Long userId) {
         List<Deck> decksFromUsersFolder = userService.getAllDecksFromUsersFolder(userId);
         return buildDtoListForCollection(decksFromUsersFolder, DeckOfUserManagedByAdminDTO.class,
