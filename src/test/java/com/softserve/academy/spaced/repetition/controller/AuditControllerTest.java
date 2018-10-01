@@ -44,7 +44,11 @@ public class AuditControllerTest {
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.numberOfElements", Matchers.is(10)));
+                .andExpect(jsonPath("$.numberOfElements", Matchers.is(10)))
+                .andExpect(jsonPath("$.totalPages", Matchers.is(1)))
+                .andExpect(jsonPath("$.size", Matchers.is(0)))
+                .andExpect(jsonPath("$.content[7].ipAddress", Matchers.is("0:0:0:0:0:0:0:1")))
+                .andExpect(jsonPath("$.content[4].time", Matchers.is("Sun Apr 09 18:50:04 PST 19")));
     }
 
     private MockMvc mockMvc;
