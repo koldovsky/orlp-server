@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -46,7 +47,7 @@ public class AuditControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.numberOfElements", Matchers.is(10)))
                 .andExpect(jsonPath("$.totalPages", Matchers.is(1)))
-                .andExpect(jsonPath("$.size", Matchers.is(0)))
+                .andExpect(jsonPath("$.content.*", hasSize(10)))
                 .andExpect(jsonPath("$.content[7].ipAddress", Matchers.is("0:0:0:0:0:0:0:1")))
                 .andExpect(jsonPath("$.content[4].time", Matchers.is("Sun Apr 09 18:50:04 PST 19")));
     }
