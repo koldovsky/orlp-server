@@ -1,9 +1,14 @@
 package com.softserve.academy.spaced.repetition.controller;
 
+
+import com.softserve.academy.spaced.repetition.controller.dto.builder.DTOBuilder;
+import com.softserve.academy.spaced.repetition.controller.dto.impl.UserCardQueuePublicDTO;
 import com.softserve.academy.spaced.repetition.controller.handler.ExceptionHandlerController;
+import com.softserve.academy.spaced.repetition.domain.UserCardQueue;
 import com.softserve.academy.spaced.repetition.domain.enums.UserCardQueueStatus;
 import com.softserve.academy.spaced.repetition.utils.exceptions.NotAuthorisedUserException;
 import com.softserve.academy.spaced.repetition.service.UserCardQueueService;
+import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -11,18 +16,24 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.context.MessageSource;
+import org.springframework.hateoas.Link;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import java.util.Date;
 import java.util.Locale;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -38,8 +49,10 @@ public class UserCardQueueControllerTest {
 
     @Mock
     private UserCardQueueService userCardQueueService;
+
     @InjectMocks
     private ExceptionHandlerController exceptionHandlerController;
+
     @Mock
     private MessageSource messageSource;
 
@@ -120,5 +133,26 @@ public class UserCardQueueControllerTest {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isUnauthorized());
         verify(messageSource).getMessage(any(String.class), any(Object[].class), any(Locale.class));
+    }
+
+    @Test
+    public void testGetUserCardQueueByIdWhenThereAreSome() throws Exception {
+        when(userCardQueueService.getUserCardQueueById(CARD_ID)).thenReturn(getUserCardQueue());
+        mockMvc.perform(get("/api/user/card/queue/{userCardQueueId}", CARD_ID)
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                //.andDo(print())
+                .andExpect(jsonPath("$.deckId", Matchers.is(1)));
+    }
+
+    private UserCardQueue getUserCardQueue() {
+        UserCardQueue userCardQueue = new UserCardQueue();
+        userCardQueue.setId(1L);
+        userCardQueue.setUserId(1L);
+        userCardQueue.setCardId(1L);
+        userCardQueue.setDeckId(1L);
+        userCardQueue.setCardDate(new Date());
+        return userCardQueue;
     }
 }
