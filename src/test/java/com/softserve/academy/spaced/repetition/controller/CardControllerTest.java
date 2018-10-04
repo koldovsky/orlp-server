@@ -36,12 +36,12 @@ public class CardControllerTest {
     @Mock
     private UserService mockedUserService;
 
-    private String QUESTION = "How many access modifiers do you know in Java?";
-    private String ANSWER = "There are 4 access modifiers in Java: public, protected, default and private";
-    private String CARD_IMAGE = "";
-    private String TITLE= "Card 11";
-    private String CARD_TO_ADD = String.format("{ \"answer\": \"%s\"," +"\"image\": " + " [ "+
-            "\"%s\" "+"],"+"\"question\": \"%s\", " + "\"title\": \"%s\" }",
+    private final String QUESTION = "How many access modifiers do you know in Java?";
+    private final String ANSWER = "There are 4 access modifiers in Java: public, protected, default and private";
+    private final String CARD_IMAGE = "image.jpeg";
+    private final String TITLE = "Card 11";
+    private final String CARD_TO_ADD = String.format("{ \"answer\": \"%s\"," + "\"image\": " + " [ " +
+                    "\"%s\" " + "]," + "\"question\": \"%s\", " + "\"title\": \"%s\" }",
             ANSWER, CARD_IMAGE, QUESTION, TITLE);
 
     private static final long RATING = 0L;
@@ -63,22 +63,22 @@ public class CardControllerTest {
     }
 
     @Test
-    public void areThereNotPostponedCardsAvailable()throws Exception {
-        mockMvc.perform(get("/api/decks/{deckId}/not-postponed" , 1L))
+    public void areThereNotPostponedCardsAvailable() throws Exception {
+        mockMvc.perform(get("/api/decks/{deckId}/not-postponed", 1L))
                 .andExpect(status().isOk());
     }
 
     @Test
-    public void updateCard()throws Exception{
-        mockMvc.perform(put("/api/decks/{deckId}/cards/{cardId}" , 1L, 190L)
+    public void updateCard() throws Exception {
+        mockMvc.perform(put("/api/decks/{deckId}/cards/{cardId}", 1L, 190L)
                 .content(CARD_TO_ADD)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
     }
 
     @Test
-    public void deleteCard()throws Exception{
-        mockMvc.perform(delete("/api/decks/{deckId}/cards/{cardId}",1L,1L))
+    public void deleteCard() throws Exception {
+        mockMvc.perform(delete("/api/decks/{deckId}/cards/{cardId}", 1L, 1L))
                 .andExpect(status().isOk());
     }
 
@@ -241,7 +241,7 @@ public class CardControllerTest {
     @Test
     public void getLearningCards() throws Exception {
         Long deckId = 1L;
-        User mockedUser1 = new User(new Account("","email1@email.com"), new Person("first1", "last1"), new Folder());
+        User mockedUser1 = new User(new Account("", "email1@email.com"), new Person("first1", "last1"), new Folder());
         when(mockedUserService.getAuthorizedUser()).thenReturn(mockedUser1);
         when(cardService.getLearningCards(deckId)).thenReturn(createLearningCards());
         mockMvc.perform(get("/api/decks/{deckId}/learn", 1L)
@@ -378,7 +378,7 @@ public class CardControllerTest {
     @Test
     public void getAdditionalLearningCards() throws Exception {
         Long deckId = 2L;
-        User mockedUser1 = new User(new Account("","email1@email.com"), new Person("first1", "last1"), new Folder());
+        User mockedUser1 = new User(new Account("", "email1@email.com"), new Person("first1", "last1"), new Folder());
         when(mockedUserService.getAuthorizedUser()).thenReturn(mockedUser1);
         when(cardService.getAdditionalLearningCards(deckId)).thenReturn(createAdditionalLearningCards());
         mockMvc.perform(get("/api/decks/{deckId}/learn/additional", 2L)
@@ -387,56 +387,56 @@ public class CardControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().json(
                         "[" +
-                        "{" +
-                        "  \"question\": \"How many access modifiers do you know in Java?\"," +
-                        "   \"rating\": 0," +
-                        "  \"answer\": \"There are 4 access modifiers in Java: public, protected, default and private\"," +
-                        "  \"title\": \"Card 1\"," +
-                        "  \"cardId\": 1," +
-                        "   \"links\": [{" +
-                        "        \"rel\":\"self\"," +
-                        "          \"href\":\"http://localhost/api/decks/2/cards/1\"" +
-                        "      }]" +
-                        "}," +
-                        "{" +
-                        "  \"question\": \"List any five features of Java?\"," +
-                        "   \"rating\": 0," +
-                        "  \"answer\": \"Some features include Object Oriented, Platform Independent, Robust, " +
-                        "Interpreted, Multi-threaded\"," +
-                        "  \"title\": \"Card 3\"," +
-                        "  \"cardId\": 3," +
-                        "   \"links\": [{" +
-                        "        \"rel\":\"self\"," +
-                        "          \"href\":\"http://localhost/api/decks/2/cards/3\"" +
-                        "      }]" +
-                        "}," +
-                        "{" +
-                        "  \"question\": \"Why is Java Architectural Neutral?\"," +
-                        "   \"rating\": 0," +
-                        "  \"answer\": \"It’s compiler generates an architecture-neutral object file format, which " +
-                        "makes the compiled code to be executable on many processors, with the presence of Java runtime" +
-                        " system.\"," +
-                        "  \"title\": \"Card 4\"," +
-                        "  \"cardId\": 4," +
-                        "   \"links\": [{" +
-                        "        \"rel\":\"self\"," +
-                        "          \"href\":\"http://localhost/api/decks/2/cards/4\"" +
-                        "      }]" +
-                        "}," +
-                        "{" +
-                        "  \"question\": \"Why Java is considered dynamic?\"," +
-                        "   \"rating\": 0," +
-                        "  \"answer\": \"It is designed to adapt to an evolving environment. Java programs can carry" +
-                        " extensive amount of run-time information that can be used to verify and resolve accesses" +
-                        " to objects on run-time.\"," +
-                        "  \"title\": \"Card 6\"," +
-                        "  \"cardId\": 6," +
-                        "   \"links\": [{" +
-                        "        \"rel\":\"self\"," +
-                        "          \"href\":\"http://localhost/api/decks/2/cards/6\"" +
-                        "      }]" +
-                        "}" +
-                        "]"));
+                                "{" +
+                                "  \"question\": \"How many access modifiers do you know in Java?\"," +
+                                "   \"rating\": 0," +
+                                "  \"answer\": \"There are 4 access modifiers in Java: public, protected, default and private\"," +
+                                "  \"title\": \"Card 1\"," +
+                                "  \"cardId\": 1," +
+                                "   \"links\": [{" +
+                                "        \"rel\":\"self\"," +
+                                "          \"href\":\"http://localhost/api/decks/2/cards/1\"" +
+                                "      }]" +
+                                "}," +
+                                "{" +
+                                "  \"question\": \"List any five features of Java?\"," +
+                                "   \"rating\": 0," +
+                                "  \"answer\": \"Some features include Object Oriented, Platform Independent, Robust, " +
+                                "Interpreted, Multi-threaded\"," +
+                                "  \"title\": \"Card 3\"," +
+                                "  \"cardId\": 3," +
+                                "   \"links\": [{" +
+                                "        \"rel\":\"self\"," +
+                                "          \"href\":\"http://localhost/api/decks/2/cards/3\"" +
+                                "      }]" +
+                                "}," +
+                                "{" +
+                                "  \"question\": \"Why is Java Architectural Neutral?\"," +
+                                "   \"rating\": 0," +
+                                "  \"answer\": \"It’s compiler generates an architecture-neutral object file format, which " +
+                                "makes the compiled code to be executable on many processors, with the presence of Java runtime" +
+                                " system.\"," +
+                                "  \"title\": \"Card 4\"," +
+                                "  \"cardId\": 4," +
+                                "   \"links\": [{" +
+                                "        \"rel\":\"self\"," +
+                                "          \"href\":\"http://localhost/api/decks/2/cards/4\"" +
+                                "      }]" +
+                                "}," +
+                                "{" +
+                                "  \"question\": \"Why Java is considered dynamic?\"," +
+                                "   \"rating\": 0," +
+                                "  \"answer\": \"It is designed to adapt to an evolving environment. Java programs can carry" +
+                                " extensive amount of run-time information that can be used to verify and resolve accesses" +
+                                " to objects on run-time.\"," +
+                                "  \"title\": \"Card 6\"," +
+                                "  \"cardId\": 6," +
+                                "   \"links\": [{" +
+                                "        \"rel\":\"self\"," +
+                                "          \"href\":\"http://localhost/api/decks/2/cards/6\"" +
+                                "      }]" +
+                                "}" +
+                                "]"));
     }
 
     private Card createCard(Long id, String title, String question, String answer, Deck deck) {
@@ -466,7 +466,7 @@ public class CardControllerTest {
     private List<Card> createAdditionalLearningCards() {
         List<Card> cards = new ArrayList<>();
         Deck deck = new Deck();
-       deck.setId(DECK_ID);
+        deck.setId(DECK_ID);
 
         Card card = createCard(1L, "Card 1", "How many access modifiers do you know in Java?",
                 "There are 4 access modifiers in Java: public, protected, default and private", deck);

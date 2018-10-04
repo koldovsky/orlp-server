@@ -25,15 +25,15 @@ public class CardImageControllerTest {
     private CardImageService cardImageService;
 
     @Before
-    public void setUp(){
+    public void setUp() {
         mockMvc = MockMvcBuilders.standaloneSetup(cardImageController)
                 .setControllerAdvice(new ExceptionHandlerController())
                 .build();
     }
 
     @Test
-    public void deleteCardImage() throws Exception{
-        mockMvc.perform(delete("/api/cardImage/{id}" , 1L))
+    public void deleteCardImage() throws Exception {
+        mockMvc.perform(delete("/api/cardImage/{id}", 1L))
                 .andExpect(status().isOk());
     }
 }
