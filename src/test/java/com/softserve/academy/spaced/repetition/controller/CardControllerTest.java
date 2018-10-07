@@ -1,5 +1,6 @@
 package com.softserve.academy.spaced.repetition.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.softserve.academy.spaced.repetition.controller.handler.ExceptionHandlerController;
 import com.softserve.academy.spaced.repetition.domain.*;
 import com.softserve.academy.spaced.repetition.service.CardService;
@@ -18,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -36,14 +37,6 @@ public class CardControllerTest {
     @Mock
     private UserService mockedUserService;
 
-    private final String QUESTION = "How many access modifiers do you know in Java?";
-    private final String ANSWER = "There are 4 access modifiers in Java: public, protected, default and private";
-    private final String CARD_IMAGE = "image.jpeg";
-    private final String TITLE = "Card 11";
-    private final String CARD_TO_ADD = String.format("{ \"answer\": \"%s\"," + "\"image\": " + " [ " +
-                    "\"%s\" " + "]," + "\"question\": \"%s\", " + "\"title\": \"%s\" }",
-            ANSWER, CARD_IMAGE, QUESTION, TITLE);
-
     private static final long RATING = 0L;
     private static final long DECK_ID = 1L;
 
@@ -55,37 +48,49 @@ public class CardControllerTest {
     }
 
     @Test
-    public void addCard() throws Exception {
+    public void testAddCard() throws Exception {
+        List<String> imageList = new ArrayList<>();
+        imageList.add("image.jpeg");
+        Card card = createCard();
+        doNothing().when(cardService).addCard(card, 1L, imageList);
         mockMvc.perform(post("/api/decks/{deckId}/cards", 1L)
-                .content(CARD_TO_ADD)
+                .content(new ObjectMapper().writeValueAsString(card))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated());
     }
 
     @Test
-    public void areThereNotPostponedCardsAvailable() throws Exception {
+    public void testAreThereNotPostponedCardsAvailable() throws Exception {
+        when(cardService.areThereNotPostponedCardsAvailable(1L)).thenReturn(true);
         mockMvc.perform(get("/api/decks/{deckId}/not-postponed", 1L))
                 .andExpect(status().isOk());
+        verify(cardService, times(1)).areThereNotPostponedCardsAvailable(1L);
     }
 
     @Test
-    public void updateCard() throws Exception {
-        mockMvc.perform(put("/api/decks/{deckId}/cards/{cardId}", 1L, 190L)
-                .content(CARD_TO_ADD)
+    public void testUpdateCard() throws Exception {
+        List<String> imageList = new ArrayList<>();
+        imageList.add("image.jpeg");
+        Card card = createCard();
+        when(cardService.updateCard(card, 1L, imageList)).thenReturn(createCard());
+        mockMvc.perform(put("/api/decks/{deckId}/cards/{cardId}", 1L, 1L)
+                .content(new ObjectMapper().writeValueAsString(card))
+                .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
     }
 
     @Test
-    public void deleteCard() throws Exception {
+    public void testDeleteCard() throws Exception {
         mockMvc.perform(delete("/api/decks/{deckId}/cards/{cardId}", 1L, 1L))
                 .andExpect(status().isOk());
+        verify(cardService, times(1)).deleteCard(1L);
+        verifyNoMoreInteractions(cardService);
     }
 
     @Test
-    public void getCardById() throws Exception {
+    public void testGetCardById() throws Exception {
         when(cardService.getCard(eq(1L))).thenReturn(createCard());
-        when(cardService.getLearningCards(1L)).thenReturn(createLearningCards());
         mockMvc.perform(get("/api/decks/{deckId}/cards/{cardId}", 1L, 1L)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON))
@@ -101,10 +106,11 @@ public class CardControllerTest {
                         "          \"href\":\"http://localhost/api/decks/1/cards/1\"" +
                         "      }]" +
                         "}"));
+        verify(cardService, times(1)).getCard(1L);
     }
 
     @Test
-    public void getCardsByDeck() throws Exception {
+    public void testGetCardsByDeck() throws Exception {
         Long deckId = 1L;
         when(cardService.findAllByDeckId(deckId)).thenReturn(createLearningCards());
         mockMvc.perform(get("/api/decks/{deckId}/cards", 1L)
@@ -236,15 +242,16 @@ public class CardControllerTest {
                         "      }]" +
                         "}" +
                         "]"));
+        verify(cardService, times(1)).findAllByDeckId(1L);
     }
 
     @Test
-    public void getLearningCards() throws Exception {
+    public void testGetLearningCards() throws Exception {
         Long deckId = 1L;
         User mockedUser1 = new User(new Account("", "email1@email.com"), new Person("first1", "last1"), new Folder());
         when(mockedUserService.getAuthorizedUser()).thenReturn(mockedUser1);
         when(cardService.getLearningCards(deckId)).thenReturn(createLearningCards());
-        mockMvc.perform(get("/api/decks/{deckId}/learn", 1L)
+        mockMvc.perform(get("/api/decks/{deckId}/learn", deckId)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -373,15 +380,16 @@ public class CardControllerTest {
                         "      }]" +
                         "}" +
                         "]"));
+        verify(cardService, times(1)).getLearningCards(deckId);
     }
 
     @Test
-    public void getAdditionalLearningCards() throws Exception {
+    public void testGetAdditionalLearningCards() throws Exception {
         Long deckId = 2L;
         User mockedUser1 = new User(new Account("", "email1@email.com"), new Person("first1", "last1"), new Folder());
         when(mockedUserService.getAuthorizedUser()).thenReturn(mockedUser1);
         when(cardService.getAdditionalLearningCards(deckId)).thenReturn(createAdditionalLearningCards());
-        mockMvc.perform(get("/api/decks/{deckId}/learn/additional", 2L)
+        mockMvc.perform(get("/api/decks/{deckId}/learn/additional", deckId)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -437,6 +445,7 @@ public class CardControllerTest {
                                 "      }]" +
                                 "}" +
                                 "]"));
+        verify(cardService, times(1)).getAdditionalLearningCards(deckId);
     }
 
     private Card createCard(Long id, String title, String question, String answer, Deck deck) {
