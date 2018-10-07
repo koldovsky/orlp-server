@@ -23,7 +23,6 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -75,8 +74,7 @@ public class DeckRatingControllerTest {
                 .content("{\"rating\":5,\"accountEmail\":\"email@email\",\"deck\":{\"id\":1}}")
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isCreated())
-                .andDo(print());
+                .andExpect(status().isCreated());
         verify(deckRatingService, times(1)).addDeckRating(RATING, DECK_ID);
     }
 
@@ -88,8 +86,7 @@ public class DeckRatingControllerTest {
                 .content("{\"rating\":5,\"accountEmail\":\"email@email\",\"deckId\":1}")
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isUnauthorized())
-                .andDo(print());
+                .andExpect(status().isUnauthorized());
         verify(messageSource).getMessage(any(String.class), any(Object[].class), any(Locale.class));
         verify(deckRatingService, times(1)).addDeckRating(RATING, DECK_ID);
     }
@@ -100,7 +97,6 @@ public class DeckRatingControllerTest {
                 .content("{\"rating\":0}")
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON))
-                .andDo(print())
                 .andExpect(status().isBadRequest());
         verifyZeroInteractions(deckRatingService);
 
@@ -108,7 +104,6 @@ public class DeckRatingControllerTest {
                 .content("{\"rating\":6}")
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON))
-                .andDo(print())
                 .andExpect(status().isBadRequest());
         verifyZeroInteractions(deckRatingService);
 
@@ -116,7 +111,6 @@ public class DeckRatingControllerTest {
                 .content("{\"rating\":-1}")
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON))
-                .andDo(print())
                 .andExpect(status().isBadRequest());
         verifyZeroInteractions(deckRatingService);
     }

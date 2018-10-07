@@ -28,7 +28,6 @@ import java.util.Locale;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -131,8 +130,7 @@ public class ImageControllerTest {
         mockMvc.perform(delete("/api/service/image/{id}", IMAGE_ID_1)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andDo(print());
+                .andExpect(status().isOk());
         verify(imageService, times(1)).deleteImage(IMAGE_ID_1);
     }
 
