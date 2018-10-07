@@ -25,6 +25,7 @@ public class UserCardQueueController {
     private UserCardQueueService userCardQueueService;
 
     @PutMapping("/decks/{deckId}/cards/{cardId}/queue")
+    @PreAuthorize("hasPermission('CARD_QUEUE', 'UPDATE')")
     public ResponseEntity updateUserCardQueue(@PathVariable Long deckId,
                                               @PathVariable Long cardId,
                                               @RequestBody String status)
