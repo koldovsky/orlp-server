@@ -21,9 +21,7 @@ import java.util.Locale;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -31,7 +29,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class FolderControllerTest {
 
     private MockMvc mockMvc;
-    private final Long DECK_ID = 1L;
+    private final Long DECK_ID_1 = 1L;
+    private final Long DECK_ID_2 = 2L;
     private final Long FOLDER_ID = 1L;
     private final String DECK_DESCRIPTION = "Interview questions about Java";
     private final String DECK_NAME = "Java interview #1";
@@ -64,31 +63,30 @@ public class FolderControllerTest {
 
     @Test
     public void testAddDeckToFolder() throws Exception {
-        when(folderService.addDeck(eq(DECK_ID))).thenReturn(createDeck());
-        mockMvc.perform(put("/api/user/folder/add/deck/{deckId}", DECK_ID)
+        when(folderService.addDeck(eq(DECK_ID_1))).thenReturn(createDeck());
+        mockMvc.perform(put("/api/user/folder/add/deck/{deckId}", DECK_ID_1)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.deckId", Matchers.is(1)))
                 .andExpect(jsonPath("$.name", Matchers.is("Java interview #1")));
-        verify(folderService, times(1)).addDeck(DECK_ID);
+        verify(folderService, times(1)).addDeck(DECK_ID_1);
     }
 
     @Test
     public void testDeleteUserDeck() throws Exception {
-        when(folderService.addDeck(eq(DECK_ID))).thenReturn(createDeck());
-        mockMvc.perform(delete("/api/user/folder/decks/{deckId}", DECK_ID)
+        mockMvc.perform(delete("/api/user/folder/decks/{deckId}", DECK_ID_1)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
-        verify(folderService, times(1)).deleteDeck(DECK_ID);
+        verify(folderService, times(1)).deleteDeck(DECK_ID_1);
     }
 
     @Test
     public void testGetAllDecksInFolder() throws Exception {
         List<Long> listWithFolderId = new ArrayList<>();
-        listWithFolderId.add(DECK_ID);
-        listWithFolderId.add(2L);
+        listWithFolderId.add(DECK_ID_1);
+        listWithFolderId.add(DECK_ID_2);
         when(folderService.getAllDecksIdWithFolder()).thenReturn(listWithFolderId);
         mockMvc.perform(get("/api/user/folder/decksId")
                 .accept(MediaType.APPLICATION_JSON)
@@ -118,7 +116,7 @@ public class FolderControllerTest {
         deck.setDescription(DECK_DESCRIPTION);
         deck.setSyntaxToHighlight(DECK_SYNTAX);
         deck.setRating(DECK_RATING);
-        deck.setId(DECK_ID);
+        deck.setId(DECK_ID_1);
         return deck;
     }
 }
