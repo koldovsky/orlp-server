@@ -11,6 +11,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -33,7 +34,10 @@ public class CardImageControllerTest {
 
     @Test
     public void deleteCardImage() throws Exception {
+        doNothing().when(cardImageService).deleteById(1L);
         mockMvc.perform(delete("/api/cardImage/{id}", 1L))
                 .andExpect(status().isOk());
+        verify(cardImageService, times(1)).deleteById(1L);
+        verifyZeroInteractions(cardImageService);
     }
 }
