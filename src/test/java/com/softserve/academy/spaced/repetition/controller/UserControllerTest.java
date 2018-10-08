@@ -73,7 +73,6 @@ public class UserControllerTest {
         mockMvc.perform(get("/api/user")
             .accept(MediaType.APPLICATION_JSON)
             .contentType(MediaType.APPLICATION_JSON))
-            .andDo(print())
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.userId",Matchers.is(1)));
         verify(userService,times(1)).getAuthorizedUser();
@@ -85,19 +84,19 @@ public class UserControllerTest {
         Course course1 = new Course();
         Set<Course> courses = new HashSet<>();
         Image image = new Image();
-        image.setId(1L);
+        image.setId(USER_ID);
         image.setType("good");
         image.setSize(5L);
 
-        user1.setId(1L);
-        category1.setId(1L);
-        course1.setId(1L);
+        user1.setId(USER_ID);
+        category1.setId(USER_ID);
+        course1.setId(USER_ID);
         course1.setName("course1");
         course1.setDescription("description");
         course1.setImage(new Image());
         course1.setPublished(true);
         course1.setRating(10L);
-        course1.setCreatedBy(1L);
+        course1.setCreatedBy(USER_ID);
         course1.setOwner(user1);
         course1.setCategory(new Category());
         course1.setCourseRatings(new ArrayList<CourseRating>());
@@ -118,11 +117,11 @@ public class UserControllerTest {
         Folder folder;
 
         folder = new Folder();
-        folder.setId(1L);
+        folder.setId(USER_ID);
         folder.setDecks(new HashSet<>());
 
         authority = new Authority();
-        authority.setId(1L);
+        authority.setId(USER_ID);
         authority.setName(AuthorityName.ROLE_USER);
 
         authorities = new HashSet<>();
