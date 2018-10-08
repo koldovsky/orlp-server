@@ -14,17 +14,14 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.context.MessageSource;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-
-import javax.validation.constraints.Null;
 
 import java.util.Locale;
 
 import static org.mockito.Matchers.any;
 import static org.powermock.api.mockito.PowerMockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(MockitoJUnitRunner.class)
 public class DeckCommentControllerTest {
@@ -40,6 +37,7 @@ public class DeckCommentControllerTest {
     private ExceptionHandlerController exceptionHandlerController;
     @Mock
     private MessageSource messageSource;
+
     @Before
     public void setUp() {
         final String MESSAGE_SOURCE_MESSAGE = "message";
@@ -59,8 +57,8 @@ public class DeckCommentControllerTest {
         DeckComment comment = new DeckComment();
         comment.setDeck(deck);
         when(deckCommentService.addCommentForDeck(1L, "1", null)).thenReturn(comment);
-         //MvcResult result =
-        mockMvc.perform(post("api/decks/{deckId}/comments",1L)
+        //MvcResult result =
+        mockMvc.perform(post("api/decks/{deckId}/comments", 1L)
                 .accept(MediaType.APPLICATION_JSON)
                 .content("{\"commentText\":\"1\",\"parentCommentId\":null}")
                 .contentType(MediaType.APPLICATION_JSON))
@@ -68,8 +66,8 @@ public class DeckCommentControllerTest {
         //.andExpect(jsonPath("$*", hasSize(4)))
         //    .andReturn()
         ;
-     //   System.out.println(result.getResponse().getContentAsString());
-     //   System.out.println(result.getRequest().getRequestURL());
+        //   System.out.println(result.getResponse().getContentAsString());
+        //   System.out.println(result.getRequest().getRequestURL());
 
 
     }

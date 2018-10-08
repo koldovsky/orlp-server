@@ -27,9 +27,11 @@ import java.util.List;
 
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -50,6 +52,7 @@ public class DeckControllerTest {
 
     final int CATEGORY_ID = 1;
     final String SORT_BY = "name";
+
 
     @Before
     public void setUp() {
@@ -132,18 +135,42 @@ public class DeckControllerTest {
     }
     @Test
     public void getAllDecksOrderByRating()throws Exception{
-
-        // MvcResult result =
+        when(deckService.getAllOrderedDecks()).thenReturn(createArrayOfDecks());
         mockMvc.perform(get("/api/decks/ordered")
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-        //.andExpect(jsonPath("$*", hasSize(4)))
-        //    .andReturn()
-        ;
-//        System.out.println(result.getResponse().getContentAsString());
-//        System.out.println(result.getRequest().getRequestURL());
+                .andExpect(jsonPath("$", hasSize(3)));
+    }
 
+    private List<Deck> createArrayOfDecks(){
+        List<Deck> list = new ArrayList<>();
+        Deck deck1 = new Deck();
+        deck1.setName("1");
+        deck1.setDescription("string");
+        Deck deck2 = new Deck();
+        deck1.setName("2");
+        deck1.setDescription("string");
+        Deck deck3 = new Deck();
+        deck1.setName("3");
+        deck1.setDescription("string");
+        list.add(deck1);
+        list.add(deck2);
+        list.add(deck3);
+        return list;
+    }
+
+    @Test
+    public void getAllDecksByCourseId() throws Exception{
+
+        when(deckService.getAllDecks(1L)).thenReturn(createArrayOfDecks());
+        mockMvc.perform(get("/api/category/1/courses/1/decks")
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(3)));
 
     }
+
+
 }
