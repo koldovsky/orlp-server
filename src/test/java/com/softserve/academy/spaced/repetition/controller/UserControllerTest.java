@@ -21,16 +21,14 @@ import java.util.Set;
 
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(MockitoJUnitRunner.class)
 public class UserControllerTest {
 
-    private MockMvc mockMvc;
     private static final long USER_ID = 1L;
-
+    private MockMvc mockMvc;
     UserController userController;
 
     @Mock
@@ -102,9 +100,7 @@ public class UserControllerTest {
         course1.setCourseRatings(new ArrayList<CourseRating>());
         course1.setCourseComments(new ArrayList<CourseComment>());
         course1.setDecks(new ArrayList<Deck>());
-
         courses.add(course1);
-
         return courses;
     }
 
@@ -151,7 +147,6 @@ public class UserControllerTest {
         user.setPerson(person);
         user.setCourses(new HashSet<>());
         user.setFolder(folder);
-
         return user;
     }
 }

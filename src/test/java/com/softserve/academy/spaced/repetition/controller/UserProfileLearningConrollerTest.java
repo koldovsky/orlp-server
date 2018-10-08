@@ -1,16 +1,16 @@
 package com.softserve.academy.spaced.repetition.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.softserve.academy.spaced.repetition.controller.handler.ExceptionHandlerController;
 import com.softserve.academy.spaced.repetition.domain.Account;
 import com.softserve.academy.spaced.repetition.domain.RememberingLevel;
 import com.softserve.academy.spaced.repetition.domain.enums.LearningRegime;
 import com.softserve.academy.spaced.repetition.service.AccountService;
-import com.softserve.academy.spaced.repetition.utils.exceptions.NotAuthorisedUserException;
+import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
-import org.hamcrest.Matchers;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.http.MediaType;
@@ -21,14 +21,13 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.util.ArrayList;
 
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.powermock.api.mockito.PowerMockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 @RunWith(MockitoJUnitRunner.class)
 public class UserProfileLearningConrollerTest {
@@ -56,7 +55,19 @@ public class UserProfileLearningConrollerTest {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.cardsNumber", Matchers.is(10)));
+    }
 
+    @Test
+    public void testUpdateLearningDetails() throws Exception {
+        Account acc = getAcc();
+        when(accountService.updateAccountDetails(acc)).thenReturn(acc);
+        mockMvc.perform(put("/api/profile/learning-details")
+                .content(new ObjectMapper().writeValueAsString(acc))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.cardsNumber", Matchers.is(10)));
+        verify(accountService,times(1)).updateAccountDetails(acc);
     }
 
     private Account getAcc() {
@@ -64,7 +75,6 @@ public class UserProfileLearningConrollerTest {
         acc.setLearningRegime(LearningRegime.BAD_NORMAL_GOOD_STATUS_DEPENDING);
         acc.setCardsNumber(10);
         acc.setRememberingLevels(new ArrayList<RememberingLevel>());
-
         return acc;
     }
 
