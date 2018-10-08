@@ -1,5 +1,6 @@
 package com.softserve.academy.spaced.repetition.service;
 
+import com.softserve.academy.spaced.repetition.controller.dto.impl.DeckCreateValidationDTO;
 import com.softserve.academy.spaced.repetition.domain.*;
 import com.softserve.academy.spaced.repetition.repository.CategoryRepository;
 import com.softserve.academy.spaced.repetition.repository.CourseRepository;
@@ -50,10 +51,13 @@ public class DeckServiceTest {
     @Mock
     private UserService userService;
     @Mock
+    private FolderService folderService;
+    @Mock
     private MessageSource messageSource;
     private User notOwnerUser;
     private Category category;
     private Deck deck;
+    private DeckCreateValidationDTO deckDTO;
 
     @Before
     public void setUp() throws NotAuthorisedUserException {
@@ -174,7 +178,12 @@ public class DeckServiceTest {
     public void testCreateNewDeckByAdmin() throws NotAuthorisedUserException {
         when(deckRepository.save(any(Deck.class))).thenReturn(deck);
 
-        Deck result = deckService.createNewDeckAdmin(deck);
+        deckDTO = new DeckCreateValidationDTO();
+        deckDTO.setDescription("Description for new card");
+        deckDTO.setName("New card");
+        deckDTO.setCategoryId(CATEGORY_ID);
+        folderService.addDeck(deck.getId());
+        Deck result = deckService.createNewDeckAdmin(deckDTO);
         verify(userService).getAuthorizedUser();
         verify(categoryRepository).findById(CATEGORY_ID);
         verify(deckRepository).save(deck);
@@ -185,7 +194,7 @@ public class DeckServiceTest {
     public void testCreateNewDeckByAdminByNotAuthorisedUser() throws NotAuthorisedUserException {
         when(userService.getAuthorizedUser()).thenThrow(new NotAuthorisedUserException());
 
-        deckService.createNewDeckAdmin(deck);
+        deckService.createNewDeckAdmin(deckDTO);
         verify(userService).getAuthorizedUser();
     }
 

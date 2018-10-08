@@ -1,6 +1,7 @@
 package com.softserve.academy.spaced.repetition.controller;
 
 import com.softserve.academy.spaced.repetition.controller.dto.annotations.Request;
+import com.softserve.academy.spaced.repetition.controller.dto.builder.DTOBuilder;
 import com.softserve.academy.spaced.repetition.controller.dto.impl.*;
 import com.softserve.academy.spaced.repetition.domain.Card;
 import com.softserve.academy.spaced.repetition.domain.Deck;
@@ -152,13 +153,12 @@ public class DeckController {
     @PostMapping(value = "/api/admin/decks")
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasPermission('DECK','CREATE')")
-    public DeckOfUserManagedByAdminDTO addDeckForAdmin(@Validated(Request.class) @RequestBody Deck deck)
+    public ResponseEntity<DeckOfUserManagedByAdminDTO> addDeckForAdmin(@Validated @RequestBody DeckCreateValidationDTO deckCreateValidationDTO)
             throws NotAuthorisedUserException {
         LOGGER.debug("Adding deck for admin");
-        Deck deckNew = deckService.createNewDeckAdmin(deck);
-        folderService.addDeck(deckNew.getId());
-        return buildDtoForEntity(deckNew, DeckOfUserManagedByAdminDTO.class,
-                linkTo(methodOn(DeckController.class).getDeckById(deckNew.getId())).withSelfRel());
+        Deck deckNew = deckService.createNewDeckAdmin(deckCreateValidationDTO);
+        return new ResponseEntity<>(DTOBuilder.buildDtoForEntity(deckNew, DeckOfUserManagedByAdminDTO.class,
+                linkTo(methodOn(DeckController.class).getDeckById(deckNew.getId())).withSelfRel()), HttpStatus.CREATED);
     }
 
     @Auditable(action = AuditingAction.EDIT_DECK_ADMIN)
