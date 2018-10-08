@@ -15,6 +15,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.text.ParseException;
@@ -23,6 +24,8 @@ import java.util.List;
 
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.stringContainsInOrder;
+import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -172,4 +175,23 @@ public class CourseControllerTest {
 
         return coursesPage;
     }
+
+    @Test
+    public void getAllCoursesOrderByRating()throws Exception{
+
+            // MvcResult result =
+                mockMvc.perform(get("/api/courses/orders")
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                //.andExpect(jsonPath("$*", hasSize(4)))
+                //    .andReturn()
+                ;
+//        System.out.println(result.getResponse().getContentAsString());
+//        System.out.println(result.getRequest().getRequestURL());
+
+
+    }
+
+
 }

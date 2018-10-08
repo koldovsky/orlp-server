@@ -18,6 +18,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.text.ParseException;
@@ -69,6 +70,7 @@ public class DeckControllerTest {
                 .andExpect(jsonPath("$.sort[:1].ascending", hasItem(true)))
                 .andExpect(jsonPath("$.sort[:1].descending", hasItem(false)))
                 .andExpect(jsonPath("$.sort[:1].property", hasItem(ADMIN_DECKS_SORT_BY)));
+
     }
 
     public Deck createDeck(long idDeck, String nameDeck, String description,
@@ -127,5 +129,21 @@ public class DeckControllerTest {
         }
         Page<Deck> deckPage = new PageImpl<>(deckList, new PageRequest(NUMBER_PAGE - 1, QUANTITY_DECKS_IN_PAGE, Sort.Direction.ASC, SORT_BY), quantityAdminDecks);
         return deckPage;
+    }
+    @Test
+    public void getAllDecksOrderByRating()throws Exception{
+
+        // MvcResult result =
+        mockMvc.perform(get("/api/decks/ordered")
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+        //.andExpect(jsonPath("$*", hasSize(4)))
+        //    .andReturn()
+        ;
+//        System.out.println(result.getResponse().getContentAsString());
+//        System.out.println(result.getRequest().getRequestURL());
+
+
     }
 }
