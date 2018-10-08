@@ -95,7 +95,7 @@ public class ImageController {
     }
 
     /**
-     * Allows Admin to download all images from ImageRepository as list of dto with links on on it
+     * Allows Admin to download all images from ImageService as list of dto with links on on it
      *
      * @return list of ImageDTO
      */
@@ -104,7 +104,7 @@ public class ImageController {
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasPermission('IMAGE','READ')")
     public List<ImageDTO> getImageList() {
-        List<Image> listId = imageRepository.getImagesWithoutContent();
+        List<Image> listId = imageService.getImagesWithoutContent();
         return buildDtoListForCollection(listId, ImageDTO.class,
                 linkTo(methodOn(ImageController.class).getImageList()).withSelfRel());
     }
