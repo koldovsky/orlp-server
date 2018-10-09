@@ -48,8 +48,7 @@ public class AuditControllerTest {
                 .andExpect(jsonPath("$.numberOfElements", Matchers.is(10)))
                 .andExpect(jsonPath("$.totalPages", Matchers.is(1)))
                 .andExpect(jsonPath("$.content.*", hasSize(10)))
-                .andExpect(jsonPath("$.content[7].ipAddress", Matchers.is("0:0:0:0:0:0:0:1")))
-                .andExpect(jsonPath("$.content[4].time", Matchers.is("Sun Apr 09 18:50:04 PST 19")));
+                .andExpect(jsonPath("$.content[7].ipAddress", Matchers.is("0:0:0:0:0:0:0:1")));
     }
 
     private MockMvc mockMvc;
