@@ -25,12 +25,10 @@ import java.util.Date;
 import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
 
 @RunWith(MockitoJUnitRunner.class)
@@ -49,6 +47,7 @@ public class AuditControllerTest {
                 .andExpect(jsonPath("$.totalPages", Matchers.is(1)))
                 .andExpect(jsonPath("$.content.*", hasSize(10)))
                 .andExpect(jsonPath("$.content[7].ipAddress", Matchers.is("0:0:0:0:0:0:0:1")));
+        verify(auditService, times(1)).getAuditByPage(numberPage, sortBy, ascending);
     }
 
     private MockMvc mockMvc;
