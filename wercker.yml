@@ -1,3 +1,6 @@
 # do nothing
 
 box: maven
+
+build:
+  steps:
