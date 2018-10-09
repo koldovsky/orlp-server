@@ -57,11 +57,11 @@ public class CategoryControllerTest {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.[0].description", Matchers.is("Part 1")))
-                .andExpect(jsonPath("$.[0].image", Matchers.is("http://localhost/api/service/image/8")))
+                .andExpect(jsonPath("$.[0].image", Matchers.containsString("/api/service/image/8")))
                 .andExpect(jsonPath("$.[0].createdBy", Matchers.is(1)))
                 .andExpect(jsonPath("$.[0].name", Matchers.is("Java interview #1")))
                 .andExpect(jsonPath("$.[1].description", Matchers.is("Part 2")))
-                .andExpect(jsonPath("$.[1].image", Matchers.is("http://localhost/api/service/image/9")))
+                .andExpect(jsonPath("$.[1].image", Matchers.containsString("/api/service/image/9")))
                 .andExpect(jsonPath("$.[1].createdBy", Matchers.is(1)))
                 .andExpect(jsonPath("$.[1].name", Matchers.is("C++ interview #2")));
         verify(categoryService, times(1)).getAllCategory();
