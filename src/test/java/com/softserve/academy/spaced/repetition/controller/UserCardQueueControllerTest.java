@@ -1,9 +1,13 @@
 package com.softserve.academy.spaced.repetition.controller;
 
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.softserve.academy.spaced.repetition.controller.handler.ExceptionHandlerController;
+import com.softserve.academy.spaced.repetition.domain.UserCardQueue;
 import com.softserve.academy.spaced.repetition.domain.enums.UserCardQueueStatus;
-import com.softserve.academy.spaced.repetition.utils.exceptions.NotAuthorisedUserException;
 import com.softserve.academy.spaced.repetition.service.UserCardQueueService;
+import com.softserve.academy.spaced.repetition.utils.exceptions.NotAuthorisedUserException;
+import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,6 +19,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import java.util.Date;
 import java.util.Locale;
 
 import static org.mockito.Matchers.any;
@@ -22,8 +27,7 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class UserCardQueueControllerTest {
@@ -31,15 +35,16 @@ public class UserCardQueueControllerTest {
     private static final long DECK_ID = 1L;
     private static final long CARD_ID = 1L;
     private MockMvc mockMvc;
-    private UserCardQueueStatus status;
 
     @InjectMocks
     private UserCardQueueController userCardQueueController;
 
     @Mock
     private UserCardQueueService userCardQueueService;
+
     @InjectMocks
     private ExceptionHandlerController exceptionHandlerController;
+
     @Mock
     private MessageSource messageSource;
 
@@ -62,7 +67,6 @@ public class UserCardQueueControllerTest {
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
-
         verify(userCardQueueService).updateUserCardQueue(DECK_ID, CARD_ID, UserCardQueueStatus.GOOD.getStatus());
     }
 
@@ -96,7 +100,6 @@ public class UserCardQueueControllerTest {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().json("0"));
-
         verify(userCardQueueService).countCardsThatNeedRepeating(DECK_ID);
     }
 
@@ -108,7 +111,6 @@ public class UserCardQueueControllerTest {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().json("5"));
-
         verify(userCardQueueService).countCardsThatNeedRepeating(DECK_ID);
     }
 
@@ -120,5 +122,38 @@ public class UserCardQueueControllerTest {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isUnauthorized());
         verify(messageSource).getMessage(any(String.class), any(Object[].class), any(Locale.class));
+    }
+
+    @Test
+    public void testGetUserCardQueueByIdWhenThereAreSome() throws Exception {
+        when(userCardQueueService.getUserCardQueueById(CARD_ID)).thenReturn(getUserCardQueue());
+        mockMvc.perform(get("/api/user/card/queue/{userCardQueueId}", CARD_ID)
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.deckId", Matchers.is(1)));
+        verify(userCardQueueService).getUserCardQueueById(CARD_ID);
+    }
+
+    @Test
+    public void testUpdateUserCardQueue() throws Exception {
+        UserCardQueue userCardQueue = getUserCardQueue();
+        doNothing().when(userCardQueueService).updateUserCardQueue(DECK_ID,CARD_ID,"OK");
+        mockMvc.perform(put("/api/decks/{deckId}/cards/{cardId}/queue",DECK_ID, CARD_ID)
+                .content(new ObjectMapper().writeValueAsString(userCardQueue))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+        verify(userCardQueueService, times(1)).updateUserCardQueue(DECK_ID,CARD_ID,new ObjectMapper().writeValueAsString(userCardQueue));
+    }
+
+    private UserCardQueue getUserCardQueue() {
+        UserCardQueue userCardQueue = new UserCardQueue();
+        userCardQueue.setId(1L);
+        userCardQueue.setUserId(1L);
+        userCardQueue.setCardId(1L);
+        userCardQueue.setDeckId(1L);
+        userCardQueue.setCardDate(new Date());
+        return userCardQueue;
     }
 }

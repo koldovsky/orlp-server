@@ -1,14 +1,15 @@
 package com.softserve.academy.spaced.repetition.service.impl;
 
+import com.softserve.academy.spaced.repetition.controller.dto.impl.DeckCreateValidationDTO;
 import com.softserve.academy.spaced.repetition.domain.*;
-
 import com.softserve.academy.spaced.repetition.repository.CategoryRepository;
 import com.softserve.academy.spaced.repetition.repository.CourseRepository;
 import com.softserve.academy.spaced.repetition.repository.DeckRepository;
+import com.softserve.academy.spaced.repetition.service.DeckService;
+import com.softserve.academy.spaced.repetition.service.FolderService;
+import com.softserve.academy.spaced.repetition.service.UserService;
 import com.softserve.academy.spaced.repetition.utils.exceptions.NotAuthorisedUserException;
 import com.softserve.academy.spaced.repetition.utils.exceptions.NotOwnerOperationException;
-import com.softserve.academy.spaced.repetition.service.DeckService;
-import com.softserve.academy.spaced.repetition.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -26,8 +27,8 @@ import java.util.Set;
 
 @Service
 public class DeckServiceImpl implements DeckService {
-    private final static int QUANTITY_ADMIN_DECKS_IN_PAGE = 20;
-    private final static int QUANTITY_DECKS_IN_PAGE = 12;
+    private static final int QUANTITY_ADMIN_DECKS_IN_PAGE = 20;
+    private static final int QUANTITY_DECKS_IN_PAGE = 12;
 
     @Autowired
     private DeckRepository deckRepository;
@@ -40,6 +41,9 @@ public class DeckServiceImpl implements DeckService {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private FolderService folderService;
 
     @Autowired
     private MessageSource messageSource;
@@ -129,16 +133,16 @@ public class DeckServiceImpl implements DeckService {
     }
 
     @Override
-    @Transactional
-    public Deck createNewDeckAdmin(Deck newDeck) throws NotAuthorisedUserException {
+    public Deck createNewDeckAdmin(DeckCreateValidationDTO deckCreateValidationDTO) throws NotAuthorisedUserException {
         User user = userService.getAuthorizedUser();
         Deck deck = new Deck();
-        deck.setName(newDeck.getName());
-        deck.setDescription(newDeck.getDescription());
-        deck.setCategory(categoryRepository.findById(newDeck.getCategory().getId()));
+        deck.setName(deckCreateValidationDTO.getName());
+        deck.setDescription(deckCreateValidationDTO.getDescription());
+        deck.setCategory(categoryRepository.findById(deckCreateValidationDTO.getCategoryId()));
         deck.setDeckOwner(user);
         Deck savedDeck = deckRepository.save(deck);
         deck.setId(savedDeck.getId());
+        folderService.addDeck(deck.getId());
         return savedDeck;
     }
 
@@ -216,7 +220,7 @@ public class DeckServiceImpl implements DeckService {
     }
 
     @Override
-    public String getSynthaxToHightlight(long deckId){
+    public String getSynthaxToHightlight(long deckId) {
         return deckRepository.getDeckById(deckId).getSyntaxToHighlight();
     }
 }
