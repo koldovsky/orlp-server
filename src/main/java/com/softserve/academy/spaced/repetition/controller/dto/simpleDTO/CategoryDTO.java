@@ -20,4 +20,15 @@ public class CategoryDTO {
         return image;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setImage(Image image) {
+        this.image = image;
+    }
 }
