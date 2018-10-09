@@ -1,6 +1,5 @@
 package com.softserve.academy.spaced.repetition.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.softserve.academy.spaced.repetition.controller.handler.ExceptionHandlerController;
 import com.softserve.academy.spaced.repetition.domain.Account;
 import com.softserve.academy.spaced.repetition.domain.Authority;
@@ -26,7 +25,6 @@ import java.util.Set;
 
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -93,42 +91,12 @@ public class RegistrationControllerTest {
     @Test
     public void addUser() throws Exception {
         User user = createUser();
-
         when(registrationService.registerNewUser(user)).thenReturn(user);
         mockMvc.perform(post("/api/registration")
-//       .content(new ObjectMapper().writeValueAsString(user))
-//       .content("{\n" +
-//                "  \"account\": {\n" +
-//                "    \"authenticationType\": \"LOCAL\",\n" +
-//                "    \"authorities\": [\n" +
-//                "      {\n" +
-//                "        \"id\": 1,\n" +
-//                "        \"name\": \"ROLE_USER\"\n" +
-//                "      }\n" +
-//                "    ],\n" +
-//                "    \"cardsNumber\": 1,\n" +
-//                "    \"deactivated\": true,\n" +
-//                "    \"email\": \"email@email.com\",\n" +
-//                "    \"id\": 1,\n" +
-//                "    \"lastPasswordResetDate\": \"2018-10-07T10:39:13.142Z\",\n" +
-//                "    \"learningRegime\": \"BAD_NORMAL_GOOD_STATUS_DEPENDING\",\n" +
-//                "    \"password\": \"12345678\",\n" +
-//                "    \"status\": \"ACTIVE\"\n" +
-//                "  },\n" +
-//                "  \"id\": 1,\n" +
-//                "  \"person\": {\n" +
-//                "    \"firstName\": \"string\",\n" +
-//                "    \"id\": 1,\n" +
-//                "    \"image\": \"string\",\n" +
-//                "    \"imageBase64\": \"string\",\n" +
-//                "    \"imageType\": \"LINK\",\n" +
-//                "    \"lastName\": \"string\"\n" +
-//                "  }\n" +
-//                "}")
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON))
-                .andDo(print())
                 .andExpect(status().isBadRequest());
+        verifyZeroInteractions(registrationService);
 
     }
 
@@ -138,7 +106,6 @@ public class RegistrationControllerTest {
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("132aksdj12e3"))
-                .andDo(print())
                 .andExpect(status().isOk());
         verify(accountVerificationByEmailService, times(1)).accountVerification("132aksdj12e3");
     }
