@@ -1,8 +1,6 @@
 package com.softserve.academy.spaced.repetition.controller;
 
 import com.softserve.academy.spaced.repetition.controller.handler.ExceptionHandlerController;
-import com.softserve.academy.spaced.repetition.domain.Deck;
-import com.softserve.academy.spaced.repetition.domain.DeckComment;
 import com.softserve.academy.spaced.repetition.service.DeckCommentService;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,7 +17,6 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import java.util.Locale;
 
 import static org.mockito.Matchers.any;
-import static org.powermock.api.mockito.PowerMockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -52,11 +49,8 @@ public class DeckCommentControllerTest {
 
     @Test
     public void getCommentById() throws Exception {
-        Deck deck = new Deck();
-        deck.setId(1L);
-        DeckComment comment = new DeckComment();
-        comment.setDeck(deck);
-        when(deckCommentService.addCommentForDeck(1L, "1", null)).thenReturn(comment);
+
+        //when(deckCommentService.addCommentForDeck(1L, "1", null)).thenReturn(comment);
         //MvcResult result =
         mockMvc.perform(post("api/decks/{deckId}/comments", 1L)
                 .accept(MediaType.APPLICATION_JSON)
