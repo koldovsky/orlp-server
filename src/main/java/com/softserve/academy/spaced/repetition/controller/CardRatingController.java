@@ -21,7 +21,7 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
 @RestController
-@RequestMapping("api/decks/{deckId}/cards/{cardId}/rate")
+@RequestMapping("api/decks/cards/{cardId}/rate")
 public class CardRatingController {
     private static final Logger LOGGER = LoggerFactory.getLogger(CardController.class);
 
