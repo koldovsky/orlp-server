@@ -113,7 +113,7 @@ public class DeckController {
     }
 
     @Auditable(action = AuditingAction.CREATE_DECK_IN_CATEGORY)
-    @PostMapping(value = "/api/categories/{category_id}/decks")
+    @PostMapping(value = "/api/categories1/{category_id}/decks")
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasPermission('DECK','CREATE')")
     public DeckPublicDTO addDeckToCategory(@Validated(Request.class) @RequestBody Deck deck,

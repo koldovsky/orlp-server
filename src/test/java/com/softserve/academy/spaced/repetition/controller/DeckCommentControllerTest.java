@@ -22,14 +22,14 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 import static net.bytebuddy.matcher.ElementMatchers.is;
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyLong;
-import static org.mockito.Matchers.refEq;
+import static org.mockito.Matchers.*;
 import static org.powermock.api.mockito.PowerMockito.doNothing;
 import static org.powermock.api.mockito.PowerMockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -74,17 +74,18 @@ public class DeckCommentControllerTest {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.commentText", Matchers.is("testComment")))
-                .andExpect(jsonPath("$.commentId", Matchers.is(1)))
-                .andExpect(jsonPath("$.parentCommentId", Matchers.is(0)))
-                ;
+                .andExpect(jsonPath("$.commentId", Matchers.is(1)));
     }
 
     private DeckComment createTestComment(){
         DeckComment comment = new DeckComment("testComment", new Date());
-        comment.setDeck(new Deck());
+        Deck deck = new Deck();
+        deck.setId(1L);
+        deck.setName("testDeck");
+        comment.setDeck(deck);
         comment.setCreatedBy(1L);
         comment.setId(1L);
-        comment.setParentCommentId(0L);
+        comment.setParentCommentId(null);
         comment.setPerson(new Person());
         return comment;
     }
@@ -110,7 +111,15 @@ public class DeckCommentControllerTest {
     }
 
     @Test
-    public void testGetAllCommentsForDeck(){
-
+    public void testGetAllCommentsForDeck() throws Exception{
+        List<Comment> listOfComments = new ArrayList<>();
+        listOfComments.add(createTestComment());
+        when(commentService.getAllCommentsForDeck(1L)).thenReturn(listOfComments);
+        mockMvc.perform(get("/api/decks/{deckId}/comments", 1L)
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.[0].commentText", Matchers.is("testComment")))
+                .andExpect(jsonPath("$.[0].commentId", Matchers.is(1)));
     }
 }

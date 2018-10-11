@@ -233,15 +233,15 @@ public class DeckControllerTest {
                 .andExpect(jsonPath("$.[1].question", is("Q2")))
                 .andExpect(jsonPath("$.[2].title", is("Card3")));
     }
-//
-//    @Test
-//    public void testAddDeckToCategory() throws Exception{
-//        doNothing().when(deckService).addDeckToCategory(createDeck(1L,"deck1","testdeck1", "deck@deck.com", 1.0, 1,"java"), 1L);
-//        mockMvc.perform(post("/api/categories/{category_id}/decks", 1L)
-//                .content(new ObjectMapper().writeValueAsString(createDeck(1L,"deck1","testdeck1", "deck@deck.com", 1.0, 1,"java")))
-//                .contentType(MediaType.APPLICATION_JSON))
-//                .andExpect(status().isCreated());
-//    }
+
+    @Test
+    public void testAddDeckToCategory() throws Exception{
+        doNothing().when(deckService).addDeckToCategory(createDeck(1L,"deck1","testdeck1", "deck@deck.com", 1.0, 1,"java"), 1L);
+        mockMvc.perform(post("/api/categories1/{category_id}/decks", 1L)
+                .content(new ObjectMapper().writeValueAsString(createDeck(1L,"deck1","testdeck1", "deck@deck.com", 1.0, 1,"java")))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isCreated());
+    }
 
     @Test
     public void testAddDeckToCourse() throws Exception{
@@ -324,18 +324,18 @@ public class DeckControllerTest {
         verify(deckService, times(1)).deleteOwnDeck(1L);
     }
 
-//    @Test
-//    public void testAddDeckForUser() throws Exception{
-//        Deck deck = createTestDeck();
-//        doNothing().when(deckService).createNewDeck(deck, 1L);
-//        when(folderService.addDeck(deck.getId())).thenReturn(deck);
-//        mockMvc.perform(post("/api/categories1/{categoryId}/decks", 1L)
-//                .content(new ObjectMapper().writeValueAsString(deck))
-//                .contentType(MediaType.APPLICATION_JSON))
-//                .andExpect(status().isCreated())
-//                .andExpect(jsonPath("$.owner", is("test@test.com")))
-//                .andExpect(jsonPath("$.rating", is(1.0)));
-//    }
+    @Test
+    public void testAddDeckForUser() throws Exception{
+        Deck deck = createTestDeck();
+        doNothing().when(deckService).createNewDeck(deck, 1L);
+        when(folderService.addDeck(deck.getId())).thenReturn(deck);
+        mockMvc.perform(post("/api/categories/{categoryId}/decks", 1L)
+                .content(new ObjectMapper().writeValueAsString(deck))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.owner", is("test@test.com")))
+                .andExpect(jsonPath("$.rating", is(1.0)));
+    }
 
     @Test
     public void testUpdateDeckForUser() throws Exception{
@@ -344,7 +344,7 @@ public class DeckControllerTest {
                 .content(new ObjectMapper().writeValueAsString(createTestDeck()))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.owner", is("test@test.com")))
+                .andExpect(jsonPath("$.name", is("testDeck")))
                 .andExpect(jsonPath("$.rating", is(1.0)));
     }
 
@@ -357,8 +357,8 @@ public class DeckControllerTest {
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.owner", is("test@test.com")))
-                .andExpect(jsonPath("$.rating", is(1.0)));
+                .andExpect(jsonPath("$.[0].name", is("testDeck")))
+                .andExpect(jsonPath("$.[0].rating", is(1.0)));
     }
 
     @Test
