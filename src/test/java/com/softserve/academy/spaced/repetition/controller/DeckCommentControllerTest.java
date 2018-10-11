@@ -28,8 +28,11 @@ import java.util.Locale;
 import static net.bytebuddy.matcher.ElementMatchers.is;
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.refEq;
+import static org.powermock.api.mockito.PowerMockito.doNothing;
 import static org.powermock.api.mockito.PowerMockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -92,16 +95,18 @@ public class DeckCommentControllerTest {
         rtcDTO.setCommentText("testComment");
         rtcDTO.setParentCommentId(0L);
         DeckComment comment = createTestComment();
-        when(commentService.addCommentForDeck(1L, "testComment", 1L)).thenReturn(comment);
+        when(commentService.addCommentForDeck(1L, "testComment", 0L)).thenReturn(comment);
         mockMvc.perform(post("/api/decks/{deckId}/comments", 1L)
                 .content(new ObjectMapper().writeValueAsString(rtcDTO))
                 .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+                .andExpect(status().isCreated());
     }
 
     @Test
-    public void testDeleteComment(){
-
+    public void testDeleteComment()throws Exception{
+        doNothing().when(commentService).deleteCommentById(anyLong());
+        mockMvc.perform(delete("/api/decks/{deckId}/comments/{commentId}", 1L, 1L))
+                .andExpect(status().isNoContent());
     }
 
     @Test
