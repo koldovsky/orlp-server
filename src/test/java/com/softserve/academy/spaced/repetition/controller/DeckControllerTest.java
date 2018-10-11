@@ -51,11 +51,11 @@ public class DeckControllerTest {
     private final static int QUANTITY_ADMIN_DECKS_IN_PAGE = 20;
     private final static int QUANTITY_DECKS_IN_PAGE = 12;
 
-    final int NUMBER_PAGE = 1;
-    final String ADMIN_DECKS_SORT_BY = "id";
+    final private int NUMBER_PAGE = 1;
+    final private String ADMIN_DECKS_SORT_BY = "id";
 
-    final int CATEGORY_ID = 1;
-    final String SORT_BY = "name";
+    final private int CATEGORY_ID = 1;
+    final private String SORT_BY = "name";
 
 
     @Before
@@ -315,7 +315,7 @@ public class DeckControllerTest {
 
     @Test
     public void testDeleteOwnDeckByUser() throws Exception{
-        List<Deck> list = new ArrayList();
+        List<Deck> list = new ArrayList<>();
         list.add(createTestDeck());
         doNothing().when(deckService).deleteOwnDeck(1L);
         when(deckService.getAllDecksByUser()).thenReturn(list);

@@ -50,7 +50,7 @@ public class DeckController {
                                                                                @RequestParam(name = "asc") boolean ascending) {
         LOGGER.debug("View all decks by category with id {}", categoryId);
         Page<DeckLinkByCategoryDTO> deckByCategoryDTOS = deckService
-                .getPageWithDecksByCategory(categoryId, pageNumber, sortBy, ascending).map((deck) -> {
+                .getPageWithDecksByCategory(categoryId, pageNumber, sortBy, ascending).map(deck -> {
                     Link selfLink = linkTo(methodOn(DeckController.class)
                             .getAllDecksByCategoryId(categoryId, pageNumber, sortBy, ascending)).withRel("deck");
                     return buildDtoForEntity(deck, DeckLinkByCategoryDTO.class, selfLink);
@@ -113,7 +113,7 @@ public class DeckController {
     }
 
     @Auditable(action = AuditingAction.CREATE_DECK_IN_CATEGORY)
-    @PostMapping(value = "/api/categories1/{category_id}/decks")
+    @PostMapping(value = "/api/categories/{category_id}/decks")
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasPermission('DECK','CREATE')")
     public DeckPublicDTO addDeckToCategory(@Validated(Request.class) @RequestBody Deck deck,
