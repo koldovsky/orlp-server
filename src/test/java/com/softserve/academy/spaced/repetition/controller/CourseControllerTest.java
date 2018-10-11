@@ -30,6 +30,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.internal.verification.VerificationModeFactory.times;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -212,9 +213,10 @@ public class CourseControllerTest {
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.[0].name",is("Java interview course")))
-                .andExpect(jsonPath("$.[0].rating",is(0.0)))
-                .andExpect(jsonPath("$.[0].categoryId",is(1)));
+                .andExpect(jsonPath("$.name",is("Java interview course")))
+                .andExpect(jsonPath("$.rating",is(0.0)))
+                .andExpect(jsonPath("$.categoryId",is(1)))
+        ;
     }
 /* the method addCourse() in CourseController.java is not working properly
     @Test
@@ -223,7 +225,7 @@ public class CourseControllerTest {
         mockMvc.perform(post("/api/courses")
                 .content(new ObjectMapper().writeValueAsString(createCourse()))
                 .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().is5xxServerError());
+                .andExpect(status().isCreated());
     }
 */
     @Test

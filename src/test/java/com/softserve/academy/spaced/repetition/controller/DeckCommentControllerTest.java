@@ -9,7 +9,6 @@ import com.softserve.academy.spaced.repetition.domain.DeckComment;
 import com.softserve.academy.spaced.repetition.domain.Person;
 import com.softserve.academy.spaced.repetition.service.DeckCommentService;
 import org.hamcrest.Matchers;
-import org.hibernate.jpa.criteria.expression.function.CurrentTimeFunction;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -27,15 +26,12 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-import static net.bytebuddy.matcher.ElementMatchers.is;
-import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.mockito.Matchers.*;
 import static org.powermock.api.mockito.PowerMockito.doNothing;
 import static org.powermock.api.mockito.PowerMockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
