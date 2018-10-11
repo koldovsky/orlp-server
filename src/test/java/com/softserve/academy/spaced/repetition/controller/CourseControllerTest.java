@@ -1,5 +1,6 @@
 package com.softserve.academy.spaced.repetition.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.softserve.academy.spaced.repetition.controller.handler.ExceptionHandlerController;
 import com.softserve.academy.spaced.repetition.domain.*;
 import com.softserve.academy.spaced.repetition.service.CourseService;
@@ -27,8 +28,10 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.stringContainsInOrder;
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -177,21 +180,117 @@ public class CourseControllerTest {
     }
 
     @Test
-    public void getAllCoursesOrderByRating()throws Exception{
-
-            // MvcResult result =
-                mockMvc.perform(get("/api/courses/orders")
+    public void testGetAllCoursesOrderByRating()throws Exception{
+        List<Course> list = new ArrayList<>();
+        list.add(createCourse());
+        when(courseService.getAllOrderedCourses()).thenReturn(list);
+        mockMvc.perform(get("/api/courses/orders")
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                //.andExpect(jsonPath("$*", hasSize(4)))
-                //    .andReturn()
                 ;
-//        System.out.println(result.getResponse().getContentAsString());
-//        System.out.println(result.getRequest().getRequestURL());
+    }
 
+    @Test
+    public void testGetTopCourse() throws Exception{
+        List<Course> list = new ArrayList<>();
+        list.add(createCourse());
+        when(courseService.getTopCourse()).thenReturn(list);
+        mockMvc.perform(get("/api/courses/top")
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                ;
+    }
+
+    @Test
+    public void testGetCourseById() throws Exception{
+        when(courseService.getCourseById(1L)).thenReturn(createCourse());
+        mockMvc.perform(get("/api/courses/{courseId}", 1L)
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                ;
+    }
+/* the method addCourse() in CourseController.java
+    @Test
+    public void testAddCourse() throws Exception{
+        doNothing().when(courseService).addCourse(createCourse(), 1L);
+        mockMvc.perform(post("/api/courses")
+                .content(new ObjectMapper().writeValueAsString(createCourse()))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().is5xxServerError());
+    }
+*/
+    @Test
+    public void testUpdateCourse() throws Exception{
+        doNothing().when(courseService).updateCourse(1L, createCourse());
+        mockMvc.perform(put("/api/cabinet/courses/{courseId}", 1L)
+                .content(new ObjectMapper().writeValueAsString(createCourse()))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void testDeleteGlobalCourse() throws Exception{
+        doNothing().when(courseService).deleteGlobalCourse(1L);
+        mockMvc.perform(delete("/api/cabinet/global/courses/{courseId}", 1L))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void testDeleteLocalCourse() throws Exception{
+        doNothing().when(courseService).deleteLocalCourse(1L);
+        mockMvc.perform(delete("/api/cabinet/local/courses/{courseId}", 1L))
+                .andExpect(status().isOk());
 
     }
 
+    @Test
+    public void testAddCourseInCabinet() throws Exception{
+        when(courseService.updateListOfCoursesOfTheAuthorizedUser(1L)).thenReturn(createCourse());
+        mockMvc.perform(post("/api/cabinet/courses/{courseId}", 1L)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
 
+    }
+
+    @Test
+    public void testUpdateCourseAccess() throws Exception{
+        when(courseService.updateCourseAccess(1L, createCourse())).thenReturn(createCourse());
+        mockMvc.perform(put("/api/cabinet/{courseId}/update/access",1L)
+                .content(new ObjectMapper().writeValueAsString(createCourse()))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void testAddDeckToCourse() throws Exception{
+        when(courseService.addDeckToCourse(1L,1L)).thenReturn(createCourse());
+        mockMvc.perform(put("/api/categories/courses/{courseId}/decks/{deckId}",1L,1L))
+                .andExpect(status().isOk());
+
+    }
+
+    @Test
+    public void testGetIdAllCoursesOfTheCurrentUser() throws Exception{
+        List<Long> list = new ArrayList<>();
+        list.add(1L);
+        list.add(2L);
+        list.add(3L);
+        when(courseService.getAllCoursesIdOfTheCurrentUser()).thenReturn(list);
+        mockMvc.perform(get("/api/private/cabinet/courses")
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void testCreatePrivateCourse() throws Exception{
+        doNothing().when(courseService).createPrivateCourse(createCourse(),1L);
+        mockMvc.perform(post("/api/categories/{categoryId}/courses",1L)
+                .content(new ObjectMapper().writeValueAsString(createCourse()))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
 }
