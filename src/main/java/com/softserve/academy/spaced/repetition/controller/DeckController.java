@@ -222,7 +222,7 @@ public class DeckController {
     public DeckPrivateDTO updateDeckForUser(@Validated(Request.class) @RequestBody Deck deck,
                                             @PathVariable Long deckId, @PathVariable Long categoryId)
             throws NotAuthorisedUserException, NotOwnerOperationException {
-        LOGGER.debug("Updating deck with id {} for user in category with id {}", categoryId);
+        LOGGER.debug("Updating deck with id {} for user in category with id {}", deckId, categoryId);
         Deck updatedDeck = deckService.updateOwnDeck(deck, deckId, categoryId);
         return buildDtoForEntity(updatedDeck, DeckPrivateDTO.class,
                 linkTo(methodOn(DeckController.class).getOneDeckForUser(updatedDeck.getId())).withSelfRel());
