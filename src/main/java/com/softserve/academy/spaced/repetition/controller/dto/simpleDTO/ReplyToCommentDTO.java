@@ -16,4 +16,12 @@ public class ReplyToCommentDTO {
     public Long getParentCommentId() {
         return parentCommentId;
     }
+
+    public void setCommentText(String commentText) {
+        this.commentText = commentText;
+    }
+
+    public void setParentCommentId(Long parentCommentId) {
+        this.parentCommentId = parentCommentId;
+    }
 }

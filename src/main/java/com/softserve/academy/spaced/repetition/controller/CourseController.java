@@ -98,7 +98,7 @@ public class CourseController {
         CourseLinkDTO linkDTO = DTOBuilder.buildDtoForEntity(course, CourseLinkDTO.class, selfLink);
         return new ResponseEntity<>(linkDTO, HttpStatus.OK);
     }
-
+//TODO fix this method
     @Auditable(action = AuditingAction.CREATE_COURSE)
     @PostMapping(value = "/api/courses")
     @PreAuthorize("hasPermission('COURSE','CREATE')")
