@@ -50,7 +50,7 @@ public class DeckController {
                                                                                @RequestParam(name = "asc") boolean ascending) {
         LOGGER.debug("View all decks by category with id {}", categoryId);
         Page<DeckLinkByCategoryDTO> deckByCategoryDTOS = deckService
-                .getPageWithDecksByCategory(categoryId, pageNumber, sortBy, ascending).map((deck) -> {
+                .getPageWithDecksByCategory(categoryId, pageNumber, sortBy, ascending).map(deck -> {
                     Link selfLink = linkTo(methodOn(DeckController.class)
                             .getAllDecksByCategoryId(categoryId, pageNumber, sortBy, ascending)).withRel("deck");
                     return buildDtoForEntity(deck, DeckLinkByCategoryDTO.class, selfLink);
@@ -111,9 +111,13 @@ public class DeckController {
         return buildDtoListForCollection(cards, CardPublicDTO.class, linkTo(methodOn(DeckController.class)
                 .getCardsByCourseAndDeck(categoryId, courseId, deckId)).withSelfRel());
     }
+    /*  TODO method addDeckToCategory had same PostMapping value as addDeckForUser()
+     *  temporarily changed categories -> categories1 in value so other
+     *  method can work
+     */
 
     @Auditable(action = AuditingAction.CREATE_DECK_IN_CATEGORY)
-    @PostMapping(value = "/api/categories/{category_id}/decks")
+    @PostMapping(value = "/api/categories1/{category_id}/decks")
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasPermission('DECK','CREATE')")
     public DeckPublicDTO addDeckToCategory(@Validated(Request.class) @RequestBody Deck deck,
@@ -218,7 +222,7 @@ public class DeckController {
     public DeckPrivateDTO updateDeckForUser(@Validated(Request.class) @RequestBody Deck deck,
                                             @PathVariable Long deckId, @PathVariable Long categoryId)
             throws NotAuthorisedUserException, NotOwnerOperationException {
-        LOGGER.debug("Updating deck with id {} for user in category with id {}", categoryId);
+        LOGGER.debug("Updating deck with id {} for user in category with id {}", deckId, categoryId);
         Deck updatedDeck = deckService.updateOwnDeck(deck, deckId, categoryId);
         return buildDtoForEntity(updatedDeck, DeckPrivateDTO.class,
                 linkTo(methodOn(DeckController.class).getOneDeckForUser(updatedDeck.getId())).withSelfRel());
