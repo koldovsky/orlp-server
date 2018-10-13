@@ -169,10 +169,10 @@ public class DeckController {
     @PutMapping(value = "/api/admin/decks/{deckId}")
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasPermission('ADMIN_DECK','UPDATE')")
-    public DeckOfUserManagedByAdminDTO updateDeckForAdmin(@Validated(Request.class) @RequestBody Deck deck,
+    public DeckOfUserManagedByAdminDTO updateDeckForAdmin(@Validated(Request.class) @RequestBody DeckEditByAdminDTO deckEditByAdminDTO,
                                                           @PathVariable Long deckId) {
         LOGGER.debug("Updating deck for admin by id {}", deckId);
-        Deck updatedDeck = deckService.updateDeckAdmin(deck, deckId);
+        Deck updatedDeck = deckService.updateDeckAdmin(deckEditByAdminDTO, deckId);
         return buildDtoForEntity(updatedDeck, DeckOfUserManagedByAdminDTO.class,
                 linkTo(methodOn(DeckController.class).getDeckById(updatedDeck.getId())).withSelfRel());
     }

@@ -2,6 +2,7 @@ package com.softserve.academy.spaced.repetition.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.softserve.academy.spaced.repetition.controller.dto.impl.DeckCreateValidationDTO;
+import com.softserve.academy.spaced.repetition.controller.dto.impl.DeckEditByAdminDTO;
 import com.softserve.academy.spaced.repetition.controller.handler.ExceptionHandlerController;
 import com.softserve.academy.spaced.repetition.domain.*;
 import com.softserve.academy.spaced.repetition.service.DeckService;
@@ -11,6 +12,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -31,7 +33,8 @@ import static org.mockito.Matchers.refEq;
 import static org.mockito.Mockito.*;
 import static org.mockito.internal.verification.VerificationModeFactory.times;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(MockitoJUnitRunner.class)
 public class DeckControllerTest {
@@ -292,14 +295,18 @@ public class DeckControllerTest {
 
     @Test
     public void testUpdateDeckForAdmin() throws Exception{
-        when(deckService.updateDeckAdmin(createTestDeck(),1L)).thenReturn(createTestDeck());
+        when(deckService.updateDeckAdmin(any(DeckEditByAdminDTO.class), eq(1L))).thenReturn(createTestDeck());
         mockMvc.perform(put("/api/admin/decks/{deckId}", 1L)
+                .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(new ObjectMapper().writeValueAsString(createTestDeck())))
+                .andExpect(status().isOk())
                 .andExpect(jsonPath("$.owner", is("test@test.com")))
                 .andExpect(jsonPath("$.name", is("testDeck")))
                 .andExpect(jsonPath("$.description", is("deckdescription")))
                 .andExpect(jsonPath("$.rating", is(1.0)));
+        verify(deckService, Mockito.times(1)).updateDeckAdmin(any(DeckEditByAdminDTO.class), eq(1L));
+        verifyNoMoreInteractions(deckService);
     }
 
     @Test
