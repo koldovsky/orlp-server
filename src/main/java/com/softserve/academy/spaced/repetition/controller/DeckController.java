@@ -140,7 +140,7 @@ public class DeckController {
 
     @Auditable(action = AuditingAction.VIEW_DECKS_ADMIN)
     @GetMapping(value = "/api/admin/decks")
-    @PreAuthorize("hasPermission('DECK','READ')")
+    @PreAuthorize("hasPermission('ADMIN_DECK','READ')")
     public ResponseEntity<Page<DeckOfUserManagedByAdminDTO>> getAllDecksForAdmin(@RequestParam(name = "p", defaultValue = "1") int pageNumber,
                                                                                  @RequestParam(name = "sortBy") String sortBy,
                                                                                  @RequestParam(name = "asc") boolean ascending) {
@@ -156,7 +156,7 @@ public class DeckController {
     @Auditable(action = AuditingAction.CREATE_DECK_ADMIN)
     @PostMapping(value = "/api/admin/decks")
     @ResponseStatus(HttpStatus.CREATED)
-    @PreAuthorize("hasPermission('DECK','CREATE')")
+    @PreAuthorize("hasPermission('ADMIN_DECK','CREATE')")
     public ResponseEntity<DeckOfUserManagedByAdminDTO> addDeckForAdmin(@Validated @RequestBody DeckCreateValidationDTO deckCreateValidationDTO)
             throws NotAuthorisedUserException {
         LOGGER.debug("Adding deck for admin");

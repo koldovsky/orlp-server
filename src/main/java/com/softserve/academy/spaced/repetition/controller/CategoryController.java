@@ -90,8 +90,7 @@ public class CategoryController {
 
     @Auditable(action = AuditingAction.EDIT_CATEGORY)
     @PutMapping("/api/categories/{id}")
-    @PreAuthorize("hasPermission('CATEGORY','UPDATE') && " +
-            "@categoryServiceImpl.getCategoryById(#id).createdBy==principal.id")
+    @PreAuthorize("hasPermission('CATEGORY','UPDATE')")
     public ResponseEntity<CategoryPublicDTO> updateCategory(@Validated(Request.class) @RequestBody CategoryDTO categoryDTO,
                                                             @PathVariable Long id) {
         LOGGER.debug("Updating category with id: {}", id);

@@ -43,7 +43,6 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
 
         //Collection of permissions for role USER
         userPermission.add(new Permission(CARD, createMask(CREATE, READ, UPDATE, DELETE)));
-        userPermission.add(new Permission(ADMIN_CARD, createMask(CREATE, READ, UPDATE, DELETE)));
         userPermission.add(new Permission(CARD_IMAGE, createMask(DELETE)));
         userPermission.add(new Permission(CARD_RATING, createMask(READ, CREATE)));
         userPermission.add(new Permission(DECK_IMPORT, createMask(CREATE, READ)));
@@ -59,9 +58,11 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
         userPermission.add(new Permission(CARD_QUEUE, createMask(READ, UPDATE)));
         userPermission.add(new Permission(USER, createMask(READ, UPDATE)));
         userPermission.add(new Permission(PROFILE, createMask(READ, UPDATE, DELETE)));
+        userPermission.add(new Permission(PROFILE_LEARNING, createMask(READ, UPDATE)));
 
         //Collection of permissions for role ADMIN
         adminPermission.add(new Permission(AUDIT, createMask(READ)));
+        adminPermission.add(new Permission(ADMIN_CARD, createMask(CREATE, READ, UPDATE, DELETE)));
         adminPermission.add(new Permission(CARD, createMask(CREATE, READ, UPDATE, DELETE)));
         adminPermission.add(new Permission(CARD_RATING, createMask(CREATE, READ)));
         adminPermission.add(new Permission(CARD_IMAGE, createMask(DELETE)));
@@ -80,6 +81,7 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
         adminPermission.add(new Permission(USER, createMask(READ, UPDATE)));
         adminPermission.add(new Permission(CARD_QUEUE, createMask(READ, UPDATE)));
         adminPermission.add(new Permission(PROFILE, createMask(READ, UPDATE, DELETE)));
+        adminPermission.add(new Permission(PROFILE_LEARNING, createMask(READ, UPDATE)));
 
         permissionMatrix.put(ROLE_ANONYMOUS.name(), anonymousPermission);
         permissionMatrix.put(ROLE_USER.name(), userPermission);
