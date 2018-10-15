@@ -33,7 +33,7 @@ public class FolderController {
     @Auditable(action = AuditingAction.ADD_DECK_TO_FOLDER)
     @PutMapping("/add/deck/{deckId}")
     @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasPermission('FOLDER','UPDATE') && principal.id==@deckServiceImpl.getDeck(#deckId).createdBy")
+    @PreAuthorize("hasPermission('FOLDER','UPDATE')")
     public DeckPublicDTO addDeckToFolder(@PathVariable Long deckId) throws NotAuthorisedUserException {
         LOGGER.debug("Adding deck with id: {} to folder", deckId);
         Deck deck = folderService.addDeck(deckId);
@@ -60,8 +60,7 @@ public class FolderController {
 
     @Auditable(action = AuditingAction.DELETE_DECK)
     @DeleteMapping(value = "/decks/{deckId}")
-    @PreAuthorize("hasPermission('FOLDER','DELETE') && " +
-            "@deckServiceImpl.getDeck(#deckId).createdBy==principal.id")
+    @PreAuthorize("hasPermission('FOLDER','DELETE')")
     public void deleteUserDeck(@PathVariable Long deckId) throws NotAuthorisedUserException {
         LOGGER.debug("Deleting deck with id: {}", deckId);
         folderService.deleteDeck(deckId);
