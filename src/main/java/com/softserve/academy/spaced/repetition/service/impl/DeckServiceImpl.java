@@ -1,6 +1,7 @@
 package com.softserve.academy.spaced.repetition.service.impl;
 
 import com.softserve.academy.spaced.repetition.controller.dto.impl.DeckCreateValidationDTO;
+import com.softserve.academy.spaced.repetition.controller.dto.impl.DeckEditByAdminDTO;
 import com.softserve.academy.spaced.repetition.domain.*;
 import com.softserve.academy.spaced.repetition.repository.CategoryRepository;
 import com.softserve.academy.spaced.repetition.repository.CourseRepository;
@@ -109,11 +110,11 @@ public class DeckServiceImpl implements DeckService {
 
     @Override
     @Transactional
-    public Deck updateDeckAdmin(Deck updatedDeck, Long deckId) {
+    public Deck updateDeckAdmin(DeckEditByAdminDTO updatedDeck, Long deckId) {
         Deck deck = deckRepository.findOne(deckId);
         deck.setName(updatedDeck.getName());
         deck.setDescription(updatedDeck.getDescription());
-        deck.setCategory(categoryRepository.findById(updatedDeck.getCategory().getId()));
+        deck.setCategory(categoryRepository.findById(updatedDeck.getCategoryId()));
         return deckRepository.save(deck);
     }
 

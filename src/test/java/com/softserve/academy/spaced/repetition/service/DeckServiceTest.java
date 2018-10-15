@@ -1,6 +1,7 @@
 package com.softserve.academy.spaced.repetition.service;
 
 import com.softserve.academy.spaced.repetition.controller.dto.impl.DeckCreateValidationDTO;
+import com.softserve.academy.spaced.repetition.controller.dto.impl.DeckEditByAdminDTO;
 import com.softserve.academy.spaced.repetition.domain.*;
 import com.softserve.academy.spaced.repetition.repository.CategoryRepository;
 import com.softserve.academy.spaced.repetition.repository.CourseRepository;
@@ -145,7 +146,11 @@ public class DeckServiceTest {
 
     @Test
     public void testUpdateDeckAdminById() {
-        Deck result = deckService.updateDeckAdmin(deck, DECK_ID);
+        DeckEditByAdminDTO deckEditDTO = new DeckEditByAdminDTO();
+        deckEditDTO.setDescription("Description for edited card");
+        deckEditDTO.setName("Edited card");
+        deckEditDTO.setCategoryId(CATEGORY_ID);
+        Deck result = deckService.updateDeckAdmin(deckEditDTO, DECK_ID);
         verify(deckRepository).findOne(DECK_ID);
         verify(categoryRepository).findById(CATEGORY_ID);
         verify(deckRepository).save(deck);
