@@ -86,13 +86,6 @@ public class DeckServiceImpl implements DeckService {
 
     @Override
     @Transactional
-    public void addDeckToCategory(Deck deck, Long categoryId) {
-        Category category = categoryRepository.findOne(categoryId);
-        category.getDecks().add(deckRepository.save(deck));
-    }
-
-    @Override
-    @Transactional
     public void addDeckToCourse(Deck deck, Long courseId) {
         Course course = courseRepository.findOne(courseId);
         course.getDecks().add(deckRepository.save(deck));
