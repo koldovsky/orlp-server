@@ -31,7 +31,6 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
         //Collection of permissions for role ANONYMOUS
         anonymousPermission.add(new Permission(CARD, createMask(READ)));
         anonymousPermission.add(new Permission(CARD_RATING, createMask(READ)));
-        anonymousPermission.add(new Permission(DECK_IMPORT, createMask(READ)));
         anonymousPermission.add(new Permission(CATEGORY, createMask(READ)));
         anonymousPermission.add(new Permission(COURSE, createMask(READ)));
         anonymousPermission.add(new Permission(IMAGE, createMask(READ)));
