@@ -185,4 +185,6 @@ public interface DeckService {
     List<Card> getAllCardsByDeckId(Long deckId);
 
     Set<BigInteger> findDecksId(String searchString);
+
+    List<Deck> findAllDecksBySearch(String searchString);
 }

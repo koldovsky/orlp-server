@@ -41,4 +41,7 @@ public interface CourseRepository extends JpaRepository<Course, Long> {
     @Query(value = "SELECT c.course_id FROM course c WHERE c.name LIKE %:searchString% OR c.description LIKE %:searchString%",
             nativeQuery = true)
     Set<BigInteger> findCoursesId(@Param("searchString") String searchString);
+
+    @Query(value = "SELECT c FROM Course c WHERE c.name LIKE %:searchString% OR c.description LIKE %:searchString%")
+    List<Course> findAllCoursesBySearch(@Param("searchString") String searchString);
 }

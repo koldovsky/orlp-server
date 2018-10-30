@@ -4,7 +4,6 @@ import com.softserve.academy.spaced.repetition.domain.Category;
 
 import java.util.List;
 
-import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -19,4 +18,7 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
 
     @Query(value = "SELECT c.name, c.description, c.image FROM Category c WHERE c.id = :categoryId")
     List<Category> hasAccessToCategory(@Param("categoryId") Long categoryId);
+
+    @Query(value = "SELECT c FROM Category c WHERE c.name LIKE %:searchString% OR c.description LIKE %:searchString%")
+    List<Category>  findAllCategoriesBySearch(@Param("searchString") String searchString);
 }

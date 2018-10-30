@@ -68,7 +68,6 @@ public class DeckServiceImpl implements DeckService {
     }
 
     @Override
-    @Transactional
     public Deck getDeck(Long deckId) {
         return deckRepository.findOne(deckId);
     }
@@ -223,5 +222,10 @@ public class DeckServiceImpl implements DeckService {
     @Override
     public String getSynthaxToHightlight(long deckId) {
         return deckRepository.getDeckById(deckId).getSyntaxToHighlight();
+    }
+
+    @Override
+    public List<Deck> findAllDecksBySearch(String searchString) {
+        return deckRepository.findAllDecksBySearch(searchString);
     }
 }

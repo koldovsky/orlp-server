@@ -30,4 +30,7 @@ public interface DeckRepository extends JpaRepository<Deck, Long> {
     @Query(value = "SELECT d.deck_id FROM deck d WHERE d.name LIKE %:searchString% or d.description LIKE %:searchString%",
             nativeQuery = true)
     Set<BigInteger> findDecksId(@Param("searchString") String searchString);
+
+    @Query(value = "SELECT d FROM Deck d WHERE d.name LIKE %:searchString% or d.description LIKE %:searchString%")
+    List<Deck> findAllDecksBySearch (@Param("searchString") String searchString);
 }

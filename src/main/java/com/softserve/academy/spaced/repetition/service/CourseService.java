@@ -156,4 +156,7 @@ public interface CourseService {
     Page<Course> getPageWithCoursesByCategory(long categoryId, int pageNumber, String sortBy, boolean ascending);
 
     Set<BigInteger> findCoursesId(String searchString);
+
+    List<Course> findAllCoursesBySearch(String searchString);
+
 }
