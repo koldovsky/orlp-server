@@ -122,21 +122,6 @@ public class DeckController {
         return buildDtoListForCollection(cards, CardPublicDTO.class, linkTo(methodOn(DeckController.class)
                 .getCardsByCourseAndDeck(categoryId, courseId, deckId)).withSelfRel());
     }
-    /*  TODO method addDeckToCategory had same PostMapping value as addDeckForUser()
-     *  temporarily changed categories -> categories1 in value so other
-     *  method can work
-     */
-
-    @Auditable(action = AuditingAction.CREATE_DECK_IN_CATEGORY)
-    @PostMapping(value = "/api/categories1/{category_id}/decks")
-    @ResponseStatus(HttpStatus.CREATED)
-    @PreAuthorize("hasPermission('DECK','CREATE')")
-    public DeckPublicDTO addDeckToCategory(@Validated(Request.class) @RequestBody Deck deck,
-                                           @PathVariable Long category_id) {
-        deckService.addDeckToCategory(deck, category_id);
-        return buildDtoForEntity(deck, DeckPublicDTO.class,
-                linkTo(methodOn(DeckController.class).getDeckById(deck.getId())).withSelfRel());
-    }
 
     @Auditable(action = AuditingAction.CREATE_DECK_IN_COURSE)
     @PostMapping(value = "/api/courses/{courseId}/decks")

@@ -123,13 +123,6 @@ public class DeckServiceTest {
     }
 
     @Test
-    public void testAddDeckToCategory() {
-        deckService.addDeckToCategory(deck, CATEGORY_ID);
-        verify(categoryRepository).findOne(CATEGORY_ID);
-        verify(deckRepository).save(deck);
-    }
-
-    @Test
     public void testAddDeckToCourse() {
         deckService.addDeckToCourse(deck, COURSE_ID);
         verify(courseRepository).findOne(COURSE_ID);

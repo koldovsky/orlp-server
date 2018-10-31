@@ -16,13 +16,6 @@ import java.util.Set;
  * This interface proceeds all operations with decks.
  */
 public interface DeckService {
-    /**
-     * Adds a new deck to the category
-     *
-     * @param deck       the deck which will be added to the category.
-     * @param categoryId category`s id for which the deck will be added.
-     */
-    void addDeckToCategory(Deck deck, Long categoryId);
 
     /**
      * Adds a new deck to the course

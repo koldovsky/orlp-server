@@ -237,15 +237,6 @@ public class DeckControllerTest {
     }
 
     @Test
-    public void testAddDeckToCategory() throws Exception{
-        doNothing().when(deckService).addDeckToCategory(createDeck(1L,"deck1","testdeck1", "deck@deck.com", 1.0, 1,"java"), 1L);
-        mockMvc.perform(post("/api/categories1/{category_id}/decks", 1L)
-                .content(new ObjectMapper().writeValueAsString(createDeck(1L,"deck1","testdeck1", "deck@deck.com", 1.0, 1,"java")))
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isCreated());
-    }
-
-    @Test
     public void testAddDeckToCourse() throws Exception{
         doNothing().when(deckService).addDeckToCourse(createTestDeck(), 1L);
         mockMvc.perform(post("/api/courses/{courseId}/decks", 1L)
