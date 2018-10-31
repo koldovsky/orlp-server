@@ -77,4 +77,5 @@ public class RegistrationController {
         accountService.createNewAccountPassword(newAccountPasswordDTO.getEmail(), newAccountPasswordDTO.getPassword());
         return ResponseEntity.ok().build();
     }
+
 }
