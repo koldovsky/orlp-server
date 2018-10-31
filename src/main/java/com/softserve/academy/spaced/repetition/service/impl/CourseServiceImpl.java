@@ -199,6 +199,6 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public List<Course> findAllCoursesBySearch(String searchString) {
-        return courseRepository.findAllCoursesBySearch(searchString);
+        return courseRepository.findByNameIgnoreCaseContainingOrDescriptionIgnoreCaseContaining(searchString, searchString);
     }
 }

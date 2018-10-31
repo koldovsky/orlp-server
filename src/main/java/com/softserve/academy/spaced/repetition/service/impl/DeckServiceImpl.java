@@ -226,6 +226,6 @@ public class DeckServiceImpl implements DeckService {
 
     @Override
     public List<Deck> findAllDecksBySearch(String searchString) {
-        return deckRepository.findAllDecksBySearch(searchString);
+        return deckRepository.findByNameIgnoreCaseContainingOrDescriptionIgnoreCaseContaining(searchString, searchString);
     }
 }

@@ -86,7 +86,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public List<Category> findAllCategoriesBySearch(String searchString) {
-        return categoryRepository.findAllCategoriesBySearch(searchString);
+        return categoryRepository.findByNameIgnoreCaseContainingOrDescriptionIgnoreCaseContaining(searchString, searchString);
     }
 }
 
