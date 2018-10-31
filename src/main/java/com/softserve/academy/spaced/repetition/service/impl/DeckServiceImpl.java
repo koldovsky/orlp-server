@@ -222,11 +222,6 @@ public class DeckServiceImpl implements DeckService {
     }
 
     @Override
-    public Deck getDeckById(Long deck_id) {
-        return deckRepository.getDeckById(deck_id);
-    }
-
-    @Override
     public String getSynthaxToHightlight(long deckId) {
         return deckRepository.getDeckById(deckId).getSyntaxToHighlight();
     }

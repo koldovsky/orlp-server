@@ -9,7 +9,7 @@ import org.springframework.hateoas.Link;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
-public class    DeckPrivateDTO extends DTO<Deck> {
+public class DeckPrivateDTO extends DTO<Deck> {
     public DeckPrivateDTO(Deck deck, Link link) {
         super(deck, link);
         add(linkTo(methodOn(CardController.class).getCardsByDeck(getEntity().getId())).withRel("cards"));
