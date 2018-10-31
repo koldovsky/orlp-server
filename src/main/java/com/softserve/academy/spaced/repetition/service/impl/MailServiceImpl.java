@@ -1,5 +1,6 @@
 package com.softserve.academy.spaced.repetition.service.impl;
 
+import com.softserve.academy.spaced.repetition.controller.dto.simpleDTO.MailDTO;
 import com.softserve.academy.spaced.repetition.domain.User;
 import com.softserve.academy.spaced.repetition.security.service.JwtTokenForMailService;
 import com.softserve.academy.spaced.repetition.service.MailService;
@@ -10,6 +11,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.bind.YamlConfigurationFactory;
+import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.mail.javamail.MimeMessagePreparator;
@@ -32,6 +35,8 @@ public class MailServiceImpl implements MailService {
     @Autowired
     @Qualifier("freemarkerConf")
     private Configuration freemarkerConfiguration;
+    @Value("${contactusemail}")
+    private String username;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MailServiceImpl.class);
 
@@ -102,6 +107,24 @@ public class MailServiceImpl implements MailService {
     }
 
     @Override
+    public void sendRequestFromContactUsFormToEmail(MailDTO mailDTO){
+       // LOGGER.debug("Send request from Contact us form, username: ", name, " user's email ", email, " message subject ", subject, " text: ", text);
+        MimeMessagePreparator preparator = mimeMessage -> {
+            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
+            helper.setSubject("New message from Contact us form from user " + mailDTO.getName());
+            helper.setTo(username);
+            Map<String, Object> model = new HashMap<>();
+            model.put("username", mailDTO.getName());
+            model.put("useremail", mailDTO.getEmail());
+            model.put("subject", mailDTO.getSubject());
+            model.put("text", mailDTO.getText());
+            String letterText = contactUsMailTemplateContent(model);
+            helper.setText(letterText, true);
+        };
+        mailSender.send(preparator);
+    }
+
+    @Override
     public String getFreeMarkerTemplateContent(Map<String, Object> model) {
         StringBuilder content = new StringBuilder();
         try {
@@ -146,6 +169,19 @@ public class MailServiceImpl implements MailService {
         try {
             content.append(FreeMarkerTemplateUtils.processTemplateIntoString(
                     freemarkerConfiguration.getTemplate("restorePasswordMailTemplate.html"), model));
+            return content.toString();
+        } catch (IOException | TemplateException e) {
+            LOGGER.error("Couldn't generate email content.", e);
+        }
+        return "";
+    }
+
+    @Override
+    public String contactUsMailTemplateContent(Map<String, Object> model){
+        StringBuilder content = new StringBuilder();
+        try {
+            content.append(FreeMarkerTemplateUtils.processTemplateIntoString(
+                    freemarkerConfiguration.getTemplate("contactUsMailTemplate.html"), model));
             return content.toString();
         } catch (IOException | TemplateException e) {
             LOGGER.error("Couldn't generate email content.", e);
