@@ -40,7 +40,7 @@ public interface MailService {
 
     /**
      * Sends data from contact us form on the website to a custom e-mail which you can set in configuration file
-     *
+     * @param mailDTO DTO which contains name of the user, his e-mail, subject of user's request and his message
      */
     void sendRequestFromContactUsFormToEmail(MailDTO mailDTO);
 
@@ -76,6 +76,12 @@ public interface MailService {
      */
     String getRestorePasswordTemplateContent(Map<String, Object> model);
 
-    public String contactUsMailTemplateContent(Map<String, Object> model);
+    /**
+     * Generates the text of email with details of user's request which we get via contact us form.
+     *
+     * @param model map with values which will be inserted into html page.
+     * @return content of the email.
+     */
+    String contactUsMailTemplateContent(Map<String, Object> model);
 
 }

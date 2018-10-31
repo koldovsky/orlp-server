@@ -20,7 +20,7 @@ public class MailController {
 
     @PostMapping
     public ResponseEntity fromContactUsFromToEmailSender(@RequestBody MailDTO mailDTO){
-       // LOGGER.debug("Send request from Contact us form to email, username: ", name, " user's email ", email, " message subject ", subject, " message: ", text);
+       LOGGER.debug("Sending request from Contact us form to email");
             mailService.sendRequestFromContactUsFormToEmail(mailDTO);
         return new ResponseEntity(HttpStatus.OK);
     }

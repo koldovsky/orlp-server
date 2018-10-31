@@ -35,7 +35,7 @@ public class MailServiceImpl implements MailService {
     @Autowired
     @Qualifier("freemarkerConf")
     private Configuration freemarkerConfiguration;
-    @Value("${contactusemail}")
+    @Value("${contactUsEmail}")
     private String username;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MailServiceImpl.class);
@@ -108,7 +108,7 @@ public class MailServiceImpl implements MailService {
 
     @Override
     public void sendRequestFromContactUsFormToEmail(MailDTO mailDTO){
-       // LOGGER.debug("Send request from Contact us form, username: ", name, " user's email ", email, " message subject ", subject, " text: ", text);
+        LOGGER.debug("Sending request from Contact us form to email");
         MimeMessagePreparator preparator = mimeMessage -> {
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
             helper.setSubject("New message from Contact us form from user " + mailDTO.getName());
