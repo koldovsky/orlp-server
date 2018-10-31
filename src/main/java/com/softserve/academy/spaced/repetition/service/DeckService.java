@@ -27,8 +27,8 @@ public interface DeckService {
     /**
      * Adds a new deck to the course
      *
-     * @param deck       the deck which will be added to the category.
-     * @param courseId   course`s id to which the deck will be added.
+     * @param deck     the deck which will be added to the category.
+     * @param courseId course`s id to which the deck will be added.
      */
     void addDeckToCourse(Deck deck, Long courseId);
 
@@ -185,4 +185,8 @@ public interface DeckService {
     List<Card> getAllCardsByDeckId(Long deckId);
 
     Set<BigInteger> findDecksId(String searchString);
+
+    Deck getDeckById(Long deck_id);
+
+    Deck toggleDeckAccess(Long course_id);
 }

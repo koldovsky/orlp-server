@@ -9,7 +9,7 @@ import org.springframework.hateoas.Link;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
-public class DeckPrivateDTO extends DTO<Deck> {
+public class    DeckPrivateDTO extends DTO<Deck> {
     public DeckPrivateDTO(Deck deck, Link link) {
         super(deck, link);
         add(linkTo(methodOn(CardController.class).getCardsByDeck(getEntity().getId())).withRel("cards"));
@@ -36,5 +36,12 @@ public class DeckPrivateDTO extends DTO<Deck> {
     public String getOwner() {
         return getEntity().getDeckOwner().getAccount().getEmail();
     }
+
+    public Boolean isHidden() { return getEntity().isHidden(); }
+
+    public Long getDeckOwner() {
+        return getEntity().getDeckOwner().getId();
+    }
+
     public String getSynthax() {return getEntity().getSyntaxToHighlight();}
 }

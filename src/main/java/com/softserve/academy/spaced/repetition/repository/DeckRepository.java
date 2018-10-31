@@ -30,4 +30,8 @@ public interface DeckRepository extends JpaRepository<Deck, Long> {
     @Query(value = "SELECT d.deck_id FROM deck d WHERE d.name LIKE %:searchString% or d.description LIKE %:searchString%",
             nativeQuery = true)
     Set<BigInteger> findDecksId(@Param("searchString") String searchString);
+
+    Page<Deck> findAllByCategoryEqualsAndHiddenFalse(Category category, Pageable pageable);
+
+    List<Deck> findAllByHiddenFalseOrderByRatingDesc();
 }

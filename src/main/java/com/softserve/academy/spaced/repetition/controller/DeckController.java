@@ -23,6 +23,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 import static com.softserve.academy.spaced.repetition.controller.dto.builder.DTOBuilder.buildDtoForEntity;
 import static com.softserve.academy.spaced.repetition.controller.dto.builder.DTOBuilder.buildDtoListForCollection;
@@ -77,6 +78,16 @@ public class DeckController {
         List<Deck> decksList = deckService.getAllDecks(courseId);
         return buildDtoListForCollection(decksList, DeckLinkByCourseDTO.class,
                 linkTo(methodOn(DeckController.class).getAllDecksByCourseId(categoryId, courseId)).withSelfRel());
+    }
+
+    @Auditable(action = AuditingAction.EDIT_DECK)
+    @PutMapping("/api/cabinet/decks/{deckId}/toggle/access")
+    @PreAuthorize("hasPermission('DECK','UPDATE') && @deckServiceImpl.getDeckById(#deckId).createdBy==principal.id")
+    public DeckLinkByCategoryDTO updateDeckAccess(@PathVariable Long deckId) {
+        LOGGER.debug("Toggle deck with id: {}", deckId);
+        Deck deck = deckService.toggleDeckAccess(deckId);
+        Link selfLink = linkTo(methodOn(DeckController.class).getDeckById(deck.getId())).withSelfRel();
+        return buildDtoForEntity(deck, DeckLinkByCategoryDTO.class, selfLink);
     }
 
     @GetMapping(value = "/api/decks/{deckId}")
@@ -217,8 +228,7 @@ public class DeckController {
     @Auditable(action = AuditingAction.EDIT_DECK_USER)
     @PutMapping(value = "/api/categories/{categoryId}/decks/{deckId}")
     @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasPermission('DECK','UPDATE')&& " +
-            "@deckServiceImpl.getDeck(#deckId).createdBy==principal.id")
+    @PreAuthorize("hasPermission('DECK','UPDATE')")
     public DeckPrivateDTO updateDeckForUser(@Validated(Request.class) @RequestBody Deck deck,
                                             @PathVariable Long deckId, @PathVariable Long categoryId)
             throws NotAuthorisedUserException, NotOwnerOperationException {
