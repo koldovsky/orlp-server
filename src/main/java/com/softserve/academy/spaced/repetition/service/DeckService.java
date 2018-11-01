@@ -180,4 +180,6 @@ public interface DeckService {
     Set<BigInteger> findDecksId(String searchString);
 
     Deck toggleDeckAccess(Long deckId);
+
+    List<Deck> findAllDecksBySearch(String searchString);
 }

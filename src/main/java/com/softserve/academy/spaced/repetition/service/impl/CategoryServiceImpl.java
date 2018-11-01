@@ -83,5 +83,10 @@ public class CategoryServiceImpl implements CategoryService {
             categoryRepository.delete(categoryId);
         }
     }
+
+    @Override
+    public List<Category> findAllCategoriesBySearch(String searchString) {
+        return categoryRepository.findByNameIgnoreCaseContainingOrDescriptionIgnoreCaseContaining(searchString, searchString);
+    }
 }
 
