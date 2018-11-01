@@ -107,18 +107,7 @@ public class MailServiceImpl implements MailService {
     @Override
     public void sendRequestFromContactUsFormToEmail(MailDTO mailDTO){
         LOGGER.debug("Sending request from Contact us form to email");
-        MimeMessagePreparator preparator = mimeMessage -> {
-            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
-            helper.setSubject("New message from Contact us form from user " + mailDTO.getName());
-            helper.setTo(username);
-            Map<String, Object> model = new HashMap<>();
-            model.put("username", mailDTO.getName());
-            model.put("useremail", mailDTO.getEmail());
-            model.put("subject", mailDTO.getSubject());
-            model.put("text", mailDTO.getText());
-            String letterText = contactUsMailTemplateContent(model);
-            helper.setText(letterText, true);
-        };
+        MimeMessagePreparator preparator = convertMailDTOToAFormattedLetter(mailDTO);
         mailSender.send(preparator);
     }
 
@@ -186,4 +175,18 @@ public class MailServiceImpl implements MailService {
         return "";
     }
 
+    public MimeMessagePreparator convertMailDTOToAFormattedLetter(MailDTO mailDTO){
+        return mimeMessage -> {
+            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
+            helper.setSubject("New message from Contact us form from user " + mailDTO.getName());
+            helper.setTo(username);
+            Map<String, Object> model = new HashMap<>();
+            model.put("username", mailDTO.getName());
+            model.put("useremail", mailDTO.getEmail());
+            model.put("subject", mailDTO.getSubject());
+            model.put("text", mailDTO.getText());
+            String letterText = contactUsMailTemplateContent(model);
+            helper.setText(letterText, true);
+        };
+    }
 }

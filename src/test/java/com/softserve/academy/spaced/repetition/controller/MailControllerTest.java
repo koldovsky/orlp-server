@@ -15,6 +15,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import static org.mockito.Matchers.refEq;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
 import static org.mockito.internal.verification.VerificationModeFactory.times;
@@ -47,7 +48,7 @@ public class MailControllerTest {
                 .content(new ObjectMapper().writeValueAsString(mailDTO))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
-        //verify(mailService, times(1)).sendRequestFromContactUsFormToEmail(mailDTO);
+        verify(mailService, times(1)).sendRequestFromContactUsFormToEmail(refEq(mailDTO));
     }
 
     private MailDTO createNewMailDTO() {
