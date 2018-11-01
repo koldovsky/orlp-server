@@ -33,4 +33,8 @@ public interface DeckRepository extends JpaRepository<Deck, Long> {
             nativeQuery = true)
     Set<BigInteger> findDecksId(@Param("searchString") String searchString);
 
+    Page<Deck> findAllByCategoryEqualsAndHiddenFalse(Category category, Pageable pageable);
+
+    List<Deck> findAllByHiddenFalseOrderByRatingDesc();
+
 }

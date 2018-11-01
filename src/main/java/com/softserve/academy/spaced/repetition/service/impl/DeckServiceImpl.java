@@ -64,7 +64,7 @@ public class DeckServiceImpl implements DeckService {
 
     @Override
     public List<Deck> getAllOrderedDecks() {
-        return deckRepository.findAllByOrderByRatingDesc();
+        return deckRepository.findAllByHiddenFalseOrderByRatingDesc();
     }
 
     @Override
@@ -199,10 +199,18 @@ public class DeckServiceImpl implements DeckService {
     }
 
     @Override
+    public Deck toggleDeckAccess(Long deckId) {
+        Deck deck = deckRepository.findOne(deckId);
+        deck.setHidden(!deck.isHidden());
+        deckRepository.save(deck);
+        return deck;
+    }
+
+    @Override
     public Page<Deck> getPageWithDecksByCategory(long categoryId, int pageNumber, String sortBy, boolean ascending) {
-        PageRequest request = new PageRequest(pageNumber - 1, QUANTITY_DECKS_IN_PAGE,
-                ascending ? Sort.Direction.ASC : Sort.Direction.DESC, sortBy);
-        return deckRepository.findAllByCategoryEquals(categoryRepository.findOne(categoryId), request);
+        PageRequest request = new PageRequest(pageNumber - 1, QUANTITY_DECKS_IN_PAGE, ascending
+                ? Sort.Direction.ASC : Sort.Direction.DESC, sortBy);
+        return deckRepository.findAllByCategoryEqualsAndHiddenFalse(categoryRepository.findOne(categoryId), request);
     }
 
     @Override

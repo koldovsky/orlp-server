@@ -37,6 +37,9 @@ public class Deck extends EntityForOwnership implements EntityInterface {
     @Column(name = "rating")
     private double rating;
 
+    @Column(name = "hidden")
+    private boolean hidden;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User deckOwner;
@@ -119,6 +122,14 @@ public class Deck extends EntityForOwnership implements EntityInterface {
 
     public void setRating(double rating) {
         this.rating = rating;
+    }
+
+    public boolean isHidden() {
+        return hidden;
+    }
+
+    public void setHidden(boolean hidden) {
+        this.hidden = hidden;
     }
 
     public List<DeckRating> getDeckRatings() {
