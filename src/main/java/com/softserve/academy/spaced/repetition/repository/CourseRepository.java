@@ -43,6 +43,8 @@ public interface CourseRepository extends JpaRepository<Course, Long> {
             nativeQuery = true)
     Set<BigInteger> findCoursesId(@Param("searchString") String searchString);
 
+    List<Course> findByNameIgnoreCaseContainingOrDescriptionIgnoreCaseContaining(String name, String description);
+
     @Modifying
     @Query(value = "DELETE FROM user_courses WHERE course_id = :courseId", nativeQuery = true)
     void deleteSubscribers(@Param("courseId") Long courseId);

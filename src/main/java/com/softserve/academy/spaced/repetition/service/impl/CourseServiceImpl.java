@@ -204,4 +204,9 @@ public class CourseServiceImpl implements CourseService {
     public Set<BigInteger> findCoursesId(String searchString) {
         return courseRepository.findCoursesId(searchString);
     }
+
+    @Override
+    public List<Course> findAllCoursesBySearch(String searchString) {
+        return courseRepository.findByNameIgnoreCaseContainingOrDescriptionIgnoreCaseContaining(searchString, searchString);
+    }
 }
