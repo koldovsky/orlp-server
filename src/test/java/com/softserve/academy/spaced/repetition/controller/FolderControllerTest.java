@@ -2,6 +2,7 @@ package com.softserve.academy.spaced.repetition.controller;
 
 import com.softserve.academy.spaced.repetition.controller.handler.ExceptionHandlerController;
 import com.softserve.academy.spaced.repetition.domain.Deck;
+import com.softserve.academy.spaced.repetition.domain.User;
 import com.softserve.academy.spaced.repetition.service.FolderService;
 import org.hamcrest.Matchers;
 import org.junit.Before;
@@ -111,12 +112,16 @@ public class FolderControllerTest {
     }
 
     private Deck createDeck() {
+        User user = new User();
+        user.setId(1L);
         Deck deck = new Deck();
         deck.setName(DECK_NAME);
+        deck.setHidden(false);
         deck.setDescription(DECK_DESCRIPTION);
         deck.setSyntaxToHighlight(DECK_SYNTAX);
         deck.setRating(DECK_RATING);
         deck.setId(DECK_ID_1);
+        deck.setDeckOwner(user);
         return deck;
     }
 }

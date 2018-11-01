@@ -33,6 +33,7 @@ import static org.mockito.Matchers.refEq;
 import static org.mockito.Mockito.*;
 import static org.mockito.internal.verification.VerificationModeFactory.times;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -57,6 +58,7 @@ public class DeckControllerTest {
     final private String ADMIN_DECKS_SORT_BY = "id";
 
     final private int CATEGORY_ID = 1;
+    final private Long DECK_ID = 1L;
     final private String SORT_BY = "name";
 
 
@@ -185,6 +187,20 @@ public class DeckControllerTest {
                 .andExpect(jsonPath("$.[1].name", is("2")))
                 .andExpect(jsonPath("$.[2].name", is("3")))
                 .andExpect(jsonPath("$.[2].rating", is(3.0)));
+    }
+
+    @Test
+    public void testUpdateDeckAccess() throws Exception {
+        Deck deck =new Deck();
+        deck.setId(DECK_ID);
+        deck.setHidden(true);
+        when(deckService.toggleDeckAccess(DECK_ID)).thenReturn(deck);
+        mockMvc.perform(put("/api/cabinet/decks/{deckId}/toggle/access", DECK_ID)
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.hidden", is(true)));
+        verify(deckService,times(1)).toggleDeckAccess(DECK_ID);
     }
 
     @Test

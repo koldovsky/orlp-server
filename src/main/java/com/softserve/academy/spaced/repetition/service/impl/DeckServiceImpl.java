@@ -200,8 +200,8 @@ public class DeckServiceImpl implements DeckService {
     }
 
     @Override
-    public Deck toggleDeckAccess(Long deck_id) {
-        Deck deck = deckRepository.findOne(deck_id);
+    public Deck toggleDeckAccess(Long deckId) {
+        Deck deck = deckRepository.findOne(deckId);
         deck.setHidden(!deck.isHidden());
         deckRepository.save(deck);
         return deck;

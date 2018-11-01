@@ -179,5 +179,5 @@ public interface DeckService {
 
     Set<BigInteger> findDecksId(String searchString);
 
-    Deck toggleDeckAccess(Long course_id);
+    Deck toggleDeckAccess(Long deckId);
 }

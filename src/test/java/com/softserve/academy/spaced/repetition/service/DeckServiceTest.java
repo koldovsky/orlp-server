@@ -101,10 +101,10 @@ public class DeckServiceTest {
 
     @Test
     public void testGetAllOrderedDecks() {
-        when(deckRepository.findAllByOrderByRatingDesc()).thenReturn(null);
+        when(deckRepository.findAllByHiddenFalseOrderByRatingDesc()).thenReturn(null);
 
         List<Deck> result = deckService.getAllOrderedDecks();
-        verify(deckRepository).findAllByOrderByRatingDesc();
+        verify(deckRepository).findAllByHiddenFalseOrderByRatingDesc();
         assertNull(result);
     }
 
@@ -296,12 +296,12 @@ public class DeckServiceTest {
 
     @Test
     public void testGetPageWithDecksByCategory() {
-        when(deckRepository.findAllByCategoryEquals(eq(category), any(PageRequest.class))).thenReturn(null);
+        when(deckRepository.findAllByCategoryEqualsAndHiddenFalse(eq(category), any(PageRequest.class))).thenReturn(null);
 
         Page<Deck> result = deckService.getPageWithDecksByCategory(CATEGORY_ID, PAGE_NUMBER, PAGE_SORT_BY,
                 PAGE_ASCENDING_ORDER);
         verify(categoryRepository).findOne(CATEGORY_ID);
-        verify(deckRepository).findAllByCategoryEquals(eq(category), any(PageRequest.class));
+        verify(deckRepository).findAllByCategoryEqualsAndHiddenFalse(eq(category), any(PageRequest.class));
         assertNull(result);
     }
 
