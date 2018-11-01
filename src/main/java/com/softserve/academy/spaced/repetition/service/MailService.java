@@ -75,13 +75,4 @@ public interface MailService {
      * @return content of the email.
      */
     String getRestorePasswordTemplateContent(Map<String, Object> model);
-
-    /**
-     * Generates the text of email with details of user's request which we get via contact us form.
-     *
-     * @param model map with values which will be inserted into html page.
-     * @return content of the email.
-     */
-    String contactUsMailTemplateContent(Map<String, Object> model);
-
 }

@@ -174,8 +174,7 @@ public class MailServiceImpl implements MailService {
         return "";
     }
 
-    @Override
-    public String contactUsMailTemplateContent(Map<String, Object> model){
+    private String contactUsMailTemplateContent(Map<String, Object> model){
         StringBuilder content = new StringBuilder();
         try {
             content.append(FreeMarkerTemplateUtils.processTemplateIntoString(
