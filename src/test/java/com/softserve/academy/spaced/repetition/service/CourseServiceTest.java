@@ -153,6 +153,15 @@ public class CourseServiceTest {
     }
 
     @Test
+    public void testDeleteCourseByAdmin() {
+        doNothing().when(courseRepository).delete(COURSE_ID);
+
+        courseService.deleteCourseByAdmin(COURSE_ID);
+        verify(courseRepository).deleteSubscribers(COURSE_ID);
+        verify(courseRepository).delete(COURSE_ID);
+    }
+
+    @Test
     public void testDeleteGlobalCourse() throws NotAuthorisedUserException {
         doNothing().when(courseRepository).delete(COURSE_ID);
 
