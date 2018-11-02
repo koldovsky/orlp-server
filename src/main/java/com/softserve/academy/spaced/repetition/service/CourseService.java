@@ -131,7 +131,7 @@ public interface CourseService {
      *
      * @param courseId must not be {@literal null}.
      */
-    void deleteCourseByAdmin (Long courseId);
+    void deleteCourseAndSubscriptions (Long courseId);
 
     /**
      * Adds deck with given identifier to course with given identifier.

@@ -156,8 +156,8 @@ public class CourseServiceTest {
     public void testDeleteCourseByAdmin() {
         doNothing().when(courseRepository).delete(COURSE_ID);
 
-        courseService.deleteCourseByAdmin(COURSE_ID);
-        verify(courseRepository).deleteSubscribers(COURSE_ID);
+        courseService.deleteCourseAndSubscriptions(COURSE_ID);
+        verify(courseRepository).deleteSubscriptions(COURSE_ID);
         verify(courseRepository).delete(COURSE_ID);
     }
 

@@ -239,12 +239,12 @@ public class CourseControllerTest {
 
     @Test
     public void testDeleteCourseByAdmin() throws Exception {
-        doNothing().when(courseService).deleteCourseByAdmin(1L);
+        doNothing().when(courseService).deleteCourseAndSubscriptions(1L);
         mockMvc.perform(delete("/api/courses/{courseId}", 1L)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
-        verify(courseService,times(1)).deleteCourseByAdmin(1L);
+        verify(courseService,times(1)).deleteCourseAndSubscriptions(1L);
         verifyZeroInteractions(courseService);
     }
 

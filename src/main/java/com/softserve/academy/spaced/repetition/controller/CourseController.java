@@ -144,7 +144,7 @@ public class CourseController {
     @PreAuthorize("hasPermission('COURSE','DELETE')")
     public ResponseEntity deleteCourseByAdmin(@PathVariable Long courseId) {
         LOGGER.debug("Deleting course with id: {}", courseId);
-        courseService.deleteCourseByAdmin(courseId);
+        courseService.deleteCourseAndSubscriptions(courseId);
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 
