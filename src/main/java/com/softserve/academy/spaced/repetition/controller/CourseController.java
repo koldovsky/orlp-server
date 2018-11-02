@@ -139,6 +139,15 @@ public class CourseController {
         return new ResponseEntity(HttpStatus.OK);
     }
 
+    @Auditable(action = AuditingAction.DELETE_COURSE)
+    @DeleteMapping(value = "/api/courses/{courseId}")
+    @PreAuthorize("hasPermission('COURSE','DELETE')")
+    public ResponseEntity deleteCourseByAdmin(@PathVariable Long courseId) {
+        LOGGER.debug("Deleting course with id: {}", courseId);
+        courseService.deleteCourseAndSubscriptions(courseId);
+        return new ResponseEntity(HttpStatus.NO_CONTENT);
+    }
+
     @Auditable(action = AuditingAction.ADD_COURSE)
     @PostMapping("/api/cabinet/courses/{courseId}")
     @PreAuthorize("hasPermission('COURSE','CREATE')")
