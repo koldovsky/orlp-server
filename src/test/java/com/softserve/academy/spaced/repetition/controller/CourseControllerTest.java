@@ -25,9 +25,7 @@ import java.util.List;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.mockito.internal.verification.VerificationModeFactory.times;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -237,6 +235,17 @@ public class CourseControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name",is("Java interview course")))
                 .andExpect(jsonPath("$.description",is("4 parts of java questions & answers")));
+    }
+
+    @Test
+    public void testDeleteCourseByAdmin() throws Exception {
+        doNothing().when(courseService).deleteCourseAndSubscriptions(1L);
+        mockMvc.perform(delete("/api/courses/{courseId}", 1L)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNoContent());
+        verify(courseService,times(1)).deleteCourseAndSubscriptions(1L);
+        verifyZeroInteractions(courseService);
     }
 
     @Test
