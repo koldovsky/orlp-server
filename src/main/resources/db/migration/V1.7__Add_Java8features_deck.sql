@@ -1,7 +1,20 @@
-insert into deck (description, name, rating, category_id, user_id, syntax, created_by) values ('Questions regarding Features that were implemented in Java 8', 'Java 8 Features', 0, 1, 1, 'JAVA', 1);
+insert into deck (
+    description,
+    name,
+    rating,
+    category_id,
+    user_id,
+    syntax,
+    created_by)
+values (
+    'Questions regarding Features that were implemented in Java 8',
+    'Java 8 Features',
+     0,
+     1,
+     1,
+     'JAVA',
+     1);
 
---SET @deck_id = last_insert_id();
---SET @deck_id = (SELECT AUTO_INCREMENT FROM  INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'orlp' AND   TABLE_NAME   = 'deck');
 SET @deck_id = (SELECT max(deck_id) from deck where name = 'Java 8 Features');
 
 insert into card (
