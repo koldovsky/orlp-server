@@ -33,7 +33,7 @@ public class MailServiceImpl implements MailService {
     @Autowired
     @Qualifier("freemarkerConf")
     private Configuration freemarkerConfiguration;
-    @Value("${contactUsEmail}")
+    @Value("${app.contactUsEmail}")
     private String username;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MailServiceImpl.class);
