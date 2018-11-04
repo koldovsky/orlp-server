@@ -26,6 +26,7 @@ import org.yaml.snakeyaml.constructor.ConstructorException;
 import org.yaml.snakeyaml.parser.ParserException;
 
 import java.io.*;
+import java.math.BigInteger;
 import java.util.*;
 
 @Service
@@ -93,6 +94,7 @@ public class CardServiceImpl implements CardService {
     @Transactional
     public Card updateCard(Card card, Long cardId, List<String> imageList) {
         card.setId(cardId);
+        card.setCreatedBy(cardRepository.findOne(cardId).getCreatedBy());
         card.setDeck(cardRepository.findOne(cardId).getDeck());
         cardRepository.save(card);
         cardImageService.addCardImage(imageList, card);
@@ -114,7 +116,7 @@ public class CardServiceImpl implements CardService {
     @Override
     @Transactional
     public void deleteCard(Long cardId) {
-        cardRepository.deleteCardById(cardId);
+        cardRepository.delete(cardId);
     }
 
     @Override

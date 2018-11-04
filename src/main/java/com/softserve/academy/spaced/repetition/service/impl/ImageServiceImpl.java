@@ -180,10 +180,15 @@ public class ImageServiceImpl implements ImageService {
         imageRepository.save(image);
     }
 
-
     @Override
     public List<Image> getImagesForCurrentUser() throws NotAuthorisedUserException {
         Long userId = userService.getAuthorizedUser().getId();
         return imageRepository.getImagesWithoutContentById(userId);
+    }
+
+    @Override
+    public List<Image> getImagesWithoutContent() {
+        List<Image> images = imageRepository.getImagesWithoutContent();
+        return images;
     }
 }

@@ -1,33 +1,29 @@
 package com.softserve.academy.spaced.repetition.service;
 
+import com.softserve.academy.spaced.repetition.controller.dto.impl.DeckCreateValidationDTO;
+import com.softserve.academy.spaced.repetition.controller.dto.impl.DeckEditByAdminDTO;
 import com.softserve.academy.spaced.repetition.domain.Card;
 import com.softserve.academy.spaced.repetition.domain.Deck;
 import com.softserve.academy.spaced.repetition.utils.exceptions.NotAuthorisedUserException;
 import com.softserve.academy.spaced.repetition.utils.exceptions.NotOwnerOperationException;
 import org.springframework.data.domain.Page;
 
+import java.math.BigInteger;
 import java.util.List;
+import java.util.Set;
 
 /**
  * This interface proceeds all operations with decks.
  */
 public interface DeckService {
-    /**
-     * Adds a new deck to the category
-     *
-     * @param deck       the deck which will be added to the category.
-     * @param categoryId category`s id for which the deck will be added.
-     */
-    void addDeckToCategory(Deck deck, Long categoryId);
 
     /**
      * Adds a new deck to the course
      *
-     * @param deck       the deck which will be added to the category.
-     * @param categoryId id of the category for which belongs the course.
-     * @param courseId   course`s id to which the deck will be added.
+     * @param deck     the deck which will be added to the category.
+     * @param courseId course`s id to which the deck will be added.
      */
-    void addDeckToCourse(Deck deck, Long categoryId, Long courseId);
+    void addDeckToCourse(Deck deck, Long courseId);
 
     /**
      * Updates the deck
@@ -45,7 +41,7 @@ public interface DeckService {
      * @param deckId      id of the deck which will be updated.
      * @return the updated deck.
      */
-    Deck updateDeckAdmin(Deck updatedDeck, Long deckId);
+    Deck updateDeckAdmin(DeckEditByAdminDTO updatedDeck, Long deckId);
 
     /**
      * Deletes the deck
@@ -66,11 +62,11 @@ public interface DeckService {
     /**
      * Creates the deck by using the admin account.
      *
-     * @param newDeck new deck which will be added.
+     * @param deckCreateValidationDTO new deck which will be added.
      * @return the created deck.
      * @throws NotAuthorisedUserException if unauthorized user creates new deck.
      */
-    Deck createNewDeckAdmin(Deck newDeck) throws NotAuthorisedUserException;
+    Deck createNewDeckAdmin(DeckCreateValidationDTO deckCreateValidationDTO) throws NotAuthorisedUserException;
 
     /**
      * Deletes the deck which was created by the user.
@@ -180,4 +176,10 @@ public interface DeckService {
      * @return list of cards that are in the deck by given identifier.
      */
     List<Card> getAllCardsByDeckId(Long deckId);
+
+    Set<BigInteger> findDecksId(String searchString);
+
+    Deck toggleDeckAccess(Long deckId);
+
+    List<Deck> findAllDecksBySearch(String searchString);
 }

@@ -1,4 +1,4 @@
-package com.softserve.academy.spaced.repetition.controller.dto.impl;
+package com.softserve.academy.spaced.repetition.controller.dto.simpleDTO;
 
 public class MessageDTO {
     private String message;

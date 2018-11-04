@@ -13,7 +13,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -21,9 +23,9 @@ import java.util.Set;
 
 @Service
 public class CourseServiceImpl implements CourseService {
-    public static final int TOP_COURSES = 4;
 
     private final static int QUANTITY_COURSES_IN_PAGE = 12;
+    private final Locale locale = LocaleContextHolder.getLocale();
     @Autowired
     private CourseRepository courseRepository;
     @Autowired
@@ -40,7 +42,6 @@ public class CourseServiceImpl implements CourseService {
     private DeckRepository deckRepository;
     @Autowired
     private MessageSource messageSource;
-    private final Locale locale = LocaleContextHolder.getLocale();
 
     @Override
     public List<Course> getAllCourses() {
@@ -59,8 +60,8 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public Course getCourseById(Long category_id, Long course_id) {
-        return courseRepository.getCourseByCategoryIdAndId(category_id, course_id);
+    public Course getCourseById(Long course_id) {
+        return courseRepository.getCourseById(course_id);
     }
 
     @Override
@@ -94,8 +95,9 @@ public class CourseServiceImpl implements CourseService {
         Set<Course> courses = user.getCourses();
         for (Course course : courses) {
             if (course.getId() == course_id) {
-                course.setPublished(false);
+//                course.setPublished(false);
                 courses.remove(course);
+                user.setCourses(courses);
                 break;
             }
         }
@@ -144,12 +146,12 @@ public class CourseServiceImpl implements CourseService {
         userRepository.save(user);
     }
 
-
     @Override
-    public void updateCourseAccess(Long course_id, Course courseAccess) {
+    public Course updateCourseAccess(Long course_id, Course courseAccess) {
         Course course = courseRepository.findOne(course_id);
         course.setPublished(courseAccess.isPublished());
         courseRepository.save(course);
+        return course;
     }
 
     @Override
@@ -165,8 +167,15 @@ public class CourseServiceImpl implements CourseService {
         userRepository.save(user);
     }
 
+    @Transactional
     @Override
-    public void addDeckToCourse(Long courseId, Long deckId) {
+    public void deleteCourseAndSubscriptions(Long courseId) {
+        courseRepository.deleteSubscriptions(courseId);
+        courseRepository.delete(courseId);
+    }
+
+    @Override
+    public Course addDeckToCourse(Long courseId, Long deckId) {
         Course course = courseRepository.findOne(courseId);
         if (course.getDecks().stream().anyMatch(deck -> deck.getId().equals(deckId))) {
             throw new IllegalArgumentException(messageSource.getMessage("message.exception.deckAlreadyExists",
@@ -174,20 +183,30 @@ public class CourseServiceImpl implements CourseService {
         }
         course.getDecks().add(deckRepository.getDeckById(deckId));
         courseRepository.save(course);
+        return course;
     }
-
 
     @Override
     public Page<Course> getPageWithCourses(int pageNumber, String sortBy, boolean ascending) {
         PageRequest request = new PageRequest(pageNumber - 1, QUANTITY_COURSES_IN_PAGE, ascending
                 ? Sort.Direction.ASC : Sort.Direction.DESC, sortBy);
-        return courseRepository.findAll(request);
+        return courseRepository.findAllByPublishedTrue(request);
     }
 
     @Override
     public Page<Course> getPageWithCoursesByCategory(long categoryId, int pageNumber, String sortBy, boolean ascending) {
         PageRequest request = new PageRequest(pageNumber - 1, QUANTITY_COURSES_IN_PAGE, ascending
                 ? Sort.Direction.ASC : Sort.Direction.DESC, sortBy);
-        return courseRepository.findAllByCategoryEquals(categoryRepository.findOne(categoryId), request);
+        return courseRepository.findAllByCategoryEqualsAndPublishedTrue(categoryRepository.findOne(categoryId), request);
+    }
+
+    @Override
+    public Set<BigInteger> findCoursesId(String searchString) {
+        return courseRepository.findCoursesId(searchString);
+    }
+
+    @Override
+    public List<Course> findAllCoursesBySearch(String searchString) {
+        return courseRepository.findByNameIgnoreCaseContainingOrDescriptionIgnoreCaseContaining(searchString, searchString);
     }
 }

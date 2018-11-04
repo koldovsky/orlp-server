@@ -1,16 +1,16 @@
 package com.softserve.academy.spaced.repetition.service.impl;
 
+import com.softserve.academy.spaced.repetition.controller.dto.impl.DeckCreateValidationDTO;
+import com.softserve.academy.spaced.repetition.controller.dto.impl.DeckEditByAdminDTO;
 import com.softserve.academy.spaced.repetition.domain.*;
-
-import com.softserve.academy.spaced.repetition.repository.CardRepository;
 import com.softserve.academy.spaced.repetition.repository.CategoryRepository;
 import com.softserve.academy.spaced.repetition.repository.CourseRepository;
 import com.softserve.academy.spaced.repetition.repository.DeckRepository;
-import com.softserve.academy.spaced.repetition.utils.exceptions.NotAuthorisedUserException;
-import com.softserve.academy.spaced.repetition.utils.exceptions.NotOwnerOperationException;
 import com.softserve.academy.spaced.repetition.service.DeckService;
 import com.softserve.academy.spaced.repetition.service.FolderService;
 import com.softserve.academy.spaced.repetition.service.UserService;
+import com.softserve.academy.spaced.repetition.utils.exceptions.NotAuthorisedUserException;
+import com.softserve.academy.spaced.repetition.utils.exceptions.NotOwnerOperationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -20,14 +20,16 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigInteger;
 import java.util.List;
 import java.util.Locale;
 import java.util.NoSuchElementException;
+import java.util.Set;
 
 @Service
 public class DeckServiceImpl implements DeckService {
-    private final static int QUANTITY_ADMIN_DECKS_IN_PAGE = 20;
-    private final static int QUANTITY_DECKS_IN_PAGE = 12;
+    private static final int QUANTITY_ADMIN_DECKS_IN_PAGE = 20;
+    private static final int QUANTITY_DECKS_IN_PAGE = 12;
 
     @Autowired
     private DeckRepository deckRepository;
@@ -40,6 +42,9 @@ public class DeckServiceImpl implements DeckService {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private FolderService folderService;
 
     @Autowired
     private MessageSource messageSource;
@@ -59,11 +64,10 @@ public class DeckServiceImpl implements DeckService {
 
     @Override
     public List<Deck> getAllOrderedDecks() {
-        return deckRepository.findAllByOrderByRatingDesc();
+        return deckRepository.findAllByHiddenFalseOrderByRatingDesc();
     }
 
     @Override
-    @Transactional
     public Deck getDeck(Long deckId) {
         return deckRepository.findOne(deckId);
     }
@@ -75,15 +79,13 @@ public class DeckServiceImpl implements DeckService {
     }
 
     @Override
-    @Transactional
-    public void addDeckToCategory(Deck deck, Long categoryId) {
-        Category category = categoryRepository.findOne(categoryId);
-        category.getDecks().add(deckRepository.save(deck));
+    public Set<BigInteger> findDecksId(String searchString) {
+        return deckRepository.findDecksId(searchString);
     }
 
     @Override
     @Transactional
-    public void addDeckToCourse(Deck deck, Long categoryId, Long courseId) {
+    public void addDeckToCourse(Deck deck, Long courseId) {
         Course course = courseRepository.findOne(courseId);
         course.getDecks().add(deckRepository.save(deck));
     }
@@ -100,18 +102,18 @@ public class DeckServiceImpl implements DeckService {
 
     @Override
     @Transactional
-    public Deck updateDeckAdmin(Deck updatedDeck, Long deckId) {
+    public Deck updateDeckAdmin(DeckEditByAdminDTO updatedDeck, Long deckId) {
         Deck deck = deckRepository.findOne(deckId);
         deck.setName(updatedDeck.getName());
         deck.setDescription(updatedDeck.getDescription());
-        deck.setCategory(categoryRepository.findById(updatedDeck.getCategory().getId()));
+        deck.setCategory(categoryRepository.findById(updatedDeck.getCategoryId()));
         return deckRepository.save(deck);
     }
 
     @Override
     @Transactional
     public void deleteDeck(Long deckId) {
-        deckRepository.deleteDeckById(deckId);
+        deckRepository.delete(deckId);
     }
 
     @Override
@@ -124,16 +126,16 @@ public class DeckServiceImpl implements DeckService {
     }
 
     @Override
-    @Transactional
-    public Deck createNewDeckAdmin(Deck newDeck) throws NotAuthorisedUserException {
+    public Deck createNewDeckAdmin(DeckCreateValidationDTO deckCreateValidationDTO) throws NotAuthorisedUserException {
         User user = userService.getAuthorizedUser();
         Deck deck = new Deck();
-        deck.setName(newDeck.getName());
-        deck.setDescription(newDeck.getDescription());
-        deck.setCategory(categoryRepository.findById(newDeck.getCategory().getId()));
+        deck.setName(deckCreateValidationDTO.getName());
+        deck.setDescription(deckCreateValidationDTO.getDescription());
+        deck.setCategory(categoryRepository.findById(deckCreateValidationDTO.getCategoryId()));
         deck.setDeckOwner(user);
         Deck savedDeck = deckRepository.save(deck);
         deck.setId(savedDeck.getId());
+        folderService.addDeck(deck.getId());
         return savedDeck;
     }
 
@@ -197,10 +199,18 @@ public class DeckServiceImpl implements DeckService {
     }
 
     @Override
+    public Deck toggleDeckAccess(Long deckId) {
+        Deck deck = deckRepository.findOne(deckId);
+        deck.setHidden(!deck.isHidden());
+        deckRepository.save(deck);
+        return deck;
+    }
+
+    @Override
     public Page<Deck> getPageWithDecksByCategory(long categoryId, int pageNumber, String sortBy, boolean ascending) {
-        PageRequest request = new PageRequest(pageNumber - 1, QUANTITY_DECKS_IN_PAGE,
-                ascending ? Sort.Direction.ASC : Sort.Direction.DESC, sortBy);
-        return deckRepository.findAllByCategoryEquals(categoryRepository.findOne(categoryId), request);
+        PageRequest request = new PageRequest(pageNumber - 1, QUANTITY_DECKS_IN_PAGE, ascending
+                ? Sort.Direction.ASC : Sort.Direction.DESC, sortBy);
+        return deckRepository.findAllByCategoryEqualsAndHiddenFalse(categoryRepository.findOne(categoryId), request);
     }
 
     @Override
@@ -211,7 +221,12 @@ public class DeckServiceImpl implements DeckService {
     }
 
     @Override
-    public String getSynthaxToHightlight(long deckId){
+    public String getSynthaxToHightlight(long deckId) {
         return deckRepository.getDeckById(deckId).getSyntaxToHighlight();
+    }
+
+    @Override
+    public List<Deck> findAllDecksBySearch(String searchString) {
+        return deckRepository.findByNameIgnoreCaseContainingOrDescriptionIgnoreCaseContaining(searchString, searchString);
     }
 }

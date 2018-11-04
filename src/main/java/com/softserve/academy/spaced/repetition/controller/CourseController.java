@@ -1,15 +1,17 @@
 package com.softserve.academy.spaced.repetition.controller;
 
 
-import com.softserve.academy.spaced.repetition.utils.audit.Auditable;
-import com.softserve.academy.spaced.repetition.utils.audit.AuditingAction;
-import com.softserve.academy.spaced.repetition.domain.Course;
-import com.softserve.academy.spaced.repetition.controller.dto.builder.DTOBuilder;
 import com.softserve.academy.spaced.repetition.controller.dto.annotations.Request;
+import com.softserve.academy.spaced.repetition.controller.dto.builder.DTOBuilder;
 import com.softserve.academy.spaced.repetition.controller.dto.impl.CourseLinkDTO;
 import com.softserve.academy.spaced.repetition.controller.dto.impl.CoursePublicDTO;
-import com.softserve.academy.spaced.repetition.utils.exceptions.NotAuthorisedUserException;
+import com.softserve.academy.spaced.repetition.domain.Course;
 import com.softserve.academy.spaced.repetition.service.CourseService;
+import com.softserve.academy.spaced.repetition.utils.audit.Auditable;
+import com.softserve.academy.spaced.repetition.utils.audit.AuditingAction;
+import com.softserve.academy.spaced.repetition.utils.exceptions.NotAuthorisedUserException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.hateoas.Link;
@@ -27,22 +29,23 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
 @RestController
 public class CourseController {
+    private static final Logger LOGGER = LoggerFactory.getLogger(CourseCommentController.class);
 
     @Autowired
     private CourseService courseService;
 
     @Auditable(action = AuditingAction.VIEW_COURSES_VIA_CATEGORY)
-    @GetMapping(value = "/api/category/{category_id}/courses")
-    @PreAuthorize(value = "@accessToUrlService.hasAccessToCategory(#category_id)")
-    public ResponseEntity<Page<CourseLinkDTO>> getAllCoursesByCategoryId(@PathVariable Long category_id,
+    @GetMapping(value = "/api/categories/{categoryId}/courses")
+    @PreAuthorize("hasPermission('COURSE','READ')")
+    public ResponseEntity<Page<CourseLinkDTO>> getAllCoursesByCategoryId(@PathVariable Long categoryId,
                                                                          @RequestParam(name = "p", defaultValue = "1")
                                                                                  int pageNumber,
                                                                          @RequestParam(name = "sortBy") String sortBy,
                                                                          @RequestParam(name = "asc") boolean ascending) {
         Page<CourseLinkDTO> courseLinkDTOS = courseService
-                .getPageWithCoursesByCategory(category_id, pageNumber, sortBy, ascending).map((course) -> {
+                .getPageWithCoursesByCategory(categoryId, pageNumber, sortBy, ascending).map((course) -> {
                     Link selfLink = linkTo(methodOn(CourseController.class)
-                            .getAllCoursesByCategoryId(category_id, pageNumber, sortBy, ascending)).withSelfRel();
+                            .getAllCoursesByCategoryId(categoryId, pageNumber, sortBy, ascending)).withSelfRel();
                     return DTOBuilder.buildDtoForEntity(course, CourseLinkDTO.class, selfLink);
                 });
         return new ResponseEntity<>(courseLinkDTOS, HttpStatus.OK);
@@ -50,111 +53,152 @@ public class CourseController {
 
     @Auditable(action = AuditingAction.VIEW_COURSES)
     @GetMapping(value = "/api/courses")
+    @PreAuthorize("hasPermission('COURSE','READ')")
     public ResponseEntity<Page<CourseLinkDTO>> getAllCourses(@RequestParam(name = "p", defaultValue = "1") int pageNumber,
                                                              @RequestParam(name = "sortBy") String sortBy,
                                                              @RequestParam(name = "asc") boolean ascending) {
         Page<CourseLinkDTO> courseLinkDTOS = courseService
                 .getPageWithCourses(pageNumber, sortBy, ascending).map((course) -> {
                     Link selfLink = linkTo(methodOn(CourseController.class)
-                            .getCourseById(course.getCategory().getId(), course.getId())).withSelfRel();
+                            .getCourseById(course.getId())).withSelfRel();
                     return DTOBuilder.buildDtoForEntity(course, CourseLinkDTO.class, selfLink);
                 });
         return new ResponseEntity<>(courseLinkDTOS, HttpStatus.OK);
     }
 
-    @GetMapping(value = "/api/courses/ordered")
+    @GetMapping(value = "/api/courses/orders")
+    @PreAuthorize("hasPermission('COURSE','READ')")
     public ResponseEntity<List<CourseLinkDTO>> getAllCoursesOrderByRating() {
         List<Course> courseList = courseService.getAllOrderedCourses();
-        Link collectionLink = linkTo(methodOn(CourseController.class).getAllCoursesOrderByRating()).withRel("course");
+        Link collectionLink = linkTo(methodOn(CourseController.class).getAllCoursesOrderByRating()).withRel("courses");
         List<CourseLinkDTO> decks = DTOBuilder
                 .buildDtoListForCollection(courseList, CourseLinkDTO.class, collectionLink);
         return new ResponseEntity<>(decks, HttpStatus.OK);
     }
 
     @Auditable(action = AuditingAction.VIEW_TOP_COURSES)
-    @GetMapping("/api/course/top")
+    @GetMapping("/api/courses/top")
+    @PreAuthorize("hasPermission('COURSE','READ')")
     public ResponseEntity<List<CourseLinkDTO>> getTopCourse() {
         List<Course> courseList = courseService.getTopCourse();
         List<CourseLinkDTO> courses = new ArrayList<>();
         for (Course course : courseList) {
             Link selfLink = linkTo(methodOn(CourseController.class)
-                    .getCourseById(course.getCategory().getId(), course.getId())).withSelfRel();
+                    .getCourseById(course.getId())).withSelfRel();
             courses.add(DTOBuilder.buildDtoForEntity(course, CourseLinkDTO.class, selfLink));
         }
         return new ResponseEntity<>(courses, HttpStatus.OK);
     }
 
-    @GetMapping(value = "/api/category/{category_id}/courses/{course_id}")
-    @PreAuthorize(value = "@accessToUrlService.hasAccessToCourse(#category_id, #course_id)")
-    public ResponseEntity<CourseLinkDTO> getCourseById(@PathVariable Long category_id, @PathVariable Long course_id) {
-        Course course = courseService.getCourseById(category_id, course_id);
-        Link selfLink = linkTo(methodOn(CourseController.class).getCourseById(category_id, course_id)).withSelfRel();
+    @GetMapping(value = "/api/courses/{courseId}")
+    @PreAuthorize("hasPermission('COURSE','READ')")
+    public ResponseEntity<CourseLinkDTO> getCourseById(@PathVariable Long courseId) {
+        Course course = courseService.getCourseById(courseId);
+        Link selfLink = linkTo(methodOn(CourseController.class).getCourseById(courseId)).withSelfRel();
         CourseLinkDTO linkDTO = DTOBuilder.buildDtoForEntity(course, CourseLinkDTO.class, selfLink);
         return new ResponseEntity<>(linkDTO, HttpStatus.OK);
     }
-
+//TODO fix this method
     @Auditable(action = AuditingAction.CREATE_COURSE)
-    @PostMapping(value = "/api/category/{category_id}/courses")
-    @PreAuthorize(value = "@accessToUrlService.hasAccessToCategory(#category_id)")
-    public ResponseEntity<CoursePublicDTO> addCourse(@RequestBody Course course, @PathVariable Long category_id) {
-        courseService.addCourse(course, category_id);
-        Link selfLink = linkTo(methodOn(CourseController.class).getCourseById(category_id, course.getId())).withSelfRel();
+    @PostMapping(value = "/api/courses")
+    @PreAuthorize("hasPermission('COURSE','CREATE')")
+    public ResponseEntity<CoursePublicDTO> addCourse(@RequestBody Course course, @PathVariable Long categoryId) {
+        LOGGER.debug("Adding course to category with id: {}", categoryId);
+        courseService.addCourse(course, categoryId);
+        Link selfLink = linkTo(methodOn(CourseController.class).getCourseById(course.getId())).withSelfRel();
         CoursePublicDTO coursePublicDTO = DTOBuilder.buildDtoForEntity(course, CoursePublicDTO.class, selfLink);
         return new ResponseEntity<>(coursePublicDTO, HttpStatus.CREATED);
     }
 
     @Auditable(action = AuditingAction.CREATE_COURSE)
-    @PutMapping(value = "/api/user/{user_id}/courses/{course_id}")
-    public void updateCourse(@PathVariable Long course_id, @Validated(Request.class) @RequestBody Course course) {
-        courseService.updateCourse(course_id, course);
+    @PutMapping(value = "/api/cabinet/courses/{courseId}")
+    @PreAuthorize("hasPermission('COURSE','UPDATE') && principal.id==#course.createdBy")
+    public ResponseEntity<CoursePublicDTO> updateCourse(@PathVariable Long courseId, @Validated(Request.class) @RequestBody Course course) {
+        LOGGER.debug("Updating course with id: {}", courseId);
+        courseService.updateCourse(courseId, course);
+        Link selfLink = linkTo(methodOn(CourseController.class).getCourseById(course.getId())).withSelfRel();
+        CoursePublicDTO coursePublicDTO = DTOBuilder.buildDtoForEntity(course, CoursePublicDTO.class, selfLink);
+        return new ResponseEntity<>(coursePublicDTO, HttpStatus.OK);
     }
 
     @Auditable(action = AuditingAction.DELETE_COURSE)
-    @DeleteMapping(value = "/api/user/global/courses/{course_id}")
-    public void deleteGlobalCourse(@PathVariable Long course_id) throws NotAuthorisedUserException {
-        courseService.deleteGlobalCourse(course_id);
-    }
-
-    @DeleteMapping(value = "/api/user/local/courses/{course_id}")
-    public void deleteLocalCourse(@PathVariable Long course_id) throws NotAuthorisedUserException {
-        courseService.deleteLocalCourse(course_id);
-    }
-
-    @Auditable(action = AuditingAction.ADD_COURSE)
-    @PutMapping("/api/user/courses/{course_id}")
-    public ResponseEntity addCourse(@PathVariable Long course_id) throws NotAuthorisedUserException {
-        Course course = courseService.updateListOfCoursesOfTheAuthorizedUser(course_id);
+    @PreAuthorize("hasPermission('COURSE','DELETE') &&" +
+            "@courseServiceImpl.getCourseById(#courseId).createdBy==principal.id")
+    @DeleteMapping(value = "/api/cabinet/global/courses/{courseId}")
+    public ResponseEntity deleteGlobalCourse(@PathVariable Long courseId) throws NotAuthorisedUserException {
+        LOGGER.debug("Deleting global course with id: {}", courseId);
+        courseService.deleteGlobalCourse(courseId);
         return new ResponseEntity(HttpStatus.OK);
     }
 
-    @Auditable(action = AuditingAction.ADD_COURSE)
-    @PutMapping("/api/user/courses/{course_id}/update/access")
-    public ResponseEntity updateCourseAccess(@PathVariable Long course_id,
-                                             @Validated(Request.class) @RequestBody Course course) {
-        courseService.updateCourseAccess(course_id, course);
+    @DeleteMapping(value = "/api/cabinet/local/courses/{courseId}")
+    @PreAuthorize("hasPermission('COURSE','DELETE')")
+    public ResponseEntity deleteLocalCourse(@PathVariable Long courseId) throws NotAuthorisedUserException {
+        LOGGER.debug("Deleting global course with id: {}", courseId);
+        courseService.deleteLocalCourse(courseId);
         return new ResponseEntity(HttpStatus.OK);
     }
 
+    @Auditable(action = AuditingAction.DELETE_COURSE)
+    @DeleteMapping(value = "/api/courses/{courseId}")
+    @PreAuthorize("hasPermission('COURSE','DELETE')")
+    public ResponseEntity deleteCourseByAdmin(@PathVariable Long courseId) {
+        LOGGER.debug("Deleting course with id: {}", courseId);
+        courseService.deleteCourseAndSubscriptions(courseId);
+        return new ResponseEntity(HttpStatus.NO_CONTENT);
+    }
+
     @Auditable(action = AuditingAction.ADD_COURSE)
-    @PutMapping("/api/category/courses/{courseId}/decks/{deckId}")
+    @PostMapping("/api/cabinet/courses/{courseId}")
+    @PreAuthorize("hasPermission('COURSE','CREATE')")
+    public ResponseEntity<CoursePublicDTO> addCourse(@PathVariable Long courseId) throws NotAuthorisedUserException {
+        LOGGER.debug("Adding course with id: {}", courseId);
+        Course course = courseService.updateListOfCoursesOfTheAuthorizedUser(courseId);
+        Link selfLink = linkTo(methodOn(CourseController.class).getCourseById(course.getId())).withSelfRel();
+        CoursePublicDTO coursePublicDTO = DTOBuilder.buildDtoForEntity(course, CoursePublicDTO.class, selfLink);
+        return new ResponseEntity<>(coursePublicDTO, HttpStatus.OK);
+    }
+
+    @Auditable(action = AuditingAction.ADD_COURSE)
+    @PutMapping("/api/cabinet/{courseId}/update/access")
+    @PreAuthorize("hasPermission('COURSE','UPDATE') && @courseServiceImpl.getCourseById(#courseId).createdBy==principal.id")
+    public ResponseEntity<CoursePublicDTO> updateCourseAccess(@PathVariable Long courseId,
+                                                              @Validated(Request.class) @RequestBody Course course) {
+        LOGGER.debug("Updating course with id: {}", courseId);
+        courseService.updateCourseAccess(courseId, course);
+        Link selfLink = linkTo(methodOn(CourseController.class).getCourseById(course.getId())).withSelfRel();
+        CoursePublicDTO coursePublicDTO = DTOBuilder.buildDtoForEntity(course, CoursePublicDTO.class, selfLink);
+        return new ResponseEntity<>(coursePublicDTO, HttpStatus.OK);
+    }
+
+    @Auditable(action = AuditingAction.ADD_COURSE)
+    @PreAuthorize("hasPermission('COURSE','CREATE')")
+    @PutMapping("/api/categories/courses/{courseId}/decks/{deckId}")
     public ResponseEntity addDeckToCourse(@Validated(Request.class) @PathVariable Long courseId,
-                                          @PathVariable Long deckId,
-                                          @RequestBody Course course) {
-        courseService.addDeckToCourse(courseId, deckId);
-        return new ResponseEntity(HttpStatus.OK);
+                                          @PathVariable Long deckId) {
+        LOGGER.debug("Adding deck with id: {} to course with id: {}",deckId, courseId);
+        Course course = courseService.addDeckToCourse(courseId, deckId);
+        Link selfLink = linkTo(methodOn(CourseController.class).getCourseById(course.getId())).withSelfRel();
+        CoursePublicDTO coursePublicDTO = DTOBuilder.buildDtoForEntity(course, CoursePublicDTO.class, selfLink);
+        return new ResponseEntity<>(coursePublicDTO, HttpStatus.OK);
     }
 
-    @GetMapping("/api/private/user/courses")
+    @GetMapping("/api/private/cabinet/courses")
+    @PreAuthorize("hasPermission('COURSE','READ')")
     public ResponseEntity<List<Long>> getIdAllCoursesOfTheCurrentUser() throws NotAuthorisedUserException {
         List<Long> id = courseService.getAllCoursesIdOfTheCurrentUser();
         return new ResponseEntity<>(id, HttpStatus.OK);
     }
 
     @Auditable(action = AuditingAction.CREATE_PRIVATE_COURSE)
-    @PostMapping("/api/category/{category_id}/private/user/create/course")
-    public ResponseEntity<Course> createPrivateCourse(@Validated(Request.class) @RequestBody Course privateCourse,
-                                                      @PathVariable Long category_id) throws NotAuthorisedUserException {
-        courseService.createPrivateCourse(privateCourse, category_id);
-        return new ResponseEntity<>(privateCourse, HttpStatus.OK);
+    @PostMapping("/api/categories/{categoryId}/courses")
+    @PreAuthorize("hasPermission('COURSE','CREATE')")
+    public ResponseEntity<CoursePublicDTO> createPrivateCourse(@Validated(Request.class) @RequestBody Course privateCourse,
+                                                               @PathVariable Long categoryId) throws NotAuthorisedUserException {
+        LOGGER.debug("Creating private course in category with id: {}", categoryId);
+        courseService.createPrivateCourse(privateCourse, categoryId);
+        Link selfLink = linkTo(methodOn(CourseController.class).getCourseById(privateCourse.getId())).withSelfRel();
+        CoursePublicDTO coursePublicDTO = DTOBuilder.buildDtoForEntity(privateCourse, CoursePublicDTO.class, selfLink);
+        return new ResponseEntity<>(coursePublicDTO, HttpStatus.OK);
     }
 }

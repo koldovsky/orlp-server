@@ -1,5 +1,6 @@
 package com.softserve.academy.spaced.repetition.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.softserve.academy.spaced.repetition.controller.handler.ExceptionHandlerController;
 import com.softserve.academy.spaced.repetition.domain.*;
 import com.softserve.academy.spaced.repetition.service.CourseService;
@@ -24,8 +25,10 @@ import java.util.List;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.mockito.Mockito.*;
+import static org.mockito.internal.verification.VerificationModeFactory.times;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -38,9 +41,9 @@ public class CourseControllerTest {
     @Mock
     private CourseService courseService;
 
-    final int NUMBER_PAGE = 1;
-    final String SORT_BY = "name";
-    final int QUANTITY_COURSES_IN_PAGE = 12;
+    final private int NUMBER_PAGE = 1;
+    final private String SORT_BY = "name";
+    final private int QUANTITY_COURSES_IN_PAGE = 12;
 
     @Before
     public void setUp() {
@@ -51,10 +54,9 @@ public class CourseControllerTest {
 
     @Test
     public void getCourseById() throws Exception {
-        final long categoryId = 1L;
         final long courseId = 1L;
-        when(courseService.getCourseById(eq(categoryId), eq(courseId))).thenReturn(createCourse());
-        mockMvc.perform(get("/api/category/{category_id}/courses/{course_id}", categoryId, courseId)
+        when(courseService.getCourseById(eq(courseId))).thenReturn(createCourse());
+        mockMvc.perform(get("/api/courses/{course_id}", courseId)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -65,9 +67,8 @@ public class CourseControllerTest {
                         "  \"image\": \"http://localhost/api/service/image/14\"," +
                         "  \"published\": true," +
                         "  \"ownerId\": 1," +
-                        "  \"categoryId\": 1," +
                         "  \"courseId\": 1," +
-                        "  \"links\":[{\"rel\":\"self\",\"href\":\"http://localhost/api/category/1/courses/1\"},{\"rel\":\"decks\",\"href\":\"http://localhost/api/category/1/courses/1/decks\"}]" +
+                        "  \"links\":[{\"rel\":\"self\",\"href\":\"http://localhost/api/courses/1\"},{\"rel\":\"decks\",\"href\":\"http://localhost/api/category/1/courses/1/decks\"}]" +
                         "}"));
     }
 
@@ -132,10 +133,10 @@ public class CourseControllerTest {
     }
 
     @Test
-    public void getCoursesByPageAndCategory() throws Exception {
+    public void getCoursesByPageAndCategoryId() throws Exception {
         final int categoryId = 2;
         when(courseService.getPageWithCoursesByCategory(categoryId, 1, "name", true)).thenReturn(createCoursesBySelectedCategory());
-        mockMvc.perform(get("/api/category/" + categoryId + "/courses?p=" + NUMBER_PAGE + "&sortBy=" + SORT_BY + "&asc=" + true)
+        mockMvc.perform(get("/api/categories/" + categoryId + "/courses?p=" + NUMBER_PAGE + "&sortBy=" + SORT_BY + "&asc=" + true)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -173,5 +174,150 @@ public class CourseControllerTest {
         Page<Course> coursesPage = new PageImpl<>(courseList, new PageRequest(NUMBER_PAGE - 1, QUANTITY_COURSES_IN_PAGE, Sort.Direction.ASC, SORT_BY), courseList.size());
 
         return coursesPage;
+    }
+
+    @Test
+    public void testGetAllCoursesOrderByRating()throws Exception{
+        List<Course> list = new ArrayList<>();
+        list.add(createCourse());
+        when(courseService.getAllOrderedCourses()).thenReturn(list);
+        mockMvc.perform(get("/api/courses/orders")
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.[0].name",is("Java interview course")))
+                .andExpect(jsonPath("$.[0].rating",is(0.0)))
+                .andExpect(jsonPath("$.[0].categoryId",is(1)));
+    }
+
+    @Test
+    public void testGetTopCourse() throws Exception{
+        List<Course> list = new ArrayList<>();
+        list.add(createCourse());
+        when(courseService.getTopCourse()).thenReturn(list);
+        mockMvc.perform(get("/api/courses/top")
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.[0].name",is("Java interview course")))
+                .andExpect(jsonPath("$.[0].rating",is(0.0)))
+                .andExpect(jsonPath("$.[0].categoryId",is(1)));
+    }
+
+    @Test
+    public void testGetCourseById() throws Exception{
+        when(courseService.getCourseById(1L)).thenReturn(createCourse());
+        mockMvc.perform(get("/api/courses/{courseId}", 1L)
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name",is("Java interview course")))
+                .andExpect(jsonPath("$.rating",is(0.0)))
+                .andExpect(jsonPath("$.categoryId",is(1)))
+        ;
+    }
+/* the method addCourse() in CourseController.java is not working properly
+    @Test
+    public void testAddCourse() throws Exception{
+        doNothing().when(courseService).addCourse(createCourse(), 1L);
+        mockMvc.perform(post("/api/courses")
+                .content(new ObjectMapper().writeValueAsString(createCourse()))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isCreated());
+    }
+*/
+    @Test
+    public void testUpdateCourse() throws Exception{
+        doNothing().when(courseService).updateCourse(1L, createCourse());
+        mockMvc.perform(put("/api/cabinet/courses/{courseId}", 1L)
+                .content(new ObjectMapper().writeValueAsString(createCourse()))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name",is("Java interview course")))
+                .andExpect(jsonPath("$.description",is("4 parts of java questions & answers")));
+    }
+
+    @Test
+    public void testDeleteCourseByAdmin() throws Exception {
+        doNothing().when(courseService).deleteCourseAndSubscriptions(1L);
+        mockMvc.perform(delete("/api/courses/{courseId}", 1L)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNoContent());
+        verify(courseService,times(1)).deleteCourseAndSubscriptions(1L);
+        verifyZeroInteractions(courseService);
+    }
+
+    @Test
+    public void testDeleteGlobalCourse() throws Exception{
+        doNothing().when(courseService).deleteGlobalCourse(1L);
+        mockMvc.perform(delete("/api/cabinet/global/courses/{courseId}", 1L))
+                .andExpect(status().isOk());
+        verify(courseService, times(1)).deleteGlobalCourse(1L);
+    }
+
+    @Test
+    public void testDeleteLocalCourse() throws Exception{
+        doNothing().when(courseService).deleteLocalCourse(1L);
+        mockMvc.perform(delete("/api/cabinet/local/courses/{courseId}", 1L))
+                .andExpect(status().isOk());
+        verify(courseService, times(1)).deleteLocalCourse(1L);
+    }
+
+    @Test
+    public void testAddCourseInCabinet() throws Exception{
+        when(courseService.updateListOfCoursesOfTheAuthorizedUser(1L)).thenReturn(createCourse());
+        mockMvc.perform(post("/api/cabinet/courses/{courseId}", 1L)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name",is("Java interview course")))
+                .andExpect(jsonPath("$.description",is("4 parts of java questions & answers")));
+    }
+
+    @Test
+    public void testUpdateCourseAccess() throws Exception{
+        when(courseService.updateCourseAccess(1L, createCourse())).thenReturn(createCourse());
+        mockMvc.perform(put("/api/cabinet/{courseId}/update/access",1L)
+                .content(new ObjectMapper().writeValueAsString(createCourse()))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name",is("Java interview course")))
+                .andExpect(jsonPath("$.description",is("4 parts of java questions & answers")));
+    }
+
+    @Test
+    public void testAddDeckToCourse() throws Exception{
+        when(courseService.addDeckToCourse(1L,1L)).thenReturn(createCourse());
+        mockMvc.perform(put("/api/categories/courses/{courseId}/decks/{deckId}",1L,1L))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name",is("Java interview course")))
+                .andExpect(jsonPath("$.description",is("4 parts of java questions & answers")));
+
+    }
+
+    @Test
+    public void testGetIdAllCoursesOfTheCurrentUser() throws Exception{
+        List<Long> list = new ArrayList<>();
+        list.add(1L);
+        list.add(22L);
+        list.add(333L);
+        when(courseService.getAllCoursesIdOfTheCurrentUser()).thenReturn(list);
+        mockMvc.perform(get("/api/private/cabinet/courses")
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.[0]",is(1)))
+                .andExpect(jsonPath("$.[2]",is(333)));
+    }
+
+    @Test
+    public void testCreatePrivateCourse() throws Exception{
+        doNothing().when(courseService).createPrivateCourse(createCourse(),1L);
+        mockMvc.perform(post("/api/categories/{categoryId}/courses",1L)
+                .content(new ObjectMapper().writeValueAsString(createCourse()))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name",is("Java interview course")))
+                .andExpect(jsonPath("$.description",is("4 parts of java questions & answers")));
     }
 }

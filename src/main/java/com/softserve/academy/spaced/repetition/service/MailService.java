@@ -1,5 +1,6 @@
 package com.softserve.academy.spaced.repetition.service;
 
+import com.softserve.academy.spaced.repetition.controller.dto.simpleDTO.MailDTO;
 import com.softserve.academy.spaced.repetition.domain.User;
 
 import java.util.Map;
@@ -38,6 +39,12 @@ public interface MailService {
     void sendPasswordRestoreMail(String accountEmail);
 
     /**
+     * Sends data from contact us form on the website to a custom e-mail which you can set in configuration file
+     * @param mailDTO DTO which contains name of the user, his e-mail, subject of user's request and his message
+     */
+    void sendRequestFromContactUsFormToEmail(MailDTO mailDTO);
+
+    /**
      * Generates the text of email to verify the registration.
      *
      * @param model map with values which will be inserted into html page.
@@ -68,5 +75,4 @@ public interface MailService {
      * @return content of the email.
      */
     String getRestorePasswordTemplateContent(Map<String, Object> model);
-
 }

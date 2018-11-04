@@ -16,6 +16,8 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
 
     List<Category> findTop8ByOrderById();
 
-    @Query(value = "SELECT c.name, c.description, c.image FROM Category c WHERE c.id = :category_id")
-    List<Category> hasAccessToCategory(@Param("category_id") Long category_id);
+    @Query(value = "SELECT c.name, c.description, c.image FROM Category c WHERE c.id = :categoryId")
+    List<Category> hasAccessToCategory(@Param("categoryId") Long categoryId);
+
+    List<Category>  findByNameIgnoreCaseContainingOrDescriptionIgnoreCaseContaining(String name, String description);
 }

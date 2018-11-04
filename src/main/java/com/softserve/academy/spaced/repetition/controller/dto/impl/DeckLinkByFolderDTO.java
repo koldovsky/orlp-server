@@ -2,7 +2,6 @@ package com.softserve.academy.spaced.repetition.controller.dto.impl;
 
 import com.softserve.academy.spaced.repetition.controller.DeckController;
 import com.softserve.academy.spaced.repetition.controller.dto.builder.DTO;
-import com.softserve.academy.spaced.repetition.controller.FolderController;
 import com.softserve.academy.spaced.repetition.domain.Deck;
 import org.springframework.hateoas.Link;
 
@@ -15,11 +14,13 @@ public class DeckLinkByFolderDTO extends DTO<Deck> {
         super(deck, link);
 
         Link linkCards = linkTo(methodOn(DeckController.class)
-                .getCardsByFolderAndDeck((long) -1, getEntity().getId())).withRel("cards");
+                .getCardsByCategoryAndDeck(getEntity().getId())).withRel("cards");
         add(getLinkWithReplacedParentPart(linkCards).withRel("cards"));
     }
 
-    public Long getDeckId() { return getEntity().getId(); }
+    public Long getDeckId() {
+        return getEntity().getId();
+    }
 
     public String getName() {
         return getEntity().getName();
@@ -33,7 +34,13 @@ public class DeckLinkByFolderDTO extends DTO<Deck> {
         return getEntity().getRating();
     }
 
-    public String getSynthax(){
+    public Boolean getHidden() {
+        return getEntity().isHidden();
+    }
+
+    public String getSynthax() {
         return getEntity().getSyntaxToHighlight();
     }
+
+    public Long getCreatedBy() { return getEntity().getDeckOwner().getId(); }
 }

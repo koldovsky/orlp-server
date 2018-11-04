@@ -5,7 +5,9 @@ import com.softserve.academy.spaced.repetition.domain.Deck;
 import com.softserve.academy.spaced.repetition.utils.exceptions.NotAuthorisedUserException;
 import org.springframework.data.domain.Page;
 
+import java.math.BigInteger;
 import java.util.List;
+import java.util.Set;
 
 /**
  * This interface works with course
@@ -37,13 +39,12 @@ public interface CourseService {
     List<Deck> getAllDecksByCourseId(Long categoryId, Long courseId);
 
     /**
-     * Find user in category with the given identifiers of category and course.
+     * Find course with the given identifier.
      *
-     * @param categoryId must not be {@literal null}.
      * @param courseId   must not be {@literal null}.
      * @return course with given identifiers
      */
-    Course getCourseById(Long categoryId, Long courseId);
+    Course getCourseById(Long courseId);
 
     /**
      * Adds course to category with the given identifier
@@ -115,7 +116,7 @@ public interface CourseService {
      * @param courseId     must not be {@literal null}.
      * @param courseAccess course with changed property published
      */
-    void updateCourseAccess(Long courseId, Course courseAccess);
+    Course updateCourseAccess(Long courseId, Course courseAccess);
 
     /**
      * Deletes course from current user, but not from DB
@@ -126,12 +127,19 @@ public interface CourseService {
     void deleteLocalCourse(Long courseId) throws NotAuthorisedUserException;
 
     /**
+     * Deletes course from DB by Admin
+     *
+     * @param courseId must not be {@literal null}.
+     */
+    void deleteCourseAndSubscriptions (Long courseId);
+
+    /**
      * Adds deck with given identifier to course with given identifier.
      *
      * @param courseId must not be {@literal null}.
      * @param deckId   must not be {@literal null}.
      */
-    void addDeckToCourse(Long courseId, Long deckId);
+    Course addDeckToCourse(Long courseId, Long deckId);
 
     /**
      * Return sorted categories on each page.
@@ -153,5 +161,9 @@ public interface CourseService {
      * @return sorted course on each page (by default 12 courses on each page)
      */
     Page<Course> getPageWithCoursesByCategory(long categoryId, int pageNumber, String sortBy, boolean ascending);
+
+    Set<BigInteger> findCoursesId(String searchString);
+
+    List<Course> findAllCoursesBySearch(String searchString);
 
 }
