@@ -79,6 +79,16 @@ public class DeckController {
                 linkTo(methodOn(DeckController.class).getAllDecksByCourseId(categoryId, courseId)).withSelfRel());
     }
 
+    @Auditable(action = AuditingAction.EDIT_DECK)
+    @PutMapping("/api/cabinet/decks/{deckId}/toggle/access")
+    @PreAuthorize("hasPermission('DECK','UPDATE') && @deckServiceImpl.getDeck(#deckId).createdBy==principal.id")
+    public DeckLinkByCategoryDTO updateDeckAccess(@PathVariable Long deckId) {
+        LOGGER.debug("Toggle deck with id: {}", deckId);
+        Deck deck = deckService.toggleDeckAccess(deckId);
+        Link selfLink = linkTo(methodOn(DeckController.class).getDeckById(deck.getId())).withSelfRel();
+        return buildDtoForEntity(deck, DeckLinkByCategoryDTO.class, selfLink);
+    }
+
     @GetMapping(value = "/api/decks/{deckId}")
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasPermission('DECK','READ')")
@@ -110,21 +120,6 @@ public class DeckController {
         List<Card> cards = deckService.getAllCardsByDeckId(deckId);
         return buildDtoListForCollection(cards, CardPublicDTO.class, linkTo(methodOn(DeckController.class)
                 .getCardsByCourseAndDeck(categoryId, courseId, deckId)).withSelfRel());
-    }
-    /*  TODO method addDeckToCategory had same PostMapping value as addDeckForUser()
-     *  temporarily changed categories -> categories1 in value so other
-     *  method can work
-     */
-
-    @Auditable(action = AuditingAction.CREATE_DECK_IN_CATEGORY)
-    @PostMapping(value = "/api/categories1/{category_id}/decks")
-    @ResponseStatus(HttpStatus.CREATED)
-    @PreAuthorize("hasPermission('DECK','CREATE')")
-    public DeckPublicDTO addDeckToCategory(@Validated(Request.class) @RequestBody Deck deck,
-                                           @PathVariable Long category_id) {
-        deckService.addDeckToCategory(deck, category_id);
-        return buildDtoForEntity(deck, DeckPublicDTO.class,
-                linkTo(methodOn(DeckController.class).getDeckById(deck.getId())).withSelfRel());
     }
 
     @Auditable(action = AuditingAction.CREATE_DECK_IN_COURSE)
@@ -217,8 +212,7 @@ public class DeckController {
     @Auditable(action = AuditingAction.EDIT_DECK_USER)
     @PutMapping(value = "/api/categories/{categoryId}/decks/{deckId}")
     @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasPermission('DECK','UPDATE')&& " +
-            "@deckServiceImpl.getDeck(#deckId).createdBy==principal.id")
+    @PreAuthorize("hasPermission('DECK','UPDATE') && @deckServiceImpl.getDeck(#deckId).createdBy==principal.id")
     public DeckPrivateDTO updateDeckForUser(@Validated(Request.class) @RequestBody Deck deck,
                                             @PathVariable Long deckId, @PathVariable Long categoryId)
             throws NotAuthorisedUserException, NotOwnerOperationException {

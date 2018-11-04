@@ -132,12 +132,20 @@ public class CourseController {
     }
 
     @DeleteMapping(value = "/api/cabinet/local/courses/{courseId}")
-    @PreAuthorize("hasPermission('COURSE','DELETE') &&" +
-            "@courseServiceImpl.getCourseById(#courseId).createdBy==principal.id")
+    @PreAuthorize("hasPermission('COURSE','DELETE')")
     public ResponseEntity deleteLocalCourse(@PathVariable Long courseId) throws NotAuthorisedUserException {
         LOGGER.debug("Deleting global course with id: {}", courseId);
         courseService.deleteLocalCourse(courseId);
         return new ResponseEntity(HttpStatus.OK);
+    }
+
+    @Auditable(action = AuditingAction.DELETE_COURSE)
+    @DeleteMapping(value = "/api/courses/{courseId}")
+    @PreAuthorize("hasPermission('COURSE','DELETE')")
+    public ResponseEntity deleteCourseByAdmin(@PathVariable Long courseId) {
+        LOGGER.debug("Deleting course with id: {}", courseId);
+        courseService.deleteCourseAndSubscriptions(courseId);
+        return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 
     @Auditable(action = AuditingAction.ADD_COURSE)

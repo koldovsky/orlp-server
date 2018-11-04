@@ -57,6 +57,7 @@ public class DeckControllerTest {
     final private String ADMIN_DECKS_SORT_BY = "id";
 
     final private int CATEGORY_ID = 1;
+    final private Long DECK_ID = 1L;
     final private String SORT_BY = "name";
 
 
@@ -188,6 +189,20 @@ public class DeckControllerTest {
     }
 
     @Test
+    public void testUpdateDeckAccess() throws Exception {
+        Deck deck =new Deck();
+        deck.setId(DECK_ID);
+        deck.setHidden(true);
+        when(deckService.toggleDeckAccess(DECK_ID)).thenReturn(deck);
+        mockMvc.perform(put("/api/cabinet/decks/{deckId}/toggle/access", DECK_ID)
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.hidden", is(true)));
+        verify(deckService,times(1)).toggleDeckAccess(DECK_ID);
+    }
+
+    @Test
     public void testGetDeckById() throws Exception{
         when(deckService.getDeck(1L)).thenReturn(createDeck(1L,"deck1","testdeck1", "deck@deck.com", 1.0, 1,"java"));
         mockMvc.perform(get("/api/decks/{deckId}", 1L)
@@ -234,15 +249,6 @@ public class DeckControllerTest {
                 .andExpect(jsonPath("$.[0].answer", is("A1")))
                 .andExpect(jsonPath("$.[1].question", is("Q2")))
                 .andExpect(jsonPath("$.[2].title", is("Card3")));
-    }
-
-    @Test
-    public void testAddDeckToCategory() throws Exception{
-        doNothing().when(deckService).addDeckToCategory(createDeck(1L,"deck1","testdeck1", "deck@deck.com", 1.0, 1,"java"), 1L);
-        mockMvc.perform(post("/api/categories1/{category_id}/decks", 1L)
-                .content(new ObjectMapper().writeValueAsString(createDeck(1L,"deck1","testdeck1", "deck@deck.com", 1.0, 1,"java")))
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isCreated());
     }
 
     @Test

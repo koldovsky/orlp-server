@@ -13,6 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -166,6 +167,13 @@ public class CourseServiceImpl implements CourseService {
         userRepository.save(user);
     }
 
+    @Transactional
+    @Override
+    public void deleteCourseAndSubscriptions(Long courseId) {
+        courseRepository.deleteSubscriptions(courseId);
+        courseRepository.delete(courseId);
+    }
+
     @Override
     public Course addDeckToCourse(Long courseId, Long deckId) {
         Course course = courseRepository.findOne(courseId);
@@ -195,5 +203,10 @@ public class CourseServiceImpl implements CourseService {
     @Override
     public Set<BigInteger> findCoursesId(String searchString) {
         return courseRepository.findCoursesId(searchString);
+    }
+
+    @Override
+    public List<Course> findAllCoursesBySearch(String searchString) {
+        return courseRepository.findByNameIgnoreCaseContainingOrDescriptionIgnoreCaseContaining(searchString, searchString);
     }
 }

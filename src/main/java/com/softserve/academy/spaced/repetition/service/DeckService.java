@@ -16,19 +16,12 @@ import java.util.Set;
  * This interface proceeds all operations with decks.
  */
 public interface DeckService {
-    /**
-     * Adds a new deck to the category
-     *
-     * @param deck       the deck which will be added to the category.
-     * @param categoryId category`s id for which the deck will be added.
-     */
-    void addDeckToCategory(Deck deck, Long categoryId);
 
     /**
      * Adds a new deck to the course
      *
-     * @param deck       the deck which will be added to the category.
-     * @param courseId   course`s id to which the deck will be added.
+     * @param deck     the deck which will be added to the category.
+     * @param courseId course`s id to which the deck will be added.
      */
     void addDeckToCourse(Deck deck, Long courseId);
 
@@ -185,4 +178,8 @@ public interface DeckService {
     List<Card> getAllCardsByDeckId(Long deckId);
 
     Set<BigInteger> findDecksId(String searchString);
+
+    Deck toggleDeckAccess(Long deckId);
+
+    List<Deck> findAllDecksBySearch(String searchString);
 }

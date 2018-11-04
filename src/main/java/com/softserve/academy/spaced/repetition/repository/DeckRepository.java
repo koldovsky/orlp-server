@@ -23,6 +23,8 @@ public interface DeckRepository extends JpaRepository<Deck, Long> {
     @Query(value = "SELECT d FROM Deck d INNER JOIN d.deckOwner u  WHERE d.id = :deck_id AND u.id = :user_id")
     Deck getDeckByItsIdAndOwnerOfDeck(@Param("deck_id") Long deckId, @Param("user_id") Long userId);
 
+    List<Deck> findByNameIgnoreCaseContainingOrDescriptionIgnoreCaseContaining(String name, String description);
+
     List<Deck> findAllByDeckOwnerIdEquals(Long userId);
 
     Page<Deck> findAllByCategoryEquals(Category category, Pageable pageable);
@@ -30,4 +32,9 @@ public interface DeckRepository extends JpaRepository<Deck, Long> {
     @Query(value = "SELECT d.deck_id FROM deck d WHERE d.name LIKE %:searchString% or d.description LIKE %:searchString%",
             nativeQuery = true)
     Set<BigInteger> findDecksId(@Param("searchString") String searchString);
+
+    Page<Deck> findAllByCategoryEqualsAndHiddenFalse(Category category, Pageable pageable);
+
+    List<Deck> findAllByHiddenFalseOrderByRatingDesc();
+
 }

@@ -63,4 +63,6 @@ public interface CategoryService {
     Page<Category> getSortedCategories(int pageNumber, String sortBy, boolean ascending);
 
     void deleteCategory(Long categoryId);
+
+    List<Category> findAllCategoriesBySearch(String searchString);
 }

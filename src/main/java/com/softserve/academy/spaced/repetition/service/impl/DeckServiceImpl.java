@@ -64,11 +64,10 @@ public class DeckServiceImpl implements DeckService {
 
     @Override
     public List<Deck> getAllOrderedDecks() {
-        return deckRepository.findAllByOrderByRatingDesc();
+        return deckRepository.findAllByHiddenFalseOrderByRatingDesc();
     }
 
     @Override
-    @Transactional
     public Deck getDeck(Long deckId) {
         return deckRepository.findOne(deckId);
     }
@@ -82,13 +81,6 @@ public class DeckServiceImpl implements DeckService {
     @Override
     public Set<BigInteger> findDecksId(String searchString) {
         return deckRepository.findDecksId(searchString);
-    }
-
-    @Override
-    @Transactional
-    public void addDeckToCategory(Deck deck, Long categoryId) {
-        Category category = categoryRepository.findOne(categoryId);
-        category.getDecks().add(deckRepository.save(deck));
     }
 
     @Override
@@ -207,10 +199,18 @@ public class DeckServiceImpl implements DeckService {
     }
 
     @Override
+    public Deck toggleDeckAccess(Long deckId) {
+        Deck deck = deckRepository.findOne(deckId);
+        deck.setHidden(!deck.isHidden());
+        deckRepository.save(deck);
+        return deck;
+    }
+
+    @Override
     public Page<Deck> getPageWithDecksByCategory(long categoryId, int pageNumber, String sortBy, boolean ascending) {
-        PageRequest request = new PageRequest(pageNumber - 1, QUANTITY_DECKS_IN_PAGE,
-                ascending ? Sort.Direction.ASC : Sort.Direction.DESC, sortBy);
-        return deckRepository.findAllByCategoryEquals(categoryRepository.findOne(categoryId), request);
+        PageRequest request = new PageRequest(pageNumber - 1, QUANTITY_DECKS_IN_PAGE, ascending
+                ? Sort.Direction.ASC : Sort.Direction.DESC, sortBy);
+        return deckRepository.findAllByCategoryEqualsAndHiddenFalse(categoryRepository.findOne(categoryId), request);
     }
 
     @Override
@@ -223,5 +223,10 @@ public class DeckServiceImpl implements DeckService {
     @Override
     public String getSynthaxToHightlight(long deckId) {
         return deckRepository.getDeckById(deckId).getSyntaxToHighlight();
+    }
+
+    @Override
+    public List<Deck> findAllDecksBySearch(String searchString) {
+        return deckRepository.findByNameIgnoreCaseContainingOrDescriptionIgnoreCaseContaining(searchString, searchString);
     }
 }

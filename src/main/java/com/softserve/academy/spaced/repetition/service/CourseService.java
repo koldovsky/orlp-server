@@ -127,6 +127,13 @@ public interface CourseService {
     void deleteLocalCourse(Long courseId) throws NotAuthorisedUserException;
 
     /**
+     * Deletes course from DB by Admin
+     *
+     * @param courseId must not be {@literal null}.
+     */
+    void deleteCourseAndSubscriptions (Long courseId);
+
+    /**
      * Adds deck with given identifier to course with given identifier.
      *
      * @param courseId must not be {@literal null}.
@@ -156,4 +163,7 @@ public interface CourseService {
     Page<Course> getPageWithCoursesByCategory(long categoryId, int pageNumber, String sortBy, boolean ascending);
 
     Set<BigInteger> findCoursesId(String searchString);
+
+    List<Course> findAllCoursesBySearch(String searchString);
+
 }
