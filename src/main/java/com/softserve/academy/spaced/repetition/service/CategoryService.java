@@ -1,6 +1,6 @@
 package com.softserve.academy.spaced.repetition.service;
 
-import com.softserve.academy.spaced.repetition.controller.dto.impl.CategoryDTO;
+import com.softserve.academy.spaced.repetition.controller.dto.simpleDTO.CategoryDTO;
 import com.softserve.academy.spaced.repetition.domain.Category;
 import com.softserve.academy.spaced.repetition.domain.Image;
 import org.springframework.data.domain.Page;
@@ -63,4 +63,6 @@ public interface CategoryService {
     Page<Category> getSortedCategories(int pageNumber, String sortBy, boolean ascending);
 
     void deleteCategory(Long categoryId);
+
+    List<Category> findAllCategoriesBySearch(String searchString);
 }

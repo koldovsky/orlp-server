@@ -75,10 +75,6 @@ public class AccessToUrlServiceTest {
         when(userService.getAuthorizedUser()).thenReturn(user);
         when(courseRepository.getAccessToCourse(CATEGORY_ID, COURSE_ID))
                 .thenReturn(courseList);
-        when(deckRepository.hasAccessToDeck(COURSE_ID, DECK_ID))
-                .thenReturn(deckList);
-        when(cardRepository.hasAccessToCard(DECK_ID, CARD_ID))
-                .thenReturn(cardList);
     }
 
     private Set<Authority> createAuthoritySet() {
@@ -128,61 +124,6 @@ public class AccessToUrlServiceTest {
 
         boolean result = accessToUrlService.hasAccessToCourse(CATEGORY_ID);
         verify(courseRepository).getAccessToCourse(CATEGORY_ID);
-        assertEquals(true, result);
-    }
-
-    @Test
-    public void testHasAccessToDeck() {
-        boolean result = accessToUrlService.hasAccessToDeck(CATEGORY_ID, COURSE_ID, DECK_ID);
-        verify(courseRepository).getAccessToCourse(CATEGORY_ID, COURSE_ID);
-        verify(deckRepository).hasAccessToDeck(COURSE_ID, DECK_ID);
-        assertEquals(true, result);
-    }
-
-    @Test
-    public void testHasAccessToDeckFromCategory() {
-        when(deckRepository.hasAccessToDeckFromCategory(CATEGORY_ID, DECK_ID))
-                .thenReturn(deckList);
-
-        boolean result = accessToUrlService.hasAccessToDeckFromCategory(CATEGORY_ID, DECK_ID);
-        verify(deckRepository).hasAccessToDeckFromCategory(CATEGORY_ID, DECK_ID);
-        assertEquals(true, result);
-    }
-
-    @Test
-    public void testHasAccessToDeckByCategory() {
-        when(deckRepository.hasAccessToDeckFromCategory(CATEGORY_ID))
-                .thenReturn(deckList);
-
-        boolean result = accessToUrlService.hasAccessToDeck(CATEGORY_ID);
-        verify(deckRepository).hasAccessToDeckFromCategory(CATEGORY_ID);
-        assertEquals(true, result);
-    }
-
-    @Test
-    public void testHasAccessToCard() {
-        boolean result = accessToUrlService.hasAccessToCard(DECK_ID, CARD_ID);
-        verify(cardRepository).hasAccessToCard(DECK_ID, CARD_ID);
-        assertEquals(true, result);
-    }
-
-    @Test
-    public void testHasAccessToCardByCategory() {
-        when(deckRepository.hasAccessToDeckFromCategory(CATEGORY_ID, DECK_ID))
-                .thenReturn(deckList);
-
-        boolean result = accessToUrlService.hasAccessToCard(CARD_ID, DECK_ID, CARD_ID);
-        verify(deckRepository).hasAccessToDeckFromCategory(CATEGORY_ID, DECK_ID);
-        verify(cardRepository).hasAccessToCard(DECK_ID, CARD_ID);
-        assertEquals(true, result);
-    }
-
-    @Test
-    public void testHasAccessToCardByCard() {
-        boolean result = accessToUrlService.hasAccessToCard(CATEGORY_ID, COURSE_ID, DECK_ID, CARD_ID);
-        verify(courseRepository).getAccessToCourse(CATEGORY_ID, COURSE_ID);
-        verify(deckRepository).hasAccessToDeck(COURSE_ID, DECK_ID);
-        verify(cardRepository).hasAccessToCard(DECK_ID, CARD_ID);
         assertEquals(true, result);
     }
 

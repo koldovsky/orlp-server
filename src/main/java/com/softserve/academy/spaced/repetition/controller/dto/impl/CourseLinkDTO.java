@@ -47,4 +47,8 @@ public class CourseLinkDTO extends DTO <Course> {
     public Long getCategoryId() {
         return getEntity().getCategory().getId();
     }
+
+    public Long getCreatedBy(){
+        return getEntity().getCreatedBy();
+    }
 }

@@ -52,39 +52,6 @@ public class AccessToUrlServiceImpl implements AccessToUrlService {
     }
 
     @Override
-    public boolean hasAccessToDeck(Long category_id, Long course_id, Long deck_id) {
-        return hasAccessToCourse(category_id, course_id)
-                & (deckRepository.hasAccessToDeck(course_id, deck_id).size() > 0);
-    }
-
-    @Override
-    public boolean hasAccessToDeckFromCategory(Long category_id, Long deck_id) {
-        return deckRepository.hasAccessToDeckFromCategory(category_id, deck_id).size() > 0;
-    }
-
-    @Override
-    public boolean hasAccessToDeck(Long category_id) {
-        return deckRepository.hasAccessToDeckFromCategory(category_id).size() > 0;
-    }
-
-    @Override
-    public boolean hasAccessToCard(Long deck_id, Long card_id) {
-        return (cardRepository.hasAccessToCard(deck_id, card_id).size() > 0);
-    }
-
-    @Override
-    public boolean hasAccessToCard(Long category_id, Long deck_id, Long card_id) {
-        return hasAccessToDeckFromCategory(category_id, deck_id)
-                & (cardRepository.hasAccessToCard(deck_id, card_id).size() > 0);
-    }
-
-    @Override
-    public boolean hasAccessToCard(Long category_id, Long course_id, Long deck_id, Long card_id) {
-        return hasAccessToDeck(category_id, course_id, deck_id)
-                & (cardRepository.hasAccessToCard(deck_id, card_id).size() > 0);
-    }
-
-    @Override
     public boolean hasAccessToFolder(Long folder_id) throws NotAuthorisedUserException {
         Long authorizedUserFolderId = userService.getAuthorizedUser().getFolder().getId();
 

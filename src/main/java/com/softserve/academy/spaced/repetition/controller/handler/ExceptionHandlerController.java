@@ -2,8 +2,7 @@ package com.softserve.academy.spaced.repetition.controller.handler;
 
 import com.softserve.academy.spaced.repetition.controller.dto.simpleDTO.FieldErrorDTO;
 import com.softserve.academy.spaced.repetition.controller.dto.simpleDTO.ValidationMessageDTO;
-import com.softserve.academy.spaced.repetition.controller.dto.impl.MessageDTO;
-import com.softserve.academy.spaced.repetition.domain.enums.AccountStatus;
+import com.softserve.academy.spaced.repetition.controller.dto.simpleDTO.MessageDTO;
 import com.softserve.academy.spaced.repetition.utils.exceptions.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -23,7 +22,6 @@ import org.springframework.web.multipart.MultipartException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import java.net.UnknownHostException;
-import java.util.EnumMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.NoSuchElementException;

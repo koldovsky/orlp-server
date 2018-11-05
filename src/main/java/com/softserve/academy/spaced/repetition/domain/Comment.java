@@ -11,7 +11,7 @@ import java.util.Objects;
 
 @Entity
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-public abstract class Comment implements EntityInterface {
+public abstract class Comment extends EntityForOwnership implements EntityInterface {
 
     @Id
     @GeneratedValue(strategy = GenerationType.TABLE)

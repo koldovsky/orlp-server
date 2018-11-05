@@ -1,4 +1,4 @@
-package com.softserve.academy.spaced.repetition.controller.dto.impl;
+package com.softserve.academy.spaced.repetition.controller.dto.simpleDTO;
 
 import com.softserve.academy.spaced.repetition.domain.Image;
 
@@ -20,4 +20,15 @@ public class CategoryDTO {
         return image;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setImage(Image image) {
+        this.image = image;
+    }
 }

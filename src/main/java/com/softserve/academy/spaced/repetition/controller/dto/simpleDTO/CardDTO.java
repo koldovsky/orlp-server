@@ -1,5 +1,6 @@
 package com.softserve.academy.spaced.repetition.controller.dto.simpleDTO;
 
+import com.softserve.academy.spaced.repetition.controller.dto.impl.CardPublicDTO;
 import com.softserve.academy.spaced.repetition.utils.validators.ValidationConstants;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;

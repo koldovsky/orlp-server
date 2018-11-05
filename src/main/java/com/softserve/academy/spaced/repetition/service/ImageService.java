@@ -109,4 +109,6 @@ public interface ImageService {
      * @throws ImageRepositorySizeQuotaExceededException if user quota is exceeded.
      */
     boolean isImageCanBeAddedToProfile(User user, String imageBase64) throws ImageRepositorySizeQuotaExceededException;
+
+    List<Image> getImagesWithoutContent();
 }

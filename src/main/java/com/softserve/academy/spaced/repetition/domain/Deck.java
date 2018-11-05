@@ -8,8 +8,11 @@ import java.util.List;
 import java.util.Set;
 
 @Entity
-@Table(name = "deck")
-public class Deck implements EntityInterface {
+@Table(name = "deck", indexes = {
+        @Index(columnList = "name", name = "deck_index"),
+        @Index(columnList = "description", name = "deck_index")
+})
+public class Deck extends EntityForOwnership implements EntityInterface {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -33,6 +36,9 @@ public class Deck implements EntityInterface {
 
     @Column(name = "rating")
     private double rating;
+
+    @Column(name = "hidden")
+    private boolean hidden;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
@@ -118,6 +124,14 @@ public class Deck implements EntityInterface {
         this.rating = rating;
     }
 
+    public boolean isHidden() {
+        return hidden;
+    }
+
+    public void setHidden(boolean hidden) {
+        this.hidden = hidden;
+    }
+
     public List<DeckRating> getDeckRatings() {
         return deckRatings;
     }
@@ -140,6 +154,14 @@ public class Deck implements EntityInterface {
 
     public void setDeckComments(List<DeckComment> deckComments) {
         this.deckComments = deckComments;
+    }
+
+    public List<Course> getCourses() {
+        return courses;
+    }
+
+    public void setCourses(List<Course> courses) {
+        this.courses = courses;
     }
 
     @Override

@@ -1,5 +1,7 @@
 package com.softserve.academy.spaced.repetition.service;
 
+import com.softserve.academy.spaced.repetition.controller.dto.impl.DeckCreateValidationDTO;
+import com.softserve.academy.spaced.repetition.controller.dto.impl.DeckEditByAdminDTO;
 import com.softserve.academy.spaced.repetition.domain.*;
 import com.softserve.academy.spaced.repetition.repository.CategoryRepository;
 import com.softserve.academy.spaced.repetition.repository.CourseRepository;
@@ -50,10 +52,13 @@ public class DeckServiceTest {
     @Mock
     private UserService userService;
     @Mock
+    private FolderService folderService;
+    @Mock
     private MessageSource messageSource;
     private User notOwnerUser;
     private Category category;
     private Deck deck;
+    private DeckCreateValidationDTO deckDTO;
 
     @Before
     public void setUp() throws NotAuthorisedUserException {
@@ -74,7 +79,7 @@ public class DeckServiceTest {
         when(deckRepository.findOne(DECK_ID)).thenReturn(deck);
         when(deckRepository.save(deck)).thenReturn(deck);
         doNothing().when(deckRepository).delete(deck);
-        doNothing().when(deckRepository).deleteDeckById(DECK_ID);
+        doNothing().when(deckRepository).delete(DECK_ID);
         when(courseRepository.findOne(COURSE_ID)).thenReturn(course);
         when(categoryRepository.findOne(CATEGORY_ID)).thenReturn(category);
         when(categoryRepository.findById(CATEGORY_ID)).thenReturn(category);
@@ -96,10 +101,10 @@ public class DeckServiceTest {
 
     @Test
     public void testGetAllOrderedDecks() {
-        when(deckRepository.findAllByOrderByRatingDesc()).thenReturn(null);
+        when(deckRepository.findAllByHiddenFalseOrderByRatingDesc()).thenReturn(null);
 
         List<Deck> result = deckService.getAllOrderedDecks();
-        verify(deckRepository).findAllByOrderByRatingDesc();
+        verify(deckRepository).findAllByHiddenFalseOrderByRatingDesc();
         assertNull(result);
     }
 
@@ -118,15 +123,8 @@ public class DeckServiceTest {
     }
 
     @Test
-    public void testAddDeckToCategory() {
-        deckService.addDeckToCategory(deck, CATEGORY_ID);
-        verify(categoryRepository).findOne(CATEGORY_ID);
-        verify(deckRepository).save(deck);
-    }
-
-    @Test
     public void testAddDeckToCourse() {
-        deckService.addDeckToCourse(deck, CATEGORY_ID, COURSE_ID);
+        deckService.addDeckToCourse(deck, COURSE_ID);
         verify(courseRepository).findOne(COURSE_ID);
         verify(deckRepository).save(deck);
     }
@@ -141,7 +139,11 @@ public class DeckServiceTest {
 
     @Test
     public void testUpdateDeckAdminById() {
-        Deck result = deckService.updateDeckAdmin(deck, DECK_ID);
+        DeckEditByAdminDTO deckEditDTO = new DeckEditByAdminDTO();
+        deckEditDTO.setDescription("Description for edited card");
+        deckEditDTO.setName("Edited card");
+        deckEditDTO.setCategoryId(CATEGORY_ID);
+        Deck result = deckService.updateDeckAdmin(deckEditDTO, DECK_ID);
         verify(deckRepository).findOne(DECK_ID);
         verify(categoryRepository).findById(CATEGORY_ID);
         verify(deckRepository).save(deck);
@@ -151,7 +153,7 @@ public class DeckServiceTest {
     @Test
     public void testDeleteDeckById() {
         deckService.deleteDeck(DECK_ID);
-        verify(deckRepository).deleteDeckById(DECK_ID);
+        verify(deckRepository).delete(DECK_ID);
     }
 
     @Test
@@ -174,7 +176,12 @@ public class DeckServiceTest {
     public void testCreateNewDeckByAdmin() throws NotAuthorisedUserException {
         when(deckRepository.save(any(Deck.class))).thenReturn(deck);
 
-        Deck result = deckService.createNewDeckAdmin(deck);
+        deckDTO = new DeckCreateValidationDTO();
+        deckDTO.setDescription("Description for new card");
+        deckDTO.setName("New card");
+        deckDTO.setCategoryId(CATEGORY_ID);
+        folderService.addDeck(deck.getId());
+        Deck result = deckService.createNewDeckAdmin(deckDTO);
         verify(userService).getAuthorizedUser();
         verify(categoryRepository).findById(CATEGORY_ID);
         verify(deckRepository).save(deck);
@@ -185,7 +192,7 @@ public class DeckServiceTest {
     public void testCreateNewDeckByAdminByNotAuthorisedUser() throws NotAuthorisedUserException {
         when(userService.getAuthorizedUser()).thenThrow(new NotAuthorisedUserException());
 
-        deckService.createNewDeckAdmin(deck);
+        deckService.createNewDeckAdmin(deckDTO);
         verify(userService).getAuthorizedUser();
     }
 
@@ -289,12 +296,12 @@ public class DeckServiceTest {
 
     @Test
     public void testGetPageWithDecksByCategory() {
-        when(deckRepository.findAllByCategoryEquals(eq(category), any(PageRequest.class))).thenReturn(null);
+        when(deckRepository.findAllByCategoryEqualsAndHiddenFalse(eq(category), any(PageRequest.class))).thenReturn(null);
 
         Page<Deck> result = deckService.getPageWithDecksByCategory(CATEGORY_ID, PAGE_NUMBER, PAGE_SORT_BY,
                 PAGE_ASCENDING_ORDER);
         verify(categoryRepository).findOne(CATEGORY_ID);
-        verify(deckRepository).findAllByCategoryEquals(eq(category), any(PageRequest.class));
+        verify(deckRepository).findAllByCategoryEqualsAndHiddenFalse(eq(category), any(PageRequest.class));
         assertNull(result);
     }
 

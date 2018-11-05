@@ -13,7 +13,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -23,6 +25,7 @@ import java.util.Set;
 public class CourseServiceImpl implements CourseService {
 
     private final static int QUANTITY_COURSES_IN_PAGE = 12;
+    private final Locale locale = LocaleContextHolder.getLocale();
     @Autowired
     private CourseRepository courseRepository;
     @Autowired
@@ -39,7 +42,6 @@ public class CourseServiceImpl implements CourseService {
     private DeckRepository deckRepository;
     @Autowired
     private MessageSource messageSource;
-    private final Locale locale = LocaleContextHolder.getLocale();
 
     @Override
     public List<Course> getAllCourses() {
@@ -93,8 +95,9 @@ public class CourseServiceImpl implements CourseService {
         Set<Course> courses = user.getCourses();
         for (Course course : courses) {
             if (course.getId() == course_id) {
-                course.setPublished(false);
+//                course.setPublished(false);
                 courses.remove(course);
+                user.setCourses(courses);
                 break;
             }
         }
@@ -164,6 +167,13 @@ public class CourseServiceImpl implements CourseService {
         userRepository.save(user);
     }
 
+    @Transactional
+    @Override
+    public void deleteCourseAndSubscriptions(Long courseId) {
+        courseRepository.deleteSubscriptions(courseId);
+        courseRepository.delete(courseId);
+    }
+
     @Override
     public Course addDeckToCourse(Long courseId, Long deckId) {
         Course course = courseRepository.findOne(courseId);
@@ -188,5 +198,15 @@ public class CourseServiceImpl implements CourseService {
         PageRequest request = new PageRequest(pageNumber - 1, QUANTITY_COURSES_IN_PAGE, ascending
                 ? Sort.Direction.ASC : Sort.Direction.DESC, sortBy);
         return courseRepository.findAllByCategoryEqualsAndPublishedTrue(categoryRepository.findOne(categoryId), request);
+    }
+
+    @Override
+    public Set<BigInteger> findCoursesId(String searchString) {
+        return courseRepository.findCoursesId(searchString);
+    }
+
+    @Override
+    public List<Course> findAllCoursesBySearch(String searchString) {
+        return courseRepository.findByNameIgnoreCaseContainingOrDescriptionIgnoreCaseContaining(searchString, searchString);
     }
 }
