@@ -38,20 +38,25 @@ build:
 
 deploy-to-production:
   steps:
-    - wercker/add-ssh-key:
-        keyname: SSH_KEY
-    - add-to-known_hosts:
-        hostname: $REMOTE_HOST
-    - script :
-        name: Copy .jar and script to remote host
-        code: |
-          ssh $LOGIN@$REMOTE_HOST "cd ~/orlp-server/ && rm -f *.jar && rm -f *.sh"
-          scp ./container/*.jar $LOGIN@$REMOTE_HOST:~/orlp-server/
-          scp container_deploy.sh $LOGIN@$REMOTE_HOST:~/orlp-server/
-    - script:
-        name: Run redeploy-script
-        code: |
-          ssh $LOGIN@$REMOTE_HOST "cd ~/orlp-server/ && sh container_deploy.sh"
+  - wercker/add-ssh-key:
+      keyname: SSH_KEY
+  - add-to-known_hosts:
+      hostname: $REMOTE_HOST
+  - script :
+      name: Copy .jar and script to remote host
+      code: |
+        ssh $LOGIN@$REMOTE_HOST "cd ~/orlp-server/ && rm -f *.jar && rm -f *.sh"
+        scp ./container/*.jar $LOGIN@$REMOTE_HOST:~/orlp-server/
+        # scp container_deploy.sh $LOGIN@$REMOTE_HOST:~/orlp-server/
+  - script:
+      name: stop docker container
+      code: |
+        scp check_if_server_run.sh $LOGIN@$REMOTE_HOST:~/orlp-server/
+        ssh $LOGIN@$REMOTE_HOST "cd ~/orlp-server/ && sh check_if_server_run.sh"
+  - script:
+      name: run docker container
+      code: |
+        ssh $LOGIN@$REMOTE_HOST "docker run --name orlp-server -d --restart=always --net=orlp --add-host orlp-mysql:192.168.0.50 --expose=80 -e 'VIRTUAL_HOST=$API_HOST' -e 'LETSENCRYPT_EMAIL=$LETSENCRYPT_EMAIL' -e 'LETSENCRYPT_HOST=$API_HOST' -v /home/wercker/orlp-server:/usr/src/myapp -w /usr/src/myapp java:8-jre java -Dserver.port=80 -jar Spaced.Repetition.jar"
   # Notify about the step status to slack
   after-steps:
     - slack-notifier:
