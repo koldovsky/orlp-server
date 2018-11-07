@@ -19,9 +19,7 @@ public class CoursePrice {
     @JoinColumn(name = "course_id")
     private Course course;
 
-    public CoursePrice(){
-
-    }
+    public CoursePrice(){}
 
     public CoursePrice(int price, Course course){
         this.course = course;
