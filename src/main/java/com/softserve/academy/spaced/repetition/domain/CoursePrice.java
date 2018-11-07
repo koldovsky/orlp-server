@@ -1,14 +1,14 @@
 package com.softserve.academy.spaced.repetition.domain;
 
-import com.softserve.academy.spaced.repetition.controller.dto.annotations.EntityInterface;
-
 import javax.persistence.*;
 
 @Entity
 @Table(name = "course_price")
 public class CoursePrice extends EntityForOwnership{
 
-    public CoursePrice(){};
+    public CoursePrice(){
+
+    }
 
     public CoursePrice(int price, Course course){
         this.course = course;
