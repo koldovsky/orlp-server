@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: jdbc:mysql://localhost/orlp?createDatabaseIfNotExist=true&useSSL=false
+    url: jdbc:mysql://localhost:3306/orlp?createDatabaseIfNotExist=true&useSSL=false
     username: root
-    password: 123456
+    password: unknown
     driver-class-name: com.mysql.jdbc.Driver
   jpa:
     show-sql: false
@@ -13,27 +13,27 @@ spring:
     host: smtp.gmail.com
     port: 587
     username: infolve.team@gmail.com
-    password: e8K9keql3ec
+    password: unknown
 app:
   jwt:
     header: Authentication
-    secret: K&Mcq(\*cy(<9bUa)|E'(@]G$ao~'Vm1h@upwRWECrLvw~>M1J{26}g6ZAr;2}i
+    secret: unknown
     expiration: 604800
     route:
       authentication:
         path: api/auth
         refresh: refresh
   reCaptcha:
-    secretKey: 6Lds0nEUAAAAAAwmGZ-LYor3LaGIThfBRYThTv0w
+    secretKey: unknown
     url: https://www.google.com/recaptcha/api/siteverify
   social:
     google:
       client-id: 109414995516-fftdn22fnpfdh80fgfsvpq1ht97hdkl5.apps.googleusercontent.com
-      client-secret: se5lxgYcg2xXeghejled31Ge
+      client-secret: unknown
       path: api/auth/google
     facebook:
       client-id: 439882899718340
-      client-secret: 94d6144f54723938f384ddb0a09daf81
+      client-secret: unknown
       path: api/auth/facebook
   images:
     maxSize: 1048576
@@ -50,3 +50,4 @@ logging:
 flyway:
   baseline-version: 1.1
   baseline-on-migrate: true
+contactUsEmail: devdevdevdev@mailinator.com
