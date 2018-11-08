@@ -59,6 +59,10 @@ public class Course extends EntityForOwnership implements EntityInterface {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "course", cascade = CascadeType.ALL)
     private List<CourseComment> courseComments;
 
+    @OneToOne
+    @JoinColumn(name = "course_price_id")
+    private CoursePrice coursePrice;
+
     public Course() {
     }
 
