@@ -44,6 +44,10 @@ public class Deck extends EntityForOwnership implements EntityInterface {
     @JoinColumn(name = "user_id")
     private User deckOwner;
 
+    @OneToOne
+    @JoinColumn(name = "deck_price_id")
+    private DeckPrice deckPrice;
+
     @OneToMany(mappedBy = "deck", cascade = CascadeType.ALL)
     private List<Card> cards;
 
