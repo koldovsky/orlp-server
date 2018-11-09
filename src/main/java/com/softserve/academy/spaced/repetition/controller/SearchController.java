@@ -43,6 +43,7 @@ public class SearchController {
         results.put("category", categoryList);
         results.put("course", courseList);
         results.put("deck", deckList);
-        return  new ResponseEntity(results, HttpStatus.OK);
+      
+        return new ResponseEntity(results, HttpStatus.OK);
     }
 }
