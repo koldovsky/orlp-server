@@ -1,6 +1,6 @@
 CREATE TABLE course_price (
 price_id bigint not null auto_increment,
-price bigint DEFAULT 0,
+price bigint,
 course_id bigint,
 primary key (price_id)
 );
