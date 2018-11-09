@@ -4,6 +4,4 @@ import com.softserve.academy.spaced.repetition.domain.DeckPrice;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface DeckPriceRepository extends JpaRepository<DeckPrice, Long> {
-
-    DeckPrice findDeckPriceById(Long id);
 }
