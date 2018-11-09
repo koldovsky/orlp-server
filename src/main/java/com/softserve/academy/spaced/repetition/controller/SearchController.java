@@ -33,7 +33,7 @@ public class SearchController {
     private CategoryService categoryService;
 
 
-    @GetMapping(value = "search/{searchString}")
+    @GetMapping(value = "api/search/{searchString}")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<Map<String, List<SearchDTO>>> getResultsFromSearch(@PathVariable String searchString) {
         Map<String, List<? extends SearchDTO>> results = new HashMap<>();
@@ -43,6 +43,7 @@ public class SearchController {
         results.put("category", categoryList);
         results.put("course", courseList);
         results.put("deck", deckList);
+      
         return new ResponseEntity(results, HttpStatus.OK);
     }
 }

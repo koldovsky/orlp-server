@@ -17,6 +17,11 @@ public class CategorySearchDTO extends SearchDTO<Category> {
     public String getName() { return getEntity().getName(); }
 
     @Override
+    public long getElementId() {
+        return getEntity().getId();
+    }
+
+    @Override
     public String getDescription() { return getEntity().getDescription(); }
 
     @Override
