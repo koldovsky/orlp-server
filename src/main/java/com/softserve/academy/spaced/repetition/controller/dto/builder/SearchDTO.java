@@ -14,8 +14,6 @@ public abstract class SearchDTO<T extends EntityInterface> extends DTO<T> {
 
     private String image;
 
-    private String resultType;
-
     private String selfLink;
 
     public SearchDTO(T entity, Link link) {
@@ -38,10 +36,6 @@ public abstract class SearchDTO<T extends EntityInterface> extends DTO<T> {
         this.image = image;
     }
 
-    public void setResultType(String resultType) {
-        this.resultType = resultType;
-    }
-
     public void setSelfLink(String selfLink) {
         this.selfLink = selfLink;
     }
@@ -58,10 +52,6 @@ public abstract class SearchDTO<T extends EntityInterface> extends DTO<T> {
         return image;
     }
 
-    public String getResultType() {
-        return resultType;
-    }
-
     public String getSelfLink() {
         return selfLink;
     }
@@ -75,12 +65,11 @@ public abstract class SearchDTO<T extends EntityInterface> extends DTO<T> {
         return Objects.equals(name, searchDTO.name) &&
                 Objects.equals(description, searchDTO.description) &&
                 Objects.equals(image, searchDTO.image) &&
-                Objects.equals(resultType, searchDTO.resultType) &&
                 Objects.equals(selfLink, searchDTO.selfLink);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), name, description, image, resultType, selfLink);
+        return Objects.hash(super.hashCode(), name, description, image, selfLink);
     }
 }
