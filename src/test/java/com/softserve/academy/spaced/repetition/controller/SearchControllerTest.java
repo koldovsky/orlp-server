@@ -107,7 +107,7 @@ public class SearchControllerTest {
         when(deckService.findAllDecksBySearch("Java")).thenReturn(deckList());
         when(courseService.findAllCoursesBySearch("Java")).thenReturn(courseList());
         when(categoryService.findAllCategoriesBySearch("Java")).thenReturn(categoryList());
-        mockMvc.perform(get("/search/{searchString}", "Java")
+        mockMvc.perform(get("/api/search/{searchString}", "Java")
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())

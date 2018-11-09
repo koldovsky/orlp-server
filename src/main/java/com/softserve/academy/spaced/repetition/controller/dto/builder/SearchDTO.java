@@ -44,6 +44,10 @@ public abstract class SearchDTO<T extends EntityInterface> extends DTO<T> {
         return name;
     }
 
+    public long getElementId() {
+        return getEntity().getId();
+    }
+
     public String getDescription() {
         return description;
     }

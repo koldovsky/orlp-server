@@ -28,6 +28,11 @@ public class CourseSearchDTO extends SearchDTO<Course> {
     public double getRating() { return getEntity().getRating(); }
 
     @Override
+    public long getElementId() {
+        return getEntity().getId();
+    }
+
+    @Override
     public String getSelfLink() {
         return linkTo(methodOn(CourseController.class).getCourseById(getEntity().getId())).withSelfRel().getHref();
     }

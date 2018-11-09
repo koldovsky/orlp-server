@@ -20,6 +20,11 @@ public class DeckSearchDTO extends SearchDTO<Deck> {
     @Override
     public String getName() { return getEntity().getName(); }
 
+    @Override
+    public long getElementId() {
+        return getEntity().getId();
+    }
+
     public double getRating() { return getEntity().getRating(); }
 
 
