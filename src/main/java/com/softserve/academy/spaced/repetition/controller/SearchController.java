@@ -15,8 +15,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static com.softserve.academy.spaced.repetition.controller.dto.builder.DTOBuilder.buildDtoListForCollection;
 
@@ -34,14 +35,14 @@ public class SearchController {
 
     @GetMapping(value = "search/{searchString}")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<List<SearchDTO>> getResultsFromSearch(@PathVariable String searchString) {
-        List<SearchDTO> results = new ArrayList<>();
+    public ResponseEntity<Map<String, List<SearchDTO>>> getResultsFromSearch(@PathVariable String searchString) {
+        Map<String, List<? extends SearchDTO>> results = new HashMap<>();
         List<CategorySearchDTO> categoryList = buildDtoListForCollection(categoryService.findAllCategoriesBySearch(searchString), CategorySearchDTO.class);
         List<DeckSearchDTO> deckList = buildDtoListForCollection(deckService.findAllDecksBySearch(searchString), DeckSearchDTO.class);
         List<CourseSearchDTO> courseList = buildDtoListForCollection(courseService.findAllCoursesBySearch(searchString), CourseSearchDTO.class);
-        results.addAll(categoryList);
-        results.addAll(deckList);
-        results.addAll(courseList);
-        return new ResponseEntity<>(results, HttpStatus.OK);
+        results.put("category", categoryList);
+        results.put("course", courseList);
+        results.put("deck", deckList);
+        return new ResponseEntity(results, HttpStatus.OK);
     }
 }

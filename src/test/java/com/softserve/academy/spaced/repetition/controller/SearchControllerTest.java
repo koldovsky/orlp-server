@@ -1,10 +1,5 @@
 package com.softserve.academy.spaced.repetition.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.softserve.academy.spaced.repetition.controller.dto.builder.SearchDTO;
-import com.softserve.academy.spaced.repetition.controller.dto.impl.CategorySearchDTO;
-import com.softserve.academy.spaced.repetition.controller.dto.impl.CourseSearchDTO;
-import com.softserve.academy.spaced.repetition.controller.dto.impl.DeckSearchDTO;
 import com.softserve.academy.spaced.repetition.controller.handler.ExceptionHandlerController;
 import com.softserve.academy.spaced.repetition.domain.Category;
 import com.softserve.academy.spaced.repetition.domain.Course;
@@ -29,7 +24,6 @@ import java.util.List;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -117,9 +111,9 @@ public class SearchControllerTest {
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.[0].name", is("Java category 1")))
-                .andExpect(jsonPath("$.[3].rating", is(2.9)))
-                .andExpect(jsonPath("$.[5].resultType", is("COURSE")));
+                .andExpect(jsonPath("$.category.[0].name", is("Java category 1")))
+                .andExpect(jsonPath("$.deck.[1].rating", is(2.9)))
+                .andExpect(jsonPath("$.course[1].name", is("Java course 2")));
         verify(deckService, times(1)).findAllDecksBySearch("Java");
         verify(courseService, times(1)).findAllCoursesBySearch("Java");
         verify(categoryService, times(1)).findAllCategoriesBySearch("Java");
