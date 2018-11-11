@@ -189,4 +189,22 @@ public class Course extends EntityForOwnership implements EntityInterface {
         result = 31 * result + (courseComments != null ? courseComments.hashCode() : 0);
         return result;
     }
+
+    @Override
+    public String toString() {
+        return "Course{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", image=" + image +
+                ", rating=" + rating +
+                ", published=" + published +
+                ", owner=" + owner +
+                ", category=" + category +
+                ", decks=" + decks +
+                ", courseRatings=" + courseRatings +
+                ", courseComments=" + courseComments +
+                ", createdBy=" + createdBy +
+                '}';
+    }
 }
