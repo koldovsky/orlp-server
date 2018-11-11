@@ -19,11 +19,6 @@ public abstract class Transaction {
     @Column(name = "date_creation")
     private Date date;
 
-    public Transaction() {
-    }
-
-
-
     public Transaction getReference() {
         return reference;
     }

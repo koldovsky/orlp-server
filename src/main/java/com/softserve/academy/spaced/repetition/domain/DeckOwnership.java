@@ -11,9 +11,6 @@ public class DeckOwnership  extends Ownership {
     @Column(name = "deck_id")
     private Long deckId;
 
-    public DeckOwnership() {
-    }
-
     public Long getDeckId() {
         return deckId;
     }

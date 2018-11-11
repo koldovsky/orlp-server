@@ -11,9 +11,6 @@ public class CourseOwnership extends Ownership {
     @Column(name = "course_id")
     private Long courseId;
 
-    public CourseOwnership() {
-    }
-
     public Long getCourseId() {
         return courseId;
     }

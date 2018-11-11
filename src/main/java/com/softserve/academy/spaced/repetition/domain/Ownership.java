@@ -11,9 +11,6 @@ public abstract class Ownership extends Transaction implements EntityInterface {
     @Column(name = "user_id")
     private Long userId;
 
-    public Ownership() {
-    }
-
     public Long getUserId() {
         return userId;
     }
