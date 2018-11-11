@@ -5,7 +5,7 @@ import java.util.Date;
 
 @Entity
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-public abstract class Transaction1 {
+public abstract class Transaction {
 
     @Id
     @GeneratedValue(strategy = GenerationType.TABLE)
@@ -14,21 +14,21 @@ public abstract class Transaction1 {
 
     @OneToOne
     @JoinColumn(name = "reference_id")
-    private Transaction1 reference;
+    private Transaction reference;
 
     @Column(name = "date_creation")
     private Date date;
 
-    public Transaction1() {
+    public Transaction() {
     }
 
 
 
-    public Transaction1 getReference() {
+    public Transaction getReference() {
         return reference;
     }
 
-    public void setReference(Transaction1 reference) {
+    public void setReference(Transaction reference) {
         this.reference = reference;
     }
 

@@ -1,12 +1,13 @@
 package com.softserve.academy.spaced.repetition.domain;
 
 import javax.persistence.Column;
-import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
+import javax.persistence.Table;
 
 @Entity
-@DiscriminatorValue(value = "DECK")
+@Table(name = "deck_ownership")
 public class DeckOwnership  extends Ownership {
+
     @Column(name = "deck_id")
     private Long deckId;
 

@@ -1,11 +1,14 @@
 package com.softserve.academy.spaced.repetition.domain;
 
-import javax.persistence.DiscriminatorValue;
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Table;
 
 @Entity
-@DiscriminatorValue(value = "COURSE")
+@Table(name = "course_ownership")
 public class CourseOwnership extends Ownership {
+
+    @Column(name = "course_id")
     private Long courseId;
 
     public CourseOwnership() {
