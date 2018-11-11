@@ -17,7 +17,7 @@ public abstract class Transaction {
     private Transaction reference;
 
     @Column(name = "date_creation")
-    private Date date;
+    private Date creationDate;
 
     public Transaction getReference() {
         return reference;
@@ -27,12 +27,12 @@ public abstract class Transaction {
         this.reference = reference;
     }
 
-    public Date getDate() {
-        return date;
+    public Date getCreationDate() {
+        return creationDate;
     }
 
-    public void setDate(Date date) {
-        this.date = date;
+    public void setCreationDate(Date creationDate) {
+        this.creationDate = creationDate;
     }
 
     public Long getId() {
