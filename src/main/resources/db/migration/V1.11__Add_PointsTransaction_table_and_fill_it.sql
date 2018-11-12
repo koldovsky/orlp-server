@@ -4,13 +4,14 @@ create table points_transaction (
   date_creation datetime not null,
   user_from bigint not null,
   user_to bigint not null,
-  points int not null ,
+  points int not null,
   primary key (transaction_id)
 );
 
-  alter table points_transaction add constraint POINTS_TRANSACTION_TRANSACTION_FK foreign key (reference_id) references points_transaction (transaction_id);
   alter table points_transaction add constraint POINTS_TRANSACTION_USER_FROM_FK foreign key (user_from) references user (user_id);
   alter table points_transaction add constraint POINTS_TRANSACTION_USER_TO_FK foreign key (user_to) references user (user_id);
+  alter table course_ownership drop foreign key Course_Ownership_Transaction_FK;
+  alter table deck_ownership drop foreign key Deck_Ownership_Transaction_FK;
 
   insert into points_transaction (reference_id, date_creation, user_from, user_to, points) values (1, '2018-11-11 17:25:46', 1, 3, 1452);
   insert into points_transaction (reference_id, date_creation, user_from, user_to, points) values (2, '2018-10-19 12:58:15', 2, 1, 2215);
