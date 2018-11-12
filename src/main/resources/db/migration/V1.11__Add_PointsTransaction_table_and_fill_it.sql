@@ -17,3 +17,4 @@ create table points_transaction (
   insert into points_transaction (reference_id, date_creation, user_from, user_to, points) values (2, '2018-10-19 12:58:15', 2, 1, 2215);
   insert into points_transaction (reference_id, date_creation, user_from, user_to, points) values (3, '2018-09-13 15:27:54', 4, 2, 1897);
   insert into points_transaction (reference_id, date_creation, user_from, user_to, points) values (4, '2018-10-22 20:25:09', 2, 3, 1254);
+
