@@ -1,5 +1,6 @@
 package com.softserve.academy.spaced.repetition.service;
 
+import com.softserve.academy.spaced.repetition.controller.dto.simpleDTO.PriceDTO;
 import com.softserve.academy.spaced.repetition.domain.Course;
 import com.softserve.academy.spaced.repetition.domain.Deck;
 import com.softserve.academy.spaced.repetition.utils.exceptions.NotAuthorisedUserException;
@@ -41,7 +42,7 @@ public interface CourseService {
     /**
      * Find course with the given identifier.
      *
-     * @param courseId   must not be {@literal null}.
+     * @param courseId must not be {@literal null}.
      * @return course with given identifiers
      */
     Course getCourseById(Long courseId);
@@ -131,7 +132,7 @@ public interface CourseService {
      *
      * @param courseId must not be {@literal null}.
      */
-    void deleteCourseAndSubscriptions (Long courseId);
+    void deleteCourseAndSubscriptions(Long courseId);
 
     /**
      * Adds deck with given identifier to course with given identifier.
@@ -161,6 +162,14 @@ public interface CourseService {
      * @return sorted course on each page (by default 12 courses on each page)
      */
     Page<Course> getPageWithCoursesByCategory(long categoryId, int pageNumber, String sortBy, boolean ascending);
+
+    /**
+     * Updates course price.
+     *
+     * @param priceDTO DTO object that contains price of course, can be null.
+     * @param courseId must not be {@Literal null}.
+     */
+    void updateCoursePrice(PriceDTO priceDTO, Long courseId);
 
     Set<BigInteger> findCoursesId(String searchString);
 

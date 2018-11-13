@@ -1,5 +1,6 @@
 package com.softserve.academy.spaced.repetition.service.impl;
 
+import com.softserve.academy.spaced.repetition.controller.dto.simpleDTO.PriceDTO;
 import com.softserve.academy.spaced.repetition.domain.*;
 import com.softserve.academy.spaced.repetition.repository.*;
 import com.softserve.academy.spaced.repetition.service.CourseService;
@@ -24,7 +25,7 @@ import java.util.Set;
 @Service
 public class CourseServiceImpl implements CourseService {
 
-    private final static int QUANTITY_COURSES_IN_PAGE = 12;
+    private static final int QUANTITY_COURSES_IN_PAGE = 12;
     private final Locale locale = LocaleContextHolder.getLocale();
     @Autowired
     private CourseRepository courseRepository;
@@ -40,6 +41,8 @@ public class CourseServiceImpl implements CourseService {
     private CategoryRepository categoryRepository;
     @Autowired
     private DeckRepository deckRepository;
+    @Autowired
+    private CoursePriceRepository coursePriceRepository;
     @Autowired
     private MessageSource messageSource;
 
@@ -208,5 +211,19 @@ public class CourseServiceImpl implements CourseService {
     @Override
     public List<Course> findAllCoursesBySearch(String searchString) {
         return courseRepository.findByNameIgnoreCaseContainingOrDescriptionIgnoreCaseContaining(searchString, searchString);
+    }
+
+    @Override
+    @Transactional
+    public void updateCoursePrice(PriceDTO priceDTO, Long courseId) {
+        CoursePrice coursePrice = coursePriceRepository.findOne(courseId);
+        if (coursePrice == null) {
+            coursePrice = new CoursePrice();
+        }
+        Course course = courseRepository.findOne(courseId);
+        coursePrice.setCourse(course);
+        coursePrice.setPrice(priceDTO.getPrice());
+        coursePriceRepository.save(coursePrice);
+        course.setCoursePrice(coursePrice);
     }
 }
