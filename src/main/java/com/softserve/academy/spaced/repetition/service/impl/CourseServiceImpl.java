@@ -1,7 +1,6 @@
 package com.softserve.academy.spaced.repetition.service.impl;
 
 import com.softserve.academy.spaced.repetition.controller.dto.simpleDTO.CourseDTO;
-import com.softserve.academy.spaced.repetition.controller.dto.simpleDTO.PriceDTO;
 import com.softserve.academy.spaced.repetition.domain.*;
 import com.softserve.academy.spaced.repetition.repository.*;
 import com.softserve.academy.spaced.repetition.service.CourseService;
@@ -217,19 +216,5 @@ public class CourseServiceImpl implements CourseService {
     @Override
     public List<Course> findAllCoursesBySearch(String searchString) {
         return courseRepository.findByNameIgnoreCaseContainingOrDescriptionIgnoreCaseContaining(searchString, searchString);
-    }
-
-    @Override
-    @Transactional
-    public void updateCoursePrice(PriceDTO priceDTO, Long courseId) {
-        CoursePrice coursePrice = coursePriceRepository.findOne(courseId);
-        if (coursePrice == null) {
-            coursePrice = new CoursePrice();
-        }
-        Course course = courseRepository.findOne(courseId);
-        coursePrice.setCourse(course);
-        coursePrice.setPrice(priceDTO.getPrice());
-        coursePriceRepository.save(coursePrice);
-        course.setCoursePrice(coursePrice);
     }
 }
