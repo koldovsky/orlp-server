@@ -1,5 +1,6 @@
 package com.softserve.academy.spaced.repetition.service.impl;
 
+import com.softserve.academy.spaced.repetition.controller.dto.simpleDTO.CourseDTO;
 import com.softserve.academy.spaced.repetition.controller.dto.simpleDTO.PriceDTO;
 import com.softserve.academy.spaced.repetition.domain.*;
 import com.softserve.academy.spaced.repetition.repository.*;
@@ -87,9 +88,14 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public void updateCourse(Long course_id, Course course) {
-        course.setId(course_id);
-        courseRepository.save(course);
+    @Transactional
+    public Course updateCourse(Long course_id, CourseDTO courseDTO) {
+        Course course = courseRepository.findOne(course_id);
+        course.setName(courseDTO.getName());
+        course.setDescription(courseDTO.getDescription());
+        course.setImage(courseDTO.getImage());
+        course.setCoursePrice(courseDTO.getCoursePrice());
+        return courseRepository.save(course);
     }
 
     @Override

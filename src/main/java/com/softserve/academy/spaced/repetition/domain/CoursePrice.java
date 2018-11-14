@@ -13,7 +13,7 @@ public class CoursePrice {
     private long id;
 
     @Column(name = "price")
-    private Integer price;
+    private int price;
 
     @OneToOne
     @JoinColumn(name = "course_id")
@@ -21,18 +21,18 @@ public class CoursePrice {
 
     public CoursePrice(){}
 
-    public CoursePrice(Integer price, Course course){
+    public CoursePrice(int price, Course course){
         this.course = course;
         this.price = price;
     }
 
     public long getId() { return id; }
 
-    public Integer getPrice() {
+    public int getPrice() {
         return price;
     }
 
-    public void setPrice(Integer price) {
+    public void setPrice(int price) {
         this.price = price;
     }
 

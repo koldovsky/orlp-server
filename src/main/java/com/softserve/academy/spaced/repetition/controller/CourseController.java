@@ -1,10 +1,10 @@
 package com.softserve.academy.spaced.repetition.controller;
 
-
 import com.softserve.academy.spaced.repetition.controller.dto.annotations.Request;
 import com.softserve.academy.spaced.repetition.controller.dto.builder.DTOBuilder;
 import com.softserve.academy.spaced.repetition.controller.dto.impl.CourseLinkDTO;
 import com.softserve.academy.spaced.repetition.controller.dto.impl.CoursePublicDTO;
+import com.softserve.academy.spaced.repetition.controller.dto.simpleDTO.CourseDTO;
 import com.softserve.academy.spaced.repetition.controller.dto.simpleDTO.PriceDTO;
 import com.softserve.academy.spaced.repetition.domain.Course;
 import com.softserve.academy.spaced.repetition.service.CourseService;
@@ -114,10 +114,10 @@ public class CourseController {
 
     @Auditable(action = AuditingAction.CREATE_COURSE)
     @PutMapping(value = "/api/cabinet/courses/{courseId}")
-    @PreAuthorize("hasPermission('COURSE','UPDATE') && principal.id==#course.createdBy")
-    public ResponseEntity<CoursePublicDTO> updateCourse(@PathVariable Long courseId, @Validated(Request.class) @RequestBody Course course) {
+    @PreAuthorize("hasPermission('COURSE','UPDATE')")
+    public ResponseEntity<CoursePublicDTO> updateCourse(@PathVariable Long courseId, @Validated(Request.class) @RequestBody CourseDTO courseDTO) {
         LOGGER.debug("Updating course with id: {}", courseId);
-        courseService.updateCourse(courseId, course);
+        Course course = courseService.updateCourse(courseId, courseDTO);
         Link selfLink = linkTo(methodOn(CourseController.class).getCourseById(course.getId())).withSelfRel();
         CoursePublicDTO coursePublicDTO = DTOBuilder.buildDtoForEntity(course, CoursePublicDTO.class, selfLink);
         return new ResponseEntity<>(coursePublicDTO, HttpStatus.OK);

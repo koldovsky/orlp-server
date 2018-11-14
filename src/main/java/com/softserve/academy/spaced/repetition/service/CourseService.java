@@ -1,5 +1,6 @@
 package com.softserve.academy.spaced.repetition.service;
 
+import com.softserve.academy.spaced.repetition.controller.dto.simpleDTO.CourseDTO;
 import com.softserve.academy.spaced.repetition.controller.dto.simpleDTO.PriceDTO;
 import com.softserve.academy.spaced.repetition.domain.Course;
 import com.softserve.academy.spaced.repetition.domain.Deck;
@@ -75,7 +76,7 @@ public interface CourseService {
      * @param courseId must not be {@literal null}.
      * @param course   updated course, must not be {@literal null}.
      */
-    void updateCourse(Long courseId, Course course);
+    Course updateCourse(Long courseId, CourseDTO courseDTO);
 
     /**
      * Delete course from DB
