@@ -124,7 +124,7 @@ public class DeckServiceImpl implements DeckService {
         User user = userService.getAuthorizedUser();
         newDeck.setCategory(categoryRepository.findOne(categoryId));
         newDeck.setDeckOwner(user);
-        deckPriceIsNull(newDeck);
+        setDeckPriceIfExist(newDeck);
         deckRepository.save(newDeck);
     }
 
@@ -175,14 +175,14 @@ public class DeckServiceImpl implements DeckService {
             deck.setDescription(updatedDeck.getDescription());
             deck.setCategory(categoryRepository.findOne(categoryId));
             deck.setSyntaxToHighlight(updatedDeck.getSyntaxToHighlight());
-            deckPriceIsNull(updatedDeck);
+            setDeckPriceIfExist(updatedDeck);
             return deckRepository.save(deck);
         } else {
             throw new NotOwnerOperationException();
         }
     }
 
-    private void deckPriceIsNull(Deck deck) {
+    private void setDeckPriceIfExist(Deck deck) {
         if (deck.getDeckPrice() != null) {
             DeckPrice deckPrice = deck.getDeckPrice();
             //deckPrice.setPrice(deck.getDeckPrice().getPrice());
