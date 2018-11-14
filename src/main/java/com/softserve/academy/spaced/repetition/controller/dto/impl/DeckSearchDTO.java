@@ -4,7 +4,6 @@ package com.softserve.academy.spaced.repetition.controller.dto.impl;
 import com.softserve.academy.spaced.repetition.controller.DeckController;
 import com.softserve.academy.spaced.repetition.controller.dto.builder.SearchDTO;
 import com.softserve.academy.spaced.repetition.domain.Deck;
-import com.softserve.academy.spaced.repetition.domain.enums.SearchType;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
@@ -21,10 +20,13 @@ public class DeckSearchDTO extends SearchDTO<Deck> {
     @Override
     public String getName() { return getEntity().getName(); }
 
+    @Override
+    public long getElementId() {
+        return getEntity().getId();
+    }
+
     public double getRating() { return getEntity().getRating(); }
 
-    @Override
-    public String getResultType() { return SearchType.DECK.toString(); }
 
     @Override
     public String getSelfLink() {

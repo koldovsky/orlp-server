@@ -42,5 +42,7 @@ public class DeckLinkByFolderDTO extends DTO<Deck> {
         return getEntity().getSyntaxToHighlight();
     }
 
-    public Long getCreatedBy() { return getEntity().getDeckOwner().getId(); }
+    public Long getCreatedBy() {
+        return getEntity().getDeckOwner().getId();
+    }
 }

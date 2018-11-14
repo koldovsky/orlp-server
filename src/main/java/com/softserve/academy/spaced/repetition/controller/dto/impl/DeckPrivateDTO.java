@@ -2,7 +2,6 @@ package com.softserve.academy.spaced.repetition.controller.dto.impl;
 
 import com.softserve.academy.spaced.repetition.controller.CardController;
 import com.softserve.academy.spaced.repetition.controller.dto.builder.DTO;
-import com.softserve.academy.spaced.repetition.controller.DeckController;
 import com.softserve.academy.spaced.repetition.domain.Deck;
 import org.springframework.hateoas.Link;
 
@@ -15,7 +14,9 @@ public class DeckPrivateDTO extends DTO<Deck> {
         add(linkTo(methodOn(CardController.class).getCardsByDeck(getEntity().getId())).withRel("cards"));
     }
 
-    public Long getDeckId() { return getEntity().getId(); }
+    public Long getDeckId() {
+        return getEntity().getId();
+    }
 
     public String getName() {
         return getEntity().getName();
@@ -29,19 +30,27 @@ public class DeckPrivateDTO extends DTO<Deck> {
         return getEntity().getRating();
     }
 
-    public String getCategory() { return getEntity().getCategory().getName(); }
+    public String getCategory() {
+        return getEntity().getCategory().getName();
+    }
 
-    public Long getCategoryId(){return getEntity().getCategory().getId();}
+    public Long getCategoryId() {
+        return getEntity().getCategory().getId();
+    }
 
     public String getOwner() {
         return getEntity().getDeckOwner().getAccount().getEmail();
     }
 
-    public Boolean isHidden() { return getEntity().isHidden(); }
+    public Boolean isHidden() {
+        return getEntity().isHidden();
+    }
 
     public Long getDeckOwner() {
         return getEntity().getDeckOwner().getId();
     }
 
-    public String getSynthax() {return getEntity().getSyntaxToHighlight();}
+    public String getSynthax() {
+        return getEntity().getSyntaxToHighlight();
+    }
 }

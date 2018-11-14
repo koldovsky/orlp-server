@@ -13,6 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -164,6 +165,13 @@ public class CourseServiceImpl implements CourseService {
             }
         }
         userRepository.save(user);
+    }
+
+    @Transactional
+    @Override
+    public void deleteCourseAndSubscriptions(Long courseId) {
+        courseRepository.deleteSubscriptions(courseId);
+        courseRepository.delete(courseId);
     }
 
     @Override
