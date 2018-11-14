@@ -18,7 +18,7 @@ public class DeckPrice implements EntityInterface {
     private Deck deck;
 
     @Column(name = "deck_price")
-    private int price;
+    private Integer price;
 
     public DeckPrice() {
     }

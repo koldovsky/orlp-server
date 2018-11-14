@@ -5,6 +5,7 @@ import com.softserve.academy.spaced.repetition.controller.dto.impl.DeckEditByAdm
 import com.softserve.academy.spaced.repetition.domain.*;
 import com.softserve.academy.spaced.repetition.repository.CategoryRepository;
 import com.softserve.academy.spaced.repetition.repository.CourseRepository;
+import com.softserve.academy.spaced.repetition.repository.DeckPriceRepository;
 import com.softserve.academy.spaced.repetition.repository.DeckRepository;
 import com.softserve.academy.spaced.repetition.service.DeckService;
 import com.softserve.academy.spaced.repetition.service.FolderService;
@@ -21,10 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigInteger;
-import java.util.List;
-import java.util.Locale;
-import java.util.NoSuchElementException;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class DeckServiceImpl implements DeckService {
@@ -45,6 +43,9 @@ public class DeckServiceImpl implements DeckService {
 
     @Autowired
     private FolderService folderService;
+
+    @Autowired
+    private DeckPriceRepository deckPriceRepository;
 
     @Autowired
     private MessageSource messageSource;
@@ -119,9 +120,11 @@ public class DeckServiceImpl implements DeckService {
     @Override
     @Transactional
     public void createNewDeck(Deck newDeck, Long categoryId) throws NotAuthorisedUserException {
+        DeckPrice deckPrice;
         User user = userService.getAuthorizedUser();
         newDeck.setCategory(categoryRepository.findOne(categoryId));
         newDeck.setDeckOwner(user);
+        deckPriceIsNull(newDeck);
         deckRepository.save(newDeck);
     }
 
@@ -150,6 +153,7 @@ public class DeckServiceImpl implements DeckService {
                     new Object[]{}, locale));
         }
         if (deck.getDeckOwner().getId().equals(user.getId())) {
+            Optional.ofNullable(deck.getDeckPrice()).ifPresent(elem -> deckPriceRepository.delete(elem.getId()));
             deckRepository.delete(deck);
         } else {
             throw new NotOwnerOperationException();
@@ -171,9 +175,19 @@ public class DeckServiceImpl implements DeckService {
             deck.setDescription(updatedDeck.getDescription());
             deck.setCategory(categoryRepository.findOne(categoryId));
             deck.setSyntaxToHighlight(updatedDeck.getSyntaxToHighlight());
+            deckPriceIsNull(updatedDeck);
             return deckRepository.save(deck);
         } else {
             throw new NotOwnerOperationException();
+        }
+    }
+
+    private void deckPriceIsNull(Deck deck) {
+        if (deck.getDeckPrice() != null) {
+            DeckPrice deckPrice = deck.getDeckPrice();
+            //deckPrice.setPrice(deck.getDeckPrice().getPrice());
+            deckPrice.setDeck(deck);
+            deckPriceRepository.save(deckPrice);
         }
     }
 
