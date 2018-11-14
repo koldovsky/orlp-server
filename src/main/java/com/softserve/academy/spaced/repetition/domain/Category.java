@@ -106,4 +106,17 @@ public class Category extends EntityForOwnership implements EntityInterface {
     public void setImage(Image image) {
         this.image = image;
     }
+
+    @Override
+    public String toString() {
+        return "Category{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", image=" + image +
+                ", courses=" + courses +
+                ", decks=" + decks +
+                ", createdBy=" + createdBy +
+                '}';
+    }
 }

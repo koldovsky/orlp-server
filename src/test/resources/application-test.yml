@@ -1,18 +1,13 @@
 spring:
   datasource:
 #    url: jdbc:h2:mem:testdb;INDB_CLOSE_ON_EXIT=FALSE;IT=CREATE SCHEMA IF NOT EXISTS PUBLIC
-#    platform: h2
-#    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1
-    url: jdbc:h2:mem:orlp;DB_CLOSE_DELAY=-1
 #    ;INIT=create schema if not exists orlp;
 #    ;DB_CLOSE_ON_EXIT=FALSE;AUTO_RECONNECT=TRUE
-#
+    url: jdbc:h2:mem:orlp;DB_CLOSE_DELAY=-1
     username: sa
     password: sa
     driver-class-name: org.h2.Driver
     platform: h2
-#    url: jdbc:h2:mem:orlp;INIT=RUNSCRIPT FROM 'classpath:V1.0__Create_initial_schema.sql'
-  #    initialize: true
   jpa:
     hibernate:
       ddl-auto: none
@@ -23,18 +18,14 @@ spring:
     console:
       enabled: true
       path: /console
-#  enabled: true
+#  autoconfigure:
+#    exclude: org.springframework.boot.autoconfigure.security.SecurityAutoConfiguration
+#    exclude: org.springframework.boot.autoconfigure.security.SecurityFilterAutoConfiguration,org.springframework.boot.autoconfigure.security.FallbackWebSecurityAutoConfiguration,org.springframework.boot.autoconfigure.security.oauth2.OAuth2AutoConfiguration
+#security:
+#  user:
+#    name: user
+#    password: password
+#    role: USER
 flyway:
-#  enabled: true
-#  schemas : orlp
-#  init-version: 1.1
   baseline-on-migrate: true
-#  locations: db/migration
-#  locations: filesystem:src/main/resources/db/migration
   baseline-version: 1.0
-#  schemas : test
-#  locations : classpath:db/migration
-#  baseline-version: 1.1
-#  baseline-on-migrate: true
-#  url: jdbc:h2:mem:testorlp
-
