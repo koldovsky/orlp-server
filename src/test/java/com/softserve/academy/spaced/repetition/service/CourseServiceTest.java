@@ -53,6 +53,10 @@ public class CourseServiceTest {
     private CategoryRepository categoryRepository;
     @Mock
     private DeckRepository deckRepository;
+    @Mock
+    private CoursePriceRepository coursePriceRepository;
+    @Mock
+    private CourseOwnershipRepository courseOwnershipRepository;
     @InjectMocks
     private CourseServiceImpl courseService;
     private Course course;
@@ -162,10 +166,11 @@ public class CourseServiceTest {
     @Test
     public void testDeleteCourseByAdmin() {
         doNothing().when(courseRepository).delete(COURSE_ID);
-
+        doNothing().when(courseOwnershipRepository).deleteCourseOwnershipByCourseId(COURSE_ID);
         courseService.deleteCourseAndSubscriptions(COURSE_ID);
         verify(courseRepository).deleteSubscriptions(COURSE_ID);
         verify(courseRepository).delete(COURSE_ID);
+        verify(courseOwnershipRepository).deleteCourseOwnershipByCourseId(COURSE_ID);
     }
 
     @Test
