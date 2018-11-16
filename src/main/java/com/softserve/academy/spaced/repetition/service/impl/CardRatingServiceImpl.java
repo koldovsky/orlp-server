@@ -36,7 +36,7 @@ public class CardRatingServiceImpl implements CardRatingService {
         cardRating.setAccountEmail(email);
         cardRating.setCard(card);
         cardRatingRepository.save(cardRating);
-        double cardAverageRating = cardRatingRepository.findRatingByCardId(cardId);
+        double cardAverageRating = cardRatingRepository.findRatingByCard_Id(cardId);
         card.setRating(cardAverageRating);
         cardRepository.save(card);
     }
