@@ -141,7 +141,7 @@ public class DeckController {
                                                                                  @RequestParam(name = "asc") boolean ascending) {
         LOGGER.debug("View all decks for admin");
         Page<DeckOfUserManagedByAdminDTO> deckOfUserManagedByAdminDTO = deckService
-                .getPageWithAllAdminDecks(pageNumber, sortBy, ascending).map((deck) -> {
+                .getPageWithAllAdminDecks(pageNumber, sortBy, ascending).map(deck -> {
                     Link selfLink = linkTo(methodOn(DeckController.class).getDeckById(deck.getId())).withSelfRel();
                     return buildDtoForEntity(deck, DeckOfUserManagedByAdminDTO.class, selfLink);
                 });

@@ -17,9 +17,9 @@ import java.util.Date;
 @Component
 public class AuditMain {
 
-    private final String PRINCIPAL_ANNONYMOUS = "anonymousUser";
-    private final String EMAIL_FOR_UNAUTHORIZED_USER = "ANONYMOUS";
-    private final String ROLE_FOR_GUEST = "[ROLE_GUEST]";
+    private static final String PRINCIPAL_ANNONYMOUS = "anonymousUser";
+    private static final String EMAIL_FOR_UNAUTHORIZED_USER = "ANONYMOUS";
+    private static final String ROLE_FOR_GUEST = "[ROLE_GUEST]";
 
     @Autowired
     private AuditRepository auditRepository;

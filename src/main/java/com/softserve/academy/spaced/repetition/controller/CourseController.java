@@ -43,7 +43,7 @@ public class CourseController {
                                                                          @RequestParam(name = "sortBy") String sortBy,
                                                                          @RequestParam(name = "asc") boolean ascending) {
         Page<CourseLinkDTO> courseLinkDTOS = courseService
-                .getPageWithCoursesByCategory(categoryId, pageNumber, sortBy, ascending).map((course) -> {
+                .getPageWithCoursesByCategory(categoryId, pageNumber, sortBy, ascending).map(course -> {
                     Link selfLink = linkTo(methodOn(CourseController.class)
                             .getAllCoursesByCategoryId(categoryId, pageNumber, sortBy, ascending)).withSelfRel();
                     return DTOBuilder.buildDtoForEntity(course, CourseLinkDTO.class, selfLink);
@@ -58,7 +58,7 @@ public class CourseController {
                                                              @RequestParam(name = "sortBy") String sortBy,
                                                              @RequestParam(name = "asc") boolean ascending) {
         Page<CourseLinkDTO> courseLinkDTOS = courseService
-                .getPageWithCourses(pageNumber, sortBy, ascending).map((course) -> {
+                .getPageWithCourses(pageNumber, sortBy, ascending).map(course -> {
                     Link selfLink = linkTo(methodOn(CourseController.class)
                             .getCourseById(course.getId())).withSelfRel();
                     return DTOBuilder.buildDtoForEntity(course, CourseLinkDTO.class, selfLink);

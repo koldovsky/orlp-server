@@ -2,7 +2,7 @@ package com.softserve.academy.spaced.repetition.controller;
 
 import com.softserve.academy.spaced.repetition.controller.dto.builder.DTOBuilder;
 import com.softserve.academy.spaced.repetition.controller.dto.impl.CommentDTO;
-import com.softserve.academy.spaced.repetition.controller.dto.simpleDTO.ReplyToCommentDTO;
+import com.softserve.academy.spaced.repetition.controller.dto.simpledto.ReplyToCommentDTO;
 import com.softserve.academy.spaced.repetition.utils.audit.Auditable;
 import com.softserve.academy.spaced.repetition.utils.audit.AuditingAction;
 import com.softserve.academy.spaced.repetition.domain.Comment;

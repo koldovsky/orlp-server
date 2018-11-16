@@ -58,7 +58,7 @@ public class CardRatingServiceTest {
                 .thenReturn(cardRating);
         when(cardRepository.findOne(CARD_ID)).thenReturn(card);
         when(cardRatingRepository.save(cardRating)).thenReturn(cardRating);
-        when(cardRatingRepository.findRatingByCard_Id(CARD_ID)).thenReturn(1.0);
+        when(cardRatingRepository.findRatingByCardId(CARD_ID)).thenReturn(1.0);
         when(cardRepository.save(card)).thenReturn(card);
 
         cardRatingService.addCardRating(cardRating, CARD_ID);
@@ -66,7 +66,7 @@ public class CardRatingServiceTest {
         verify(cardRatingRepository).findCardRatingByAccountEmailAndCard_Id(EMAIL, CARD_ID);
         verify(cardRepository).findOne(CARD_ID);
         verify(cardRatingRepository).save(cardRating);
-        verify(cardRatingRepository).findRatingByCard_Id(CARD_ID);
+        verify(cardRatingRepository).findRatingByCardId(CARD_ID);
         verify(cardRepository).save(card);
     }
 

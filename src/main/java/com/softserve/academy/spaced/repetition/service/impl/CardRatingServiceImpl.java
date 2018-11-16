@@ -6,7 +6,6 @@ import com.softserve.academy.spaced.repetition.domain.User;
 import com.softserve.academy.spaced.repetition.utils.exceptions.NotAuthorisedUserException;
 import com.softserve.academy.spaced.repetition.repository.CardRatingRepository;
 import com.softserve.academy.spaced.repetition.repository.CardRepository;
-import com.softserve.academy.spaced.repetition.repository.DeckRepository;
 import com.softserve.academy.spaced.repetition.service.CardRatingService;
 import com.softserve.academy.spaced.repetition.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +36,7 @@ public class CardRatingServiceImpl implements CardRatingService {
         cardRating.setAccountEmail(email);
         cardRating.setCard(card);
         cardRatingRepository.save(cardRating);
-        double cardAverageRating = cardRatingRepository.findRatingByCard_Id(cardId);
+        double cardAverageRating = cardRatingRepository.findRatingByCardId(cardId);
         card.setRating(cardAverageRating);
         cardRepository.save(card);
     }

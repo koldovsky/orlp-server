@@ -1,6 +1,6 @@
 package com.softserve.academy.spaced.repetition.controller;
 
-import com.softserve.academy.spaced.repetition.controller.dto.simpleDTO.MailDTO;
+import com.softserve.academy.spaced.repetition.controller.dto.simpledto.MailDTO;
 import com.softserve.academy.spaced.repetition.service.MailService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

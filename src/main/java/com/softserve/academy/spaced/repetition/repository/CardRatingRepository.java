@@ -8,7 +8,7 @@ import org.springframework.data.repository.query.Param;
 public interface CardRatingRepository extends JpaRepository<CardRating, Long> {
 
     @Query("select avg(c.rating) from CardRating c where c.card.id=:cardId group by c.card.id")
-    Double findRatingByCard_Id(@Param("cardId") long cardId);
+    Double findRatingByCardId(@Param("cardId") long cardId);
 
     CardRating findCardRatingByAccountEmailAndCard_Id(String accountEmail, long cardId);
 }

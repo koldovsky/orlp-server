@@ -45,7 +45,7 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private AuthorityRepository authorityRepository;
 
-    int QUANTITY_USER_IN_PAGE = 20;
+    int quantityUserInPage = 20;
 
     @Override
     public void addUser(User user) {
@@ -145,7 +145,7 @@ public class UserServiceImpl implements UserService {
                 hasFolderDeck = true;
             }
         }
-        if (deck == null && hasFolderDeck == true) {
+        if (deck == null && hasFolderDeck) {
             deck = deckRepository.findOne(deckId);
             usersFolder.getDecks().remove(deck);
             userRepository.save(user);
@@ -166,7 +166,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Page<User> getUsersByPage(int pageNumber, String sortBy, boolean ascending) {
-        PageRequest request = new PageRequest(pageNumber - 1, QUANTITY_USER_IN_PAGE,
+        PageRequest request = new PageRequest(pageNumber - 1, quantityUserInPage,
                 ascending ? Sort.Direction.ASC : Sort.Direction.DESC, sortBy);
         return userRepository.findAll(request);
     }

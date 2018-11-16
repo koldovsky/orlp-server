@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class AuditServiceImpl implements AuditService {
 
-    private final static int QUANTITY_AUDIT_IN_PAGE = 10;
+    private static final int QUANTITY_AUDIT_IN_PAGE = 10;
     @Autowired
     private AuditRepository auditRepository;
 

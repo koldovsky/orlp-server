@@ -2,7 +2,7 @@ package com.softserve.academy.spaced.repetition.controller;
 
 
 import com.softserve.academy.spaced.repetition.controller.dto.annotations.Request;
-import com.softserve.academy.spaced.repetition.controller.dto.simpleDTO.NewAccountPasswordDTO;
+import com.softserve.academy.spaced.repetition.controller.dto.simpledto.NewAccountPasswordDTO;
 import com.softserve.academy.spaced.repetition.domain.Person;
 import com.softserve.academy.spaced.repetition.domain.User;
 import com.softserve.academy.spaced.repetition.service.AccountService;

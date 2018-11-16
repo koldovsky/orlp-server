@@ -1,8 +1,8 @@
 package com.softserve.academy.spaced.repetition.service.impl;
 
-import com.softserve.academy.spaced.repetition.controller.dto.simpleDTO.userProfileDTO.JsonImageDTO;
-import com.softserve.academy.spaced.repetition.controller.dto.simpleDTO.userProfileDTO.JsonPasswordDTO;
-import com.softserve.academy.spaced.repetition.controller.dto.simpleDTO.userProfileDTO.JsonPersonalInfoDTO;
+import com.softserve.academy.spaced.repetition.controller.dto.simpledto.userprofiledto.JsonImageDTO;
+import com.softserve.academy.spaced.repetition.controller.dto.simpledto.userprofiledto.JsonPasswordDTO;
+import com.softserve.academy.spaced.repetition.controller.dto.simpledto.userprofiledto.JsonPersonalInfoDTO;
 import com.softserve.academy.spaced.repetition.domain.Account;
 import com.softserve.academy.spaced.repetition.domain.Person;
 import com.softserve.academy.spaced.repetition.domain.User;

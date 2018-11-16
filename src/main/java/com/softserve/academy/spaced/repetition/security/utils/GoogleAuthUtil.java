@@ -26,9 +26,9 @@ import java.util.Collections;
 @Component
 public class GoogleAuthUtil {
 
-    private final String FIRST_NAME = "given_name";
-    private final String LAST_NAME = "family_name";
-    private final String IMAGE = "picture";
+    private static final String FIRST_NAME = "given_name";
+    private static final String LAST_NAME = "family_name";
+    private static final String IMAGE = "picture";
 
     @Value("${app.social.google.client-id}")
     private String clientId;
