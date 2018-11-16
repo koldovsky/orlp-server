@@ -72,7 +72,7 @@ public interface CourseService {
     /**
      * Updates course in category with the given identifier.
      *
-     * @param courseId must not be {@literal null}.
+     * @param courseId  must not be {@literal null}.
      * @param courseDTO DTO object containing updated course, must not be {@literal null}.
      *
      * @return updated Course
@@ -164,6 +164,15 @@ public interface CourseService {
      * @return sorted course on each page (by default 12 courses on each page)
      */
     Page<Course> getPageWithCoursesByCategory(long categoryId, int pageNumber, String sortBy, boolean ascending);
+
+    /**
+     * Checks whether entity course contains instantiated CoursePrice entity and creates and assignes
+     * CoursePrice to a course if course does not contain instantiated CoursePrice
+     *
+     * @param course
+     * @return returns course with instantiated CoursePrice
+     */
+    Course checkIfCoursePriceExists(Course course);
 
     Set<BigInteger> findCoursesId(String searchString);
 

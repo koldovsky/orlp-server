@@ -52,26 +52,26 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public List<Course> getAllCoursesByCategoryId(Long category_id) {
-        return courseRepository.getAllCoursesByCategoryIdAndPublishedTrue(category_id);
+    public List<Course> getAllCoursesByCategoryId(Long categoryId) {
+        return courseRepository.getAllCoursesByCategoryIdAndPublishedTrue(categoryId);
     }
 
     @Override
-    public List<Deck> getAllDecksByCourseId(Long category_id, Long course_id) {
-        Course course = courseRepository.getCourseByCategoryIdAndId(category_id, course_id);
+    public List<Deck> getAllDecksByCourseId(Long categoryId, Long courseId) {
+        Course course = courseRepository.getCourseByCategoryIdAndId(categoryId, courseId);
         return course.getDecks();
     }
 
     @Override
-    public Course getCourseById(Long course_id) {
-        return courseRepository.getCourseById(course_id);
+    public Course getCourseById(Long courseId) {
+        return courseRepository.getCourseById(courseId);
     }
 
     @Override
-    public void addCourse(Course course, Long category_id) {
+    public void addCourse(Course course, Long categoryId) {
         Long imageId = course.getImage().getId();
         imageService.setImageStatusInUse(imageId);
-        course.setCategory(new Category(category_id));
+        course.setCategory(new Category(categoryId));
         courseRepository.save(course);
     }
 
@@ -88,30 +88,31 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     @Transactional
-    public Course updateCourse(Long course_id, CourseDTO courseDTO) {
-        Course course = courseRepository.findOne(course_id);
+    public Course updateCourse(Long courseId, CourseDTO courseDTO) {
+        Course course = courseRepository.findOne(courseId);
         course.setName(courseDTO.getName());
         course.setDescription(courseDTO.getDescription());
         course.setImage(courseDTO.getImage());
         course.setCoursePrice(courseDTO.getCoursePrice());
+        coursePriceRepository.save(course.getCoursePrice());
         return courseRepository.save(course);
     }
 
     @Override
-    public void deleteGlobalCourse(Long course_id) throws NotAuthorisedUserException {
+    public void deleteGlobalCourse(Long courseId) throws NotAuthorisedUserException {
         User user = userService.getAuthorizedUser();
         Set<Course> courses = user.getCourses();
         for (Course course : courses) {
-            if (course.getId() == course_id) {
+            if (course.getId() == courseId) {
 //                course.setPublished(false);
                 courses.remove(course);
                 user.setCourses(courses);
                 break;
             }
         }
-
         userRepository.save(user);
-        courseRepository.delete(course_id);
+        coursePriceRepository.deleteCoursePriceByCourseId(courseId);
+        courseRepository.delete(courseId);
     }
 
     @Override
@@ -139,14 +140,14 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public void createPrivateCourse(Course privateCourse, Long category_id) throws NotAuthorisedUserException {
+    public void createPrivateCourse(Course privateCourse, Long categoryId) throws NotAuthorisedUserException {
         User user = userService.getAuthorizedUser();
         Image image = imageRepository.findImageById(privateCourse.getImage().getId());
         Course course = new Course();
         course.setName(privateCourse.getName());
         course.setDescription(privateCourse.getDescription());
         course.setImage(image);
-        course.setCategory(categoryRepository.findById(category_id));
+        course.setCategory(categoryRepository.findById(categoryId));
         course.setPublished(false);
         course.setOwner(user);
         courseRepository.save(course);
@@ -155,19 +156,19 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public Course updateCourseAccess(Long course_id, Course courseAccess) {
-        Course course = courseRepository.findOne(course_id);
+    public Course updateCourseAccess(Long courseId, Course courseAccess) {
+        Course course = courseRepository.findOne(courseId);
         course.setPublished(courseAccess.isPublished());
         courseRepository.save(course);
         return course;
     }
 
     @Override
-    public void deleteLocalCourse(Long course_id) throws NotAuthorisedUserException {
+    public void deleteLocalCourse(Long courseId) throws NotAuthorisedUserException {
         User user = userService.getAuthorizedUser();
         Set<Course> courses = user.getCourses();
         for (Course course : courses) {
-            if (course.getId() == course_id) {
+            if (course.getId() == courseId) {
                 courses.remove(course);
                 break;
             }
@@ -175,10 +176,15 @@ public class CourseServiceImpl implements CourseService {
         userRepository.save(user);
     }
 
+    @Autowired
+    CourseOwnershipRepository courseOwnershipRepository;
+
     @Transactional
     @Override
     public void deleteCourseAndSubscriptions(Long courseId) {
         courseRepository.deleteSubscriptions(courseId);
+        courseOwnershipRepository.deleteCourseOwnershipByCourseId(courseId);
+        coursePriceRepository.deleteCoursePriceByCourseId(courseId);
         courseRepository.delete(courseId);
     }
 
@@ -216,5 +222,17 @@ public class CourseServiceImpl implements CourseService {
     @Override
     public List<Course> findAllCoursesBySearch(String searchString) {
         return courseRepository.findByNameIgnoreCaseContainingOrDescriptionIgnoreCaseContaining(searchString, searchString);
+    }
+
+    @Override
+    public Course checkIfCoursePriceExists(Course course) {
+        CoursePrice coursePrice;
+        if (course.getCoursePrice() == null) {
+            coursePrice = new CoursePrice();
+            coursePrice.setCourse(course);
+            course.setCoursePrice(coursePrice);
+            coursePriceRepository.save(coursePrice);
+        }
+        return course;
     }
 }

@@ -59,8 +59,7 @@ public class Course extends EntityForOwnership implements EntityInterface {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "course", cascade = CascadeType.ALL)
     private List<CourseComment> courseComments;
 
-    @OneToOne
-    @JoinColumn(name = "course_price_id")
+    @OneToOne(mappedBy = "course")
     private CoursePrice coursePrice;
 
     public Course() {
@@ -180,6 +179,7 @@ public class Course extends EntityForOwnership implements EntityInterface {
         if (decks != null ? !decks.equals(course.decks) : course.decks != null) return false;
         if (courseRatings != null ? !courseRatings.equals(course.courseRatings) : course.courseRatings != null)
             return false;
+        if (coursePrice != null ? !coursePrice.equals(course.coursePrice) : course.coursePrice != null) return false;
         return courseComments != null ? courseComments.equals(course.courseComments) : course.courseComments == null;
     }
 
@@ -200,6 +200,7 @@ public class Course extends EntityForOwnership implements EntityInterface {
         result = 31 * result + (decks != null ? decks.hashCode() : 0);
         result = 31 * result + (courseRatings != null ? courseRatings.hashCode() : 0);
         result = 31 * result + (courseComments != null ? courseComments.hashCode() : 0);
+        result = 31 * result + (coursePrice != null ? coursePrice.hashCode() : 0);
         return result;
     }
 }

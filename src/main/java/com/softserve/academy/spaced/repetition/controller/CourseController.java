@@ -46,6 +46,7 @@ public class CourseController {
                 .getPageWithCoursesByCategory(categoryId, pageNumber, sortBy, ascending).map(course -> {
                     Link selfLink = linkTo(methodOn(CourseController.class)
                             .getAllCoursesByCategoryId(categoryId, pageNumber, sortBy, ascending)).withSelfRel();
+                    course = courseService.checkIfCoursePriceExists(course);
                     return DTOBuilder.buildDtoForEntity(course, CourseLinkDTO.class, selfLink);
                 });
         return new ResponseEntity<>(courseLinkDTOS, HttpStatus.OK);
@@ -61,6 +62,7 @@ public class CourseController {
                 .getPageWithCourses(pageNumber, sortBy, ascending).map(course -> {
                     Link selfLink = linkTo(methodOn(CourseController.class)
                             .getCourseById(course.getId())).withSelfRel();
+                    course = courseService.checkIfCoursePriceExists(course);
                     return DTOBuilder.buildDtoForEntity(course, CourseLinkDTO.class, selfLink);
                 });
         return new ResponseEntity<>(courseLinkDTOS, HttpStatus.OK);
