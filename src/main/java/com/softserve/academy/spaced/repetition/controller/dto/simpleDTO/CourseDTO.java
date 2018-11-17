@@ -7,7 +7,7 @@ public class CourseDTO {
     private String name;
     private String description;
     private Image image;
-    private CoursePrice coursePrice;
+    private Integer coursePrice;
 
     public String getName() {
         return name;
@@ -21,7 +21,7 @@ public class CourseDTO {
         return image;
     }
 
-    public CoursePrice getCoursePrice() {
+    public Integer getCoursePrice() {
         return coursePrice;
     }
 
@@ -37,7 +37,7 @@ public class CourseDTO {
         this.image = image;
     }
 
-    public void setCoursePrice(CoursePrice coursePrice) {
+    public void setCoursePrice(Integer coursePrice) {
         this.coursePrice = coursePrice;
     }
 }

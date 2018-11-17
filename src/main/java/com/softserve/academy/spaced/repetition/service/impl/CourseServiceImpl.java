@@ -90,10 +90,11 @@ public class CourseServiceImpl implements CourseService {
     @Transactional
     public Course updateCourse(Long courseId, CourseDTO courseDTO) {
         Course course = courseRepository.findOne(courseId);
+        course = checkIfCoursePriceExists(course);
         course.setName(courseDTO.getName());
         course.setDescription(courseDTO.getDescription());
         course.setImage(courseDTO.getImage());
-        course.setCoursePrice(courseDTO.getCoursePrice());
+        course.getCoursePrice().setPrice(courseDTO.getCoursePrice());
         coursePriceRepository.save(course.getCoursePrice());
         return courseRepository.save(course);
     }
