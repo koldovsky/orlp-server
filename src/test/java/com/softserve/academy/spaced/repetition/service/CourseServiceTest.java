@@ -306,7 +306,7 @@ public class CourseServiceTest {
         courseDTO.setName(COURSE_NAME);
         courseDTO.setName(COURSE_DESCRIPTION);
         courseDTO.setImage(image);
-        courseDTO.setCoursePrice(coursePrice);
+        courseDTO.setCoursePrice(PRICE);
         return courseDTO;
     }
 }
