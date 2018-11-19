@@ -5,6 +5,7 @@ import com.softserve.academy.spaced.repetition.controller.dto.builder.DTOBuilder
 import com.softserve.academy.spaced.repetition.controller.dto.impl.CourseLinkDTO;
 import com.softserve.academy.spaced.repetition.controller.dto.impl.CoursePublicDTO;
 import com.softserve.academy.spaced.repetition.controller.dto.simpleDTO.CourseDTO;
+import com.softserve.academy.spaced.repetition.controller.dto.simpleDTO.PriceDTO;
 import com.softserve.academy.spaced.repetition.domain.Course;
 import com.softserve.academy.spaced.repetition.service.CourseService;
 import com.softserve.academy.spaced.repetition.utils.audit.Auditable;
@@ -85,6 +86,7 @@ public class CourseController {
         List<Course> courseList = courseService.getTopCourse();
         List<CourseLinkDTO> courses = new ArrayList<>();
         for (Course course : courseList) {
+            courseService.checkIfCoursePriceExists(course);
             Link selfLink = linkTo(methodOn(CourseController.class)
                     .getCourseById(course.getId())).withSelfRel();
             courses.add(DTOBuilder.buildDtoForEntity(course, CourseLinkDTO.class, selfLink));
@@ -203,5 +205,14 @@ public class CourseController {
         Link selfLink = linkTo(methodOn(CourseController.class).getCourseById(privateCourse.getId())).withSelfRel();
         CoursePublicDTO coursePublicDTO = DTOBuilder.buildDtoForEntity(privateCourse, CoursePublicDTO.class, selfLink);
         return new ResponseEntity<>(coursePublicDTO, HttpStatus.OK);
+    }
+
+    @PutMapping("/api/courses/{courseId}")
+    @PreAuthorize("hasPermission('COURSE','UPDATE')")
+    public ResponseEntity updateCoursePrice(@Validated(Request.class) @RequestBody PriceDTO priceDTO,
+                                            @PathVariable Long courseId) {
+        LOGGER.debug("Updating course price with Integer: {}", priceDTO.getPrice());
+        courseService.updateCoursePrice(priceDTO, courseId);
+        return new ResponseEntity(HttpStatus.OK);
     }
 }

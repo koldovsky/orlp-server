@@ -16,7 +16,7 @@ public class CoursePrice implements EntityInterface {
     @Column(name = "price")
     private Integer price;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "course_id")
     private Course course;
 

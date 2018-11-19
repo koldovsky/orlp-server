@@ -1,6 +1,7 @@
 package com.softserve.academy.spaced.repetition.service.impl;
 
 import com.softserve.academy.spaced.repetition.controller.dto.simpleDTO.CourseDTO;
+import com.softserve.academy.spaced.repetition.controller.dto.simpleDTO.PriceDTO;
 import com.softserve.academy.spaced.repetition.domain.*;
 import com.softserve.academy.spaced.repetition.repository.*;
 import com.softserve.academy.spaced.repetition.service.CourseService;
@@ -44,6 +45,8 @@ public class CourseServiceImpl implements CourseService {
     @Autowired
     private CoursePriceRepository coursePriceRepository;
     @Autowired
+    CourseOwnershipRepository courseOwnershipRepository;
+    @Autowired
     private MessageSource messageSource;
 
     @Override
@@ -83,7 +86,11 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public List<Course> getAllOrderedCourses() {
-        return courseRepository.findAllByPublishedTrueOrderByRatingDesc();
+        List<Course> courses = courseRepository.findAllByPublishedTrueOrderByRatingDesc();
+        for (Course course : courses) {
+            checkIfCoursePriceExists(course);
+        }
+        return courses;
     }
 
     @Override
@@ -177,9 +184,6 @@ public class CourseServiceImpl implements CourseService {
         userRepository.save(user);
     }
 
-    @Autowired
-    CourseOwnershipRepository courseOwnershipRepository;
-
     @Transactional
     @Override
     public void deleteCourseAndSubscriptions(Long courseId) {
@@ -223,6 +227,16 @@ public class CourseServiceImpl implements CourseService {
     @Override
     public List<Course> findAllCoursesBySearch(String searchString) {
         return courseRepository.findByNameIgnoreCaseContainingOrDescriptionIgnoreCaseContaining(searchString, searchString);
+    }
+
+    @Override
+    @Transactional
+    public void updateCoursePrice(PriceDTO priceDTO, Long courseId) {
+        Course course = courseRepository.findOne(courseId);
+        course = checkIfCoursePriceExists(course);
+        course.getCoursePrice().setPrice(priceDTO.getPrice());
+        coursePriceRepository.save(course.getCoursePrice());
+        courseRepository.save(course);
     }
 
     @Override
