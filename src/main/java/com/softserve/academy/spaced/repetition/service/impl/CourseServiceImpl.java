@@ -94,7 +94,7 @@ public class CourseServiceImpl implements CourseService {
         course.setName(courseDTO.getName());
         course.setDescription(courseDTO.getDescription());
         course.setImage(courseDTO.getImage());
-        course.getCoursePrice().setPrice(courseDTO.getCoursePrice());
+        course.getCoursePrice().setPrice(courseDTO.getPrice());
         coursePriceRepository.save(course.getCoursePrice());
         return courseRepository.save(course);
     }

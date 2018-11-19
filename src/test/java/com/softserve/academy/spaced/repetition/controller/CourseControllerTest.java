@@ -239,7 +239,7 @@ public class CourseControllerTest {
         mockMvc.perform(put("/api/cabinet/courses/{courseId}", 1L)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().writeValueAsBytes(course)))
+                .content(new ObjectMapper().writeValueAsString(course)))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name", is("Java interview course")))

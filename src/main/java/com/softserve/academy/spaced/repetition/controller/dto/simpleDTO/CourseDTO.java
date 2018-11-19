@@ -1,13 +1,12 @@
 package com.softserve.academy.spaced.repetition.controller.dto.simpleDTO;
 
-import com.softserve.academy.spaced.repetition.domain.CoursePrice;
 import com.softserve.academy.spaced.repetition.domain.Image;
 
 public class CourseDTO {
     private String name;
     private String description;
     private Image image;
-    private Integer coursePrice;
+    private Integer price;
 
     public String getName() {
         return name;
@@ -21,8 +20,8 @@ public class CourseDTO {
         return image;
     }
 
-    public Integer getCoursePrice() {
-        return coursePrice;
+    public Integer getPrice() {
+        return price;
     }
 
     public void setName(String name) {
@@ -37,7 +36,7 @@ public class CourseDTO {
         this.image = image;
     }
 
-    public void setCoursePrice(Integer coursePrice) {
-        this.coursePrice = coursePrice;
+    public void setPrice(Integer price) {
+        this.price = price;
     }
 }
