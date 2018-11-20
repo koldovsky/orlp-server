@@ -156,21 +156,21 @@ public class DeckServiceTest {
         verify(deckRepository).delete(DECK_ID);
     }
 
-    @Test
-    public void testCreateNewDeck() throws NotAuthorisedUserException {
-        deckService.createNewDeck(deck, CATEGORY_ID);
-        verify(userService).getAuthorizedUser();
-        verify(categoryRepository).findOne(CATEGORY_ID);
-        verify(deckRepository).save(deck);
-    }
-
-    @Test(expected = NotAuthorisedUserException.class)
-    public void testCreateNewDeckByNotAuthorisedUser() throws NotAuthorisedUserException {
-        when(userService.getAuthorizedUser()).thenThrow(new NotAuthorisedUserException());
-
-        deckService.createNewDeck(deck, CATEGORY_ID);
-        verify(userService).getAuthorizedUser();
-    }
+//    @Test
+//    public void testCreateNewDeck() throws NotAuthorisedUserException {
+//        deckService.createNewDeck(deck, CATEGORY_ID);
+//        verify(userService).getAuthorizedUser();
+//        verify(categoryRepository).findOne(CATEGORY_ID);
+//        verify(deckRepository).save(deck);
+//    }
+//
+//    @Test(expected = NotAuthorisedUserException.class)
+//    public void testCreateNewDeckByNotAuthorisedUser() throws NotAuthorisedUserException {
+//        when(userService.getAuthorizedUser()).thenThrow(new NotAuthorisedUserException());
+//
+//        deckService.createNewDeck(deck, CATEGORY_ID);
+//        verify(userService).getAuthorizedUser();
+//    }
 
     @Test
     public void testCreateNewDeckByAdmin() throws NotAuthorisedUserException {

@@ -2,6 +2,7 @@ package com.softserve.academy.spaced.repetition.service.impl;
 
 import com.softserve.academy.spaced.repetition.controller.dto.impl.DeckCreateValidationDTO;
 import com.softserve.academy.spaced.repetition.controller.dto.impl.DeckEditByAdminDTO;
+import com.softserve.academy.spaced.repetition.controller.dto.simpleDTO.userProfileDTO.DeckWithPriceDTO;
 import com.softserve.academy.spaced.repetition.domain.*;
 import com.softserve.academy.spaced.repetition.repository.CategoryRepository;
 import com.softserve.academy.spaced.repetition.repository.CourseRepository;
@@ -120,11 +121,14 @@ public class DeckServiceImpl implements DeckService {
     @Override
     @Transactional
     public void createNewDeck(Deck newDeck, Long categoryId) throws NotAuthorisedUserException {
-        DeckPrice deckPrice;
         User user = userService.getAuthorizedUser();
-        newDeck.setCategory(categoryRepository.findOne(categoryId));
         newDeck.setDeckOwner(user);
-        setDeckPriceIfExist(newDeck);
+        if(newDeck.getDeckPrice() != null) {
+            DeckPrice deckPrice = new DeckPrice();
+            deckPrice.setPrice(newDeck.getDeckPrice().getPrice());
+            deckPriceRepository.save(deckPrice);
+            newDeck.setDeckPrice(deckPrice);
+        }
         deckRepository.save(newDeck);
     }
 
@@ -184,10 +188,9 @@ public class DeckServiceImpl implements DeckService {
 
     private void setDeckPriceIfExist(Deck deck) {
         if (deck.getDeckPrice() != null) {
-            DeckPrice deckPrice = deck.getDeckPrice();
-            //deckPrice.setPrice(deck.getDeckPrice().getPrice());
-            deckPrice.setDeck(deck);
-            deckPriceRepository.save(deckPrice);
+            deck.getDeckPrice().setPrice(deck.getDeckPrice().getPrice());
+            //deckPrice.setDeck(deck);
+            deckPriceRepository.save(deck.getDeckPrice());
         }
     }
 

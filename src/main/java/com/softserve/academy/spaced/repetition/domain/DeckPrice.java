@@ -13,9 +13,9 @@ public class DeckPrice implements EntityInterface {
     @Column(name = "deck_price_id")
     private Long id;
 
-    @OneToOne
-    @JoinColumn(name = "deck_id")
-    private Deck deck;
+//    @OneToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "deck_id")
+//    private Deck deck;
 
     @Column(name = "deck_price")
     private Integer price;
@@ -24,7 +24,7 @@ public class DeckPrice implements EntityInterface {
     }
 
     public DeckPrice(Deck deck, int price) {
-        this.deck = deck;
+//        this.deck = deck;
         this.price = price;
     }
 
@@ -32,9 +32,9 @@ public class DeckPrice implements EntityInterface {
         return id;
     }
 
-    public Deck getDeck() {
-        return deck;
-    }
+//    public Deck getDeck() {
+//        return deck;
+//    }
 
     public int getPrice() {
         return price;
@@ -44,9 +44,9 @@ public class DeckPrice implements EntityInterface {
         this.id = id;
     }
 
-    public void setDeck(Deck deck) {
-        this.deck = deck;
-    }
+//    public void setDeck(Deck deck) {
+//        this.deck = deck;
+//    }
 
     public void setPrice(int price) {
         this.price = price;
