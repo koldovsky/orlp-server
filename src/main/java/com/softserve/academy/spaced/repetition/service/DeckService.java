@@ -2,7 +2,6 @@ package com.softserve.academy.spaced.repetition.service;
 
 import com.softserve.academy.spaced.repetition.controller.dto.impl.DeckCreateValidationDTO;
 import com.softserve.academy.spaced.repetition.controller.dto.impl.DeckEditByAdminDTO;
-import com.softserve.academy.spaced.repetition.controller.dto.simpleDTO.userProfileDTO.DeckWithPriceDTO;
 import com.softserve.academy.spaced.repetition.domain.Card;
 import com.softserve.academy.spaced.repetition.domain.Deck;
 import com.softserve.academy.spaced.repetition.utils.exceptions.NotAuthorisedUserException;
@@ -58,7 +57,7 @@ public interface DeckService {
      * @param categoryId category`s id for which the deck will be created.
      * @throws NotAuthorisedUserException if unauthorized user creates new deck.
      */
-    void createNewDeck(Deck newDeck, Long categoryId) throws NotAuthorisedUserException;
+    Deck createNewDeck(Deck newDeck, Long categoryId) throws NotAuthorisedUserException;
 
     /**
      * Creates the deck by using the admin account.

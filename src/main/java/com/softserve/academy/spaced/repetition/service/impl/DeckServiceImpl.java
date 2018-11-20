@@ -2,7 +2,6 @@ package com.softserve.academy.spaced.repetition.service.impl;
 
 import com.softserve.academy.spaced.repetition.controller.dto.impl.DeckCreateValidationDTO;
 import com.softserve.academy.spaced.repetition.controller.dto.impl.DeckEditByAdminDTO;
-import com.softserve.academy.spaced.repetition.controller.dto.simpleDTO.userProfileDTO.DeckWithPriceDTO;
 import com.softserve.academy.spaced.repetition.domain.*;
 import com.softserve.academy.spaced.repetition.repository.CategoryRepository;
 import com.softserve.academy.spaced.repetition.repository.CourseRepository;
@@ -120,9 +119,10 @@ public class DeckServiceImpl implements DeckService {
 
     @Override
     @Transactional
-    public void createNewDeck(Deck newDeck, Long categoryId) throws NotAuthorisedUserException {
+    public Deck createNewDeck(Deck newDeck, Long categoryId) throws NotAuthorisedUserException {
         User user = userService.getAuthorizedUser();
         newDeck.setDeckOwner(user);
+        newDeck.setCategory(categoryRepository.findById(categoryId));
         if(newDeck.getDeckPrice() != null) {
             DeckPrice deckPrice = new DeckPrice();
             deckPrice.setPrice(newDeck.getDeckPrice().getPrice());
@@ -130,6 +130,7 @@ public class DeckServiceImpl implements DeckService {
             newDeck.setDeckPrice(deckPrice);
         }
         deckRepository.save(newDeck);
+        return newDeck;
     }
 
     @Override
@@ -179,7 +180,15 @@ public class DeckServiceImpl implements DeckService {
             deck.setDescription(updatedDeck.getDescription());
             deck.setCategory(categoryRepository.findOne(categoryId));
             deck.setSyntaxToHighlight(updatedDeck.getSyntaxToHighlight());
-            setDeckPriceIfExist(updatedDeck);
+
+            if (deck.getDeckPrice() != null && updatedDeck.getDeckPrice() == null) {
+                deckPriceRepository.delete(deck.getDeckPrice().getId());
+            } else if (deck.getDeckPrice() != null && updatedDeck.getDeckPrice() != null) {
+                deckPriceRepository.save(updatedDeck.getDeckPrice());
+            } else if (deck.getDeckPrice() == null && updatedDeck.getDeckPrice() != null) {
+                deckPriceRepository.save(updatedDeck.getDeckPrice());
+                deck.setDeckPrice(updatedDeck.getDeckPrice());
+            }
             return deckRepository.save(deck);
         } else {
             throw new NotOwnerOperationException();

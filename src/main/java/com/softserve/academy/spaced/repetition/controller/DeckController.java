@@ -3,7 +3,6 @@ package com.softserve.academy.spaced.repetition.controller;
 import com.softserve.academy.spaced.repetition.controller.dto.annotations.Request;
 import com.softserve.academy.spaced.repetition.controller.dto.builder.DTOBuilder;
 import com.softserve.academy.spaced.repetition.controller.dto.impl.*;
-import com.softserve.academy.spaced.repetition.controller.dto.simpleDTO.userProfileDTO.DeckWithPriceDTO;
 import com.softserve.academy.spaced.repetition.domain.Card;
 import com.softserve.academy.spaced.repetition.domain.Deck;
 import com.softserve.academy.spaced.repetition.service.DeckService;
@@ -204,7 +203,7 @@ public class DeckController {
     public DeckPrivateDTO addDeckForUser(@Validated(Request.class) @RequestBody Deck deck, @PathVariable Long categoryId)
             throws NotAuthorisedUserException, NotOwnerOperationException {
         LOGGER.debug("Adding deck by user to category with id {}", categoryId);
-        deckService.createNewDeck(deck, categoryId);
+        Deck newDeck = deckService.createNewDeck(deck, categoryId);
         folderService.addDeck(deck.getId());
         return buildDtoForEntity(deck, DeckPrivateDTO.class,
                 linkTo(methodOn(DeckController.class).getOneDeckForUser(deck.getId())).withSelfRel());
