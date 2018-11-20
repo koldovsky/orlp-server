@@ -52,14 +52,8 @@ public class PointsTransactionServiceImpl implements PointsTransactionService {
     }
 
     @Override
-    public PointsTransaction givePoints(long user_id, int points) {
-
-        return new PointsTransaction();
-    }
-
-    @Override
     public List<PointsTransaction> getTransactionsById (long userId) {
-       return transactionRepository.findAllByUserId(userId);
+       return transactionRepository.findAllTransactionsByUserId(userId);
     }
 
     @Override

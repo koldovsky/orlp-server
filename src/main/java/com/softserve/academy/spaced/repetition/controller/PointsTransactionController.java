@@ -30,7 +30,6 @@ public class PointsTransactionController {
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity makeTransaction(@Validated(Request.class) @RequestBody TransactionDTO transaction)
         throws NotAuthorisedUserException, TransactionException {
-
         transactionService.makeTransaction(transaction);
       return new ResponseEntity(HttpStatus.CREATED);
     }

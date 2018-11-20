@@ -8,8 +8,6 @@ import com.softserve.academy.spaced.repetition.utils.exceptions.TransactionExcep
 import java.util.List;
 
 public interface PointsTransactionService {
-    PointsTransaction givePoints(long userId, int points);
-
     PointsTransaction makeTransaction(TransactionDTO transaction) throws NotAuthorisedUserException, TransactionException;
 
     List<PointsTransaction> getTransactionsById (long userId);
