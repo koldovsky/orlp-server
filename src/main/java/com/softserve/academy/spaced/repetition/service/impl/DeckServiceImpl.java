@@ -119,7 +119,7 @@ public class DeckServiceImpl implements DeckService {
 
     @Override
     @Transactional
-    public Deck createNewDeck(Deck newDeck, Long categoryId) throws NotAuthorisedUserException {
+    public void createNewDeck(Deck newDeck, Long categoryId) throws NotAuthorisedUserException {
         User user = userService.getAuthorizedUser();
         newDeck.setDeckOwner(user);
         newDeck.setCategory(categoryRepository.findById(categoryId));
@@ -130,7 +130,6 @@ public class DeckServiceImpl implements DeckService {
             newDeck.setDeckPrice(deckPrice);
         }
         deckRepository.save(newDeck);
-        return newDeck;
     }
 
     @Override
@@ -182,9 +181,14 @@ public class DeckServiceImpl implements DeckService {
             deck.setSyntaxToHighlight(updatedDeck.getSyntaxToHighlight());
 
             if (deck.getDeckPrice() != null && updatedDeck.getDeckPrice() == null) {
-                deckPriceRepository.delete(deck.getDeckPrice().getId());
+                long id = deck.getDeckPrice().getId();
+                deck.setDeckPrice(null);
+                deckPriceRepository.delete(id);
             } else if (deck.getDeckPrice() != null && updatedDeck.getDeckPrice() != null) {
-                deckPriceRepository.save(updatedDeck.getDeckPrice());
+                DeckPrice oldDeckPrice = deckPriceRepository.findOne(deck.getDeckPrice().getId());
+                oldDeckPrice.setPrice(updatedDeck.getDeckPrice().getPrice());
+                deckPriceRepository.save(oldDeckPrice);
+                deck.setDeckPrice(oldDeckPrice);
             } else if (deck.getDeckPrice() == null && updatedDeck.getDeckPrice() != null) {
                 deckPriceRepository.save(updatedDeck.getDeckPrice());
                 deck.setDeckPrice(updatedDeck.getDeckPrice());
@@ -192,14 +196,6 @@ public class DeckServiceImpl implements DeckService {
             return deckRepository.save(deck);
         } else {
             throw new NotOwnerOperationException();
-        }
-    }
-
-    private void setDeckPriceIfExist(Deck deck) {
-        if (deck.getDeckPrice() != null) {
-            deck.getDeckPrice().setPrice(deck.getDeckPrice().getPrice());
-            //deckPrice.setDeck(deck);
-            deckPriceRepository.save(deck.getDeckPrice());
         }
     }
 

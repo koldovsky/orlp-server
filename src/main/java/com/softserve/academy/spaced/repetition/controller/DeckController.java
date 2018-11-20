@@ -203,7 +203,7 @@ public class DeckController {
     public DeckPrivateDTO addDeckForUser(@Validated(Request.class) @RequestBody Deck deck, @PathVariable Long categoryId)
             throws NotAuthorisedUserException, NotOwnerOperationException {
         LOGGER.debug("Adding deck by user to category with id {}", categoryId);
-        Deck newDeck = deckService.createNewDeck(deck, categoryId);
+        deckService.createNewDeck(deck, categoryId);
         folderService.addDeck(deck.getId());
         return buildDtoForEntity(deck, DeckPrivateDTO.class,
                 linkTo(methodOn(DeckController.class).getOneDeckForUser(deck.getId())).withSelfRel());

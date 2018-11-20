@@ -57,7 +57,7 @@ public interface DeckService {
      * @param categoryId category`s id for which the deck will be created.
      * @throws NotAuthorisedUserException if unauthorized user creates new deck.
      */
-    Deck createNewDeck(Deck newDeck, Long categoryId) throws NotAuthorisedUserException;
+    void createNewDeck(Deck newDeck, Long categoryId) throws NotAuthorisedUserException;
 
     /**
      * Creates the deck by using the admin account.
@@ -72,7 +72,7 @@ public interface DeckService {
      * Deletes the deck which was created by the user.
      *
      * @param deckId id of the deck which will be deleted.
-     * @throws NotAuthorisedUserException if unauthorized user deletes the deck.
+     * @throws NotAuthorisedUserException if unauthorized user deletes the deloca.
      * @throws NotOwnerOperationException if the user is not owner of the deck deletes the deck.
      */
     void deleteOwnDeck(Long deckId)
