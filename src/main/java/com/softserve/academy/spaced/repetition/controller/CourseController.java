@@ -1,10 +1,11 @@
 package com.softserve.academy.spaced.repetition.controller;
 
-
 import com.softserve.academy.spaced.repetition.controller.dto.annotations.Request;
 import com.softserve.academy.spaced.repetition.controller.dto.builder.DTOBuilder;
 import com.softserve.academy.spaced.repetition.controller.dto.impl.CourseLinkDTO;
 import com.softserve.academy.spaced.repetition.controller.dto.impl.CoursePublicDTO;
+import com.softserve.academy.spaced.repetition.controller.dto.simpleDTO.CourseDTO;
+import com.softserve.academy.spaced.repetition.controller.dto.simpleDTO.PriceDTO;
 import com.softserve.academy.spaced.repetition.domain.Course;
 import com.softserve.academy.spaced.repetition.service.CourseService;
 import com.softserve.academy.spaced.repetition.utils.audit.Auditable;
@@ -43,9 +44,10 @@ public class CourseController {
                                                                          @RequestParam(name = "sortBy") String sortBy,
                                                                          @RequestParam(name = "asc") boolean ascending) {
         Page<CourseLinkDTO> courseLinkDTOS = courseService
-                .getPageWithCoursesByCategory(categoryId, pageNumber, sortBy, ascending).map((course) -> {
+                .getPageWithCoursesByCategory(categoryId, pageNumber, sortBy, ascending).map(course -> {
                     Link selfLink = linkTo(methodOn(CourseController.class)
                             .getAllCoursesByCategoryId(categoryId, pageNumber, sortBy, ascending)).withSelfRel();
+                    course = courseService.checkIfCoursePriceExists(course);
                     return DTOBuilder.buildDtoForEntity(course, CourseLinkDTO.class, selfLink);
                 });
         return new ResponseEntity<>(courseLinkDTOS, HttpStatus.OK);
@@ -58,9 +60,10 @@ public class CourseController {
                                                              @RequestParam(name = "sortBy") String sortBy,
                                                              @RequestParam(name = "asc") boolean ascending) {
         Page<CourseLinkDTO> courseLinkDTOS = courseService
-                .getPageWithCourses(pageNumber, sortBy, ascending).map((course) -> {
+                .getPageWithCourses(pageNumber, sortBy, ascending).map(course -> {
                     Link selfLink = linkTo(methodOn(CourseController.class)
                             .getCourseById(course.getId())).withSelfRel();
+                    course = courseService.checkIfCoursePriceExists(course);
                     return DTOBuilder.buildDtoForEntity(course, CourseLinkDTO.class, selfLink);
                 });
         return new ResponseEntity<>(courseLinkDTOS, HttpStatus.OK);
@@ -83,6 +86,7 @@ public class CourseController {
         List<Course> courseList = courseService.getTopCourse();
         List<CourseLinkDTO> courses = new ArrayList<>();
         for (Course course : courseList) {
+            courseService.checkIfCoursePriceExists(course);
             Link selfLink = linkTo(methodOn(CourseController.class)
                     .getCourseById(course.getId())).withSelfRel();
             courses.add(DTOBuilder.buildDtoForEntity(course, CourseLinkDTO.class, selfLink));
@@ -98,7 +102,8 @@ public class CourseController {
         CourseLinkDTO linkDTO = DTOBuilder.buildDtoForEntity(course, CourseLinkDTO.class, selfLink);
         return new ResponseEntity<>(linkDTO, HttpStatus.OK);
     }
-//TODO fix this method
+
+    //TODO fix this method
     @Auditable(action = AuditingAction.CREATE_COURSE)
     @PostMapping(value = "/api/courses")
     @PreAuthorize("hasPermission('COURSE','CREATE')")
@@ -112,10 +117,10 @@ public class CourseController {
 
     @Auditable(action = AuditingAction.CREATE_COURSE)
     @PutMapping(value = "/api/cabinet/courses/{courseId}")
-    @PreAuthorize("hasPermission('COURSE','UPDATE') && principal.id==#course.createdBy")
-    public ResponseEntity<CoursePublicDTO> updateCourse(@PathVariable Long courseId, @Validated(Request.class) @RequestBody Course course) {
+    @PreAuthorize("hasPermission('COURSE','UPDATE')")
+    public ResponseEntity<CoursePublicDTO> updateCourse(@PathVariable Long courseId, @Validated(Request.class) @RequestBody CourseDTO courseDTO) {
         LOGGER.debug("Updating course with id: {}", courseId);
-        courseService.updateCourse(courseId, course);
+        Course course = courseService.updateCourse(courseId, courseDTO);
         Link selfLink = linkTo(methodOn(CourseController.class).getCourseById(course.getId())).withSelfRel();
         CoursePublicDTO coursePublicDTO = DTOBuilder.buildDtoForEntity(course, CoursePublicDTO.class, selfLink);
         return new ResponseEntity<>(coursePublicDTO, HttpStatus.OK);
@@ -176,7 +181,7 @@ public class CourseController {
     @PutMapping("/api/categories/courses/{courseId}/decks/{deckId}")
     public ResponseEntity addDeckToCourse(@Validated(Request.class) @PathVariable Long courseId,
                                           @PathVariable Long deckId) {
-        LOGGER.debug("Adding deck with id: {} to course with id: {}",deckId, courseId);
+        LOGGER.debug("Adding deck with id: {} to course with id: {}", deckId, courseId);
         Course course = courseService.addDeckToCourse(courseId, deckId);
         Link selfLink = linkTo(methodOn(CourseController.class).getCourseById(course.getId())).withSelfRel();
         CoursePublicDTO coursePublicDTO = DTOBuilder.buildDtoForEntity(course, CoursePublicDTO.class, selfLink);
@@ -200,5 +205,14 @@ public class CourseController {
         Link selfLink = linkTo(methodOn(CourseController.class).getCourseById(privateCourse.getId())).withSelfRel();
         CoursePublicDTO coursePublicDTO = DTOBuilder.buildDtoForEntity(privateCourse, CoursePublicDTO.class, selfLink);
         return new ResponseEntity<>(coursePublicDTO, HttpStatus.OK);
+    }
+
+    @PutMapping("/api/courses/{courseId}")
+    @PreAuthorize("hasPermission('COURSE','UPDATE')")
+    public ResponseEntity updateCoursePrice(@Validated(Request.class) @RequestBody PriceDTO priceDTO,
+                                            @PathVariable Long courseId) {
+        LOGGER.debug("Updating course price with Integer: {}", priceDTO.getPrice());
+        courseService.updateCoursePrice(priceDTO, courseId);
+        return new ResponseEntity(HttpStatus.OK);
     }
 }
