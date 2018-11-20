@@ -142,4 +142,11 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
     MessageDTO handleEmptyFileException(EmptyFileException emptyFileException) {
         return new MessageDTO(emptyFileException.getMessage());
     }
+
+    @ExceptionHandler(TransactionException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    MessageDTO handleTransactionException(TransactionException transactionException) {
+        return new MessageDTO(transactionException.getMessage());
+    }
 }

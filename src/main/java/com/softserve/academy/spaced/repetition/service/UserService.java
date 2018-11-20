@@ -165,4 +165,6 @@ public interface UserService {
      */
     void isUserStatusActive(User user) throws UserStatusException;
 
+    User updatePointsBalance(User user);
+
 }

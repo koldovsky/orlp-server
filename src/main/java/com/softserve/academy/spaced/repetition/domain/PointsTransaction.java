@@ -22,6 +22,15 @@ public class PointsTransaction extends Transaction implements EntityInterface {
     @Column(name = "points")
     private int points;
 
+    public PointsTransaction() {
+    }
+
+    public PointsTransaction(User userFrom, User userTo, int points) {
+        this.userFrom = userFrom;
+        this.userTo = userTo;
+        this.points = points;
+    }
+
     public User getUserFrom() {
         return userFrom;
     }

@@ -2,6 +2,7 @@ package com.softserve.academy.spaced.repetition.service.impl;
 
 import com.softserve.academy.spaced.repetition.domain.*;
 import com.softserve.academy.spaced.repetition.domain.enums.*;
+import com.softserve.academy.spaced.repetition.repository.PointsTransactionRepository;
 import com.softserve.academy.spaced.repetition.service.ImageService;
 import com.softserve.academy.spaced.repetition.utils.exceptions.NotAuthorisedUserException;
 import com.softserve.academy.spaced.repetition.utils.exceptions.UserStatusException;
@@ -44,6 +45,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private AuthorityRepository authorityRepository;
+
+    @Autowired
+    private PointsTransactionRepository transactionRepository;
 
     int QUANTITY_USER_IN_PAGE = 20;
 
@@ -206,5 +210,11 @@ public class UserServiceImpl implements UserService {
         if (user.getAccount().getStatus().isNotActive()) {
             throw new UserStatusException(user.getAccount().getStatus());
         }
+    }
+
+    @Override
+    public User updatePointsBalance(User user) {
+        user.setPoints(transactionRepository.sumAllByUserTo(user.getId()) - transactionRepository.sumAllByUserFrom(user.getId()));
+        return userRepository.save(user);
     }
 }
