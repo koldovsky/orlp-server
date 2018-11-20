@@ -48,3 +48,5 @@ message:
     fieldSizeLimits: "Field can't be less than {min} and more than {max} symbols!"
     ratingMinValue: "Rating can't be less than {value}!"
     ratingMaxValue: "Rating can't be more than {value}!"
+    emailNotExists: "User with this email doesn't exist!"
+    notEnoughPoints: "Sorry, you have not enough points to send"
