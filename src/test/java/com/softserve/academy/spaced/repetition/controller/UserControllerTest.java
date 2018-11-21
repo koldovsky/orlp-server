@@ -80,6 +80,7 @@ public class UserControllerTest {
         User user1 = new User();
         Category category1 = new Category();
         Course course1 = new Course();
+        CoursePrice coursePrice = new CoursePrice();
         Set<Course> courses = new HashSet<>();
         Image image = new Image();
         image.setId(USER_ID);
@@ -100,6 +101,8 @@ public class UserControllerTest {
         course1.setCourseRatings(new ArrayList<CourseRating>());
         course1.setCourseComments(new ArrayList<CourseComment>());
         course1.setDecks(new ArrayList<Deck>());
+        coursePrice.setCourse(course1);
+        course1.setCoursePrice(coursePrice);
         courses.add(course1);
         return courses;
     }

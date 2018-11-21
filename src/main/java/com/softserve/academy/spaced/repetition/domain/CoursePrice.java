@@ -1,11 +1,12 @@
 package com.softserve.academy.spaced.repetition.domain;
 
+import com.softserve.academy.spaced.repetition.controller.dto.annotations.EntityInterface;
+
 import javax.persistence.*;
-import java.util.Objects;
 
 @Entity
 @Table(name = "course_price")
-public class CoursePrice {
+public class CoursePrice implements EntityInterface {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -15,18 +16,21 @@ public class CoursePrice {
     @Column(name = "price")
     private Integer price;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "course_id")
     private Course course;
 
-    public CoursePrice(){}
+    public CoursePrice() {
+    }
 
-    public CoursePrice(Integer price, Course course){
+    public CoursePrice(Integer price, Course course) {
         this.course = course;
         this.price = price;
     }
 
-    public long getId() { return id; }
+    public Long getId() {
+        return id;
+    }
 
     public Integer getPrice() {
         return price;
@@ -42,28 +46,5 @@ public class CoursePrice {
 
     public void setCourse(Course course) {
         this.course = course;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        CoursePrice that = (CoursePrice) o;
-        return id == that.id &&
-                price == that.price;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, price);
-    }
-
-    @Override
-    public String toString() {
-        return "CoursePrice{" +
-                "id=" + id +
-                ", price=" + price +
-                ", course=" + course.getId() +
-                '}';
     }
 }
