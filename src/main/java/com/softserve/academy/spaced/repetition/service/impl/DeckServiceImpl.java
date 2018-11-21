@@ -3,10 +3,7 @@ package com.softserve.academy.spaced.repetition.service.impl;
 import com.softserve.academy.spaced.repetition.controller.dto.impl.DeckCreateValidationDTO;
 import com.softserve.academy.spaced.repetition.controller.dto.impl.DeckEditByAdminDTO;
 import com.softserve.academy.spaced.repetition.domain.*;
-import com.softserve.academy.spaced.repetition.repository.CategoryRepository;
-import com.softserve.academy.spaced.repetition.repository.CourseRepository;
-import com.softserve.academy.spaced.repetition.repository.DeckPriceRepository;
-import com.softserve.academy.spaced.repetition.repository.DeckRepository;
+import com.softserve.academy.spaced.repetition.repository.*;
 import com.softserve.academy.spaced.repetition.service.DeckService;
 import com.softserve.academy.spaced.repetition.service.FolderService;
 import com.softserve.academy.spaced.repetition.service.UserService;
@@ -46,6 +43,9 @@ public class DeckServiceImpl implements DeckService {
 
     @Autowired
     private DeckPriceRepository deckPriceRepository;
+
+    @Autowired
+    private DeckOwnershipRepository deckOwnershipRepository;
 
     @Autowired
     private MessageSource messageSource;
@@ -158,6 +158,7 @@ public class DeckServiceImpl implements DeckService {
         }
         if (deck.getDeckOwner().getId().equals(user.getId())) {
             Optional.ofNullable(deck.getDeckPrice()).ifPresent(elem -> deckPriceRepository.delete(elem.getId()));
+            deckOwnershipRepository.deleteDeckOwnershipByDeckId(deck.getId());
             deckRepository.delete(deck);
         } else {
             throw new NotOwnerOperationException();

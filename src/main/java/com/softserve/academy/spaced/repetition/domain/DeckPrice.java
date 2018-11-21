@@ -27,7 +27,7 @@ public class DeckPrice implements EntityInterface {
         return id;
     }
 
-    public int getPrice() {
+    public Integer getPrice() {
         return price;
     }
 
