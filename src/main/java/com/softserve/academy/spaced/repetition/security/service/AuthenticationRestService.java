@@ -55,6 +55,8 @@ public class AuthenticationRestService {
     private UserRepository userRepository;
     @Value("${app.jwt.header}")
     private String tokenHeader;
+    @Value("${app.jwt.domain}")
+    private String domain;
 
     public HttpHeaders getAuthHeaders(String email, String password, String captcha, Device device) throws UserStatusException {
         ReCaptchaResponseDto reCaptchaResponseDto = reCaptchaApiService.verify(captcha);
@@ -134,7 +136,7 @@ public class AuthenticationRestService {
     private HttpHeaders addTokenToHeaderCookie(String token) {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Set-Cookie", tokenHeader + "=" +
-                token + "; Path=/" + "; Expires=" + jwtTokenUtil.getExpirationDateFromToken(token));
+                token + "; Path=/" + "; Domain=" + domain + "; Expires=" + jwtTokenUtil.getExpirationDateFromToken(token));
         return headers;
     }
 
