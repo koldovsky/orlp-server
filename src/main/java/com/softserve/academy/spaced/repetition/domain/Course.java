@@ -154,6 +154,14 @@ public class Course extends EntityForOwnership implements EntityInterface {
         this.courseComments = courseComments;
     }
 
+    public CoursePrice getCoursePrice() {
+        return coursePrice;
+    }
+
+    public void setCoursePrice(CoursePrice coursePrice) {
+        this.coursePrice = coursePrice;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

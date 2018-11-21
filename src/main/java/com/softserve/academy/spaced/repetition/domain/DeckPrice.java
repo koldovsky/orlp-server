@@ -18,7 +18,7 @@ public class DeckPrice implements EntityInterface {
     private Deck deck;
 
     @Column(name = "deck_price")
-    private int price;
+    private Integer price;
 
     public DeckPrice() {
     }
@@ -36,7 +36,7 @@ public class DeckPrice implements EntityInterface {
         return deck;
     }
 
-    public int getPrice() {
+    public Integer getPrice() {
         return price;
     }
 
@@ -48,7 +48,7 @@ public class DeckPrice implements EntityInterface {
         this.deck = deck;
     }
 
-    public void setPrice(int price) {
+    public void setPrice(Integer price) {
         this.price = price;
     }
 }

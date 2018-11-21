@@ -214,7 +214,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User updatePointsBalance(User user) {
-        user.setPoints(transactionRepository.sumPointsByUserTo(user.getId()) - transactionRepository.sumPointsByUserFrom(user.getId()));
+        Integer expenses = Optional.ofNullable(transactionRepository.getAllExpensesByUser(user.getId())).orElse(0);
+        Integer income =  Optional.ofNullable(transactionRepository.getAllIncomeByUser(user.getId())).orElse(0);
+        user.setPoints(income - expenses);
         return userRepository.save(user);
     }
 }

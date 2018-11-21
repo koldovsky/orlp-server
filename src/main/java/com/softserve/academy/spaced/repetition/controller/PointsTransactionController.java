@@ -1,9 +1,7 @@
 package com.softserve.academy.spaced.repetition.controller;
 
-import com.softserve.academy.spaced.repetition.controller.dto.annotations.Request;
 import com.softserve.academy.spaced.repetition.controller.dto.builder.DTOBuilder;
 import com.softserve.academy.spaced.repetition.controller.dto.impl.PointsTransactionDTO;
-import com.softserve.academy.spaced.repetition.controller.dto.simpleDTO.TransactionDTO;
 import com.softserve.academy.spaced.repetition.domain.PointsTransaction;
 import com.softserve.academy.spaced.repetition.service.PointsTransactionService;
 import com.softserve.academy.spaced.repetition.utils.exceptions.NotAuthorisedUserException;
@@ -12,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Link;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -26,12 +23,19 @@ public class PointsTransactionController {
     @Autowired
     private PointsTransactionService transactionService;
 
-    @PostMapping(value = "/api/transaction/")
+    @PostMapping(value = "/api/buy/deck/{deckId}")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity makeTransaction(@Validated(Request.class) @RequestBody TransactionDTO transaction)
-        throws NotAuthorisedUserException, TransactionException {
-        transactionService.makeTransaction(transaction);
-      return new ResponseEntity(HttpStatus.CREATED);
+    public ResponseEntity buyDeck(@PathVariable Long deckId)
+            throws NotAuthorisedUserException, TransactionException{
+        transactionService.buyDeck(deckId);
+        return new ResponseEntity(HttpStatus.CREATED);
+    }
+
+    @PostMapping(value = "/api/buy/course/{courseId}")
+    @ResponseStatus(HttpStatus.CREATED)
+    public ResponseEntity buyCourse(@PathVariable Long courseId) throws NotAuthorisedUserException, TransactionException {
+        transactionService.buyCourse(courseId);
+        return new ResponseEntity(HttpStatus.CREATED);
     }
 
     @GetMapping(value = "/api/private/user/{userId}/transactions")
@@ -39,6 +43,15 @@ public class PointsTransactionController {
     public ResponseEntity<List<PointsTransactionDTO>> getAllTransactionsById(@PathVariable Long userId) {
         List<PointsTransaction> list = transactionService.getTransactionsById(userId);
         Link collectionLink = linkTo(methodOn(PointsTransactionController.class).getAllTransactionsById(userId)).withSelfRel();
+        List<PointsTransactionDTO> transactions = DTOBuilder.buildDtoListForCollection(list, PointsTransactionDTO.class, collectionLink);
+        return new ResponseEntity<>(transactions, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/api/admin/audit/transactions")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<List<PointsTransactionDTO>> getAllTransactions(){
+        List<PointsTransaction> list = transactionService.getAllTransactions();
+        Link collectionLink = linkTo(methodOn(PointsTransactionController.class).getAllTransactions()).withSelfRel();
         List<PointsTransactionDTO> transactions = DTOBuilder.buildDtoListForCollection(list, PointsTransactionDTO.class, collectionLink);
         return new ResponseEntity<>(transactions, HttpStatus.OK);
     }

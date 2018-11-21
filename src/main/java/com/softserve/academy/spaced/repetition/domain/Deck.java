@@ -168,6 +168,14 @@ public class Deck extends EntityForOwnership implements EntityInterface {
         this.courses = courses;
     }
 
+    public DeckPrice getDeckPrice() {
+        return deckPrice;
+    }
+
+    public void setDeckPrice(DeckPrice deckPrice) {
+        this.deckPrice = deckPrice;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
