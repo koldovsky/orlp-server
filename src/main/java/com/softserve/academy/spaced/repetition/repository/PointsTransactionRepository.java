@@ -17,6 +17,4 @@ public interface PointsTransactionRepository extends JpaRepository<PointsTransac
     @Query(value = "select distinct p from PointsTransaction p where p.userFrom.id = :idUser or p.userTo.id = :idUser")
     List<PointsTransaction> findAllTransactionsByUserId(@Param("idUser") long idUser);
 
-    @Query(value = "select p from PointsTransaction p")
-    List<PointsTransaction> getAllTransactions();
 }

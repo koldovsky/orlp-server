@@ -104,7 +104,7 @@ public class PointsTransactionServiceImpl implements PointsTransactionService {
 
     @Override
     public List<PointsTransaction> getAllTransactions(){
-        return transactionRepository.getAllTransactions();
+        return transactionRepository.findAll();
     }
 
 }

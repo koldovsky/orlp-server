@@ -14,16 +14,18 @@ public class PointsTransactionDTO extends DTO<PointsTransaction> {
     }
 
     public Integer getPoints(){
-        return(this.getEntity().getPoints());
+        return this.getEntity().getPoints();
     }
 
-    public Long getUserToId() {
-        return (this.getEntity().getUserTo().getId());
+    public String getUserToEmail() {
+        return this.getEntity().getUserTo().getAccount().getEmail();
     }
 
-    public Long getUserFromId() {
-        return (this.getEntity().getUserFrom().getId());
+    public String getUserFromEmail() {
+        return this.getEntity().getUserFrom().getAccount().getEmail();
     }
 
-
+    public String getCreationDate() {
+        return this.getEntity().getCreationDate().toString();
+    }
 }
