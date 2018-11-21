@@ -1,0 +1,2 @@
+ALTER TABLE user ADD COLUMN points INT NOT NULL DEFAULT 0;
+ALTER TABLE points_transaction ADD COLUMN transaction_type VARCHAR(255);
