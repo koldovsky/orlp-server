@@ -6,7 +6,7 @@ import com.softserve.academy.spaced.repetition.repository.*;
 import com.softserve.academy.spaced.repetition.service.PointsTransactionService;
 import com.softserve.academy.spaced.repetition.service.UserService;
 import com.softserve.academy.spaced.repetition.utils.exceptions.NotAuthorisedUserException;
-import com.softserve.academy.spaced.repetition.utils.exceptions.TransactionException;
+import com.softserve.academy.spaced.repetition.utils.exceptions.PointsTransactionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -45,7 +45,7 @@ public class PointsTransactionServiceImpl implements PointsTransactionService {
 
     @Transactional
     @Override
-    public void buyDeck(Long deckId) throws NotAuthorisedUserException, TransactionException {
+    public void buyDeck(Long deckId) throws NotAuthorisedUserException, PointsTransactionException {
         Deck deck = deckRepository.findOne(deckId);
         User userFrom = userService.getAuthorizedUser();
         Integer points = Optional.ofNullable(deck.getDeckPrice().getPrice()).orElse(0);
@@ -64,7 +64,7 @@ public class PointsTransactionServiceImpl implements PointsTransactionService {
             userService.updatePointsBalance(userFrom);
             userService.updatePointsBalance(userTo);
         } else {
-            throw new TransactionException(messageSource.getMessage("message.transaction.notEnoughPoints",
+            throw new PointsTransactionException(messageSource.getMessage("message.transaction.notEnoughPoints",
                     new Object[]{}, locale));
         }
 
@@ -72,7 +72,7 @@ public class PointsTransactionServiceImpl implements PointsTransactionService {
 
     @Transactional
     @Override
-    public void buyCourse(Long courseId) throws NotAuthorisedUserException, TransactionException {
+    public void buyCourse(Long courseId) throws NotAuthorisedUserException, PointsTransactionException {
         Course course = courseRepository.findOne(courseId);
         User userFrom = userService.getAuthorizedUser();
         Integer points = Optional.ofNullable(course.getCoursePrice().getPrice()).orElse(0);
@@ -91,7 +91,7 @@ public class PointsTransactionServiceImpl implements PointsTransactionService {
             userService.updatePointsBalance(userFrom);
             userService.updatePointsBalance(userTo);
         } else {
-            throw new TransactionException(messageSource.getMessage("message.transaction.notEnoughPoints",
+            throw new PointsTransactionException(messageSource.getMessage("message.transaction.notEnoughPoints",
                     new Object[]{}, locale));
         }
 

@@ -143,10 +143,10 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
         return new MessageDTO(emptyFileException.getMessage());
     }
 
-    @ExceptionHandler(TransactionException.class)
+    @ExceptionHandler(PointsTransactionException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
-    MessageDTO handleTransactionException(TransactionException transactionException) {
-        return new MessageDTO(transactionException.getMessage());
+    MessageDTO handleTransactionException(PointsTransactionException pointsTransactionException) {
+        return new MessageDTO(pointsTransactionException.getMessage());
     }
 }

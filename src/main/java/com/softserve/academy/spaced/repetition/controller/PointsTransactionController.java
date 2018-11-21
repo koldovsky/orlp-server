@@ -5,7 +5,7 @@ import com.softserve.academy.spaced.repetition.controller.dto.impl.PointsTransac
 import com.softserve.academy.spaced.repetition.domain.PointsTransaction;
 import com.softserve.academy.spaced.repetition.service.PointsTransactionService;
 import com.softserve.academy.spaced.repetition.utils.exceptions.NotAuthorisedUserException;
-import com.softserve.academy.spaced.repetition.utils.exceptions.TransactionException;
+import com.softserve.academy.spaced.repetition.utils.exceptions.PointsTransactionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Link;
 import org.springframework.http.HttpStatus;
@@ -26,14 +26,14 @@ public class PointsTransactionController {
     @PostMapping(value = "/api/buy/deck/{deckId}")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity buyDeck(@PathVariable Long deckId)
-            throws NotAuthorisedUserException, TransactionException{
+            throws NotAuthorisedUserException, PointsTransactionException {
         transactionService.buyDeck(deckId);
         return new ResponseEntity(HttpStatus.CREATED);
     }
 
     @PostMapping(value = "/api/buy/course/{courseId}")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity buyCourse(@PathVariable Long courseId) throws NotAuthorisedUserException, TransactionException {
+    public ResponseEntity buyCourse(@PathVariable Long courseId) throws NotAuthorisedUserException, PointsTransactionException {
         transactionService.buyCourse(courseId);
         return new ResponseEntity(HttpStatus.CREATED);
     }
