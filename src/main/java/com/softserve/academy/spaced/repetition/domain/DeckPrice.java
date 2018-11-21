@@ -19,7 +19,7 @@ public class DeckPrice implements EntityInterface {
     public DeckPrice() {
     }
 
-    public DeckPrice(int price) {
+    public DeckPrice(Integer price) {
         this.price = price;
     }
 
@@ -35,7 +35,7 @@ public class DeckPrice implements EntityInterface {
         this.id = id;
     }
 
-    public void setPrice(int price) {
+    public void setPrice(Integer price) {
         this.price = price;
     }
 }
