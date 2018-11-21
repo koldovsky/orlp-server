@@ -5,6 +5,7 @@ import com.softserve.academy.spaced.repetition.controller.dto.impl.DeckEditByAdm
 import com.softserve.academy.spaced.repetition.domain.*;
 import com.softserve.academy.spaced.repetition.repository.CategoryRepository;
 import com.softserve.academy.spaced.repetition.repository.CourseRepository;
+import com.softserve.academy.spaced.repetition.repository.DeckOwnershipRepository;
 import com.softserve.academy.spaced.repetition.repository.DeckRepository;
 import com.softserve.academy.spaced.repetition.service.impl.DeckServiceImpl;
 import com.softserve.academy.spaced.repetition.util.DomainFactory;
@@ -53,6 +54,8 @@ public class DeckServiceTest {
     private UserService userService;
     @Mock
     private FolderService folderService;
+    @Mock
+    private DeckOwnershipRepository deckOwnershipRepository;
     @Mock
     private MessageSource messageSource;
     private User notOwnerUser;
