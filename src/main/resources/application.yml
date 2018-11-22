@@ -21,7 +21,7 @@ app:
     expiration: 604800
     route:
       authentication:
-        path: api/auth
+        path: /api/auth
         refresh: refresh
   reCaptcha:
     secretKey: unknown

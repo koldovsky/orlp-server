@@ -1,5 +1,6 @@
 package com.softserve.academy.spaced.repetition.service;
 
+import com.softserve.academy.spaced.repetition.controller.dto.simpleDTO.CourseDTO;
 import com.softserve.academy.spaced.repetition.domain.*;
 import com.softserve.academy.spaced.repetition.repository.*;
 import com.softserve.academy.spaced.repetition.service.impl.CourseServiceImpl;
@@ -35,6 +36,9 @@ public class CourseServiceTest {
     private final int PAGE_NUMBER = 1;
     private final boolean PAGE_ASCENDING_ORDER = true;
     private final String PAGE_SORT_BY = "field";
+    private final int PRICE = 1;
+    private final String COURSE_NAME = "Java interview course";
+    private final String COURSE_DESCRIPTION = "Java description";
     @Mock
     private CourseRepository courseRepository;
     @Mock
@@ -49,12 +53,17 @@ public class CourseServiceTest {
     private CategoryRepository categoryRepository;
     @Mock
     private DeckRepository deckRepository;
+    @Mock
+    private CoursePriceRepository coursePriceRepository;
+    @Mock
+    private CourseOwnershipRepository courseOwnershipRepository;
     @InjectMocks
     private CourseServiceImpl courseService;
     private Course course;
     private User user;
     private Category category;
     private Image image;
+    private CoursePrice coursePrice;
     private List<Course> courseList;
     private Set<Course> courseSet;
     private List<Deck> deckList;
@@ -72,7 +81,7 @@ public class CourseServiceTest {
         user = DomainFactory.createUser(1L, null, null, null, courseSet);
         course = DomainFactory.createCourse(COURSE_ID, null, null, new Image(), 1, true
                 , user, new Category(), deckList, null, null);
-
+        coursePrice = DomainFactory.createCoursePrice(PRICE, course);
         courseList.add(course);
         courseSet.add(course);
         deckList.add(deck);
@@ -148,17 +157,20 @@ public class CourseServiceTest {
 
     @Test
     public void testUpdateCourse() {
-        courseService.updateCourse(COURSE_ID, course);
+        CourseDTO courseDTO = createCourseDTO();
+        when(courseService.updateCourse(COURSE_ID, courseDTO)).thenReturn(course);
+        courseService.updateCourse(COURSE_ID, courseDTO);
         verify(courseRepository).save(course);
     }
 
     @Test
     public void testDeleteCourseByAdmin() {
         doNothing().when(courseRepository).delete(COURSE_ID);
-
+        doNothing().when(courseOwnershipRepository).deleteCourseOwnershipByCourseId(COURSE_ID);
         courseService.deleteCourseAndSubscriptions(COURSE_ID);
         verify(courseRepository).deleteSubscriptions(COURSE_ID);
         verify(courseRepository).delete(COURSE_ID);
+        verify(courseOwnershipRepository).deleteCourseOwnershipByCourseId(COURSE_ID);
     }
 
     @Test
@@ -287,5 +299,14 @@ public class CourseServiceTest {
                 , PAGE_SORT_BY, PAGE_ASCENDING_ORDER);
         verify(courseRepository).findAllByCategoryEqualsAndPublishedTrue(any(Category.class), any(PageRequest.class));
         assertNull(result);
+    }
+
+    private CourseDTO createCourseDTO() {
+        CourseDTO courseDTO = new CourseDTO();
+        courseDTO.setName(COURSE_NAME);
+        courseDTO.setName(COURSE_DESCRIPTION);
+        courseDTO.setImage(image);
+        courseDTO.setPrice(PRICE);
+        return courseDTO;
     }
 }

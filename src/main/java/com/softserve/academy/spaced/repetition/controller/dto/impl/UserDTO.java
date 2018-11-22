@@ -13,8 +13,6 @@ import java.util.Set;
 
 public class UserDTO extends DTO<User> {
 
-    private Integer pointsBalance;
-
     public UserDTO(User user, Link link) {
         super(user, link);
     }
@@ -52,10 +50,6 @@ public class UserDTO extends DTO<User> {
 
     public boolean isDeactivated() { return getEntity().getAccount().isDeactivated();}
 
-    public Integer getPointsBalance() { return pointsBalance;}
-
-    public void setPointsBalance(Integer pointsBalance) {
-        this.pointsBalance = pointsBalance;
-    }
+    public Integer getPoints() { return getEntity().getPoints();}
 }
 

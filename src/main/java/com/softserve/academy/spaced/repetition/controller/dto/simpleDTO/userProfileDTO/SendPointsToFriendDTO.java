@@ -3,12 +3,12 @@ package com.softserve.academy.spaced.repetition.controller.dto.simpleDTO.userPro
 public class SendPointsToFriendDTO {
     private String emailFrom;
     private String emailTo;
-    private int points;
+    private Integer points;
 
     public SendPointsToFriendDTO() {
     }
 
-    public SendPointsToFriendDTO(String emailFrom, String emailTo, int points) {
+    public SendPointsToFriendDTO(String emailFrom, String emailTo, Integer points) {
         this.emailFrom = emailFrom;
         this.emailTo = emailTo;
         this.points = points;
@@ -30,11 +30,11 @@ public class SendPointsToFriendDTO {
         this.emailTo = emailTo;
     }
 
-    public int getPoints() {
+    public Integer getPoints() {
         return points;
     }
 
-    public void setPoints(int points) {
+    public void setPoints(Integer points) {
         this.points = points;
     }
 }
