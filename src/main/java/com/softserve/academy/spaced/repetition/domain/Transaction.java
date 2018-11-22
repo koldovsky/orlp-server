@@ -8,7 +8,8 @@ import java.util.Date;
 public abstract class Transaction {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.TABLE)
+    @GeneratedValue(strategy = GenerationType.TABLE, generator = "generator")
+    @TableGenerator(name = "generator", allocationSize = 1)
     @Column(name = "transaction_id")
     private Long id;
 
@@ -42,4 +43,5 @@ public abstract class Transaction {
     public void setId(Long id) {
         this.id = id;
     }
+
 }

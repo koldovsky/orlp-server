@@ -1,6 +1,7 @@
 package com.softserve.academy.spaced.repetition.domain;
 
 import com.softserve.academy.spaced.repetition.controller.dto.annotations.EntityInterface;
+import com.softserve.academy.spaced.repetition.domain.enums.TransactionType;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -21,6 +22,19 @@ public class PointsTransaction extends Transaction implements EntityInterface {
 
     @Column(name = "points")
     private int points;
+
+    @Column(name="transaction_type")
+    private String transactionType;
+
+    public PointsTransaction() {
+    }
+
+    public PointsTransaction(User userFrom, User userTo, int points, TransactionType transactionType) {
+        this.userFrom = userFrom;
+        this.userTo = userTo;
+        this.points = points;
+        this.transactionType = transactionType.toString();
+    }
 
     public User getUserFrom() {
         return userFrom;
@@ -44,6 +58,14 @@ public class PointsTransaction extends Transaction implements EntityInterface {
 
     public void setPoints(int points) {
         this.points = points;
+    }
+
+    public String getTransactionType() {
+        return transactionType;
+    }
+
+    public void setTransactionType(String transactionType) {
+        this.transactionType = transactionType;
     }
 }
 
