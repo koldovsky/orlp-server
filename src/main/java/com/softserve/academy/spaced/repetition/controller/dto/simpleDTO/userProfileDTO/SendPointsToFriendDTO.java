@@ -1,8 +1,25 @@
 package com.softserve.academy.spaced.repetition.controller.dto.simpleDTO.userProfileDTO;
 
+import com.softserve.academy.spaced.repetition.controller.dto.annotations.Request;
+import org.hibernate.validator.constraints.NotBlank;
+
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
+
+import static com.softserve.academy.spaced.repetition.utils.validators.ValidationConstants.*;
+
 public class SendPointsToFriendDTO {
+
     private String emailFrom;
+
+    @NotNull(message = "{message.validation.fieldNotNull}", groups = Request.class)
+    @Size(min = EMAIL_MIN_SIZE, max = EMAIL_MAX_SIZE, message = "{message.validation.fieldSizeLimits}", groups = Request.class)
+    @Pattern(regexp = EMAIL_PATTERN, message = "{message.validation.emailWrongFormat}", groups = Request.class)
+    @NotBlank(message = "{message.validation.fieldNotEmpty}", groups = Request.class)
     private String emailTo;
+
+    @NotNull
     private Integer points;
 
     public SendPointsToFriendDTO() {
