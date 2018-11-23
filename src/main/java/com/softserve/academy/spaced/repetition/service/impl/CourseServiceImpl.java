@@ -86,11 +86,7 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public List<Course> getAllOrderedCourses() {
-        List<Course> courses = courseRepository.findAllByPublishedTrueOrderByRatingDesc();
-        for (Course course : courses) {
-            checkIfCoursePriceExists(course);
-        }
-        return courses;
+        return courseRepository.findAllByPublishedTrueOrderByRatingDesc();
     }
 
     @Override
@@ -107,6 +103,7 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
+    @Transactional
     public void deleteGlobalCourse(Long courseId) throws NotAuthorisedUserException {
         User user = userService.getAuthorizedUser();
         Set<Course> courses = user.getCourses();
@@ -148,19 +145,25 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public void createPrivateCourse(Course privateCourse, Long categoryId) throws NotAuthorisedUserException {
+    @Transactional
+    public Course createPrivateCourse(Course privateCourse, Long categoryId) throws NotAuthorisedUserException {
         User user = userService.getAuthorizedUser();
         Image image = imageRepository.findImageById(privateCourse.getImage().getId());
         Course course = new Course();
+        CoursePrice coursePrice = new CoursePrice();
+        coursePrice.setCourse(course);
+        course.setCoursePrice(coursePrice);
         course.setName(privateCourse.getName());
         course.setDescription(privateCourse.getDescription());
         course.setImage(image);
         course.setCategory(categoryRepository.findById(categoryId));
         course.setPublished(false);
         course.setOwner(user);
+        coursePriceRepository.save(coursePrice);
         courseRepository.save(course);
         user.getCourses().add(course);
         userRepository.save(user);
+        return course;
     }
 
     @Override

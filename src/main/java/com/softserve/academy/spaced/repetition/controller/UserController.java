@@ -4,10 +4,8 @@ import com.softserve.academy.spaced.repetition.controller.dto.builder.DTOBuilder
 import com.softserve.academy.spaced.repetition.controller.dto.impl.CourseLinkDTO;
 import com.softserve.academy.spaced.repetition.controller.dto.impl.UserDTO;
 import com.softserve.academy.spaced.repetition.controller.dto.impl.UserLinksDTO;
-import com.softserve.academy.spaced.repetition.domain.Authority;
 import com.softserve.academy.spaced.repetition.domain.Course;
 import com.softserve.academy.spaced.repetition.domain.User;
-import com.softserve.academy.spaced.repetition.domain.enums.AuthorityName;
 import com.softserve.academy.spaced.repetition.service.PointsTransactionService;
 import com.softserve.academy.spaced.repetition.service.UserService;
 import com.softserve.academy.spaced.repetition.utils.exceptions.NotAuthorisedUserException;
