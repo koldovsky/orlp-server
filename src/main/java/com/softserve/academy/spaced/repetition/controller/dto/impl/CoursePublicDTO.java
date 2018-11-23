@@ -28,8 +28,4 @@ public class CoursePublicDTO extends DTO<Course> {
     public Long getCreatedBy(){
         return getEntity().getCreatedBy();
     }
-
-    public Integer getCoursePrice() {
-        return getEntity().getCoursePrice().getPrice();
-    }
 }
