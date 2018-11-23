@@ -110,9 +110,11 @@ public interface CourseService {
      *
      * @param privateCourse added course, must not be {null}.
      * @param categoryId    must not be {@literal null}.
+     *
+     * @return created course
      * @throws NotAuthorisedUserException if user is not authorised
      */
-    void createPrivateCourse(Course privateCourse, Long categoryId) throws NotAuthorisedUserException;
+    Course createPrivateCourse(Course privateCourse, Long categoryId) throws NotAuthorisedUserException;
 
     /**
      * Updates access to course - change property published in course
