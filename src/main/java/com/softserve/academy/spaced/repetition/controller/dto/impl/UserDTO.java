@@ -1,16 +1,18 @@
 package com.softserve.academy.spaced.repetition.controller.dto.impl;
 
 import com.softserve.academy.spaced.repetition.controller.dto.builder.DTO;
+import com.softserve.academy.spaced.repetition.domain.Authority;
+import com.softserve.academy.spaced.repetition.domain.User;
 import com.softserve.academy.spaced.repetition.domain.enums.AccountStatus;
 import com.softserve.academy.spaced.repetition.domain.enums.AuthenticationType;
 import com.softserve.academy.spaced.repetition.domain.enums.ImageType;
-import com.softserve.academy.spaced.repetition.domain.*;
 import org.springframework.hateoas.Link;
 
 import java.util.HashSet;
 import java.util.Set;
 
 public class UserDTO extends DTO<User> {
+
     public UserDTO(User user, Link link) {
         super(user, link);
     }
@@ -47,4 +49,7 @@ public class UserDTO extends DTO<User> {
     public AccountStatus getAccountStatus() { return getEntity().getAccount().getStatus();}
 
     public boolean isDeactivated() { return getEntity().getAccount().isDeactivated();}
+
+    public Integer getPoints() { return getEntity().getPoints();}
 }
+
