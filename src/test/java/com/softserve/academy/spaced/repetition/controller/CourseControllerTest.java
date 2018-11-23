@@ -322,7 +322,7 @@ public class CourseControllerTest {
 
     @Test
     public void testCreatePrivateCourse() throws Exception {
-        doNothing().when(courseService).createPrivateCourse(createCourse(), 1L);
+        when(courseService.createPrivateCourse(any(Course.class), eq(1L))).thenReturn(createCourse());
         mockMvc.perform(post("/api/categories/{categoryId}/courses", 1L)
                 .content(new ObjectMapper().writeValueAsString(createCourse()))
                 .contentType(MediaType.APPLICATION_JSON))

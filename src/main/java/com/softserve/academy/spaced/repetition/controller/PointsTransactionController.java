@@ -1,7 +1,9 @@
 package com.softserve.academy.spaced.repetition.controller;
 
+import com.softserve.academy.spaced.repetition.controller.dto.annotations.Request;
 import com.softserve.academy.spaced.repetition.controller.dto.builder.DTOBuilder;
 import com.softserve.academy.spaced.repetition.controller.dto.impl.PointsTransactionDTO;
+import com.softserve.academy.spaced.repetition.controller.dto.simpleDTO.userProfileDTO.SendPointsToFriendDTO;
 import com.softserve.academy.spaced.repetition.domain.PointsTransaction;
 import com.softserve.academy.spaced.repetition.service.PointsTransactionService;
 import com.softserve.academy.spaced.repetition.utils.exceptions.NotAuthorisedUserException;
@@ -10,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Link;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -56,4 +59,10 @@ public class PointsTransactionController {
         return new ResponseEntity<>(transactions, HttpStatus.OK);
     }
 
+    @PostMapping(value = "api/profile/wallet")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<SendPointsToFriendDTO> sendPointsToFriend (@Validated(Request.class) @RequestBody SendPointsToFriendDTO sendPointsToFriendDTO) throws NotAuthorisedUserException {
+        SendPointsToFriendDTO pointsToFriendDTO  = transactionService.sendPointsToFriend(sendPointsToFriendDTO);
+        return new ResponseEntity<>(pointsToFriendDTO, HttpStatus.OK);
+    }
 }
