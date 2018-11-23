@@ -86,8 +86,7 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public List<Course> getAllOrderedCourses() {
-        List<Course> courses = courseRepository.findAllByPublishedTrueOrderByRatingDesc();
-        return courses;
+        return courseRepository.findAllByPublishedTrueOrderByRatingDesc();
     }
 
     @Override
