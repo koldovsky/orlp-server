@@ -228,6 +228,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public SetPointsByAdminDTO setPointsToUser(SetPointsByAdminDTO setPointsByAdminDTO) throws NotAuthorisedUserException {
         User admin = getAuthorizedUser();
         User user = userRepository.findUserByAccountEmail(setPointsByAdminDTO.getEmail());
