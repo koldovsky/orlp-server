@@ -44,7 +44,7 @@ public class Deck extends EntityForOwnership implements EntityInterface {
     @JoinColumn(name = "user_id")
     private User deckOwner;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "deck_price_id")
     private DeckPrice deckPrice;
 
@@ -102,6 +102,14 @@ public class Deck extends EntityForOwnership implements EntityInterface {
 
     public void setCategory(Category category) {
         this.category = category;
+    }
+
+    public DeckPrice getDeckPrice() {
+        return deckPrice;
+    }
+
+    public void setDeckPrice(DeckPrice deckPrice) {
+        this.deckPrice = deckPrice;
     }
 
     public User getDeckOwner() {
