@@ -1,7 +1,9 @@
 package com.softserve.academy.spaced.repetition.service.impl;
 
+import com.softserve.academy.spaced.repetition.controller.dto.impl.SetPointsByAdminDTO;
 import com.softserve.academy.spaced.repetition.domain.*;
 import com.softserve.academy.spaced.repetition.domain.enums.*;
+import com.softserve.academy.spaced.repetition.repository.PointsTransactionRepository;
 import com.softserve.academy.spaced.repetition.service.ImageService;
 import com.softserve.academy.spaced.repetition.utils.exceptions.NotAuthorisedUserException;
 import com.softserve.academy.spaced.repetition.utils.exceptions.UserStatusException;
@@ -44,6 +46,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private AuthorityRepository authorityRepository;
+
+    @Autowired
+    private PointsTransactionRepository transactionRepository;
 
     int QUANTITY_USER_IN_PAGE = 20;
 
@@ -207,4 +212,35 @@ public class UserServiceImpl implements UserService {
             throw new UserStatusException(user.getAccount().getStatus());
         }
     }
+
+    @Override
+    public User updatePointsBalance(User user) {
+        Integer expenses = Optional.ofNullable(transactionRepository.getAllExpensesByUser(user.getId())).orElse(0);
+        Integer income =  Optional.ofNullable(transactionRepository.getAllIncomeByUser(user.getId())).orElse(0);
+        user.setPoints(income - expenses);
+        return userRepository.save(user);
+    }
+
+    @Override
+    public boolean isAdmin(User user) throws NotAuthorisedUserException {
+        return getAuthorizedUser().getAccount().getAuthorities().stream()
+                .anyMatch(authority -> authority.getName().equals(AuthorityName.ROLE_ADMIN));
+    }
+
+    @Override
+    @Transactional
+    public SetPointsByAdminDTO setPointsToUser(SetPointsByAdminDTO setPointsByAdminDTO) throws NotAuthorisedUserException {
+        User admin = getAuthorizedUser();
+        User user = userRepository.findUserByAccountEmail(setPointsByAdminDTO.getEmail());
+        PointsTransaction pointsTransaction = new PointsTransaction(admin, user, setPointsByAdminDTO.getPoints(), TransactionType.TRANSFER);
+        pointsTransaction.setCreationDate(new Date());
+        pointsTransaction.setReference(pointsTransaction);
+        transactionRepository.save(pointsTransaction);
+        User updatedUser = updatePointsBalance(user);
+        user.setPoints(updatedUser.getPoints());
+        setPointsByAdminDTO.setPoints(updatedUser.getPoints());
+        return setPointsByAdminDTO;
+    }
+
+
 }

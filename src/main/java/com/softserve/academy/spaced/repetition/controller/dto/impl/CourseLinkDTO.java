@@ -1,15 +1,15 @@
 package com.softserve.academy.spaced.repetition.controller.dto.impl;
 
-import com.softserve.academy.spaced.repetition.controller.dto.builder.DTO;
 import com.softserve.academy.spaced.repetition.controller.DeckController;
 import com.softserve.academy.spaced.repetition.controller.ImageController;
+import com.softserve.academy.spaced.repetition.controller.dto.builder.DTO;
 import com.softserve.academy.spaced.repetition.domain.Course;
 import org.springframework.hateoas.Link;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
-public class CourseLinkDTO extends DTO <Course> {
+public class CourseLinkDTO extends DTO<Course> {
 
     public CourseLinkDTO(Course course, Link link) {
         super(course, link);
@@ -48,7 +48,7 @@ public class CourseLinkDTO extends DTO <Course> {
         return getEntity().getCategory().getId();
     }
 
-    public Long getCreatedBy(){
+    public Long getCreatedBy() {
         return getEntity().getCreatedBy();
     }
 }

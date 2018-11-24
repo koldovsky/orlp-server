@@ -22,5 +22,6 @@ public enum EntityName{
    CARD_QUEUE,
    USER,
    PROFILE,
-   PROFILE_LEARNING
+   PROFILE_LEARNING,
+
 }

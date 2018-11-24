@@ -34,7 +34,9 @@ public class DeckLinkByCategoryDTO extends DTO<Deck> {
         return getEntity().getRating();
     }
 
-    public Boolean getHidden() { return getEntity().isHidden(); }
+    public Boolean getHidden() {
+        return getEntity().isHidden();
+    }
 
     public String getSynthax() {
         return getEntity().getSyntaxToHighlight();

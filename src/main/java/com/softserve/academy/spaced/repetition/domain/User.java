@@ -40,6 +40,9 @@ public class User implements EntityInterface {
             inverseJoinColumns = {@JoinColumn(name = "course_id")})
     private Set<Course> courses;
 
+    @Column(name="points")
+    private Integer points;
+
     public User() {
     }
 
@@ -47,6 +50,13 @@ public class User implements EntityInterface {
         this.account = account;
         this.person = person;
         this.folder = folder;
+    }
+
+    public User(Account account, Person person, Folder folder, Integer points) {
+        this.account = account;
+        this.person = person;
+        this.folder = folder;
+        this.points = points;
     }
 
     public Long getId() {
@@ -87,6 +97,14 @@ public class User implements EntityInterface {
 
     public void setCourses(Set<Course> courses) {
         this.courses = courses;
+    }
+
+    public Integer getPoints() {
+        return points;
+    }
+
+    public void setPoints(Integer points) {
+        this.points = points;
     }
 
     @Override

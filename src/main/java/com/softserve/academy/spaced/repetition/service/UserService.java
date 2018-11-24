@@ -1,5 +1,6 @@
 package com.softserve.academy.spaced.repetition.service;
 
+import com.softserve.academy.spaced.repetition.controller.dto.impl.SetPointsByAdminDTO;
 import com.softserve.academy.spaced.repetition.domain.*;
 import com.softserve.academy.spaced.repetition.domain.enums.AccountStatus;
 import com.softserve.academy.spaced.repetition.domain.enums.AuthenticationType;
@@ -165,4 +166,9 @@ public interface UserService {
      */
     void isUserStatusActive(User user) throws UserStatusException;
 
+    User updatePointsBalance(User user);
+
+    boolean isAdmin(User user) throws NotAuthorisedUserException;
+
+    SetPointsByAdminDTO setPointsToUser(SetPointsByAdminDTO setPointsByAdminDTO) throws NotAuthorisedUserException;
 }

@@ -6,6 +6,7 @@ import com.softserve.academy.spaced.repetition.controller.dto.impl.UserDTO;
 import com.softserve.academy.spaced.repetition.controller.dto.impl.UserLinksDTO;
 import com.softserve.academy.spaced.repetition.domain.Course;
 import com.softserve.academy.spaced.repetition.domain.User;
+import com.softserve.academy.spaced.repetition.service.PointsTransactionService;
 import com.softserve.academy.spaced.repetition.service.UserService;
 import com.softserve.academy.spaced.repetition.utils.exceptions.NotAuthorisedUserException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,10 +31,16 @@ public class UserController {
     @Autowired
     UserService userService;
 
+    @Autowired
+    PointsTransactionService pointsTransactionService;
+
     @GetMapping("api/user/details")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<UserDTO> getAuthorizedUserPublicInfo() throws NotAuthorisedUserException {
         User user = userService.getAuthorizedUser();
+        if (!userService.isAdmin(user)) {
+            userService.updatePointsBalance(user);
+        }
         Link link = linkTo(methodOn(UserController.class).getAuthorizedUserWithLinks()).withSelfRel();
         UserDTO userDTO = DTOBuilder.buildDtoForEntity(user, UserDTO.class, link);
         return new ResponseEntity<>(userDTO, HttpStatus.OK);
