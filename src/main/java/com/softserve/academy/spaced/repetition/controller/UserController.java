@@ -38,7 +38,9 @@ public class UserController {
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<UserDTO> getAuthorizedUserPublicInfo() throws NotAuthorisedUserException {
         User user = userService.getAuthorizedUser();
-        userService.updatePointsBalance(user);
+        if (!userService.isAdmin(user)) {
+            userService.updatePointsBalance(user);
+        }
         Link link = linkTo(methodOn(UserController.class).getAuthorizedUserWithLinks()).withSelfRel();
         UserDTO userDTO = DTOBuilder.buildDtoForEntity(user, UserDTO.class, link);
         return new ResponseEntity<>(userDTO, HttpStatus.OK);
