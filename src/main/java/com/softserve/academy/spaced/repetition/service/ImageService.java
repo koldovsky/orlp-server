@@ -112,11 +112,4 @@ public interface ImageService {
 
     List<Image> getImagesWithoutContent();
 
-    /**
-     * Returns image by id
-     *
-     * @param id
-     * @return object of image
-     */
-    Image getImageById(Long id);
 }

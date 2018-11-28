@@ -2,10 +2,7 @@ package com.softserve.academy.spaced.repetition.controller;
 
 import com.softserve.academy.spaced.repetition.controller.dto.annotations.Request;
 import com.softserve.academy.spaced.repetition.controller.dto.builder.DTOBuilder;
-import com.softserve.academy.spaced.repetition.controller.dto.impl.CourseLinkDTO;
-import com.softserve.academy.spaced.repetition.controller.dto.impl.CoursePriceDTO;
-import com.softserve.academy.spaced.repetition.controller.dto.impl.CoursePublicDTO;
-import com.softserve.academy.spaced.repetition.controller.dto.impl.CourseUpdatedDTO;
+import com.softserve.academy.spaced.repetition.controller.dto.impl.*;
 import com.softserve.academy.spaced.repetition.controller.dto.simpleDTO.CourseDTO;
 import com.softserve.academy.spaced.repetition.controller.dto.simpleDTO.PriceDTO;
 import com.softserve.academy.spaced.repetition.domain.Course;
@@ -104,6 +101,31 @@ public class CourseController {
         return new ResponseEntity<>(linkDTO, HttpStatus.OK);
     }
 
+    @GetMapping(value = "/api/admin/courses/{courseId}")
+    @PreAuthorize("hasPermission('COURSE','READ')")
+    public ResponseEntity<CourseEditDTO> getCourseByIdByAdmin(@PathVariable Long courseId) {
+        Course course = courseService.getCourseById(courseId);
+        Link selfLink = linkTo(methodOn(CourseController.class).getCourseByIdByAdmin(courseId)).withSelfRel();
+        CourseEditDTO dto = DTOBuilder.buildDtoForEntity(course, CourseEditDTO.class, selfLink);
+        return new ResponseEntity<>(dto, HttpStatus.OK);
+    }
+
+    @Auditable(action = AuditingAction.VIEW_COURSES_ADMIN)
+    @GetMapping(value = "/api/admin/courses")
+    @PreAuthorize("hasPermission('COURSE','READ')")
+    public ResponseEntity<Page<CourseEditDTO>> getAllCoursesByAdmin(@RequestParam(name = "p", defaultValue = "1") int pageNumber,
+                                                                    @RequestParam(name = "sortBy") String sortBy,
+                                                                    @RequestParam(name = "asc") boolean ascending) {
+        Page<CourseEditDTO> courseEditDTOS = courseService
+                .getPageWithCourses(pageNumber, sortBy, ascending).map(course -> {
+                    Link selfLink = linkTo(methodOn(CourseController.class)
+                            .getCourseByIdByAdmin(course.getId())).withSelfRel();
+                    course = courseService.checkIfCoursePriceExists(course);
+                    return DTOBuilder.buildDtoForEntity(course, CourseEditDTO.class, selfLink);
+                });
+        return new ResponseEntity<>(courseEditDTOS, HttpStatus.OK);
+    }
+
     //TODO fix this method
     @Auditable(action = AuditingAction.CREATE_COURSE)
     @PostMapping(value = "/api/courses")
@@ -116,7 +138,7 @@ public class CourseController {
         return new ResponseEntity<>(coursePublicDTO, HttpStatus.CREATED);
     }
 
-    @Auditable(action = AuditingAction.CREATE_COURSE)
+    @Auditable(action = AuditingAction.EDIT_COURSE_ADMIN)
     @PutMapping(value = "/api/cabinet/courses/{courseId}")
     @PreAuthorize("hasPermission('COURSE','UPDATE')")
     public ResponseEntity<CoursePublicDTO> updateCourse(@PathVariable Long courseId, @Validated(Request.class) @RequestBody CourseDTO courseDTO) {
@@ -145,8 +167,8 @@ public class CourseController {
         return new ResponseEntity(HttpStatus.OK);
     }
 
-    @Auditable(action = AuditingAction.DELETE_COURSE)
-    @DeleteMapping(value = "/api/courses/{courseId}")
+    @Auditable(action = AuditingAction.DELETE_COURSE_ADMIN)
+    @DeleteMapping(value = "/api/admin/courses/{courseId}")
     @PreAuthorize("hasPermission('COURSE','DELETE')")
     public ResponseEntity deleteCourseByAdmin(@PathVariable Long courseId) {
         LOGGER.debug("Deleting course with id: {}", courseId);
