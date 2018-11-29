@@ -43,9 +43,6 @@ public class DeckServiceImpl implements DeckService {
     private FolderService folderService;
 
     @Autowired
-    private DeckOwnershipRepository deckOwnershipRepository;
-
-    @Autowired
     private MessageSource messageSource;
     private final Locale locale = LocaleContextHolder.getLocale();
 
