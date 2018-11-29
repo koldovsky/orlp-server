@@ -303,6 +303,17 @@ public class CourseServiceTest {
         assertNull(result);
     }
 
+    @Test
+    public void testUpdateCoursePrice() {
+        Course result = course;
+        result.getCoursePrice().setPrice(1);
+        when(courseRepository.findOne(COURSE_ID)).thenReturn(course);
+        when(coursePriceRepository.findByCourseId(COURSE_ID)).thenReturn(course.getCoursePrice());
+        courseService.updateCoursePrice(1, COURSE_ID);
+        verify(coursePriceRepository, times(1)).findByCourseId(COURSE_ID);
+        assertEquals(course, result);
+    }
+
     private CourseDTO createCourseDTO() {
         CourseDTO courseDTO = new CourseDTO();
         courseDTO.setName(COURSE_NAME);

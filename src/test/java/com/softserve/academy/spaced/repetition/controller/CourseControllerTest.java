@@ -2,6 +2,7 @@ package com.softserve.academy.spaced.repetition.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.softserve.academy.spaced.repetition.controller.dto.simpleDTO.CourseDTO;
+import com.softserve.academy.spaced.repetition.controller.dto.simpleDTO.PriceDTO;
 import com.softserve.academy.spaced.repetition.controller.handler.ExceptionHandlerController;
 import com.softserve.academy.spaced.repetition.domain.*;
 import com.softserve.academy.spaced.repetition.service.CourseService;
@@ -107,6 +108,12 @@ public class CourseControllerTest {
         Course course = createCourse(1L, "Java interview course", "4 parts of java questions & answers",
                 0, 14L, true, 1L, "admin@gmail.com", 1, 1L);
         return course;
+    }
+
+    private PriceDTO createPriceDto() {
+        PriceDTO priceDTO = new PriceDTO();
+        priceDTO.setPrice(5);
+        return priceDTO;
     }
 
     @Test
@@ -329,5 +336,14 @@ public class CourseControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name", is("Java interview course")))
                 .andExpect(jsonPath("$.description", is("4 parts of java questions & answers")));
+    }
+
+    @Test
+    public void testUpdateCoursePrice() throws Exception {
+        mockMvc.perform(put("/api/courses/{courseId}", 1L)
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(new ObjectMapper().writeValueAsString(createPriceDto())))
+                .andExpect(status().isOk());
     }
 }
