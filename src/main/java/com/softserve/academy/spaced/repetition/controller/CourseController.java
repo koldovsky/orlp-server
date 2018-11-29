@@ -139,7 +139,7 @@ public class CourseController {
     }
 
     @Auditable(action = AuditingAction.EDIT_COURSE_ADMIN)
-    @PutMapping(value = "/api/cabinet/courses/{courseId}")
+    @PutMapping(value = "/api/admin/courses/{courseId}")
     @PreAuthorize("hasPermission('COURSE','UPDATE')")
     public ResponseEntity<CoursePublicDTO> updateCourse(@PathVariable Long courseId, @Validated(Request.class) @RequestBody CourseDTO courseDTO) {
         LOGGER.debug("Updating course with id: {}", courseId);
