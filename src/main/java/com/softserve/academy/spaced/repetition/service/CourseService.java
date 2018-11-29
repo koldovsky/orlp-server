@@ -189,4 +189,6 @@ public interface CourseService {
 
     List<Course> findAllCoursesBySearch(String searchString);
 
+    void deleteDeckFromCourse(Long courseId, Long deckId);
+
 }
