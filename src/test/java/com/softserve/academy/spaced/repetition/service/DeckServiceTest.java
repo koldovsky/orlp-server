@@ -261,30 +261,30 @@ public class DeckServiceTest {
         when(deckRepository.getDeckById(DECK_ID)).thenReturn(getDeck());
         when(deckService.updateOwnDeck(getDeckWithPriceDTO(), DECK_ID, CATEGORY_ID)).thenReturn(getDeck());
         Deck result = deckService.updateOwnDeck(getDeckWithPriceDTO(), DECK_ID, CATEGORY_ID);
-        verify(userService).getAuthorizedUser();
-        verify(deckRepository).findOne(DECK_ID);
-        verify(categoryRepository).findOne(CATEGORY_ID);
+        verify(userService,times(2)).getAuthorizedUser();
+        verify(deckRepository,times(2)).findOne(DECK_ID);
+        verify(categoryRepository, times(2)).findById(CATEGORY_ID);
         verify(deckRepository).save(getDeck());
         assertEquals(deck, result);
     }
 
-//    @Test(expected = NoSuchElementException.class)
-//    public void testUpdateDeckThatNotFound() throws NotAuthorisedUserException, NotOwnerOperationException {
-//        when(deckRepository.findOne(DECK_ID)).thenReturn(null);
-//
-//        deckService.updateOwnDeck(deck, DECK_ID, CATEGORY_ID);
-//        verify(userService).getAuthorizedUser();
-//        verify(deckRepository).findOne(DECK_ID);
-//    }
+    @Test(expected = NoSuchElementException.class)
+    public void testUpdateDeckThatNotFound() throws NotAuthorisedUserException, NotOwnerOperationException {
+        when(deckRepository.findOne(DECK_ID)).thenReturn(null);
 
-//    @Test(expected = NotOwnerOperationException.class)
-//    public void testUpdateDeckByNotOwnerUser() throws NotAuthorisedUserException, NotOwnerOperationException {
-//        when(userService.getAuthorizedUser()).thenReturn(notOwnerUser);
-//
-//        deckService.updateOwnDeck(deck, DECK_ID, CATEGORY_ID);
-//        verify(userService).getAuthorizedUser();
-//        verify(deckRepository).findOne(DECK_ID);
-//    }
+        deckService.updateOwnDeck(deckWithPriceDTO, DECK_ID, CATEGORY_ID);
+        verify(userService).getAuthorizedUser();
+        verify(deckRepository).findOne(DECK_ID);
+    }
+
+    @Test(expected = NotOwnerOperationException.class)
+    public void testUpdateDeckByNotOwnerUser() throws NotAuthorisedUserException, NotOwnerOperationException {
+        when(userService.getAuthorizedUser()).thenReturn(notOwnerUser);
+
+        deckService.updateOwnDeck(deckWithPriceDTO, DECK_ID, CATEGORY_ID);
+        verify(userService).getAuthorizedUser();
+        verify(deckRepository).findOne(DECK_ID);
+    }
 
     @Test
     public void testGetAllUserDecks() throws NotAuthorisedUserException {
