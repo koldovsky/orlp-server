@@ -131,7 +131,6 @@ public class DeckServiceImpl implements DeckService {
         }
 
         newDeck.setDeckOwner(user);
-        newDeck.setCategory(categoryRepository.findById(categoryId));
         deckRepository.save(newDeck);
         return newDeck;
     }

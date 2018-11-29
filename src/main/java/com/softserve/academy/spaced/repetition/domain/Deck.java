@@ -104,14 +104,6 @@ public class Deck extends EntityForOwnership implements EntityInterface {
         this.category = category;
     }
 
-    public DeckPrice getDeckPrice() {
-        return deckPrice;
-    }
-
-    public void setDeckPrice(DeckPrice deckPrice) {
-        this.deckPrice = deckPrice;
-    }
-
     public User getDeckOwner() {
         return deckOwner;
     }
@@ -174,6 +166,14 @@ public class Deck extends EntityForOwnership implements EntityInterface {
 
     public void setCourses(List<Course> courses) {
         this.courses = courses;
+    }
+
+    public DeckPrice getDeckPrice() {
+        return deckPrice;
+    }
+
+    public void setDeckPrice(DeckPrice deckPrice) {
+        this.deckPrice = deckPrice;
     }
 
     @Override

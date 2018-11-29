@@ -347,25 +347,28 @@ public class DeckControllerTest {
         verify(deckService, times(1)).deleteOwnDeck(1L);
     }
 
-//    @Test
-//    public void testAddDeckForUser() throws Exception{
-//        Deck deck = createTestDeck();
-//        DeckDTO deckDTO = createTestDeckDTO();
-//        when(deckService.createNewDeck(deckDTO, 1L)).thenReturn(deck);
-//        when(folderService.addDeck(deck.getId())).thenReturn(deck);
-//        mockMvc.perform(post("/api/categories/{categoryId}/decks", 1L)
-//                .content(new ObjectMapper().writeValueAsString(deckDTO))
-//                .contentType(MediaType.APPLICATION_JSON))
-//                .andExpect(status().isCreated())
-//                .andExpect(jsonPath("$.owner", is("test@test.com")))
-//                .andExpect(jsonPath("$.rating", is(1.0)));
-//    }
+    @Test
+    public void testAddDeckForUser() throws Exception{
+        Deck deck = createTestDeck();
+        DeckDTO deckDTO = createTestDeckDTO();
+        when(deckService.createNewDeck(any(DeckDTO.class), eq(1L))).thenReturn(deck);
+        when(folderService.addDeck(deck.getId())).thenReturn(deck);
+        mockMvc.perform(post("/api/categories/{categoryId}/decks", 1L)
+                .content(new ObjectMapper().writeValueAsString(deckDTO))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.owner", is("test@test.com")))
+                .andExpect(jsonPath("$.rating", is(1.0)));
+    }
 
     @Test
     public void testUpdateDeckForUser() throws Exception{
-        when(deckService.updateOwnDeck(createTestDeckDTO(), 1L, 1L)).thenReturn(createTestDeck());
+        DeckDTO deckDto = createTestDeckDTO();
+        Deck deck = createTestDeck();
+        when(deckService.updateOwnDeck(any(DeckDTO.class), eq(1L), eq(1L))).thenReturn(deck);
         mockMvc.perform(put("/api/categories/{categoryId}/decks/{deckId}",1L, 1L)
-                .content(new ObjectMapper().writeValueAsString(createTestDeckDTO()))
+                .content(new ObjectMapper().writeValueAsString(deckDto))
+                .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name", is("testDeck")))
