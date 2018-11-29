@@ -1,7 +1,6 @@
 package com.softserve.academy.spaced.repetition.service.impl;
 
 import com.softserve.academy.spaced.repetition.controller.dto.simpleDTO.CourseDTO;
-import com.softserve.academy.spaced.repetition.controller.dto.simpleDTO.PriceDTO;
 import com.softserve.academy.spaced.repetition.domain.*;
 import com.softserve.academy.spaced.repetition.repository.*;
 import com.softserve.academy.spaced.repetition.service.CourseService;
@@ -93,12 +92,10 @@ public class CourseServiceImpl implements CourseService {
     @Transactional
     public Course updateCourse(Long courseId, CourseDTO courseDTO) {
         Course course = courseRepository.findOne(courseId);
-        course = checkIfCoursePriceExists(course);
         course.setName(courseDTO.getName());
         course.setDescription(courseDTO.getDescription());
         course.setImage(courseDTO.getImage());
-        course.getCoursePrice().setPrice(courseDTO.getPrice());
-        coursePriceRepository.save(course.getCoursePrice());
+        updateCoursePrice(courseDTO.getPrice(), courseId);
         return courseRepository.save(course);
     }
 
@@ -150,16 +147,12 @@ public class CourseServiceImpl implements CourseService {
         User user = userService.getAuthorizedUser();
         Image image = imageRepository.findImageById(privateCourse.getImage().getId());
         Course course = new Course();
-        CoursePrice coursePrice = new CoursePrice();
-        coursePrice.setCourse(course);
-        course.setCoursePrice(coursePrice);
         course.setName(privateCourse.getName());
         course.setDescription(privateCourse.getDescription());
         course.setImage(image);
         course.setCategory(categoryRepository.findById(categoryId));
         course.setPublished(false);
         course.setOwner(user);
-        coursePriceRepository.save(coursePrice);
         courseRepository.save(course);
         user.getCourses().add(course);
         userRepository.save(user);
@@ -234,23 +227,21 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     @Transactional
-    public void updateCoursePrice(PriceDTO priceDTO, Long courseId) {
+    public void updateCoursePrice(Integer price, Long courseId) {
         Course course = courseRepository.findOne(courseId);
-        course = checkIfCoursePriceExists(course);
-        course.getCoursePrice().setPrice(priceDTO.getPrice());
-        coursePriceRepository.save(course.getCoursePrice());
-        courseRepository.save(course);
-    }
-
-    @Override
-    public Course checkIfCoursePriceExists(Course course) {
-        CoursePrice coursePrice;
-        if (course.getCoursePrice() == null) {
-            coursePrice = new CoursePrice();
+        if (price == null) {
+            coursePriceRepository.deleteCoursePriceByCourseId(courseId);
+        } else if (course.getCoursePrice() == null) {
+            CoursePrice coursePrice = new CoursePrice();
             coursePrice.setCourse(course);
+            coursePrice.setPrice(price);
             course.setCoursePrice(coursePrice);
             coursePriceRepository.save(coursePrice);
+        } else if (course.getCoursePrice() != null) {
+            CoursePrice coursePrice = coursePriceRepository.findByCourseId(courseId);
+            coursePrice.setPrice(price);
+            coursePriceRepository.save(coursePrice);
         }
-        return course;
+        courseRepository.save(course);
     }
 }

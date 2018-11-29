@@ -6,4 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface CoursePriceRepository extends JpaRepository<CoursePrice, Long> {
 
     void deleteCoursePriceByCourseId(Long courseId);
+
+    CoursePrice findByCourseId(Long courseId);
 }

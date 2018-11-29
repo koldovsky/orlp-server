@@ -1,7 +1,6 @@
 package com.softserve.academy.spaced.repetition.service;
 
 import com.softserve.academy.spaced.repetition.controller.dto.simpleDTO.CourseDTO;
-import com.softserve.academy.spaced.repetition.controller.dto.simpleDTO.PriceDTO;
 import com.softserve.academy.spaced.repetition.domain.Course;
 import com.softserve.academy.spaced.repetition.domain.Deck;
 import com.softserve.academy.spaced.repetition.utils.exceptions.NotAuthorisedUserException;
@@ -75,7 +74,6 @@ public interface CourseService {
      *
      * @param courseId  must not be {@literal null}.
      * @param courseDTO DTO object containing updated course, must not be {@literal null}.
-     *
      * @return updated Course
      */
     Course updateCourse(Long courseId, CourseDTO courseDTO);
@@ -110,7 +108,6 @@ public interface CourseService {
      *
      * @param privateCourse added course, must not be {null}.
      * @param categoryId    must not be {@literal null}.
-     *
      * @return created course
      * @throws NotAuthorisedUserException if user is not authorised
      */
@@ -169,24 +166,14 @@ public interface CourseService {
     Page<Course> getPageWithCoursesByCategory(long categoryId, int pageNumber, String sortBy, boolean ascending);
 
     /**
-     * Checks whether entity course contains instantiated CoursePrice entity and creates and assignes
-     * CoursePrice to a course if course does not contain instantiated CoursePrice
-     *
-     * @param course
-     * @return returns course with instantiated CoursePrice
-     */
-    Course checkIfCoursePriceExists(Course course);
-
-    /**
      * Updates course price.
      *
-     * @param priceDTO DTO object that contains price of course, can be null.
+     * @param price    Integer value that is price of a course, can be null.
      * @param courseId must not be {@Literal null}.
      */
-    void updateCoursePrice(PriceDTO priceDTO, Long courseId);
+    void updateCoursePrice(Integer price, Long courseId);
 
     Set<BigInteger> findCoursesId(String searchString);
 
     List<Course> findAllCoursesBySearch(String searchString);
-
 }

@@ -79,9 +79,10 @@ public class CourseServiceTest {
         image = DomainFactory.createImage(1L, null, null, null, null, true);
         category = DomainFactory.createCategory(CATEGORY_ID, null, null, image);
         user = DomainFactory.createUser(1L, null, null, null, courseSet);
-        course = DomainFactory.createCourse(COURSE_ID, null, null, new Image(), 1, true
+        course = DomainFactory.createCourse(COURSE_ID, COURSE_NAME, COURSE_DESCRIPTION, new Image(), 1, true
                 , user, new Category(), deckList, null, null);
         coursePrice = DomainFactory.createCoursePrice(PRICE, course);
+        course.setCoursePrice(coursePrice);
         courseList.add(course);
         courseSet.add(course);
         deckList.add(deck);
@@ -158,9 +159,10 @@ public class CourseServiceTest {
     @Test
     public void testUpdateCourse() {
         CourseDTO courseDTO = createCourseDTO();
-        when(courseService.updateCourse(COURSE_ID, courseDTO)).thenReturn(course);
+        when(coursePriceRepository.findByCourseId(eq(COURSE_ID))).thenReturn(course.getCoursePrice());
         courseService.updateCourse(COURSE_ID, courseDTO);
-        verify(courseRepository).save(course);
+        verify(courseRepository, times(2)).save(course);
+        verify(coursePriceRepository).findByCourseId(eq(COURSE_ID));
     }
 
     @Test
