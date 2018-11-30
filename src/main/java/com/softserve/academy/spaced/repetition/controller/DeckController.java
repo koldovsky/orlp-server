@@ -41,14 +41,14 @@ public class DeckController {
     private FolderService folderService;
 
     @Auditable(action = AuditingAction.VIEW_DECKS_VIA_CATEGORY)
-
     @GetMapping(value = "/api/categories/{categoryId}/decks")
     @PreAuthorize("hasPermission('DECK','READ')")
     public ResponseEntity<Page<DeckLinkByCategoryDTO>> getAllDecksByCategoryId(@PathVariable Long categoryId,
                                                                                @RequestParam(name = "p", defaultValue = "1")
                                                                                        int pageNumber,
-                                                                               @RequestParam(name = "sortBy") String sortBy,
-                                                                               @RequestParam(name = "asc") boolean ascending) {
+                                                                               @RequestParam(name = "sortBy", defaultValue = "id") String sortBy,
+                                                                               @RequestParam(name = "asc", defaultValue = "true") boolean ascending
+    ) {
         LOGGER.debug("View all decks by category with id {}", categoryId);
         Page<DeckLinkByCategoryDTO> deckByCategoryDTOS = deckService
                 .getPageWithDecksByCategory(categoryId, pageNumber, sortBy, ascending).map(deck -> {
