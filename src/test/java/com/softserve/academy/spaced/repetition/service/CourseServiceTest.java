@@ -281,6 +281,13 @@ public class CourseServiceTest {
     }
 
     @Test
+    public void testDeleteDeckFromCourse() {
+
+        courseService.deleteDeckFromCourse(COURSE_ID, DECK_ID);
+        verify(courseRepository).save(course);
+    }
+
+    @Test
     public void testGetPageWithCourses() {
         when(courseRepository.findAllByPublishedTrue(any(PageRequest.class))).thenReturn(null);
         Page<Course> result = courseService.getPageWithCourses(PAGE_NUMBER, PAGE_SORT_BY, PAGE_ASCENDING_ORDER);

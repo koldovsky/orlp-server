@@ -243,7 +243,7 @@ public class CourseControllerTest {
     public void testUpdateCourse() throws Exception {
         Course course = createCourse();
         when(courseService.updateCourse(eq(1L), any(CourseDTO.class))).thenReturn(course);
-        mockMvc.perform(put("/api/cabinet/courses/{courseId}", 1L)
+        mockMvc.perform(put("/api/admin/courses/{courseId}", 1L)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(new ObjectMapper().writeValueAsString(course)))
@@ -257,7 +257,7 @@ public class CourseControllerTest {
     @Test
     public void testDeleteCourseByAdmin() throws Exception {
         doNothing().when(courseService).deleteCourseAndSubscriptions(1L);
-        mockMvc.perform(delete("/api/courses/{courseId}", 1L)
+        mockMvc.perform(delete("/api/admin/courses/{courseId}", 1L)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
@@ -313,6 +313,14 @@ public class CourseControllerTest {
     }
 
     @Test
+    public void testDeleteDeckFromCourse() throws Exception {
+        doNothing().when(courseService).deleteDeckFromCourse(1L,1L);
+        mockMvc.perform(delete("/api/categories/courses/{courseId}/decks/{deckId}", 1L,1L))
+                .andExpect(status().isOk());
+        verify(courseService, times(1)).deleteDeckFromCourse(1L,1L);
+    }
+
+    @Test
     public void testGetIdAllCoursesOfTheCurrentUser() throws Exception {
         List<Long> list = new ArrayList<>();
         list.add(1L);
@@ -345,5 +353,32 @@ public class CourseControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(new ObjectMapper().writeValueAsString(createPriceDto())))
                 .andExpect(status().isOk());
+    }
+
+    @Test
+    public void testGetCourseByIdByAdmin() throws Exception {
+        when(courseService.getCourseById(eq(1L))).thenReturn(createCourse());
+        mockMvc.perform(get("/api/admin/courses/{courseId}", 1L)
+                .content(new ObjectMapper().writeValueAsString(createCourse()))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name", is("Java interview course")))
+                .andExpect(jsonPath("$.description", is("4 parts of java questions & answers")));
+        verify(courseService, times(1)).getCourseById(eq(1L));
+    }
+
+    @Test
+    public void testGetAllCoursesByAdmin() throws Exception {
+        when(courseService.getPageWithCourses(NUMBER_PAGE, SORT_BY, true)).thenReturn(createCourses());
+        mockMvc.perform(get("/api/admin/courses?p=" + NUMBER_PAGE + "&sortBy=" + SORT_BY + "&asc=" + true)
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.totalPages", is(3)))
+                .andExpect(jsonPath("$.size", is(QUANTITY_COURSES_IN_PAGE)))
+                .andExpect(jsonPath("$.sort[:1].ascending", hasItem(true)))
+                .andExpect(jsonPath("$.sort[:1].descending", hasItem(false)))
+                .andExpect(jsonPath("$.sort[:1].property", hasItem(SORT_BY)));
+        verify(courseService, times(1)).getPageWithCourses(NUMBER_PAGE, SORT_BY, true);
     }
 }

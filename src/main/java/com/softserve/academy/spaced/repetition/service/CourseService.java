@@ -176,4 +176,7 @@ public interface CourseService {
     Set<BigInteger> findCoursesId(String searchString);
 
     List<Course> findAllCoursesBySearch(String searchString);
+
+    void deleteDeckFromCourse(Long courseId, Long deckId);
+
 }
