@@ -42,8 +42,6 @@ public class CourseServiceImpl implements CourseService {
     @Autowired
     private DeckRepository deckRepository;
     @Autowired
-    private CoursePriceRepository coursePriceRepository;
-    @Autowired
     CourseOwnershipRepository courseOwnershipRepository;
     @Autowired
     private MessageSource messageSource;
@@ -113,7 +111,6 @@ public class CourseServiceImpl implements CourseService {
             }
         }
         userRepository.save(user);
-        coursePriceRepository.deleteCoursePriceByCourseId(courseId);
         courseRepository.delete(courseId);
     }
 
@@ -185,7 +182,6 @@ public class CourseServiceImpl implements CourseService {
     public void deleteCourseAndSubscriptions(Long courseId) {
         courseRepository.deleteSubscriptions(courseId);
         courseOwnershipRepository.deleteCourseOwnershipByCourseId(courseId);
-        coursePriceRepository.deleteCoursePriceByCourseId(courseId);
         courseRepository.delete(courseId);
     }
 
@@ -230,17 +226,15 @@ public class CourseServiceImpl implements CourseService {
     public void updateCoursePrice(Integer price, Long courseId) {
         Course course = courseRepository.findOne(courseId);
         if (price == null) {
-            coursePriceRepository.deleteCoursePriceByCourseId(courseId);
+            course.setCoursePrice(null);
         } else if (course.getCoursePrice() == null) {
             CoursePrice coursePrice = new CoursePrice();
             coursePrice.setCourse(course);
             coursePrice.setPrice(price);
             course.setCoursePrice(coursePrice);
-            coursePriceRepository.save(coursePrice);
         } else if (course.getCoursePrice() != null) {
-            CoursePrice coursePrice = coursePriceRepository.findByCourseId(courseId);
+            CoursePrice coursePrice = course.getCoursePrice();
             coursePrice.setPrice(price);
-            coursePriceRepository.save(coursePrice);
         }
         courseRepository.save(course);
     }

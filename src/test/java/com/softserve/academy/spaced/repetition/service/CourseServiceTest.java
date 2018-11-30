@@ -54,8 +54,6 @@ public class CourseServiceTest {
     @Mock
     private DeckRepository deckRepository;
     @Mock
-    private CoursePriceRepository coursePriceRepository;
-    @Mock
     private CourseOwnershipRepository courseOwnershipRepository;
     @InjectMocks
     private CourseServiceImpl courseService;
@@ -159,10 +157,8 @@ public class CourseServiceTest {
     @Test
     public void testUpdateCourse() {
         CourseDTO courseDTO = createCourseDTO();
-        when(coursePriceRepository.findByCourseId(eq(COURSE_ID))).thenReturn(course.getCoursePrice());
         courseService.updateCourse(COURSE_ID, courseDTO);
         verify(courseRepository, times(2)).save(course);
-        verify(coursePriceRepository).findByCourseId(eq(COURSE_ID));
     }
 
     @Test
@@ -308,9 +304,7 @@ public class CourseServiceTest {
         Course result = course;
         result.getCoursePrice().setPrice(1);
         when(courseRepository.findOne(COURSE_ID)).thenReturn(course);
-        when(coursePriceRepository.findByCourseId(COURSE_ID)).thenReturn(course.getCoursePrice());
         courseService.updateCoursePrice(1, COURSE_ID);
-        verify(coursePriceRepository, times(1)).findByCourseId(COURSE_ID);
         assertEquals(course, result);
     }
 

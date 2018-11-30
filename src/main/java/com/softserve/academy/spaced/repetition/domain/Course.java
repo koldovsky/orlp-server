@@ -51,7 +51,7 @@ public class Course extends EntityForOwnership implements EntityInterface {
     @JoinTable(name = "course_decks", joinColumns = {
             @JoinColumn(name = "course_id")},
             inverseJoinColumns = {@JoinColumn(name = "deck_id")})
-    private List <Deck> decks;
+    private List<Deck> decks;
 
     @OneToMany(mappedBy = "course", cascade = CascadeType.ALL)
     private List<CourseRating> courseRatings;
@@ -59,7 +59,7 @@ public class Course extends EntityForOwnership implements EntityInterface {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "course", cascade = CascadeType.ALL)
     private List<CourseComment> courseComments;
 
-    @OneToOne(mappedBy = "course")
+    @OneToOne(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
     private CoursePrice coursePrice;
 
     public Course() {
@@ -97,11 +97,11 @@ public class Course extends EntityForOwnership implements EntityInterface {
         this.category = category;
     }
 
-    public List <Deck> getDecks() {
+    public List<Deck> getDecks() {
         return decks;
     }
 
-    public void setDecks(List <Deck> decks) {
+    public void setDecks(List<Deck> decks) {
         this.decks = decks;
     }
 
