@@ -191,9 +191,4 @@ public class ImageServiceImpl implements ImageService {
         List<Image> images = imageRepository.getImagesWithoutContent();
         return images;
     }
-
-    @Override
-    public Image getImageById(Long id) {
-        return imageRepository.findImageById(id);
-    }
 }
