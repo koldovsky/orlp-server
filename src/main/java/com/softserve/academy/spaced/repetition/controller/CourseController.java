@@ -211,6 +211,16 @@ public class CourseController {
         return new ResponseEntity<>(coursePublicDTO, HttpStatus.OK);
     }
 
+    @Auditable(action = AuditingAction.DELETE_DECK_FROM_COURSE)
+    @DeleteMapping("/api/categories/courses/{courseId}/decks/{deckId}")
+    @PreAuthorize("hasPermission('COURSE','UPDATE') && @courseServiceImpl.getCourseById(#courseId).createdBy==principal.id")
+    public ResponseEntity deleteDeckFromCourse(@Validated(Request.class) @PathVariable Long courseId,
+                                          @PathVariable Long deckId) {
+        LOGGER.debug("Deleting deck with id: {} from course with id: {}", deckId, courseId);
+        courseService.deleteDeckFromCourse(courseId, deckId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
     @GetMapping("/api/private/cabinet/courses")
     @PreAuthorize("hasPermission('COURSE','READ')")
     public ResponseEntity<List<Long>> getIdAllCoursesOfTheCurrentUser() throws NotAuthorisedUserException {

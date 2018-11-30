@@ -209,6 +209,20 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
+    @Transactional
+    public void deleteDeckFromCourse(Long courseId, Long deckId) {
+        Course course = courseRepository.findOne(courseId);
+        List<Deck> decks = course.getDecks();
+        for (Deck deck : decks) {
+            if (deck.getId() == deckId) {
+                decks.remove(deck);
+                break;
+            }
+        }
+        courseRepository.save(course);
+    }
+
+    @Override
     public Page<Course> getPageWithCourses(int pageNumber, String sortBy, boolean ascending) {
         PageRequest request = new PageRequest(pageNumber - 1, QUANTITY_COURSES_IN_PAGE, ascending
                 ? Sort.Direction.ASC : Sort.Direction.DESC, sortBy);
