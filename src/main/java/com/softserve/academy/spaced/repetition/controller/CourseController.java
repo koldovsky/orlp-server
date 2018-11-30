@@ -46,7 +46,6 @@ public class CourseController {
                 .getPageWithCoursesByCategory(categoryId, pageNumber, sortBy, ascending).map(course -> {
                     Link selfLink = linkTo(methodOn(CourseController.class)
                             .getAllCoursesByCategoryId(categoryId, pageNumber, sortBy, ascending)).withSelfRel();
-                    course = courseService.checkIfCoursePriceExists(course);
                     return DTOBuilder.buildDtoForEntity(course, CoursePriceDTO.class, selfLink);
                 });
         return new ResponseEntity<>(coursePriceDTOS, HttpStatus.OK);
@@ -62,7 +61,6 @@ public class CourseController {
                 .getPageWithCourses(pageNumber, sortBy, ascending).map(course -> {
                     Link selfLink = linkTo(methodOn(CourseController.class)
                             .getCourseById(course.getId())).withSelfRel();
-                    course = courseService.checkIfCoursePriceExists(course);
                     return DTOBuilder.buildDtoForEntity(course, CoursePriceDTO.class, selfLink);
                 });
         return new ResponseEntity<>(coursePriceDTOS, HttpStatus.OK);
@@ -120,7 +118,6 @@ public class CourseController {
                 .getPageWithCourses(pageNumber, sortBy, ascending).map(course -> {
                     Link selfLink = linkTo(methodOn(CourseController.class)
                             .getCourseByIdByAdmin(course.getId())).withSelfRel();
-                    course = courseService.checkIfCoursePriceExists(course);
                     return DTOBuilder.buildDtoForEntity(course, CourseEditDTO.class, selfLink);
                 });
         return new ResponseEntity<>(courseEditDTOS, HttpStatus.OK);
@@ -245,7 +242,7 @@ public class CourseController {
     public ResponseEntity updateCoursePrice(@Validated(Request.class) @RequestBody PriceDTO priceDTO,
                                             @PathVariable Long courseId) {
         LOGGER.debug("Updating course price with Integer: {}", priceDTO.getPrice());
-        courseService.updateCoursePrice(priceDTO, courseId);
+        courseService.updateCoursePrice(priceDTO.getPrice(), courseId);
         return new ResponseEntity(HttpStatus.OK);
     }
 }

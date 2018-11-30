@@ -2,6 +2,8 @@ package com.softserve.academy.spaced.repetition.controller.dto.builder;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.softserve.academy.spaced.repetition.controller.dto.annotations.EntityInterface;
+import com.softserve.academy.spaced.repetition.domain.Course;
+import com.softserve.academy.spaced.repetition.domain.Deck;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.ResourceSupport;
 
@@ -42,5 +44,27 @@ public abstract class DTO<T extends EntityInterface> extends ResourceSupport {
         }
         link = new Link(String.join(URL_DELIMETER, template));
         return link;
+    }
+
+    @JsonIgnore
+    protected Integer getEntityPrice(T entity) {
+        Integer result = null;
+        if (entity.getClass() == Course.class) {
+            Course course = (Course) entity;
+            if (course.getCoursePrice() == null) {
+                result = null;
+            } else {
+                result = course.getCoursePrice().getPrice();
+            }
+        }
+        if (entity.getClass() == Deck.class) {
+            Deck deck = (Deck) entity;
+            if (deck.getDeckPrice() == null) {
+                result = null;
+            } else {
+                result = deck.getDeckPrice().getPrice();
+            }
+        }
+        return result;
     }
 }
