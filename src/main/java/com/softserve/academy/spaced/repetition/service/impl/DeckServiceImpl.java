@@ -122,7 +122,7 @@ public class DeckServiceImpl implements DeckService {
         newDeck.setCategory(categoryRepository.findById(categoryId));
         newDeck.setSyntaxToHighlight(newDeckDTO.getSyntaxToHighlight());
 
-        if(newDeckDTO.getPrice() != null) {
+        if(newDeckDTO.getPrice() != null && newDeckDTO.getPrice() != 0) {
             DeckPrice deckPrice = new DeckPrice(newDeckDTO.getPrice());
             newDeck.setDeckPrice(deckPrice);
         }
