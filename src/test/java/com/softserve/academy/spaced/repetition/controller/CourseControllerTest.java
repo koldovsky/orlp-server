@@ -306,6 +306,14 @@ public class CourseControllerTest {
     }
 
     @Test
+    public void testDeleteDeckFromCourse() throws Exception {
+        doNothing().when(courseService).deleteDeckFromCourse(1L,1L);
+        mockMvc.perform(delete("/api/categories/courses/{courseId}/decks/{deckId}", 1L,1L))
+                .andExpect(status().isOk());
+        verify(courseService, times(1)).deleteDeckFromCourse(1L,1L);
+    }
+
+    @Test
     public void testGetIdAllCoursesOfTheCurrentUser() throws Exception {
         List<Long> list = new ArrayList<>();
         list.add(1L);

@@ -209,6 +209,7 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
+    @Transactional
     public void deleteDeckFromCourse(Long courseId, Long deckId) {
         Course course = courseRepository.findOne(courseId);
         List<Deck> decks = course.getDecks();
