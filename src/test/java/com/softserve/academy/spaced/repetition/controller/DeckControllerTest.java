@@ -305,7 +305,7 @@ public class DeckControllerTest {
         DeckDTO deckDTO = new DeckDTO();
         deckDTO.setSyntaxToHighlight("JAVA");
         deckDTO.setName("Name");
-        deckDTO.setDescpription("Description");
+        deckDTO.setDescription("Description");
         deckDTO.setPrice(10);
         return deckDTO;
     }

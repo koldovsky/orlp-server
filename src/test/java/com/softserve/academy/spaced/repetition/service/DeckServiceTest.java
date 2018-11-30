@@ -172,7 +172,7 @@ public class DeckServiceTest {
     DeckDTO getDeckWithPriceDTO() {
         DeckDTO deckWithPriceDTO = new DeckDTO();
         deckWithPriceDTO.setPrice(10);
-        deckWithPriceDTO.setDescpription("desc");
+        deckWithPriceDTO.setDescription("desc");
         deckWithPriceDTO.setName("name");
         deckWithPriceDTO.setSyntaxToHighlight("JAVA");
         return deckWithPriceDTO;

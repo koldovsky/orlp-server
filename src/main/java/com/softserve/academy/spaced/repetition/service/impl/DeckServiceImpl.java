@@ -118,7 +118,7 @@ public class DeckServiceImpl implements DeckService {
         User user = userService.getAuthorizedUser();
         Deck newDeck = new Deck();
         newDeck.setName(newDeckDTO.getName());
-        newDeck.setDescription(newDeckDTO.getDescpription());
+        newDeck.setDescription(newDeckDTO.getDescription());
         newDeck.setCategory(categoryRepository.findById(categoryId));
         newDeck.setSyntaxToHighlight(newDeckDTO.getSyntaxToHighlight());
 
@@ -177,7 +177,7 @@ public class DeckServiceImpl implements DeckService {
 
             Deck deckFromRepo = deckRepository.getDeckById(deckId);
             deckFromRepo.setName(updatedDeckDTO.getName());
-            deckFromRepo.setDescription(updatedDeckDTO.getDescpription());
+            deckFromRepo.setDescription(updatedDeckDTO.getDescription());
             deckFromRepo.setCategory(categoryRepository.findById(categoryId));
             deckFromRepo.setSyntaxToHighlight(updatedDeckDTO.getSyntaxToHighlight());
             if (updatedDeckDTO.getPrice() == null) {

@@ -9,7 +9,7 @@ public class DeckDTO {
     private String name;
 
     @NotNull
-    private String descpription;
+    private String description;
     private String syntaxToHighlight;
 
     @Min(1)
@@ -27,12 +27,12 @@ public class DeckDTO {
         this.name = name;
     }
 
-    public String getDescpription() {
-        return descpription;
+    public String getDescription() {
+        return description;
     }
 
-    public void setDescpription(String descpription) {
-        this.descpription = descpription;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public String getSyntaxToHighlight() {
