@@ -55,7 +55,7 @@ public class DeckPrivateDTO extends DTO<Deck> {
         return getEntity().getSyntaxToHighlight();
     }
 
-    public Integer getDeckPrice() {
+    public Integer getPrice() {
         return getEntityPrice(getEntity());
     }
 }

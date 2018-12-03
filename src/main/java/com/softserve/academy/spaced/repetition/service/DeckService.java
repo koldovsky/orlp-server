@@ -2,6 +2,7 @@ package com.softserve.academy.spaced.repetition.service;
 
 import com.softserve.academy.spaced.repetition.controller.dto.impl.DeckCreateValidationDTO;
 import com.softserve.academy.spaced.repetition.controller.dto.impl.DeckEditByAdminDTO;
+import com.softserve.academy.spaced.repetition.controller.dto.simpleDTO.DeckDTO;
 import com.softserve.academy.spaced.repetition.domain.Card;
 import com.softserve.academy.spaced.repetition.domain.Deck;
 import com.softserve.academy.spaced.repetition.utils.exceptions.NotAuthorisedUserException;
@@ -53,11 +54,11 @@ public interface DeckService {
     /**
      * Creates new deck
      *
-     * @param newDeck    new deck which will be added.
+     * @param newDeckDTO    new deck which will be added.
      * @param categoryId category`s id for which the deck will be created.
      * @throws NotAuthorisedUserException if unauthorized user creates new deck.
      */
-    void createNewDeck(Deck newDeck, Long categoryId) throws NotAuthorisedUserException;
+    Deck createNewDeck(DeckDTO newDeckDTO, Long categoryId) throws NotAuthorisedUserException;
 
     /**
      * Creates the deck by using the admin account.
@@ -81,14 +82,14 @@ public interface DeckService {
     /**
      * Updates the deck which was created by the user.
      *
-     * @param updatedDeck the new deck which will be set.
+     * @param updatedDeckDTO the new deck which will be set.
      * @param deckId      id of the deck which will be updated.
      * @param categoryId  category`s id for which the deck will be updated.
      * @return updated deck.
      * @throws NotAuthorisedUserException if unauthorized user creates new deck.
      * @throws NotOwnerOperationException if the user is not owner of the deck updates the deck.
      */
-    Deck updateOwnDeck(Deck updatedDeck, Long deckId, Long categoryId)
+    Deck updateOwnDeck(DeckDTO updatedDeckDTO, Long deckId, Long categoryId)
             throws NotAuthorisedUserException, NotOwnerOperationException;
 
     /**
