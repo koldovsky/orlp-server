@@ -1,4 +1,4 @@
-package com.softserve.academy.spaced.repetition.controller.dto.simpleDTO;
+package com.softserve.academy.spaced.repetition.controller.dto.simpledto;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
