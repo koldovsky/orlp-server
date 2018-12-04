@@ -3,6 +3,7 @@ package com.softserve.academy.spaced.repetition.controller;
 import com.softserve.academy.spaced.repetition.controller.dto.annotations.Request;
 import com.softserve.academy.spaced.repetition.controller.dto.builder.DTOBuilder;
 import com.softserve.academy.spaced.repetition.controller.dto.impl.*;
+import com.softserve.academy.spaced.repetition.controller.dto.simpleDTO.DeckDTO;
 import com.softserve.academy.spaced.repetition.domain.Card;
 import com.softserve.academy.spaced.repetition.domain.Deck;
 import com.softserve.academy.spaced.repetition.service.DeckService;
@@ -40,14 +41,14 @@ public class DeckController {
     private FolderService folderService;
 
     @Auditable(action = AuditingAction.VIEW_DECKS_VIA_CATEGORY)
-
     @GetMapping(value = "/api/categories/{categoryId}/decks")
     @PreAuthorize("hasPermission('DECK','READ')")
     public ResponseEntity<Page<DeckLinkByCategoryDTO>> getAllDecksByCategoryId(@PathVariable Long categoryId,
                                                                                @RequestParam(name = "p", defaultValue = "1")
                                                                                        int pageNumber,
-                                                                               @RequestParam(name = "sortBy") String sortBy,
-                                                                               @RequestParam(name = "asc") boolean ascending) {
+                                                                               @RequestParam(name = "sortBy", defaultValue = "id") String sortBy,
+                                                                               @RequestParam(name = "asc", defaultValue = "true") boolean ascending
+    ) {
         LOGGER.debug("View all decks by category with id {}", categoryId);
         Page<DeckLinkByCategoryDTO> deckByCategoryDTOS = deckService
                 .getPageWithDecksByCategory(categoryId, pageNumber, sortBy, ascending).map(deck -> {
@@ -200,10 +201,10 @@ public class DeckController {
     @PostMapping(value = "/api/categories/{categoryId}/decks")
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasPermission('DECK','CREATE')")
-    public DeckPrivateDTO addDeckForUser(@Validated(Request.class) @RequestBody Deck deck, @PathVariable Long categoryId)
+    public DeckPrivateDTO addDeckForUser(@Validated(Request.class) @RequestBody DeckDTO deckDTO, @PathVariable Long categoryId)
             throws NotAuthorisedUserException, NotOwnerOperationException {
         LOGGER.debug("Adding deck by user to category with id {}", categoryId);
-        deckService.createNewDeck(deck, categoryId);
+        Deck deck = deckService.createNewDeck(deckDTO, categoryId);
         folderService.addDeck(deck.getId());
         return buildDtoForEntity(deck, DeckPrivateDTO.class,
                 linkTo(methodOn(DeckController.class).getOneDeckForUser(deck.getId())).withSelfRel());
@@ -213,11 +214,11 @@ public class DeckController {
     @PutMapping(value = "/api/categories/{categoryId}/decks/{deckId}")
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasPermission('DECK','UPDATE') && @deckServiceImpl.getDeck(#deckId).createdBy==principal.id")
-    public DeckPrivateDTO updateDeckForUser(@Validated(Request.class) @RequestBody Deck deck,
+    public DeckPrivateDTO updateDeckForUser(@Validated(Request.class) @RequestBody DeckDTO deckDTO,
                                             @PathVariable Long deckId, @PathVariable Long categoryId)
             throws NotAuthorisedUserException, NotOwnerOperationException {
         LOGGER.debug("Updating deck with id {} for user in category with id {}", deckId, categoryId);
-        Deck updatedDeck = deckService.updateOwnDeck(deck, deckId, categoryId);
+        Deck updatedDeck = deckService.updateOwnDeck(deckDTO, deckId, categoryId);
         return buildDtoForEntity(updatedDeck, DeckPrivateDTO.class,
                 linkTo(methodOn(DeckController.class).getOneDeckForUser(updatedDeck.getId())).withSelfRel());
     }

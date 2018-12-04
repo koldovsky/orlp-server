@@ -1,14 +1,14 @@
 package com.softserve.academy.spaced.repetition.controller.dto.impl;
 
-public class SetPointsByAdminDTO {
+public class AddPointsByAdminDTO {
 
     private String email;
 
     private Integer points;
 
-    public SetPointsByAdminDTO() {}
+    public AddPointsByAdminDTO() {}
 
-    public SetPointsByAdminDTO(String email, Integer points) {
+    public AddPointsByAdminDTO(String email, Integer points) {
         this.email = email;
         this.points = points;
     }

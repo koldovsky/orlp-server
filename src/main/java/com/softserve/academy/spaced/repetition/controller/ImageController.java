@@ -24,7 +24,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
-import static com.softserve.academy.spaced.repetition.controller.dto.builder.DTOBuilder.buildDtoForEntity;
 import static com.softserve.academy.spaced.repetition.controller.dto.builder.DTOBuilder.buildDtoListForCollection;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
@@ -74,21 +73,6 @@ public class ImageController {
         List<Image> listId = imageService.getImagesForCurrentUser();
         return buildDtoListForCollection(listId, ImageDTO.class,
                 linkTo(methodOn(ImageController.class).getImageList()).withSelfRel());
-    }
-
-    /**
-     * Returns ImageDTO by id
-     *
-     * @param id
-     * @return object of ImageDto
-     */
-    @GetMapping(value = "/api/service/image/edit/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasPermission('IMAGE','READ')")
-    public ImageDTO getImageDTOById(@PathVariable("id") Long id) {
-        Image image = imageService.getImageById(id);
-        return buildDtoForEntity(image, ImageDTO.class,
-                linkTo(methodOn(ImageController.class).getImageById(id)).withSelfRel());
     }
 
     /**
