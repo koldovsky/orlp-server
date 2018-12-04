@@ -13,18 +13,13 @@ public class DeckPrice implements EntityInterface {
     @Column(name = "deck_price_id")
     private Long id;
 
-    @OneToOne
-    @JoinColumn(name = "deck_id")
-    private Deck deck;
-
     @Column(name = "deck_price")
     private int price;
 
     public DeckPrice() {
     }
 
-    public DeckPrice(Deck deck, int price) {
-        this.deck = deck;
+    public DeckPrice(int price) {
         this.price = price;
     }
 
@@ -32,23 +27,16 @@ public class DeckPrice implements EntityInterface {
         return id;
     }
 
-    public Deck getDeck() {
-        return deck;
-    }
-
     public int getPrice() {
         return price;
+    }
+
+    public void setPrice(int price) {
+        this.price = price;
     }
 
     public void setId(Long id) {
         this.id = id;
     }
 
-    public void setDeck(Deck deck) {
-        this.deck = deck;
-    }
-
-    public void setPrice(int price) {
-        this.price = price;
-    }
 }

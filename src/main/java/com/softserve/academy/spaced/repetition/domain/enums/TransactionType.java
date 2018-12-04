@@ -1,7 +1,7 @@
 package com.softserve.academy.spaced.repetition.domain.enums;
 
-public enum SearchType {
-    CATEGORY,
+public enum TransactionType {
+    DECK,
     COURSE,
-    DECK
+    TRANSFER
 }

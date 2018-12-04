@@ -4,7 +4,6 @@ import com.softserve.academy.spaced.repetition.controller.dto.builder.DTOBuilder
 import com.softserve.academy.spaced.repetition.controller.dto.impl.ImageDTO;
 import com.softserve.academy.spaced.repetition.controller.dto.impl.UploadingImageDTO;
 import com.softserve.academy.spaced.repetition.domain.Image;
-import com.softserve.academy.spaced.repetition.repository.ImageRepository;
 import com.softserve.academy.spaced.repetition.service.ImageService;
 import com.softserve.academy.spaced.repetition.utils.audit.Auditable;
 import com.softserve.academy.spaced.repetition.utils.audit.AuditingAction;
@@ -35,8 +34,6 @@ public class ImageController {
 
     @Autowired
     private ImageService imageService;
-    @Autowired
-    private ImageRepository imageRepository;
 
     /**
      * Upload and add the image to the database

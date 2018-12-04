@@ -11,10 +11,13 @@ import com.softserve.academy.spaced.repetition.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 
 @Service
 public class RegistrationServiceImpl implements RegistrationService {
+
+    private final int DEFAULT_POINTS_VALUE = 0;
 
     @Autowired
     private UserService userService;
@@ -26,12 +29,14 @@ public class RegistrationServiceImpl implements RegistrationService {
     private AccountService accountService;
 
     @Override
+    @Transactional
     public User registerNewUser(User user) {
         Account account = user.getAccount();
         userService.initializeNewUser(account, account.getEmail().toLowerCase(), AccountStatus.ACTIVE,
                 true, AuthenticationType.LOCAL);
         user.getPerson().setImageType(ImageType.NONE);
         user.setFolder(new Folder());
+        user.setPoints(DEFAULT_POINTS_VALUE);
         userService.addUser(user);
         accountService.initializeLearningRegimeSettingsForAccount(account);
         return user;

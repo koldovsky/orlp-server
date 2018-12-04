@@ -1,12 +1,14 @@
 package com.softserve.academy.spaced.repetition.controller;
 
 import com.softserve.academy.spaced.repetition.controller.dto.impl.DeckOfUserManagedByAdminDTO;
+import com.softserve.academy.spaced.repetition.controller.dto.impl.AddPointsByAdminDTO;
 import com.softserve.academy.spaced.repetition.controller.dto.impl.UserManagedByAdminDTO;
 import com.softserve.academy.spaced.repetition.domain.Deck;
 import com.softserve.academy.spaced.repetition.domain.User;
 import com.softserve.academy.spaced.repetition.service.UserService;
 import com.softserve.academy.spaced.repetition.utils.audit.Auditable;
 import com.softserve.academy.spaced.repetition.utils.audit.AuditingAction;
+import com.softserve.academy.spaced.repetition.utils.exceptions.NotAuthorisedUserException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -179,5 +181,14 @@ public class ManageUserController {
         List<Deck> decksFromUsersFolder = userService.getAllDecksFromUsersFolder(userId);
         return buildDtoListForCollection(decksFromUsersFolder, DeckOfUserManagedByAdminDTO.class,
                 linkTo(methodOn(ManageUserController.class).getAllDecksFromUsersFolder(userId)).withSelfRel());
+    }
+
+    @Auditable(action = AuditingAction.SET_POINTS)
+    @ResponseStatus(HttpStatus.OK)
+    @PostMapping("/points")
+    @PreAuthorize("hasPermission('MANAGE_USER','UPDATE')")
+    public ResponseEntity<AddPointsByAdminDTO> addPointsToUser(@RequestBody AddPointsByAdminDTO addPointsByAdminDTO) throws NotAuthorisedUserException {
+        AddPointsByAdminDTO pointsByAdminDTO = userService.addPointsToUser(addPointsByAdminDTO);
+        return new ResponseEntity<>(pointsByAdminDTO, HttpStatus.OK);
     }
 }

@@ -3,6 +3,7 @@ package com.softserve.academy.spaced.repetition.controller.dto.impl;
 import com.softserve.academy.spaced.repetition.controller.CardController;
 import com.softserve.academy.spaced.repetition.controller.dto.builder.DTO;
 import com.softserve.academy.spaced.repetition.domain.Deck;
+import com.softserve.academy.spaced.repetition.domain.DeckPrice;
 import org.springframework.hateoas.Link;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
@@ -52,5 +53,9 @@ public class DeckPrivateDTO extends DTO<Deck> {
 
     public String getSynthax() {
         return getEntity().getSyntaxToHighlight();
+    }
+
+    public Integer getPrice() {
+        return getEntityPrice(getEntity());
     }
 }

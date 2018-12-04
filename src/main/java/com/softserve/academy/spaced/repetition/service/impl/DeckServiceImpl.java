@@ -2,10 +2,9 @@ package com.softserve.academy.spaced.repetition.service.impl;
 
 import com.softserve.academy.spaced.repetition.controller.dto.impl.DeckCreateValidationDTO;
 import com.softserve.academy.spaced.repetition.controller.dto.impl.DeckEditByAdminDTO;
+import com.softserve.academy.spaced.repetition.controller.dto.simpleDTO.DeckDTO;
 import com.softserve.academy.spaced.repetition.domain.*;
-import com.softserve.academy.spaced.repetition.repository.CategoryRepository;
-import com.softserve.academy.spaced.repetition.repository.CourseRepository;
-import com.softserve.academy.spaced.repetition.repository.DeckRepository;
+import com.softserve.academy.spaced.repetition.repository.*;
 import com.softserve.academy.spaced.repetition.service.DeckService;
 import com.softserve.academy.spaced.repetition.service.FolderService;
 import com.softserve.academy.spaced.repetition.service.UserService;
@@ -21,10 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigInteger;
-import java.util.List;
-import java.util.Locale;
-import java.util.NoSuchElementException;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class DeckServiceImpl implements DeckService {
@@ -118,11 +114,22 @@ public class DeckServiceImpl implements DeckService {
 
     @Override
     @Transactional
-    public void createNewDeck(Deck newDeck, Long categoryId) throws NotAuthorisedUserException {
+    public Deck createNewDeck(DeckDTO newDeckDTO, Long categoryId) throws NotAuthorisedUserException {
         User user = userService.getAuthorizedUser();
-        newDeck.setCategory(categoryRepository.findOne(categoryId));
+        Deck newDeck = new Deck();
+        newDeck.setName(newDeckDTO.getName());
+        newDeck.setDescription(newDeckDTO.getDescription());
+        newDeck.setCategory(categoryRepository.findById(categoryId));
+        newDeck.setSyntaxToHighlight(newDeckDTO.getSyntaxToHighlight());
+
+        if(newDeckDTO.getPrice() != null && newDeckDTO.getPrice() != 0) {
+            DeckPrice deckPrice = new DeckPrice(newDeckDTO.getPrice());
+            newDeck.setDeckPrice(deckPrice);
+        }
+
         newDeck.setDeckOwner(user);
         deckRepository.save(newDeck);
+        return newDeck;
     }
 
     @Override
@@ -158,7 +165,7 @@ public class DeckServiceImpl implements DeckService {
 
     @Override
     @Transactional
-    public Deck updateOwnDeck(Deck updatedDeck, Long deckId, Long categoryId)
+    public Deck updateOwnDeck(DeckDTO updatedDeckDTO, Long deckId, Long categoryId)
             throws NotAuthorisedUserException, NotOwnerOperationException {
         User user = userService.getAuthorizedUser();
         Deck deck = deckRepository.findOne(deckId);
@@ -167,10 +174,21 @@ public class DeckServiceImpl implements DeckService {
                     new Object[]{}, locale));
         }
         if (deck.getDeckOwner().getId().equals(user.getId())) {
-            deck.setName(updatedDeck.getName());
-            deck.setDescription(updatedDeck.getDescription());
-            deck.setCategory(categoryRepository.findOne(categoryId));
-            deck.setSyntaxToHighlight(updatedDeck.getSyntaxToHighlight());
+
+            Deck deckFromRepo = deckRepository.getDeckById(deckId);
+            deckFromRepo.setName(updatedDeckDTO.getName());
+            deckFromRepo.setDescription(updatedDeckDTO.getDescription());
+            deckFromRepo.setCategory(categoryRepository.findById(categoryId));
+            deckFromRepo.setSyntaxToHighlight(updatedDeckDTO.getSyntaxToHighlight());
+            if (updatedDeckDTO.getPrice() == null) {
+                deckFromRepo.setDeckPrice(null);
+            } else {
+                if (deckFromRepo.getDeckPrice() == null) {
+                    deckFromRepo.setDeckPrice(new DeckPrice(updatedDeckDTO.getPrice()));
+                } else {
+                    deckFromRepo.getDeckPrice().setPrice(updatedDeckDTO.getPrice());
+                }
+            }
             return deckRepository.save(deck);
         } else {
             throw new NotOwnerOperationException();

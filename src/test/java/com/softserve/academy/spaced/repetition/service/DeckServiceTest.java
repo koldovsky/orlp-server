@@ -2,9 +2,11 @@ package com.softserve.academy.spaced.repetition.service;
 
 import com.softserve.academy.spaced.repetition.controller.dto.impl.DeckCreateValidationDTO;
 import com.softserve.academy.spaced.repetition.controller.dto.impl.DeckEditByAdminDTO;
+import com.softserve.academy.spaced.repetition.controller.dto.simpleDTO.DeckDTO;
 import com.softserve.academy.spaced.repetition.domain.*;
 import com.softserve.academy.spaced.repetition.repository.CategoryRepository;
 import com.softserve.academy.spaced.repetition.repository.CourseRepository;
+import com.softserve.academy.spaced.repetition.repository.DeckOwnershipRepository;
 import com.softserve.academy.spaced.repetition.repository.DeckRepository;
 import com.softserve.academy.spaced.repetition.service.impl.DeckServiceImpl;
 import com.softserve.academy.spaced.repetition.util.DomainFactory;
@@ -54,11 +56,14 @@ public class DeckServiceTest {
     @Mock
     private FolderService folderService;
     @Mock
+    private DeckOwnershipRepository deckOwnershipRepository;
+    @Mock
     private MessageSource messageSource;
     private User notOwnerUser;
     private Category category;
     private Deck deck;
     private DeckCreateValidationDTO deckDTO;
+    private DeckDTO deckWithPriceDTO;
 
     @Before
     public void setUp() throws NotAuthorisedUserException {
@@ -158,17 +163,46 @@ public class DeckServiceTest {
 
     @Test
     public void testCreateNewDeck() throws NotAuthorisedUserException {
-        deckService.createNewDeck(deck, CATEGORY_ID);
+        deckService.createNewDeck(getDeckWithPriceDTO(), CATEGORY_ID);
         verify(userService).getAuthorizedUser();
-        verify(categoryRepository).findOne(CATEGORY_ID);
-        verify(deckRepository).save(deck);
+        verify(categoryRepository).findById(CATEGORY_ID);//findOne(CATEGORY_ID);
+        verify(deckRepository).save(any(Deck.class));
     }
+
+    DeckDTO getDeckWithPriceDTO() {
+        DeckDTO deckWithPriceDTO = new DeckDTO();
+        deckWithPriceDTO.setPrice(10);
+        deckWithPriceDTO.setDescription("desc");
+        deckWithPriceDTO.setName("name");
+        deckWithPriceDTO.setSyntaxToHighlight("JAVA");
+        return deckWithPriceDTO;
+    }
+
+    Deck getDeck() {
+        Category category = new Category();
+        category.setId(DECK_ID);
+        category.setName("JAVA");
+        category.setDescription("JAVA");
+        Deck deck = new Deck();
+        User user = new User();
+        Account account = new Account();
+        account.setEmail("email@gmail.com");
+        user.setAccount(account);
+        deck.setDeckOwner(user);
+        deck.setId(DECK_ID);
+        deck.setName("name");
+        deck.setDescription("desc");
+        deck.setSyntaxToHighlight("JAVA");
+        deck.setCategory(category);
+        return deck;
+    }
+
+
 
     @Test(expected = NotAuthorisedUserException.class)
     public void testCreateNewDeckByNotAuthorisedUser() throws NotAuthorisedUserException {
         when(userService.getAuthorizedUser()).thenThrow(new NotAuthorisedUserException());
-
-        deckService.createNewDeck(deck, CATEGORY_ID);
+        deckService.createNewDeck(getDeckWithPriceDTO(), CATEGORY_ID);
         verify(userService).getAuthorizedUser();
     }
 
@@ -224,11 +258,13 @@ public class DeckServiceTest {
 
     @Test
     public void testUpdateDeck() throws NotAuthorisedUserException, NotOwnerOperationException {
-        Deck result = deckService.updateOwnDeck(deck, DECK_ID, CATEGORY_ID);
-        verify(userService).getAuthorizedUser();
-        verify(deckRepository).findOne(DECK_ID);
-        verify(categoryRepository).findOne(CATEGORY_ID);
-        verify(deckRepository).save(deck);
+        when(deckRepository.getDeckById(DECK_ID)).thenReturn(getDeck());
+        when(deckService.updateOwnDeck(getDeckWithPriceDTO(), DECK_ID, CATEGORY_ID)).thenReturn(getDeck());
+        Deck result = deckService.updateOwnDeck(getDeckWithPriceDTO(), DECK_ID, CATEGORY_ID);
+        verify(userService,times(2)).getAuthorizedUser();
+        verify(deckRepository,times(2)).findOne(DECK_ID);
+        verify(categoryRepository, times(2)).findById(CATEGORY_ID);
+        verify(deckRepository).save(getDeck());
         assertEquals(deck, result);
     }
 
@@ -236,7 +272,7 @@ public class DeckServiceTest {
     public void testUpdateDeckThatNotFound() throws NotAuthorisedUserException, NotOwnerOperationException {
         when(deckRepository.findOne(DECK_ID)).thenReturn(null);
 
-        deckService.updateOwnDeck(deck, DECK_ID, CATEGORY_ID);
+        deckService.updateOwnDeck(deckWithPriceDTO, DECK_ID, CATEGORY_ID);
         verify(userService).getAuthorizedUser();
         verify(deckRepository).findOne(DECK_ID);
     }
@@ -245,7 +281,7 @@ public class DeckServiceTest {
     public void testUpdateDeckByNotOwnerUser() throws NotAuthorisedUserException, NotOwnerOperationException {
         when(userService.getAuthorizedUser()).thenReturn(notOwnerUser);
 
-        deckService.updateOwnDeck(deck, DECK_ID, CATEGORY_ID);
+        deckService.updateOwnDeck(deckWithPriceDTO, DECK_ID, CATEGORY_ID);
         verify(userService).getAuthorizedUser();
         verify(deckRepository).findOne(DECK_ID);
     }

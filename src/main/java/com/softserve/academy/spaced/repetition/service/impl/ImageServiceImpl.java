@@ -71,14 +71,14 @@ public class ImageServiceImpl implements ImageService {
 
     @Override
     public boolean isImageCanBeAddedToProfile(User user, String imageBase64) throws ImageRepositorySizeQuotaExceededException {
-        if(isUserImageQuotaExceeded(user)) {
+        if (isUserImageQuotaExceeded(user)) {
             throw new ImageRepositorySizeQuotaExceededException();
         }
-        if(isEncodedStringNotImage(imageBase64)) {
-           throw new IllegalArgumentException(messageSource.getMessage(("message.exception.imageFileWrongFormat"),
-                   new Object[]{}, locale));
+        if (isEncodedStringNotImage(imageBase64)) {
+            throw new IllegalArgumentException(messageSource.getMessage(("message.exception.imageFileWrongFormat"),
+                    new Object[]{}, locale));
         }
-        if(isEncodedStringExceedMaxSize(imageBase64)) {
+        if (isEncodedStringExceedMaxSize(imageBase64)) {
             throw new MultipartException(messageSource.getMessage(("message.exception.fileSizeTooLarge"),
                     new Object[]{}, locale));
         }

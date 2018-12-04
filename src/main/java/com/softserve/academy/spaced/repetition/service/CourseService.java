@@ -1,5 +1,6 @@
 package com.softserve.academy.spaced.repetition.service;
 
+import com.softserve.academy.spaced.repetition.controller.dto.simpleDTO.CourseDTO;
 import com.softserve.academy.spaced.repetition.domain.Course;
 import com.softserve.academy.spaced.repetition.domain.Deck;
 import com.softserve.academy.spaced.repetition.utils.exceptions.NotAuthorisedUserException;
@@ -41,7 +42,7 @@ public interface CourseService {
     /**
      * Find course with the given identifier.
      *
-     * @param courseId   must not be {@literal null}.
+     * @param courseId must not be {@literal null}.
      * @return course with given identifiers
      */
     Course getCourseById(Long courseId);
@@ -71,10 +72,11 @@ public interface CourseService {
     /**
      * Updates course in category with the given identifier.
      *
-     * @param courseId must not be {@literal null}.
-     * @param course   updated course, must not be {@literal null}.
+     * @param courseId  must not be {@literal null}.
+     * @param courseDTO DTO object containing updated course, must not be {@literal null}.
+     * @return updated Course
      */
-    void updateCourse(Long courseId, Course course);
+    Course updateCourse(Long courseId, CourseDTO courseDTO);
 
     /**
      * Delete course from DB
@@ -106,9 +108,10 @@ public interface CourseService {
      *
      * @param privateCourse added course, must not be {null}.
      * @param categoryId    must not be {@literal null}.
+     * @return created course
      * @throws NotAuthorisedUserException if user is not authorised
      */
-    void createPrivateCourse(Course privateCourse, Long categoryId) throws NotAuthorisedUserException;
+    Course createPrivateCourse(Course privateCourse, Long categoryId) throws NotAuthorisedUserException;
 
     /**
      * Updates access to course - change property published in course
@@ -131,7 +134,7 @@ public interface CourseService {
      *
      * @param courseId must not be {@literal null}.
      */
-    void deleteCourseAndSubscriptions (Long courseId);
+    void deleteCourseAndSubscriptions(Long courseId);
 
     /**
      * Adds deck with given identifier to course with given identifier.
@@ -162,8 +165,18 @@ public interface CourseService {
      */
     Page<Course> getPageWithCoursesByCategory(long categoryId, int pageNumber, String sortBy, boolean ascending);
 
+    /**
+     * Updates course price.
+     *
+     * @param price    Integer value that is price of a course, can be null.
+     * @param courseId must not be {@Literal null}.
+     */
+    void updateCoursePrice(Integer price, Long courseId);
+
     Set<BigInteger> findCoursesId(String searchString);
 
     List<Course> findAllCoursesBySearch(String searchString);
+
+    void deleteDeckFromCourse(Long courseId, Long deckId);
 
 }

@@ -1,7 +1,9 @@
 package com.softserve.academy.spaced.repetition.service.impl;
 
+import com.softserve.academy.spaced.repetition.controller.dto.impl.AddPointsByAdminDTO;
 import com.softserve.academy.spaced.repetition.domain.*;
 import com.softserve.academy.spaced.repetition.domain.enums.*;
+import com.softserve.academy.spaced.repetition.repository.PointsTransactionRepository;
 import com.softserve.academy.spaced.repetition.service.ImageService;
 import com.softserve.academy.spaced.repetition.utils.exceptions.NotAuthorisedUserException;
 import com.softserve.academy.spaced.repetition.utils.exceptions.UserStatusException;
@@ -45,7 +47,10 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private AuthorityRepository authorityRepository;
 
-    int quantityUserInPage = 20;
+    @Autowired
+    private PointsTransactionRepository transactionRepository;
+
+    int QUANTITY_USER_IN_PAGE = 20;
 
     @Override
     public void addUser(User user) {
@@ -145,7 +150,7 @@ public class UserServiceImpl implements UserService {
                 hasFolderDeck = true;
             }
         }
-        if (deck == null && hasFolderDeck) {
+        if (deck == null && hasFolderDeck == true) {
             deck = deckRepository.findOne(deckId);
             usersFolder.getDecks().remove(deck);
             userRepository.save(user);
@@ -166,7 +171,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Page<User> getUsersByPage(int pageNumber, String sortBy, boolean ascending) {
-        PageRequest request = new PageRequest(pageNumber - 1, quantityUserInPage,
+        PageRequest request = new PageRequest(pageNumber - 1, QUANTITY_USER_IN_PAGE,
                 ascending ? Sort.Direction.ASC : Sort.Direction.DESC, sortBy);
         return userRepository.findAll(request);
     }
@@ -206,5 +211,34 @@ public class UserServiceImpl implements UserService {
         if (user.getAccount().getStatus().isNotActive()) {
             throw new UserStatusException(user.getAccount().getStatus());
         }
+    }
+
+    @Override
+    public User updatePointsBalance(User user) {
+        Integer expenses = Optional.ofNullable(transactionRepository.getAllExpensesByUser(user.getId())).orElse(0);
+        Integer income =  Optional.ofNullable(transactionRepository.getAllIncomeByUser(user.getId())).orElse(0);
+        user.setPoints(income - expenses);
+        return userRepository.save(user);
+    }
+
+    @Override
+    public boolean isAdmin(User user) throws NotAuthorisedUserException {
+        return getAuthorizedUser().getAccount().getAuthorities().stream()
+                .anyMatch(authority -> authority.getName().equals(AuthorityName.ROLE_ADMIN));
+    }
+
+    @Override
+    @Transactional
+    public AddPointsByAdminDTO addPointsToUser(AddPointsByAdminDTO addPointsByAdminDTO) throws NotAuthorisedUserException {
+        User admin = getAuthorizedUser();
+        User user = userRepository.findUserByAccountEmail(addPointsByAdminDTO.getEmail());
+        PointsTransaction pointsTransaction = new PointsTransaction(admin, user, addPointsByAdminDTO.getPoints(), TransactionType.TRANSFER);
+        pointsTransaction.setCreationDate(new Date());
+        pointsTransaction.setReference(pointsTransaction);
+        transactionRepository.save(pointsTransaction);
+        User updatedUser = updatePointsBalance(user);
+        user.setPoints(updatedUser.getPoints());
+        addPointsByAdminDTO.setPoints(updatedUser.getPoints());
+        return addPointsByAdminDTO;
     }
 }

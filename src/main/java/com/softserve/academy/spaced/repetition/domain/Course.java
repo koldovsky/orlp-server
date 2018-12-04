@@ -51,7 +51,7 @@ public class Course extends EntityForOwnership implements EntityInterface {
     @JoinTable(name = "course_decks", joinColumns = {
             @JoinColumn(name = "course_id")},
             inverseJoinColumns = {@JoinColumn(name = "deck_id")})
-    private List <Deck> decks;
+    private List<Deck> decks;
 
     @OneToMany(mappedBy = "course", cascade = CascadeType.ALL)
     private List<CourseRating> courseRatings;
@@ -59,8 +59,7 @@ public class Course extends EntityForOwnership implements EntityInterface {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "course", cascade = CascadeType.ALL)
     private List<CourseComment> courseComments;
 
-    @OneToOne
-    @JoinColumn(name = "course_price_id")
+    @OneToOne(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
     private CoursePrice coursePrice;
 
     public Course() {
@@ -98,11 +97,11 @@ public class Course extends EntityForOwnership implements EntityInterface {
         this.category = category;
     }
 
-    public List <Deck> getDecks() {
+    public List<Deck> getDecks() {
         return decks;
     }
 
-    public void setDecks(List <Deck> decks) {
+    public void setDecks(List<Deck> decks) {
         this.decks = decks;
     }
 
@@ -154,6 +153,14 @@ public class Course extends EntityForOwnership implements EntityInterface {
         this.courseComments = courseComments;
     }
 
+    public CoursePrice getCoursePrice() {
+        return coursePrice;
+    }
+
+    public void setCoursePrice(CoursePrice coursePrice) {
+        this.coursePrice = coursePrice;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -172,8 +179,10 @@ public class Course extends EntityForOwnership implements EntityInterface {
         if (decks != null ? !decks.equals(course.decks) : course.decks != null) return false;
         if (courseRatings != null ? !courseRatings.equals(course.courseRatings) : course.courseRatings != null)
             return false;
+        if (coursePrice != null ? !coursePrice.equals(course.coursePrice) : course.coursePrice != null) return false;
         return courseComments != null ? courseComments.equals(course.courseComments) : course.courseComments == null;
     }
+
 
     @Override
     public int hashCode() {
@@ -191,6 +200,7 @@ public class Course extends EntityForOwnership implements EntityInterface {
         result = 31 * result + (decks != null ? decks.hashCode() : 0);
         result = 31 * result + (courseRatings != null ? courseRatings.hashCode() : 0);
         result = 31 * result + (courseComments != null ? courseComments.hashCode() : 0);
+        result = 31 * result + (coursePrice != null ? coursePrice.hashCode() : 0);
         return result;
     }
 }

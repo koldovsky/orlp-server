@@ -229,4 +229,11 @@ public class DomainFactory {
         cardImage.setId(cardImageId);
         return cardImage;
     }
+
+    public static CoursePrice createCoursePrice(int price, Course course) {
+        CoursePrice coursePrice = new CoursePrice();
+        coursePrice.setPrice(price);
+        coursePrice.setCourse(course);
+        return coursePrice;
+    }
 }
