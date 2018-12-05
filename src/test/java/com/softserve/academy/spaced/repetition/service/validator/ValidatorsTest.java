@@ -1,7 +1,7 @@
 package com.softserve.academy.spaced.repetition.service.validator;
 
 import com.softserve.academy.spaced.repetition.config.TestDatabaseConfig;
-import com.softserve.academy.spaced.repetition.controller.dto.simpleDTO.PasswordDTO;
+import com.softserve.academy.spaced.repetition.controller.dto.simpledto.PasswordDTO;
 import com.softserve.academy.spaced.repetition.domain.Account;
 import com.softserve.academy.spaced.repetition.domain.Folder;
 import com.softserve.academy.spaced.repetition.domain.Person;

@@ -1,8 +1,8 @@
 package com.softserve.academy.spaced.repetition.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.softserve.academy.spaced.repetition.controller.dto.simpleDTO.CourseDTO;
-import com.softserve.academy.spaced.repetition.controller.dto.simpleDTO.PriceDTO;
+import com.softserve.academy.spaced.repetition.controller.dto.simpledto.CourseDTO;
+import com.softserve.academy.spaced.repetition.controller.dto.simpledto.PriceDTO;
 import com.softserve.academy.spaced.repetition.controller.handler.ExceptionHandlerController;
 import com.softserve.academy.spaced.repetition.domain.*;
 import com.softserve.academy.spaced.repetition.service.CourseService;
