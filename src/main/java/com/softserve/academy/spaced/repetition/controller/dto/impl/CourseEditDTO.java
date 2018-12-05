@@ -9,11 +9,12 @@ import org.springframework.hateoas.Link;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
-public class CoursePriceDTO extends DTO<Course> {
+public class CourseEditDTO extends DTO<Course> {
 
-    public CoursePriceDTO(Course course, Link link) {
-        super(course, link);
+    public CourseEditDTO(Course entity, Link link) {
+        super(entity, link);
         add(linkTo(methodOn(DeckController.class).getAllDecksByCourseId(getEntity().getCategory().getId(), getEntity().getId())).withRel("decks"));
+
     }
 
     public Long getCourseId() {
@@ -28,28 +29,17 @@ public class CoursePriceDTO extends DTO<Course> {
         return getEntity().getDescription();
     }
 
-    public String getImage() {
-        return linkTo(methodOn(ImageController.class).getImageById(getEntity().getImage().getId())).withSelfRel().getHref();
-    }
-
-    public Long getOwnerId() {
-        return getEntity().getOwner().getId();
+    public ImageDTO getImage() {
+        Link link = new Link(linkTo(methodOn(ImageController.class).getImageById(getEntity().getImage().getId())).withSelfRel().getHref());
+        return new ImageDTO(getEntity().getImage(), link);
     }
 
     public Boolean isPublished() {
         return getEntity().isPublished();
     }
 
-    public Double getRating() {
-        return getEntity().getRating();
-    }
-
     public Long getCategoryId() {
         return getEntity().getCategory().getId();
-    }
-
-    public Long getCreatedBy() {
-        return getEntity().getCreatedBy();
     }
 
     public Integer getCoursePrice() {

@@ -54,8 +54,6 @@ public class CourseServiceTest {
     @Mock
     private DeckRepository deckRepository;
     @Mock
-    private CoursePriceRepository coursePriceRepository;
-    @Mock
     private CourseOwnershipRepository courseOwnershipRepository;
     @InjectMocks
     private CourseServiceImpl courseService;
@@ -79,9 +77,10 @@ public class CourseServiceTest {
         image = DomainFactory.createImage(1L, null, null, null, null, true);
         category = DomainFactory.createCategory(CATEGORY_ID, null, null, image);
         user = DomainFactory.createUser(1L, null, null, null, courseSet);
-        course = DomainFactory.createCourse(COURSE_ID, null, null, new Image(), 1, true
+        course = DomainFactory.createCourse(COURSE_ID, COURSE_NAME, COURSE_DESCRIPTION, new Image(), 1, true
                 , user, new Category(), deckList, null, null);
         coursePrice = DomainFactory.createCoursePrice(PRICE, course);
+        course.setCoursePrice(coursePrice);
         courseList.add(course);
         courseSet.add(course);
         deckList.add(deck);
@@ -158,9 +157,8 @@ public class CourseServiceTest {
     @Test
     public void testUpdateCourse() {
         CourseDTO courseDTO = createCourseDTO();
-        when(courseService.updateCourse(COURSE_ID, courseDTO)).thenReturn(course);
         courseService.updateCourse(COURSE_ID, courseDTO);
-        verify(courseRepository).save(course);
+        verify(courseRepository, times(2)).save(course);
     }
 
     @Test
@@ -283,6 +281,13 @@ public class CourseServiceTest {
     }
 
     @Test
+    public void testDeleteDeckFromCourse() {
+
+        courseService.deleteDeckFromCourse(COURSE_ID, DECK_ID);
+        verify(courseRepository).save(course);
+    }
+
+    @Test
     public void testGetPageWithCourses() {
         when(courseRepository.findAllByPublishedTrue(any(PageRequest.class))).thenReturn(null);
         Page<Course> result = courseService.getPageWithCourses(PAGE_NUMBER, PAGE_SORT_BY, PAGE_ASCENDING_ORDER);
@@ -299,6 +304,15 @@ public class CourseServiceTest {
                 , PAGE_SORT_BY, PAGE_ASCENDING_ORDER);
         verify(courseRepository).findAllByCategoryEqualsAndPublishedTrue(any(Category.class), any(PageRequest.class));
         assertNull(result);
+    }
+
+    @Test
+    public void testUpdateCoursePrice() {
+        Course result = course;
+        result.getCoursePrice().setPrice(1);
+        when(courseRepository.findOne(COURSE_ID)).thenReturn(course);
+        courseService.updateCoursePrice(1, COURSE_ID);
+        assertEquals(course, result);
     }
 
     private CourseDTO createCourseDTO() {
