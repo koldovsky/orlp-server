@@ -14,12 +14,12 @@ public class DeckPrice implements EntityInterface {
     private Long id;
 
     @Column(name = "deck_price")
-    private Integer price;
+    private int price;
 
     public DeckPrice() {
     }
 
-    public DeckPrice(Integer price) {
+    public DeckPrice(int price) {
         this.price = price;
     }
 
@@ -27,15 +27,16 @@ public class DeckPrice implements EntityInterface {
         return id;
     }
 
-    public Integer getPrice() {
+    public int getPrice() {
         return price;
+    }
+
+    public void setPrice(int price) {
+        this.price = price;
     }
 
     public void setId(Long id) {
         this.id = id;
     }
 
-    public void setPrice(Integer price) {
-        this.price = price;
-    }
 }

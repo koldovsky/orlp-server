@@ -1,6 +1,6 @@
 package com.softserve.academy.spaced.repetition.service.impl;
 
-import com.softserve.academy.spaced.repetition.controller.dto.impl.SetPointsByAdminDTO;
+import com.softserve.academy.spaced.repetition.controller.dto.impl.AddPointsByAdminDTO;
 import com.softserve.academy.spaced.repetition.domain.*;
 import com.softserve.academy.spaced.repetition.domain.enums.*;
 import com.softserve.academy.spaced.repetition.repository.PointsTransactionRepository;
@@ -229,18 +229,16 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public SetPointsByAdminDTO setPointsToUser(SetPointsByAdminDTO setPointsByAdminDTO) throws NotAuthorisedUserException {
+    public AddPointsByAdminDTO addPointsToUser(AddPointsByAdminDTO addPointsByAdminDTO) throws NotAuthorisedUserException {
         User admin = getAuthorizedUser();
-        User user = userRepository.findUserByAccountEmail(setPointsByAdminDTO.getEmail());
-        PointsTransaction pointsTransaction = new PointsTransaction(admin, user, setPointsByAdminDTO.getPoints(), TransactionType.TRANSFER);
+        User user = userRepository.findUserByAccountEmail(addPointsByAdminDTO.getEmail());
+        PointsTransaction pointsTransaction = new PointsTransaction(admin, user, addPointsByAdminDTO.getPoints(), TransactionType.TRANSFER);
         pointsTransaction.setCreationDate(new Date());
         pointsTransaction.setReference(pointsTransaction);
         transactionRepository.save(pointsTransaction);
         User updatedUser = updatePointsBalance(user);
         user.setPoints(updatedUser.getPoints());
-        setPointsByAdminDTO.setPoints(updatedUser.getPoints());
-        return setPointsByAdminDTO;
+        addPointsByAdminDTO.setPoints(updatedUser.getPoints());
+        return addPointsByAdminDTO;
     }
-
-
 }

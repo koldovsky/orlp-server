@@ -1,7 +1,7 @@
 package com.softserve.academy.spaced.repetition.controller;
 
 import com.softserve.academy.spaced.repetition.controller.dto.impl.DeckOfUserManagedByAdminDTO;
-import com.softserve.academy.spaced.repetition.controller.dto.impl.SetPointsByAdminDTO;
+import com.softserve.academy.spaced.repetition.controller.dto.impl.AddPointsByAdminDTO;
 import com.softserve.academy.spaced.repetition.controller.dto.impl.UserManagedByAdminDTO;
 import com.softserve.academy.spaced.repetition.domain.Deck;
 import com.softserve.academy.spaced.repetition.domain.User;
@@ -187,8 +187,8 @@ public class ManageUserController {
     @ResponseStatus(HttpStatus.OK)
     @PostMapping("/points")
     @PreAuthorize("hasPermission('MANAGE_USER','UPDATE')")
-    public ResponseEntity<SetPointsByAdminDTO> setPointsToUser(@RequestBody SetPointsByAdminDTO setPointsByAdminDTO) throws NotAuthorisedUserException {
-        SetPointsByAdminDTO pointsByAdminDTO = userService.setPointsToUser(setPointsByAdminDTO);
+    public ResponseEntity<AddPointsByAdminDTO> addPointsToUser(@RequestBody AddPointsByAdminDTO addPointsByAdminDTO) throws NotAuthorisedUserException {
+        AddPointsByAdminDTO pointsByAdminDTO = userService.addPointsToUser(addPointsByAdminDTO);
         return new ResponseEntity<>(pointsByAdminDTO, HttpStatus.OK);
     }
 }

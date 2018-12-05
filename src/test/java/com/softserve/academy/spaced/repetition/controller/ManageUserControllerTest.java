@@ -1,9 +1,12 @@
 package com.softserve.academy.spaced.repetition.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.softserve.academy.spaced.repetition.controller.dto.impl.AddPointsByAdminDTO;
 import com.softserve.academy.spaced.repetition.controller.handler.ExceptionHandlerController;
 import com.softserve.academy.spaced.repetition.domain.*;
 import com.softserve.academy.spaced.repetition.domain.enums.AccountStatus;
 import com.softserve.academy.spaced.repetition.service.UserService;
+import com.softserve.academy.spaced.repetition.utils.exceptions.NotAuthorisedUserException;
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
@@ -25,6 +28,7 @@ import java.util.List;
 import java.util.Set;
 
 import static org.hamcrest.Matchers.*;
+import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -269,5 +273,19 @@ public class ManageUserControllerTest {
         }
         Page<User> userPage = new PageImpl<>(users, new PageRequest(NUMBER_PAGE - 1, QUANTITY_USER_IN_PAGE, Sort.Direction.ASC, SORT_BY), quantityUsers);
         return userPage;
+    }
+
+    @Test
+    public void addPointsToUser() throws Exception {
+       AddPointsByAdminDTO addPointsByAdminDTO = new AddPointsByAdminDTO("asd@asd.asd", 1200);
+        when(userService.addPointsToUser(any(AddPointsByAdminDTO.class))).thenReturn(addPointsByAdminDTO);
+        mockMvc.perform(post("/api/admin/users/points")
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(new ObjectMapper().writeValueAsString(addPointsByAdminDTO)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.email", is("asd@asd.asd")))
+                .andExpect(jsonPath("$.points", is(1200)));
+        verify(userService, times(1)).addPointsToUser(any(AddPointsByAdminDTO.class));
     }
 }

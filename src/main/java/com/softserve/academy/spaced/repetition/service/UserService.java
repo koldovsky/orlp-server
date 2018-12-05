@@ -1,6 +1,6 @@
 package com.softserve.academy.spaced.repetition.service;
 
-import com.softserve.academy.spaced.repetition.controller.dto.impl.SetPointsByAdminDTO;
+import com.softserve.academy.spaced.repetition.controller.dto.impl.AddPointsByAdminDTO;
 import com.softserve.academy.spaced.repetition.domain.*;
 import com.softserve.academy.spaced.repetition.domain.enums.AccountStatus;
 import com.softserve.academy.spaced.repetition.domain.enums.AuthenticationType;
@@ -170,5 +170,5 @@ public interface UserService {
 
     boolean isAdmin(User user) throws NotAuthorisedUserException;
 
-    SetPointsByAdminDTO setPointsToUser(SetPointsByAdminDTO setPointsByAdminDTO) throws NotAuthorisedUserException;
+    AddPointsByAdminDTO addPointsToUser(AddPointsByAdminDTO addPointsByAdminDTO) throws NotAuthorisedUserException;
 }
