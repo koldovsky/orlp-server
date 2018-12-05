@@ -1,6 +1,6 @@
 package com.softserve.academy.spaced.repetition.service.impl;
 
-import com.softserve.academy.spaced.repetition.controller.dto.simpleDTO.MailDTO;
+import com.softserve.academy.spaced.repetition.controller.dto.simpledto.MailDTO;
 import com.softserve.academy.spaced.repetition.domain.User;
 import com.softserve.academy.spaced.repetition.security.service.JwtTokenForMailService;
 import com.softserve.academy.spaced.repetition.service.MailService;

@@ -2,7 +2,7 @@ package com.softserve.academy.spaced.repetition.controller;
 
 import com.softserve.academy.spaced.repetition.controller.dto.annotations.Request;
 import com.softserve.academy.spaced.repetition.controller.dto.builder.DTOBuilder;
-import com.softserve.academy.spaced.repetition.controller.dto.simpleDTO.CategoryDTO;
+import com.softserve.academy.spaced.repetition.controller.dto.simpledto.CategoryDTO;
 import com.softserve.academy.spaced.repetition.controller.dto.impl.CategoryLinkDTO;
 import com.softserve.academy.spaced.repetition.controller.dto.impl.CategoryPublicDTO;
 import com.softserve.academy.spaced.repetition.controller.dto.impl.CategoryTopDTO;
