@@ -1,7 +1,7 @@
 package com.softserve.academy.spaced.repetition.security.controller;
 
-import com.softserve.academy.spaced.repetition.security.DTO.JwtAuthenticationRequest;
-import com.softserve.academy.spaced.repetition.security.DTO.JwtAuthenticationResponse;
+import com.softserve.academy.spaced.repetition.security.dto.JwtAuthenticationRequest;
+import com.softserve.academy.spaced.repetition.security.dto.JwtAuthenticationResponse;
 import com.softserve.academy.spaced.repetition.security.service.AuthenticationRestService;
 import com.softserve.academy.spaced.repetition.utils.audit.Auditable;
 import com.softserve.academy.spaced.repetition.utils.audit.AuditingAction;
