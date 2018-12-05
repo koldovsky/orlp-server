@@ -1,21 +1,15 @@
 package com.softserve.academy.spaced.repetition.service;
 
-import com.softserve.academy.spaced.repetition.controller.dto.simpleDTO.MailDTO;
+import com.softserve.academy.spaced.repetition.controller.dto.simpledto.MailDTO;
 import com.softserve.academy.spaced.repetition.service.impl.MailServiceImpl;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.MailSender;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessagePreparator;
 
-import javax.mail.internet.MimeMessage;
-
-import static org.hamcrest.core.IsInstanceOf.any;
 import static org.mockito.Matchers.refEq;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;

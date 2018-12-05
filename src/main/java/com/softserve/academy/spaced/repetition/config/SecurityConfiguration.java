@@ -41,7 +41,7 @@ import java.util.Map;
 @EnableJpaAuditing(auditorAwareRef = "auditorProvider")
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
-    private final int MAX_AGE = 3600;
+    private static final int MAX_AGE = 3600;
 
     @Autowired
     private JwtAuthenticationEntryPoint unauthorizedHandler;

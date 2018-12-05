@@ -1,6 +1,6 @@
 package com.softserve.academy.spaced.repetition.service;
 
-import com.softserve.academy.spaced.repetition.controller.dto.simpleDTO.CategoryDTO;
+import com.softserve.academy.spaced.repetition.controller.dto.simpledto.CategoryDTO;
 import com.softserve.academy.spaced.repetition.domain.Category;
 import com.softserve.academy.spaced.repetition.domain.Image;
 import org.springframework.data.domain.Page;
