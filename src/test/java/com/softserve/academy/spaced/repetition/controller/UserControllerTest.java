@@ -1,6 +1,7 @@
 package com.softserve.academy.spaced.repetition.controller;
 
 
+import com.softserve.academy.spaced.repetition.config.PointsBalanceEvent;
 import com.softserve.academy.spaced.repetition.controller.handler.ExceptionHandlerController;
 import com.softserve.academy.spaced.repetition.domain.*;
 import com.softserve.academy.spaced.repetition.domain.enums.*;
@@ -11,6 +12,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -34,10 +36,14 @@ public class UserControllerTest {
     @Mock
     UserService userService;
 
+    @Mock
+    ApplicationEventPublisher publisher;
+
     @Before
     public void setUp() {
         userController = new UserController();
         userController.userService = userService;
+        userController.publisher = publisher;
         mockMvc = MockMvcBuilders.standaloneSetup(userController)
                 .setControllerAdvice(new ExceptionHandlerController())
                 .build();
@@ -46,6 +52,7 @@ public class UserControllerTest {
     @Test
     public void testGetAuthorizedUserPublicInfo() throws Exception {
         when(userService.getAuthorizedUser()).thenReturn(getUser());
+        doNothing().when(publisher).publishEvent(new PointsBalanceEvent(this.getClass().getCanonicalName() , getUser()));
         mockMvc.perform(get("/api/user/details")
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON))

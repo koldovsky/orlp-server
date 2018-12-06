@@ -68,8 +68,8 @@ public class PointsTransactionServiceImpl implements PointsTransactionService {
             transaction.setCreationDate(new Date());
             transaction.setReference(deckOwnership.getReference());
             transactionRepository.save(transaction);
-            publisher.publishEvent(new PointsBalanceEvent(this, userFrom));
-            publisher.publishEvent(new PointsBalanceEvent(this, userTo));
+            publisher.publishEvent(new PointsBalanceEvent(this.getClass().getCanonicalName(), userFrom));
+            publisher.publishEvent(new PointsBalanceEvent(this.getClass().getCanonicalName(), userTo));
         } else {
             throw new PointsTransactionException(messageSource.getMessage("message.transaction.notEnoughPoints",
                     new Object[]{}, locale));
@@ -94,8 +94,8 @@ public class PointsTransactionServiceImpl implements PointsTransactionService {
             transaction.setCreationDate(new Date());
             transaction.setReference(courseOwnership.getReference());
             transactionRepository.save(transaction);
-            publisher.publishEvent(new PointsBalanceEvent(this, userFrom));
-            publisher.publishEvent(new PointsBalanceEvent(this, userTo));
+            publisher.publishEvent(new PointsBalanceEvent(this.getClass().getCanonicalName(), userFrom));
+            publisher.publishEvent(new PointsBalanceEvent(this.getClass().getCanonicalName(), userTo));
         } else {
             throw new PointsTransactionException(messageSource.getMessage("message.transaction.notEnoughPoints",
                     new Object[]{}, locale));
@@ -124,8 +124,8 @@ public class PointsTransactionServiceImpl implements PointsTransactionService {
                 pointsTransaction.setCreationDate(new Date());
                 pointsTransaction.setReference(pointsTransaction);
                 transactionRepository.save(pointsTransaction);
-                publisher.publishEvent(new PointsBalanceEvent(this, userFrom));
-                publisher.publishEvent(new PointsBalanceEvent(this, userTo));
+                publisher.publishEvent(new PointsBalanceEvent(this.getClass().getCanonicalName(), userFrom));
+                publisher.publishEvent(new PointsBalanceEvent(this.getClass().getCanonicalName(), userTo));
                 sendPointsToFriendDTO.setPoints(userFrom.getPoints());
             } else {
                 throw new IllegalArgumentException(messageSource.getMessage("message.transaction.notEnoughPointsToSend",

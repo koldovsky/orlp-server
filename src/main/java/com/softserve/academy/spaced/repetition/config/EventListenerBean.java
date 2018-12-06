@@ -41,8 +41,7 @@ public class EventListenerBean {
 
     @EventListener
     public User updatePointsBalance(PointsBalanceEvent pointBalanceEvent) {
-        LOG.info("Updating points balance for {} {}", pointBalanceEvent.getUser().getPerson().getFirstName(),
-                pointBalanceEvent.getUser().getPerson().getLastName());
+        LOG.info("Updating points balance for {}", pointBalanceEvent.getUser());
         return userService.updatePointsBalance(pointBalanceEvent.getUser());
     }
 }

@@ -243,7 +243,7 @@ public class UserServiceImpl implements UserService {
         pointsTransaction.setCreationDate(new Date());
         pointsTransaction.setReference(pointsTransaction);
         transactionRepository.save(pointsTransaction);
-        publisher.publishEvent(new PointsBalanceEvent(this, user));
+        publisher.publishEvent(new PointsBalanceEvent(this.getClass().getCanonicalName(), user));
         addPointsByAdminDTO.setPoints(user.getPoints());
         return addPointsByAdminDTO;
     }

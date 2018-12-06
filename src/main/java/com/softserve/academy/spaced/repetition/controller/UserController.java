@@ -37,14 +37,14 @@ public class UserController {
     PointsTransactionService pointsTransactionService;
 
     @Autowired
-    private ApplicationEventPublisher publisher;
+    ApplicationEventPublisher publisher;
 
     @GetMapping("api/user/details")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<UserDTO> getAuthorizedUserPublicInfo() throws NotAuthorisedUserException {
         User user = userService.getAuthorizedUser();
         if (!userService.isAdmin(user)) {
-            publisher.publishEvent(new PointsBalanceEvent(this, user));
+            publisher.publishEvent(new PointsBalanceEvent(this.getClass().getCanonicalName(), user));
         }
         Link link = linkTo(methodOn(UserController.class).getAuthorizedUserWithLinks()).withSelfRel();
         UserDTO userDTO = DTOBuilder.buildDtoForEntity(user, UserDTO.class, link);
