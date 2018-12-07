@@ -52,7 +52,7 @@ public class UserControllerTest {
     @Test
     public void testGetAuthorizedUserPublicInfo() throws Exception {
         when(userService.getAuthorizedUser()).thenReturn(getUser());
-        doNothing().when(publisher).publishEvent(new PointsBalanceEvent(this.getClass().getCanonicalName() , getUser()));
+        doNothing().when(publisher).publishEvent(Matchers.any(PointsBalanceEvent.class));
         mockMvc.perform(get("/api/user/details")
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON))
