@@ -41,6 +41,10 @@ public class DeckLinkByCategoryDTO extends DTO<Deck> {
     public String getSynthax() {
         return getEntity().getSyntaxToHighlight();
     }
+
+    public Integer getPrice() {
+        return getEntityPrice(getEntity());
+    }
 }
 
 
