@@ -6,33 +6,22 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "deck_price")
-public class DeckPrice implements EntityInterface {
+public class DeckPrice extends BasePrice implements EntityInterface {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "deck_price_id")
     private Long id;
 
-    @Column(name = "deck_price")
-    private int price;
-
     public DeckPrice() {
     }
 
     public DeckPrice(int price) {
-        this.price = price;
+        setPrice(price);
     }
 
     public Long getId() {
         return id;
-    }
-
-    public int getPrice() {
-        return price;
-    }
-
-    public void setPrice(int price) {
-        this.price = price;
     }
 
     public void setId(Long id) {

@@ -1,6 +1,7 @@
 package com.softserve.academy.spaced.repetition.domain;
 
 import com.softserve.academy.spaced.repetition.controller.dto.annotations.EntityInterface;
+import com.softserve.academy.spaced.repetition.controller.dto.annotations.PriceEntityInterface;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -12,7 +13,7 @@ import java.util.Set;
         @Index(columnList = "name", name = "deck_index"),
         @Index(columnList = "description", name = "deck_index")
 })
-public class Deck extends EntityForOwnership implements EntityInterface {
+public class Deck extends EntityForOwnership implements EntityInterface, PriceEntityInterface {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -197,5 +198,21 @@ public class Deck extends EntityForOwnership implements EntityInterface {
 
     public void setSyntaxToHighlight(String syntaxToHighlight) {
         this.syntaxToHighlight = syntaxToHighlight;
+    }
+
+    @Override
+    public BasePrice getPriceObject() {
+        return deckPrice;
+    }
+
+    @Override
+    public Integer getEntityPrice() {
+        Integer result;
+        if (this.getPriceObject() == null) {
+            result = null;
+        } else {
+            result = this.getPriceObject().getPrice();
+        }
+        return result;
     }
 }

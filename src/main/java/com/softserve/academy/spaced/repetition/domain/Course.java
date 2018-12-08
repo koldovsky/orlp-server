@@ -2,6 +2,7 @@ package com.softserve.academy.spaced.repetition.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.softserve.academy.spaced.repetition.controller.dto.annotations.EntityInterface;
+import com.softserve.academy.spaced.repetition.controller.dto.annotations.PriceEntityInterface;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -12,7 +13,7 @@ import java.util.List;
         @Index(columnList = "name", name = "course_index"),
         @Index(columnList = "description", name = "course_index")
 })
-public class Course extends EntityForOwnership implements EntityInterface {
+public class Course extends EntityForOwnership implements EntityInterface , PriceEntityInterface {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -201,6 +202,22 @@ public class Course extends EntityForOwnership implements EntityInterface {
         result = 31 * result + (courseRatings != null ? courseRatings.hashCode() : 0);
         result = 31 * result + (courseComments != null ? courseComments.hashCode() : 0);
         result = 31 * result + (coursePrice != null ? coursePrice.hashCode() : 0);
+        return result;
+    }
+
+    @Override
+    public BasePrice getPriceObject() {
+        return coursePrice;
+    }
+
+    @Override
+    public Integer getEntityPrice() {
+        Integer result;
+        if (this.getPriceObject() == null) {
+            result = null;
+        } else {
+            result = this.getPriceObject().getPrice();
+        }
         return result;
     }
 }
