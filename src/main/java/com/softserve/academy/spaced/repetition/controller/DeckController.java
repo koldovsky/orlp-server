@@ -3,7 +3,7 @@ package com.softserve.academy.spaced.repetition.controller;
 import com.softserve.academy.spaced.repetition.controller.dto.annotations.Request;
 import com.softserve.academy.spaced.repetition.controller.dto.builder.DTOBuilder;
 import com.softserve.academy.spaced.repetition.controller.dto.impl.*;
-import com.softserve.academy.spaced.repetition.controller.dto.simpleDTO.DeckDTO;
+import com.softserve.academy.spaced.repetition.controller.dto.simpledto.DeckDTO;
 import com.softserve.academy.spaced.repetition.domain.Card;
 import com.softserve.academy.spaced.repetition.domain.Deck;
 import com.softserve.academy.spaced.repetition.service.DeckService;
@@ -142,7 +142,7 @@ public class DeckController {
                                                                                  @RequestParam(name = "asc") boolean ascending) {
         LOGGER.debug("View all decks for admin");
         Page<DeckOfUserManagedByAdminDTO> deckOfUserManagedByAdminDTO = deckService
-                .getPageWithAllAdminDecks(pageNumber, sortBy, ascending).map((deck) -> {
+                .getPageWithAllAdminDecks(pageNumber, sortBy, ascending).map(deck -> {
                     Link selfLink = linkTo(methodOn(DeckController.class).getDeckById(deck.getId())).withSelfRel();
                     return buildDtoForEntity(deck, DeckOfUserManagedByAdminDTO.class, selfLink);
                 });

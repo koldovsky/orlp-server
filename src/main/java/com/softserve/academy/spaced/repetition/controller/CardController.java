@@ -2,7 +2,7 @@ package com.softserve.academy.spaced.repetition.controller;
 
 import com.softserve.academy.spaced.repetition.controller.dto.builder.DTOBuilder;
 import com.softserve.academy.spaced.repetition.controller.dto.impl.CardPublicDTO;
-import com.softserve.academy.spaced.repetition.controller.dto.simpleDTO.CardDTO;
+import com.softserve.academy.spaced.repetition.controller.dto.simpledto.CardDTO;
 import com.softserve.academy.spaced.repetition.domain.Card;
 import com.softserve.academy.spaced.repetition.service.CardService;
 import com.softserve.academy.spaced.repetition.utils.audit.Auditable;

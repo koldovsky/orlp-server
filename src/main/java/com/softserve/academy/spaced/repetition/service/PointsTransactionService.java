@@ -1,6 +1,6 @@
 package com.softserve.academy.spaced.repetition.service;
 
-import com.softserve.academy.spaced.repetition.controller.dto.simpleDTO.userProfileDTO.SendPointsToFriendDTO;
+import com.softserve.academy.spaced.repetition.controller.dto.simpledto.userprofiledto.SendPointsToFriendDTO;
 import com.softserve.academy.spaced.repetition.domain.PointsTransaction;
 import com.softserve.academy.spaced.repetition.utils.exceptions.NotAuthorisedUserException;
 import com.softserve.academy.spaced.repetition.utils.exceptions.PointsTransactionException;

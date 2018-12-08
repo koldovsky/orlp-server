@@ -2,7 +2,7 @@ package com.softserve.academy.spaced.repetition.service;
 
 import com.softserve.academy.spaced.repetition.controller.dto.impl.DeckCreateValidationDTO;
 import com.softserve.academy.spaced.repetition.controller.dto.impl.DeckEditByAdminDTO;
-import com.softserve.academy.spaced.repetition.controller.dto.simpleDTO.DeckDTO;
+import com.softserve.academy.spaced.repetition.controller.dto.simpledto.DeckDTO;
 import com.softserve.academy.spaced.repetition.domain.Card;
 import com.softserve.academy.spaced.repetition.domain.Deck;
 import com.softserve.academy.spaced.repetition.utils.exceptions.NotAuthorisedUserException;

@@ -1,7 +1,7 @@
 package com.softserve.academy.spaced.repetition.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.softserve.academy.spaced.repetition.controller.dto.simpleDTO.ReplyToCommentDTO;
+import com.softserve.academy.spaced.repetition.controller.dto.simpledto.ReplyToCommentDTO;
 import com.softserve.academy.spaced.repetition.controller.handler.ExceptionHandlerController;
 import com.softserve.academy.spaced.repetition.domain.Comment;
 import com.softserve.academy.spaced.repetition.domain.Deck;

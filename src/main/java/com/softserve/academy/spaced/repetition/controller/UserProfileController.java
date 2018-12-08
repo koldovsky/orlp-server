@@ -2,12 +2,12 @@ package com.softserve.academy.spaced.repetition.controller;
 
 import com.softserve.academy.spaced.repetition.controller.dto.annotations.Request;
 import com.softserve.academy.spaced.repetition.controller.dto.builder.DTOBuilder;
-import com.softserve.academy.spaced.repetition.controller.dto.impl.userProfileDTO.PersonalInfoDTO;
-import com.softserve.academy.spaced.repetition.controller.dto.impl.userProfileDTO.ProfileDataDTO;
-import com.softserve.academy.spaced.repetition.controller.dto.impl.userProfileDTO.ProfileImageDTO;
-import com.softserve.academy.spaced.repetition.controller.dto.simpleDTO.userProfileDTO.JsonImageDTO;
-import com.softserve.academy.spaced.repetition.controller.dto.simpleDTO.userProfileDTO.JsonPasswordDTO;
-import com.softserve.academy.spaced.repetition.controller.dto.simpleDTO.userProfileDTO.JsonPersonalInfoDTO;
+import com.softserve.academy.spaced.repetition.controller.dto.impl.userprofiledto.PersonalInfoDTO;
+import com.softserve.academy.spaced.repetition.controller.dto.impl.userprofiledto.ProfileDataDTO;
+import com.softserve.academy.spaced.repetition.controller.dto.impl.userprofiledto.ProfileImageDTO;
+import com.softserve.academy.spaced.repetition.controller.dto.simpledto.userprofiledto.JsonImageDTO;
+import com.softserve.academy.spaced.repetition.controller.dto.simpledto.userprofiledto.JsonPasswordDTO;
+import com.softserve.academy.spaced.repetition.controller.dto.simpledto.userprofiledto.JsonPersonalInfoDTO;
 import com.softserve.academy.spaced.repetition.domain.Person;
 import com.softserve.academy.spaced.repetition.domain.User;
 import com.softserve.academy.spaced.repetition.service.UserProfileService;

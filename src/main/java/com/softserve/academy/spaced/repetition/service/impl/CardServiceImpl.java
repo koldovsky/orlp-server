@@ -1,7 +1,7 @@
 package com.softserve.academy.spaced.repetition.service.impl;
 
-import com.softserve.academy.spaced.repetition.controller.dto.simpleDTO.CardFileDTO;
-import com.softserve.academy.spaced.repetition.controller.dto.simpleDTO.CardFileDTOList;
+import com.softserve.academy.spaced.repetition.controller.dto.simpledto.CardFileDTO;
+import com.softserve.academy.spaced.repetition.controller.dto.simpledto.CardFileDTOList;
 import com.softserve.academy.spaced.repetition.domain.Card;
 import com.softserve.academy.spaced.repetition.domain.User;
 import com.softserve.academy.spaced.repetition.domain.enums.LearningRegime;
@@ -26,7 +26,6 @@ import org.yaml.snakeyaml.constructor.ConstructorException;
 import org.yaml.snakeyaml.parser.ParserException;
 
 import java.io.*;
-import java.math.BigInteger;
 import java.util.*;
 
 @Service
