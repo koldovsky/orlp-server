@@ -1,5 +1,6 @@
 package com.softserve.academy.spaced.repetition.controller;
 
+import com.softserve.academy.spaced.repetition.config.PointsBalanceEvent;
 import com.softserve.academy.spaced.repetition.controller.dto.builder.DTOBuilder;
 import com.softserve.academy.spaced.repetition.controller.dto.impl.CourseLinkDTO;
 import com.softserve.academy.spaced.repetition.controller.dto.impl.UserDTO;
@@ -10,6 +11,7 @@ import com.softserve.academy.spaced.repetition.service.PointsTransactionService;
 import com.softserve.academy.spaced.repetition.service.UserService;
 import com.softserve.academy.spaced.repetition.utils.exceptions.NotAuthorisedUserException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.hateoas.Link;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,12 +36,15 @@ public class UserController {
     @Autowired
     PointsTransactionService pointsTransactionService;
 
+    @Autowired
+    ApplicationEventPublisher publisher;
+
     @GetMapping("api/user/details")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<UserDTO> getAuthorizedUserPublicInfo() throws NotAuthorisedUserException {
         User user = userService.getAuthorizedUser();
         if (!userService.isAdmin(user)) {
-            userService.updatePointsBalance(user);
+            publisher.publishEvent(new PointsBalanceEvent(this.getClass().getCanonicalName(), user));
         }
         Link link = linkTo(methodOn(UserController.class).getAuthorizedUserWithLinks()).withSelfRel();
         UserDTO userDTO = DTOBuilder.buildDtoForEntity(user, UserDTO.class, link);

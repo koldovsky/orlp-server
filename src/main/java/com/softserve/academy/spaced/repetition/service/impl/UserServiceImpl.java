@@ -1,19 +1,21 @@
 package com.softserve.academy.spaced.repetition.service.impl;
 
+import com.softserve.academy.spaced.repetition.config.PointsBalanceEvent;
 import com.softserve.academy.spaced.repetition.controller.dto.impl.AddPointsByAdminDTO;
 import com.softserve.academy.spaced.repetition.domain.*;
 import com.softserve.academy.spaced.repetition.domain.enums.*;
-import com.softserve.academy.spaced.repetition.repository.PointsTransactionRepository;
-import com.softserve.academy.spaced.repetition.service.ImageService;
-import com.softserve.academy.spaced.repetition.utils.exceptions.NotAuthorisedUserException;
-import com.softserve.academy.spaced.repetition.utils.exceptions.UserStatusException;
 import com.softserve.academy.spaced.repetition.repository.AuthorityRepository;
 import com.softserve.academy.spaced.repetition.repository.DeckRepository;
+import com.softserve.academy.spaced.repetition.repository.PointsTransactionRepository;
 import com.softserve.academy.spaced.repetition.repository.UserRepository;
 import com.softserve.academy.spaced.repetition.security.authentification.JwtUser;
+import com.softserve.academy.spaced.repetition.service.ImageService;
 import com.softserve.academy.spaced.repetition.service.MailService;
 import com.softserve.academy.spaced.repetition.service.UserService;
+import com.softserve.academy.spaced.repetition.utils.exceptions.NotAuthorisedUserException;
+import com.softserve.academy.spaced.repetition.utils.exceptions.UserStatusException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -51,6 +53,9 @@ public class UserServiceImpl implements UserService {
     private PointsTransactionRepository transactionRepository;
 
     int QUANTITY_USER_IN_PAGE = 20;
+
+    @Autowired
+    private ApplicationEventPublisher publisher;
 
     @Override
     public void addUser(User user) {
@@ -110,6 +115,7 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
         return user;
     }
+
     //TODO: Move to separate class
     @Override
     public String getNoAuthenticatedUserEmail() throws NotAuthorisedUserException {
@@ -121,6 +127,7 @@ public class UserServiceImpl implements UserService {
             throw new NotAuthorisedUserException();
         }
     }
+
     //TODO: Move to separate class
     @Override
     public User getAuthorizedUser() throws NotAuthorisedUserException {
@@ -216,7 +223,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User updatePointsBalance(User user) {
         Integer expenses = Optional.ofNullable(transactionRepository.getAllExpensesByUser(user.getId())).orElse(0);
-        Integer income =  Optional.ofNullable(transactionRepository.getAllIncomeByUser(user.getId())).orElse(0);
+        Integer income = Optional.ofNullable(transactionRepository.getAllIncomeByUser(user.getId())).orElse(0);
         user.setPoints(income - expenses);
         return userRepository.save(user);
     }
@@ -236,9 +243,8 @@ public class UserServiceImpl implements UserService {
         pointsTransaction.setCreationDate(new Date());
         pointsTransaction.setReference(pointsTransaction);
         transactionRepository.save(pointsTransaction);
-        User updatedUser = updatePointsBalance(user);
-        user.setPoints(updatedUser.getPoints());
-        addPointsByAdminDTO.setPoints(updatedUser.getPoints());
+        publisher.publishEvent(new PointsBalanceEvent(this.getClass().getCanonicalName(), user));
+        addPointsByAdminDTO.setPoints(user.getPoints());
         return addPointsByAdminDTO;
     }
 }
