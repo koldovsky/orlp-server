@@ -4,7 +4,7 @@ import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
 
 @MappedSuperclass
-public class BasePrice {
+public abstract class BasePrice {
 
     @Column(name = "price")
     private int price;

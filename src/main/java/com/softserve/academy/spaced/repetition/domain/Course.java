@@ -206,17 +206,12 @@ public class Course extends EntityForOwnership implements EntityInterface , Pric
     }
 
     @Override
-    public BasePrice getPriceObject() {
-        return coursePrice;
-    }
-
-    @Override
     public Integer getEntityPrice() {
         Integer result;
-        if (this.getPriceObject() == null) {
+        if (coursePrice == null) {
             result = null;
         } else {
-            result = this.getPriceObject().getPrice();
+            result = coursePrice.getPrice();
         }
         return result;
     }

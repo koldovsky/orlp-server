@@ -201,17 +201,12 @@ public class Deck extends EntityForOwnership implements EntityInterface, PriceEn
     }
 
     @Override
-    public BasePrice getPriceObject() {
-        return deckPrice;
-    }
-
-    @Override
     public Integer getEntityPrice() {
         Integer result;
-        if (this.getPriceObject() == null) {
+        if (deckPrice == null) {
             result = null;
         } else {
-            result = this.getPriceObject().getPrice();
+            result = deckPrice.getPrice();
         }
         return result;
     }
