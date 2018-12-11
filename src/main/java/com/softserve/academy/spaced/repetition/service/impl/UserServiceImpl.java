@@ -1,5 +1,6 @@
 package com.softserve.academy.spaced.repetition.service.impl;
 
+import com.softserve.academy.spaced.repetition.config.PointsBalanceEvent;
 import com.softserve.academy.spaced.repetition.controller.dto.impl.AddPointsByAdminDTO;
 import com.softserve.academy.spaced.repetition.domain.*;
 import com.softserve.academy.spaced.repetition.domain.enums.*;
@@ -16,6 +17,7 @@ import com.softserve.academy.spaced.repetition.utils.exceptions.PasswordCannotBe
 import com.softserve.academy.spaced.repetition.utils.exceptions.UserStatusException;
 import com.softserve.academy.spaced.repetition.utils.validators.PasswordValidator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.data.domain.Page;
@@ -63,6 +65,9 @@ public class UserServiceImpl implements UserService {
     private MessageSource messageSource;
 
     int QUANTITY_USER_IN_PAGE = 20;
+
+    @Autowired
+    private ApplicationEventPublisher publisher;
 
     @Override
     public void addUser(User user) {
@@ -256,9 +261,8 @@ public class UserServiceImpl implements UserService {
         pointsTransaction.setCreationDate(new Date());
         pointsTransaction.setReference(pointsTransaction);
         transactionRepository.save(pointsTransaction);
-        User updatedUser = updatePointsBalance(user);
-        user.setPoints(updatedUser.getPoints());
-        addPointsByAdminDTO.setPoints(updatedUser.getPoints());
+        publisher.publishEvent(new PointsBalanceEvent(this.getClass().getCanonicalName(), user));
+        addPointsByAdminDTO.setPoints(user.getPoints());
         return addPointsByAdminDTO;
     }
 
