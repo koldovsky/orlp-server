@@ -5,6 +5,7 @@ import com.softserve.academy.spaced.repetition.domain.*;
 import com.softserve.academy.spaced.repetition.domain.enums.AccountStatus;
 import com.softserve.academy.spaced.repetition.domain.enums.AuthenticationType;
 import com.softserve.academy.spaced.repetition.utils.exceptions.NotAuthorisedUserException;
+import com.softserve.academy.spaced.repetition.utils.exceptions.PasswordCannotBeNullException;
 import com.softserve.academy.spaced.repetition.utils.exceptions.UserStatusException;
 import org.springframework.data.domain.Page;
 
@@ -165,6 +166,16 @@ public interface UserService {
      * @throws UserStatusException if user is no active.
      */
     void isUserStatusActive(User user) throws UserStatusException;
+
+    /**
+     * Validates whether user's account can or cannot contain a null password value. If user registered
+     * via Facebook or Google then it allows for password field to be null, but will throw
+     * PasswordCannotBeNullException if user's authentication type is LOCAL and password is null.
+     *
+     * @param account            user`s account.
+     * @throws PasswordCannotBeNullException if authenticationType is LOCAL and password is null
+     */
+    void validateAccount(Account account) throws PasswordCannotBeNullException;
 
     User updatePointsBalance(User user);
 

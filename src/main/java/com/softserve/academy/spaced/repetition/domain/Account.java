@@ -6,7 +6,6 @@ import com.softserve.academy.spaced.repetition.domain.enums.AccountStatus;
 import com.softserve.academy.spaced.repetition.domain.enums.AuthenticationType;
 import com.softserve.academy.spaced.repetition.domain.enums.LearningRegime;
 import com.softserve.academy.spaced.repetition.utils.validators.annotations.EmailNotUsed;
-import com.softserve.academy.spaced.repetition.utils.validators.annotations.PasswordNotNull;
 
 import javax.persistence.*;
 import javax.validation.constraints.Min;
@@ -20,7 +19,6 @@ import java.util.Set;
 import static com.softserve.academy.spaced.repetition.utils.validators.ValidationConstants.*;
 
 @Entity
-@PasswordNotNull(groups = Request.class)
 @Table(name = "account")
 public class Account implements EntityInterface {
     public static final int INITIAL_CARDS_NUMBER = 10;
