@@ -6,7 +6,6 @@ import com.softserve.academy.spaced.repetition.repository.DeckOwnershipRepositor
 import com.softserve.academy.spaced.repetition.service.DeckOwnershipService;
 import com.softserve.academy.spaced.repetition.utils.exceptions.NotAuthorisedUserException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
