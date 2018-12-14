@@ -5,7 +5,6 @@ import com.softserve.academy.spaced.repetition.domain.*;
 import com.softserve.academy.spaced.repetition.domain.enums.AccountStatus;
 import com.softserve.academy.spaced.repetition.domain.enums.AuthenticationType;
 import com.softserve.academy.spaced.repetition.utils.exceptions.NotAuthorisedUserException;
-import com.softserve.academy.spaced.repetition.utils.exceptions.PasswordCannotBeNullException;
 import com.softserve.academy.spaced.repetition.utils.exceptions.UserStatusException;
 import org.springframework.data.domain.Page;
 
