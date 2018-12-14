@@ -167,16 +167,6 @@ public interface UserService {
      */
     void isUserStatusActive(User user) throws UserStatusException;
 
-    /**
-     * Validates whether user's account can or cannot contain a null password value. If user registered
-     * via Facebook or Google then it allows for password field to be null, but will throw
-     * PasswordCannotBeNullException if user's authentication type is LOCAL and password is null.
-     *
-     * @param account            user`s account.
-     * @throws PasswordCannotBeNullException if authenticationType is LOCAL and password is null
-     */
-    void validateAccount(Account account) throws PasswordCannotBeNullException;
-
     User updatePointsBalance(User user);
 
     boolean isAdmin(User user) throws NotAuthorisedUserException;
