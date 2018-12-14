@@ -60,13 +60,7 @@ public class DeckController {
                             .getAllDecksByCategoryId(categoryId, pageNumber, sortBy, ascending)).withRel("deck");
                     return buildDtoForEntity(deck, DeckLinkByCategoryDTO.class, selfLink);
                 });
-        deckByCategoryDTOS.forEach(deck -> {
-            try {
-                deck.setIsBought(deckOwnershipService.checkIsBoughtDeck(deck.getDeckId()));
-            } catch (NotAuthorisedUserException e) {
-                LOGGER.warn("Operation is unavailable for unauthorized users!");
-            }
-        });
+        deckByCategoryDTOS.forEach(deck -> deck.setIsBought(deckOwnershipService.checkIsBoughtDeck(deck.getDeckId())));
         return new ResponseEntity<>(deckByCategoryDTOS, HttpStatus.OK);
     }
 
@@ -89,13 +83,7 @@ public class DeckController {
         List<Deck> decksList = deckService.getAllDecks(courseId);
         List<DeckLinkByCourseDTO> decksDTO = buildDtoListForCollection(decksList, DeckLinkByCourseDTO.class,
                 linkTo(methodOn(DeckController.class).getAllDecksByCourseId(categoryId, courseId)).withSelfRel());
-        decksDTO.forEach(deck -> {
-            try {
-                deck.setIsBought(deckOwnershipService.checkIsBoughtDeck(deck.getDeckId()));
-            } catch (NotAuthorisedUserException e) {
-                LOGGER.error("Operation is unavailable for unauthorized users!");
-            }
-        });
+        decksDTO.forEach(deck -> deck.setIsBought(deckOwnershipService.checkIsBoughtDeck(deck.getDeckId())));
         return decksDTO;
     }
 
