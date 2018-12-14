@@ -1,0 +1,1 @@
+ALTER TABLE deck_price CHANGE COLUMN deck_price price INT NOT NULL default 0;
