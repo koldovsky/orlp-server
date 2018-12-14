@@ -35,7 +35,7 @@ public class DeckLinkByCourseDTO extends DTO<Deck> {
     }
 
     public Integer getPrice() {
-        return getEntityPrice(getEntity());
+        return getEntity().getEntityPrice();
     }
 
     public void setIsBought(boolean isBought) {

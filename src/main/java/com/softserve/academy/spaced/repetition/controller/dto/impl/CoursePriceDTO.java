@@ -53,6 +53,6 @@ public class CoursePriceDTO extends DTO<Course> {
     }
 
     public Integer getCoursePrice() {
-        return getEntityPrice(getEntity());
+        return getEntity().getEntityPrice();
     }
 }
