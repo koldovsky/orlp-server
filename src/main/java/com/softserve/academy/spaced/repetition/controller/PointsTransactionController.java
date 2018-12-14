@@ -2,6 +2,7 @@ package com.softserve.academy.spaced.repetition.controller;
 
 import com.softserve.academy.spaced.repetition.controller.dto.annotations.Request;
 import com.softserve.academy.spaced.repetition.controller.dto.builder.DTOBuilder;
+import com.softserve.academy.spaced.repetition.controller.dto.impl.DeckBuyDTO;
 import com.softserve.academy.spaced.repetition.controller.dto.impl.PointsTransactionDTO;
 import com.softserve.academy.spaced.repetition.controller.dto.simpledto.userprofiledto.SendPointsToFriendDTO;
 import com.softserve.academy.spaced.repetition.domain.PointsTransaction;
@@ -28,10 +29,10 @@ public class PointsTransactionController {
 
     @PostMapping(value = "/api/buy/deck/{deckId}")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity buyDeck(@PathVariable Long deckId)
+    public ResponseEntity<DeckBuyDTO> buyDeck(@PathVariable Long deckId)
             throws NotAuthorisedUserException, PointsTransactionException {
-        transactionService.buyDeck(deckId);
-        return new ResponseEntity(HttpStatus.CREATED);
+        DeckBuyDTO deckBuyDTO = transactionService.buyDeck(deckId);
+        return new ResponseEntity<>(deckBuyDTO, HttpStatus.CREATED);
     }
 
     @PostMapping(value = "/api/buy/course/{courseId}")

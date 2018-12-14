@@ -1,5 +1,6 @@
 package com.softserve.academy.spaced.repetition.service.impl;
 
+import com.softserve.academy.spaced.repetition.controller.dto.impl.DeckBuyDTO;
 import com.softserve.academy.spaced.repetition.controller.dto.simpledto.userprofiledto.SendPointsToFriendDTO;
 import com.softserve.academy.spaced.repetition.config.PointsBalanceEvent;
 import com.softserve.academy.spaced.repetition.domain.*;
@@ -52,7 +53,7 @@ public class PointsTransactionServiceImpl implements PointsTransactionService {
 
     @Transactional
     @Override
-    public void buyDeck(Long deckId) throws NotAuthorisedUserException, PointsTransactionException {
+    public DeckBuyDTO buyDeck(Long deckId) throws NotAuthorisedUserException, PointsTransactionException {
         Deck deck = deckRepository.findOne(deckId);
         User userFrom = userService.getAuthorizedUser();
         Integer points = Optional.ofNullable(deck.getDeckPrice().getPrice()).orElse(0);
@@ -70,6 +71,7 @@ public class PointsTransactionServiceImpl implements PointsTransactionService {
             transactionRepository.save(transaction);
             publisher.publishEvent(new PointsBalanceEvent(this.getClass().getCanonicalName(), userFrom));
             publisher.publishEvent(new PointsBalanceEvent(this.getClass().getCanonicalName(), userTo));
+            return new DeckBuyDTO(true, userFrom.getPoints());
         } else {
             throw new PointsTransactionException(messageSource.getMessage("message.transaction.notEnoughPoints",
                     new Object[]{}, locale));
