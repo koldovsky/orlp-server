@@ -13,7 +13,9 @@ import com.softserve.academy.spaced.repetition.service.impl.UserServiceImpl;
 import com.softserve.academy.spaced.repetition.util.DomainFactory;
 import com.softserve.academy.spaced.repetition.utils.exceptions.ImageRepositorySizeQuotaExceededException;
 import com.softserve.academy.spaced.repetition.utils.exceptions.NotAuthorisedUserException;
+import com.softserve.academy.spaced.repetition.utils.exceptions.PasswordCannotBeNullException;
 import com.softserve.academy.spaced.repetition.utils.exceptions.UserStatusException;
+import com.softserve.academy.spaced.repetition.utils.validators.PasswordValidator;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -72,6 +74,8 @@ public class UserServiceTest {
     private Authentication authentication;
     @Mock
     private MultipartFile multipartFile;
+    @Mock
+    private PasswordValidator passwordValidator;
     private User user;
     private Person person;
     private Account account;
@@ -307,12 +311,11 @@ public class UserServiceTest {
     }
 
     @Test
-    public void testInitializeNewUser() {
+    public void testInitializeNewUser() throws PasswordCannotBeNullException {
         final AuthenticationType AUTHENTICATION_TYPE = AuthenticationType.LOCAL;
-
         when(passwordEncoder.encode(ACCOUNT_PASSWORD)).thenReturn(PASSWORD_ENCODER_ENCODED_PASSWORD);
         when(authorityRepository.findAuthorityByName(AUTHORITY_NAME_USER)).thenReturn(authority);
-
+        when(passwordValidator.supports(any(Class.class))).thenReturn(true);
         userService.initializeNewUser(account, ACCOUNT_EMAIL, ACCOUNT_STATUS_ACTIVE, ACCOUNT_DEACTIVATED,
                 AUTHENTICATION_TYPE);
         verify(passwordEncoder).encode(ACCOUNT_PASSWORD);

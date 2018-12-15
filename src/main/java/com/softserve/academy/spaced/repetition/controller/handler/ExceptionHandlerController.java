@@ -149,4 +149,11 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
     MessageDTO handleTransactionException(PointsTransactionException pointsTransactionException) {
         return new MessageDTO(pointsTransactionException.getMessage());
     }
+
+    @ExceptionHandler(PasswordCannotBeNullException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    MessageDTO handlePasswordCannotBeNullException(PasswordCannotBeNullException passwordCannotBeNullException) {
+        return new MessageDTO(passwordCannotBeNullException.getMessage());
+    }
 }

@@ -29,7 +29,6 @@ public class Account implements EntityInterface {
     private Long id;
 
     @Column(name = "password", length = PASSWORD_MAX_SIZE_HASH)
-    @NotNull
     @Size(min = PASSWORD_MIN_SIZE, max = PASSWORD_MAX_SIZE, message = "{message.validation.fieldSizeLimits}", groups = Request.class)
     private String password;
 
