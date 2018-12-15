@@ -86,6 +86,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public List<Category> findAllCategoriesBySearch(String searchString) {
+        searchString = searchString.replace("_", "\\_").replace("%", "\\%");
         return categoryRepository.findByNameIgnoreCaseContainingOrDescriptionIgnoreCaseContaining(searchString, searchString);
     }
 }
