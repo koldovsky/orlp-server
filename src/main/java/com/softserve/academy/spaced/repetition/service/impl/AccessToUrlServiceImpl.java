@@ -32,30 +32,30 @@ public class AccessToUrlServiceImpl implements AccessToUrlService {
     private CourseCommentRepository courseCommentRepository;
 
     @Override
-    public boolean hasAccessToCategory(Long category_id) {
-        return categoryRepository.hasAccessToCategory(category_id).size() > 0;
+    public boolean hasAccessToCategory(Long categoryId) {
+        return categoryRepository.hasAccessToCategory(categoryId).size() > 0;
     }
 
     @Override
-    public boolean hasAccessToCourse(Long category_id, Long course_id) {
-        return courseRepository.getAccessToCourse(category_id, course_id).size() > 0;
+    public boolean hasAccessToCourse(Long categoryId, Long courseId) {
+        return courseRepository.getAccessToCourse(categoryId, courseId).size() > 0;
     }
 
     @Override
-    public boolean hasAccessToDeckFromFolder(Long folder_id, Long deckId) {
-        return folderRepository.getAccessToDeckFromFolder(folder_id, deckId).size() > 0;
+    public boolean hasAccessToDeckFromFolder(Long folderId, Long deckId) {
+        return folderRepository.getAccessToDeckFromFolder(folderId, deckId).size() > 0;
     }
 
     @Override
-    public boolean hasAccessToCourse(Long category_id) {
-        return courseRepository.getAccessToCourse(category_id).size() > 0;
+    public boolean hasAccessToCourse(Long categoryId) {
+        return courseRepository.getAccessToCourse(categoryId).size() > 0;
     }
 
     @Override
-    public boolean hasAccessToFolder(Long folder_id) throws NotAuthorisedUserException {
+    public boolean hasAccessToFolder(Long folderId) throws NotAuthorisedUserException {
         Long authorizedUserFolderId = userService.getAuthorizedUser().getFolder().getId();
 
-        return Objects.equals(authorizedUserFolderId, folder_id);
+        return Objects.equals(authorizedUserFolderId, folderId);
     }
 
     @Override

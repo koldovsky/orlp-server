@@ -1,7 +1,7 @@
 package com.softserve.academy.spaced.repetition.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.softserve.academy.spaced.repetition.controller.dto.simpleDTO.CategoryDTO;
+import com.softserve.academy.spaced.repetition.controller.dto.simpledto.CategoryDTO;
 import com.softserve.academy.spaced.repetition.controller.handler.ExceptionHandlerController;
 import com.softserve.academy.spaced.repetition.domain.Category;
 import com.softserve.academy.spaced.repetition.domain.Image;

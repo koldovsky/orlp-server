@@ -3,9 +3,10 @@ package com.softserve.academy.spaced.repetition.controller;
 import com.softserve.academy.spaced.repetition.controller.dto.annotations.Request;
 import com.softserve.academy.spaced.repetition.controller.dto.builder.DTOBuilder;
 import com.softserve.academy.spaced.repetition.controller.dto.impl.*;
-import com.softserve.academy.spaced.repetition.controller.dto.simpleDTO.DeckDTO;
+import com.softserve.academy.spaced.repetition.controller.dto.simpledto.DeckDTO;
 import com.softserve.academy.spaced.repetition.domain.Card;
 import com.softserve.academy.spaced.repetition.domain.Deck;
+import com.softserve.academy.spaced.repetition.service.DeckOwnershipService;
 import com.softserve.academy.spaced.repetition.service.DeckService;
 import com.softserve.academy.spaced.repetition.service.FolderService;
 import com.softserve.academy.spaced.repetition.utils.audit.Auditable;
@@ -40,6 +41,9 @@ public class DeckController {
     @Autowired
     private FolderService folderService;
 
+    @Autowired
+    DeckOwnershipService deckOwnershipService;
+
     @Auditable(action = AuditingAction.VIEW_DECKS_VIA_CATEGORY)
     @GetMapping(value = "/api/categories/{categoryId}/decks")
     @PreAuthorize("hasPermission('DECK','READ')")
@@ -56,6 +60,7 @@ public class DeckController {
                             .getAllDecksByCategoryId(categoryId, pageNumber, sortBy, ascending)).withRel("deck");
                     return buildDtoForEntity(deck, DeckLinkByCategoryDTO.class, selfLink);
                 });
+        deckByCategoryDTOS.forEach(deck -> deck.setIsBought(deckOwnershipService.checkIsBoughtDeck(deck.getDeckId())));
         return new ResponseEntity<>(deckByCategoryDTOS, HttpStatus.OK);
     }
 
@@ -76,8 +81,10 @@ public class DeckController {
     public List<DeckLinkByCourseDTO> getAllDecksByCourseId(@PathVariable Long categoryId, @PathVariable Long courseId) {
         LOGGER.debug("View all decks by course with id {}", courseId);
         List<Deck> decksList = deckService.getAllDecks(courseId);
-        return buildDtoListForCollection(decksList, DeckLinkByCourseDTO.class,
+        List<DeckLinkByCourseDTO> decksDTO = buildDtoListForCollection(decksList, DeckLinkByCourseDTO.class,
                 linkTo(methodOn(DeckController.class).getAllDecksByCourseId(categoryId, courseId)).withSelfRel());
+        decksDTO.forEach(deck -> deck.setIsBought(deckOwnershipService.checkIsBoughtDeck(deck.getDeckId())));
+        return decksDTO;
     }
 
     @Auditable(action = AuditingAction.EDIT_DECK)
@@ -142,7 +149,7 @@ public class DeckController {
                                                                                  @RequestParam(name = "asc") boolean ascending) {
         LOGGER.debug("View all decks for admin");
         Page<DeckOfUserManagedByAdminDTO> deckOfUserManagedByAdminDTO = deckService
-                .getPageWithAllAdminDecks(pageNumber, sortBy, ascending).map((deck) -> {
+                .getPageWithAllAdminDecks(pageNumber, sortBy, ascending).map(deck -> {
                     Link selfLink = linkTo(methodOn(DeckController.class).getDeckById(deck.getId())).withSelfRel();
                     return buildDtoForEntity(deck, DeckOfUserManagedByAdminDTO.class, selfLink);
                 });

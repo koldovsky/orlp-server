@@ -4,7 +4,7 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import com.softserve.academy.spaced.repetition.domain.User;
 import com.softserve.academy.spaced.repetition.domain.enums.AuthorityName;
 import com.softserve.academy.spaced.repetition.repository.UserRepository;
-import com.softserve.academy.spaced.repetition.security.DTO.ReCaptchaResponseDto;
+import com.softserve.academy.spaced.repetition.security.dto.ReCaptchaResponseDto;
 import com.softserve.academy.spaced.repetition.security.utils.FacebookAuthUtil;
 import com.softserve.academy.spaced.repetition.security.utils.GoogleAuthUtil;
 import com.softserve.academy.spaced.repetition.security.utils.JwtTokenUtil;

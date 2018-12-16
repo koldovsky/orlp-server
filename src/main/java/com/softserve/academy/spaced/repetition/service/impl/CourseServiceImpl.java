@@ -1,6 +1,6 @@
 package com.softserve.academy.spaced.repetition.service.impl;
 
-import com.softserve.academy.spaced.repetition.controller.dto.simpleDTO.CourseDTO;
+import com.softserve.academy.spaced.repetition.controller.dto.simpledto.CourseDTO;
 import com.softserve.academy.spaced.repetition.domain.*;
 import com.softserve.academy.spaced.repetition.repository.*;
 import com.softserve.academy.spaced.repetition.service.CourseService;
@@ -77,8 +77,7 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public List<Course> getTopCourse() {
-        List<Course> courses = courseRepository.findTop4ByOrderByRating();
-        return courses;
+        return courseRepository.findTop4ByOrderByRating();
     }
 
     @Override
@@ -232,6 +231,7 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public List<Course> findAllCoursesBySearch(String searchString) {
+        searchString = searchString.replace("_", "\\_").replace("%", "\\%");
         return courseRepository.findByNameIgnoreCaseContainingOrDescriptionIgnoreCaseContaining(searchString, searchString);
     }
 

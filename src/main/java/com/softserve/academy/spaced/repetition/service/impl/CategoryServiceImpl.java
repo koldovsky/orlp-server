@@ -1,7 +1,7 @@
 package com.softserve.academy.spaced.repetition.service.impl;
 
 
-import com.softserve.academy.spaced.repetition.controller.dto.simpleDTO.CategoryDTO;
+import com.softserve.academy.spaced.repetition.controller.dto.simpledto.CategoryDTO;
 import com.softserve.academy.spaced.repetition.domain.Category;
 import com.softserve.academy.spaced.repetition.domain.Image;
 import com.softserve.academy.spaced.repetition.repository.CategoryRepository;
@@ -20,9 +20,9 @@ import java.util.List;
 @Service
 public class CategoryServiceImpl implements CategoryService {
 
-    private final int QUANTITY_CATEGORIES_IN_PAGE = 8;
-    private final String ALL_CATEGORIES_CACHE_NAME = "allCategories";
-    private final String TOP_CATEGORIES_CACHE_NAME = "topCategories";
+    private static final int QUANTITY_CATEGORIES_IN_PAGE = 8;
+    private static final String ALL_CATEGORIES_CACHE_NAME = "allCategories";
+    private static final String TOP_CATEGORIES_CACHE_NAME = "topCategories";
 
     @Autowired
     private CategoryRepository categoryRepository;
@@ -86,6 +86,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public List<Category> findAllCategoriesBySearch(String searchString) {
+        searchString = searchString.replace("_", "\\_").replace("%", "\\%");
         return categoryRepository.findByNameIgnoreCaseContainingOrDescriptionIgnoreCaseContaining(searchString, searchString);
     }
 }

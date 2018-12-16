@@ -1,6 +1,8 @@
 package com.softserve.academy.spaced.repetition.service.impl;
 
-import com.softserve.academy.spaced.repetition.controller.dto.simpleDTO.userProfileDTO.SendPointsToFriendDTO;
+import com.softserve.academy.spaced.repetition.controller.dto.impl.DeckBuyDTO;
+import com.softserve.academy.spaced.repetition.controller.dto.simpledto.userprofiledto.SendPointsToFriendDTO;
+import com.softserve.academy.spaced.repetition.config.PointsBalanceEvent;
 import com.softserve.academy.spaced.repetition.domain.*;
 import com.softserve.academy.spaced.repetition.domain.enums.TransactionType;
 import com.softserve.academy.spaced.repetition.repository.*;
@@ -9,6 +11,7 @@ import com.softserve.academy.spaced.repetition.service.UserService;
 import com.softserve.academy.spaced.repetition.utils.exceptions.NotAuthorisedUserException;
 import com.softserve.academy.spaced.repetition.utils.exceptions.PointsTransactionException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Service;
@@ -20,6 +23,10 @@ import java.util.*;
 public class PointsTransactionServiceImpl implements PointsTransactionService {
 
     private final Locale locale = LocaleContextHolder.getLocale();
+
+    @Autowired
+    private ApplicationEventPublisher publisher;
+
     @Autowired
     private PointsTransactionRepository transactionRepository;
 
@@ -46,7 +53,7 @@ public class PointsTransactionServiceImpl implements PointsTransactionService {
 
     @Transactional
     @Override
-    public void buyDeck(Long deckId) throws NotAuthorisedUserException, PointsTransactionException {
+    public DeckBuyDTO buyDeck(Long deckId) throws NotAuthorisedUserException, PointsTransactionException {
         Deck deck = deckRepository.findOne(deckId);
         User userFrom = userService.getAuthorizedUser();
         Integer points = Optional.ofNullable(deck.getDeckPrice().getPrice()).orElse(0);
@@ -62,8 +69,9 @@ public class PointsTransactionServiceImpl implements PointsTransactionService {
             transaction.setCreationDate(new Date());
             transaction.setReference(deckOwnership.getReference());
             transactionRepository.save(transaction);
-            userService.updatePointsBalance(userFrom);
-            userService.updatePointsBalance(userTo);
+            publisher.publishEvent(new PointsBalanceEvent(this.getClass().getCanonicalName(), userFrom));
+            publisher.publishEvent(new PointsBalanceEvent(this.getClass().getCanonicalName(), userTo));
+            return new DeckBuyDTO(true, userFrom.getPoints());
         } else {
             throw new PointsTransactionException(messageSource.getMessage("message.transaction.notEnoughPoints",
                     new Object[]{}, locale));
@@ -88,8 +96,8 @@ public class PointsTransactionServiceImpl implements PointsTransactionService {
             transaction.setCreationDate(new Date());
             transaction.setReference(courseOwnership.getReference());
             transactionRepository.save(transaction);
-            userService.updatePointsBalance(userFrom);
-            userService.updatePointsBalance(userTo);
+            publisher.publishEvent(new PointsBalanceEvent(this.getClass().getCanonicalName(), userFrom));
+            publisher.publishEvent(new PointsBalanceEvent(this.getClass().getCanonicalName(), userTo));
         } else {
             throw new PointsTransactionException(messageSource.getMessage("message.transaction.notEnoughPoints",
                     new Object[]{}, locale));
@@ -118,8 +126,8 @@ public class PointsTransactionServiceImpl implements PointsTransactionService {
                 pointsTransaction.setCreationDate(new Date());
                 pointsTransaction.setReference(pointsTransaction);
                 transactionRepository.save(pointsTransaction);
-                userService.updatePointsBalance(userFrom);
-                userService.updatePointsBalance(userTo);
+                publisher.publishEvent(new PointsBalanceEvent(this.getClass().getCanonicalName(), userFrom));
+                publisher.publishEvent(new PointsBalanceEvent(this.getClass().getCanonicalName(), userTo));
                 sendPointsToFriendDTO.setPoints(userFrom.getPoints());
             } else {
                 throw new IllegalArgumentException(messageSource.getMessage("message.transaction.notEnoughPointsToSend",
