@@ -1,5 +1,6 @@
 package com.softserve.academy.spaced.repetition.config;
 
+import com.softserve.academy.spaced.repetition.domain.Person;
 import com.softserve.academy.spaced.repetition.domain.User;
 import com.softserve.academy.spaced.repetition.domain.enums.AuthorityName;
 import com.softserve.academy.spaced.repetition.repository.UserRepository;
@@ -12,6 +13,7 @@ import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Optional;
 
 @Component
 public class EventListenerBean {
@@ -37,6 +39,17 @@ public class EventListenerBean {
                 userRepository.save(user);
             }
         }
+    }
+
+    @EventListener
+    public User updatePointsBalance(PointsBalanceEvent pointBalanceEvent) {
+        String firstName = Optional.ofNullable(pointBalanceEvent.getUser().getPerson()).map(Person::getFirstName)
+                .orElse(null);
+        String lastName = Optional.ofNullable(pointBalanceEvent.getUser().getPerson()).map(Person::getLastName)
+                .orElse(null);
+        LOG.info("Updating points balance for: {} {}, {}", firstName, lastName,
+                pointBalanceEvent.getClass().getCanonicalName());
+        return userService.updatePointsBalance(pointBalanceEvent.getUser());
     }
 }
 

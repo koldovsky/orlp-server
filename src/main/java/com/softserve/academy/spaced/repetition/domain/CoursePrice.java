@@ -6,15 +6,12 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "course_price")
-public class CoursePrice implements EntityInterface {
+public class CoursePrice extends BasePrice implements EntityInterface {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "price_id")
-    private long id;
-
-    @Column(name = "price")
-    private Integer price;
+    private Long id;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "course_id")
@@ -25,19 +22,15 @@ public class CoursePrice implements EntityInterface {
 
     public CoursePrice(Integer price, Course course) {
         this.course = course;
-        this.price = price;
+        setPrice(price);
     }
 
     public Long getId() {
         return id;
     }
 
-    public Integer getPrice() {
-        return price;
-    }
-
-    public void setPrice(Integer price) {
-        this.price = price;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public Course getCourse() {

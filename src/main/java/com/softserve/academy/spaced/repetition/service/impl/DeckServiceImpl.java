@@ -2,7 +2,7 @@ package com.softserve.academy.spaced.repetition.service.impl;
 
 import com.softserve.academy.spaced.repetition.controller.dto.impl.DeckCreateValidationDTO;
 import com.softserve.academy.spaced.repetition.controller.dto.impl.DeckEditByAdminDTO;
-import com.softserve.academy.spaced.repetition.controller.dto.simpleDTO.DeckDTO;
+import com.softserve.academy.spaced.repetition.controller.dto.simpledto.DeckDTO;
 import com.softserve.academy.spaced.repetition.domain.*;
 import com.softserve.academy.spaced.repetition.repository.*;
 import com.softserve.academy.spaced.repetition.service.DeckService;
@@ -122,7 +122,7 @@ public class DeckServiceImpl implements DeckService {
         newDeck.setCategory(categoryRepository.findById(categoryId));
         newDeck.setSyntaxToHighlight(newDeckDTO.getSyntaxToHighlight());
 
-        if(newDeckDTO.getPrice() != null && newDeckDTO.getPrice() != 0) {
+        if (newDeckDTO.getPrice() != null && newDeckDTO.getPrice() != 0) {
             DeckPrice deckPrice = new DeckPrice(newDeckDTO.getPrice());
             newDeck.setDeckPrice(deckPrice);
         }
@@ -245,6 +245,7 @@ public class DeckServiceImpl implements DeckService {
 
     @Override
     public List<Deck> findAllDecksBySearch(String searchString) {
+        searchString = searchString.replace("_", "\\_").replace("%", "\\%");
         return deckRepository.findByNameIgnoreCaseContainingOrDescriptionIgnoreCaseContaining(searchString, searchString);
     }
 }

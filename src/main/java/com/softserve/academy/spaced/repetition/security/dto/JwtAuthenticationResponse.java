@@ -1,4 +1,4 @@
-package com.softserve.academy.spaced.repetition.security.DTO;
+package com.softserve.academy.spaced.repetition.security.dto;
 
 public class JwtAuthenticationResponse {
     private String status;

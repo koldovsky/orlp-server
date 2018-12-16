@@ -9,8 +9,9 @@ import org.springframework.hateoas.Link;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
-
 public class DeckLinkByCategoryDTO extends DTO<Deck> {
+
+    private boolean isBought;
 
     public DeckLinkByCategoryDTO(Deck deck, Link link) throws NotAuthorisedUserException {
         super(deck, link);
@@ -40,6 +41,18 @@ public class DeckLinkByCategoryDTO extends DTO<Deck> {
 
     public String getSynthax() {
         return getEntity().getSyntaxToHighlight();
+    }
+
+    public Integer getPrice() {
+        return getEntity().getEntityPrice();
+    }
+
+    public void setIsBought(boolean isBought) {
+        this.isBought = isBought;
+    }
+
+    public boolean getIsBought() {
+        return isBought;
     }
 }
 

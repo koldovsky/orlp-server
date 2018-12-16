@@ -1,6 +1,6 @@
 package com.softserve.academy.spaced.repetition.service;
 
-import com.softserve.academy.spaced.repetition.controller.dto.simpleDTO.MailDTO;
+import com.softserve.academy.spaced.repetition.controller.dto.simpledto.MailDTO;
 import com.softserve.academy.spaced.repetition.domain.User;
 
 import java.util.Map;

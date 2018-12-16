@@ -26,9 +26,9 @@ import java.util.Collections;
 @Component
 public class GoogleAuthUtil {
 
-    private final String FIRST_NAME = "given_name";
-    private final String LAST_NAME = "family_name";
-    private final String IMAGE = "picture";
+    private static final String FIRST_NAME = "given_name";
+    private static final String LAST_NAME = "family_name";
+    private static final String IMAGE = "picture";
 
     @Value("${app.social.google.client-id}")
     private String clientId;
@@ -87,7 +87,9 @@ public class GoogleAuthUtil {
                 false, AuthenticationType.GOOGLE);
         Person person = new Person((String) payload.get(FIRST_NAME), (String) payload.get(LAST_NAME), ImageType.LINK,
                 (String) payload.get(IMAGE));
-        userRepository.save(new User(account, person, new Folder()));
+        User user = new User(account, person, new Folder());
+        user.setPoints(0);
+        userRepository.save(user);
         accountService.initializeLearningRegimeSettingsForAccount(account);
     }
 }

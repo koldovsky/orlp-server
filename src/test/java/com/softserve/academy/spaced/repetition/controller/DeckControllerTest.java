@@ -3,9 +3,10 @@ package com.softserve.academy.spaced.repetition.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.softserve.academy.spaced.repetition.controller.dto.impl.DeckCreateValidationDTO;
 import com.softserve.academy.spaced.repetition.controller.dto.impl.DeckEditByAdminDTO;
-import com.softserve.academy.spaced.repetition.controller.dto.simpleDTO.DeckDTO;
+import com.softserve.academy.spaced.repetition.controller.dto.simpledto.DeckDTO;
 import com.softserve.academy.spaced.repetition.controller.handler.ExceptionHandlerController;
 import com.softserve.academy.spaced.repetition.domain.*;
+import com.softserve.academy.spaced.repetition.service.DeckOwnershipService;
 import com.softserve.academy.spaced.repetition.service.DeckService;
 import com.softserve.academy.spaced.repetition.service.FolderService;
 import org.junit.Before;
@@ -34,7 +35,6 @@ import static org.mockito.Matchers.refEq;
 import static org.mockito.Mockito.*;
 import static org.mockito.internal.verification.VerificationModeFactory.times;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -48,6 +48,9 @@ public class DeckControllerTest {
 
     @Mock
     private DeckService deckService;
+
+    @Mock
+    DeckOwnershipService deckOwnershipService;
 
     @Mock
     private FolderService folderService;
@@ -121,6 +124,7 @@ public class DeckControllerTest {
     @Test
     public void getDecksByPageAndCategory() throws Exception {
         when(deckService.getPageWithDecksByCategory(CATEGORY_ID, NUMBER_PAGE, SORT_BY, false)).thenReturn(createDecksBySelectedCategory());
+        when(deckOwnershipService.checkIsBoughtDeck(1L)).thenReturn(false);
         mockMvc.perform(get("/api/categories/" + CATEGORY_ID + "/decks?p=" + NUMBER_PAGE + "&sortBy=" + SORT_BY + "&asc=" + false)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON))
@@ -129,6 +133,8 @@ public class DeckControllerTest {
                 .andExpect(jsonPath("$.sort[:1].ascending", hasItem(true)))
                 .andExpect(jsonPath("$.sort[:1].descending", hasItem(false)))
                 .andExpect(jsonPath("$.sort[:1].property", hasItem(SORT_BY)));
+        verify(deckService, times(1)).getPageWithDecksByCategory(CATEGORY_ID, NUMBER_PAGE, SORT_BY, false);
+        verify(deckOwnershipService, times(1)).checkIsBoughtDeck(1L);
     }
 
     private Page<Deck> createDecksBySelectedCategory() throws ParseException {

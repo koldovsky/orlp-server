@@ -1,19 +1,25 @@
 package com.softserve.academy.spaced.repetition.service.impl;
 
+import com.softserve.academy.spaced.repetition.config.PointsBalanceEvent;
 import com.softserve.academy.spaced.repetition.controller.dto.impl.AddPointsByAdminDTO;
 import com.softserve.academy.spaced.repetition.domain.*;
 import com.softserve.academy.spaced.repetition.domain.enums.*;
-import com.softserve.academy.spaced.repetition.repository.PointsTransactionRepository;
-import com.softserve.academy.spaced.repetition.service.ImageService;
-import com.softserve.academy.spaced.repetition.utils.exceptions.NotAuthorisedUserException;
-import com.softserve.academy.spaced.repetition.utils.exceptions.UserStatusException;
 import com.softserve.academy.spaced.repetition.repository.AuthorityRepository;
 import com.softserve.academy.spaced.repetition.repository.DeckRepository;
+import com.softserve.academy.spaced.repetition.repository.PointsTransactionRepository;
 import com.softserve.academy.spaced.repetition.repository.UserRepository;
 import com.softserve.academy.spaced.repetition.security.authentification.JwtUser;
+import com.softserve.academy.spaced.repetition.service.ImageService;
 import com.softserve.academy.spaced.repetition.service.MailService;
 import com.softserve.academy.spaced.repetition.service.UserService;
+import com.softserve.academy.spaced.repetition.utils.exceptions.NotAuthorisedUserException;
+import com.softserve.academy.spaced.repetition.utils.exceptions.PasswordCannotBeNullException;
+import com.softserve.academy.spaced.repetition.utils.exceptions.UserStatusException;
+import com.softserve.academy.spaced.repetition.utils.validators.PasswordValidator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -21,6 +27,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.DataBinder;
 
 import java.util.*;
 
@@ -29,6 +36,7 @@ import static com.softserve.academy.spaced.repetition.domain.Account.INITIAL_CAR
 @Service
 public class UserServiceImpl implements UserService {
 
+    private final Locale locale = LocaleContextHolder.getLocale();
     @Autowired
     private UserRepository userRepository;
 
@@ -50,7 +58,16 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private PointsTransactionRepository transactionRepository;
 
+    @Autowired
+    private PasswordValidator passwordValidator;
+
+    @Autowired
+    private MessageSource messageSource;
+
     int QUANTITY_USER_IN_PAGE = 20;
+
+    @Autowired
+    private ApplicationEventPublisher publisher;
 
     @Override
     public void addUser(User user) {
@@ -110,6 +127,7 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
         return user;
     }
+
     //TODO: Move to separate class
     @Override
     public String getNoAuthenticatedUserEmail() throws NotAuthorisedUserException {
@@ -121,6 +139,7 @@ public class UserServiceImpl implements UserService {
             throw new NotAuthorisedUserException();
         }
     }
+
     //TODO: Move to separate class
     @Override
     public User getAuthorizedUser() throws NotAuthorisedUserException {
@@ -192,18 +211,24 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public void initializeNewUser(Account account, String email, AccountStatus accountStatus,
                                   boolean deactivated, AuthenticationType authenticationType) {
-        account.setEmail(email);
-        if (account.getPassword() != null) {
-            account.setPassword(passwordEncoder.encode(account.getPassword()));
+        try {
+            account.setEmail(email);
+            if (account.getPassword() != null) {
+                account.setPassword(passwordEncoder.encode(account.getPassword()));
+            }
+            account.setAuthenticationType(authenticationType);
+            validateAccount(account);
+            account.setLastPasswordResetDate(new Date());
+            account.setStatus(accountStatus);
+            account.setAuthenticationType(authenticationType);
+            account.setDeactivated(deactivated);
+            Authority authority = authorityRepository.findAuthorityByName(AuthorityName.ROLE_USER);
+            account.setAuthorities(Collections.singleton(authority));
+            account.setLearningRegime(LearningRegime.CARDS_POSTPONING_USING_SPACED_REPETITION);
+            account.setCardsNumber(INITIAL_CARDS_NUMBER);
+        } catch (PasswordCannotBeNullException e) {
+            e.printStackTrace();
         }
-        account.setLastPasswordResetDate(new Date());
-        account.setStatus(accountStatus);
-        account.setAuthenticationType(authenticationType);
-        account.setDeactivated(deactivated);
-        Authority authority = authorityRepository.findAuthorityByName(AuthorityName.ROLE_USER);
-        account.setAuthorities(Collections.singleton(authority));
-        account.setLearningRegime(LearningRegime.CARDS_POSTPONING_USING_SPACED_REPETITION);
-        account.setCardsNumber(INITIAL_CARDS_NUMBER);
     }
 
     @Override
@@ -216,7 +241,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User updatePointsBalance(User user) {
         Integer expenses = Optional.ofNullable(transactionRepository.getAllExpensesByUser(user.getId())).orElse(0);
-        Integer income =  Optional.ofNullable(transactionRepository.getAllIncomeByUser(user.getId())).orElse(0);
+        Integer income = Optional.ofNullable(transactionRepository.getAllIncomeByUser(user.getId())).orElse(0);
         user.setPoints(income - expenses);
         return userRepository.save(user);
     }
@@ -236,9 +261,26 @@ public class UserServiceImpl implements UserService {
         pointsTransaction.setCreationDate(new Date());
         pointsTransaction.setReference(pointsTransaction);
         transactionRepository.save(pointsTransaction);
-        User updatedUser = updatePointsBalance(user);
-        user.setPoints(updatedUser.getPoints());
-        addPointsByAdminDTO.setPoints(updatedUser.getPoints());
+        publisher.publishEvent(new PointsBalanceEvent(this.getClass().getCanonicalName(), user));
+        addPointsByAdminDTO.setPoints(user.getPoints());
         return addPointsByAdminDTO;
+    }
+
+    /**
+     * Validates whether user's account can or cannot contain a null password value. If user registered
+     * via Facebook or Google then it allows for password field to be null, but will throw
+     * PasswordCannotBeNullException if user's authentication type is LOCAL and password is null.
+     *
+     * @param account            user`s account.
+     * @throws PasswordCannotBeNullException if authenticationType is LOCAL and password is null
+     */
+    private void validateAccount(Account account) throws PasswordCannotBeNullException {
+        DataBinder binder = new DataBinder(account);
+        binder.setValidator(passwordValidator);
+        binder.validate();
+        if (binder.getBindingResult().hasErrors()) {
+            throw new PasswordCannotBeNullException(messageSource
+                    .getMessage("message.validation.fieldNotNull", new Object[]{}, locale));
+        }
     }
 }

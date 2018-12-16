@@ -1,8 +1,8 @@
 package com.softserve.academy.spaced.repetition.controller.handler;
 
-import com.softserve.academy.spaced.repetition.controller.dto.simpleDTO.FieldErrorDTO;
-import com.softserve.academy.spaced.repetition.controller.dto.simpleDTO.ValidationMessageDTO;
-import com.softserve.academy.spaced.repetition.controller.dto.simpleDTO.MessageDTO;
+import com.softserve.academy.spaced.repetition.controller.dto.simpledto.FieldErrorDTO;
+import com.softserve.academy.spaced.repetition.controller.dto.simpledto.ValidationMessageDTO;
+import com.softserve.academy.spaced.repetition.controller.dto.simpledto.MessageDTO;
 import com.softserve.academy.spaced.repetition.utils.exceptions.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -148,5 +148,12 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
     @ResponseBody
     MessageDTO handleTransactionException(PointsTransactionException pointsTransactionException) {
         return new MessageDTO(pointsTransactionException.getMessage());
+    }
+
+    @ExceptionHandler(PasswordCannotBeNullException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    MessageDTO handlePasswordCannotBeNullException(PasswordCannotBeNullException passwordCannotBeNullException) {
+        return new MessageDTO(passwordCannotBeNullException.getMessage());
     }
 }

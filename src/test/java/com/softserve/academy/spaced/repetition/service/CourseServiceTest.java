@@ -1,6 +1,6 @@
 package com.softserve.academy.spaced.repetition.service;
 
-import com.softserve.academy.spaced.repetition.controller.dto.simpleDTO.CourseDTO;
+import com.softserve.academy.spaced.repetition.controller.dto.simpledto.CourseDTO;
 import com.softserve.academy.spaced.repetition.domain.*;
 import com.softserve.academy.spaced.repetition.repository.*;
 import com.softserve.academy.spaced.repetition.service.impl.CourseServiceImpl;
