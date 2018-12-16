@@ -122,7 +122,7 @@ public class DeckServiceImpl implements DeckService {
         newDeck.setCategory(categoryRepository.findById(categoryId));
         newDeck.setSyntaxToHighlight(newDeckDTO.getSyntaxToHighlight());
 
-        if(newDeckDTO.getPrice() != null && newDeckDTO.getPrice() != 0) {
+        if (newDeckDTO.getPrice() != null && newDeckDTO.getPrice() != 0) {
             DeckPrice deckPrice = new DeckPrice(newDeckDTO.getPrice());
             newDeck.setDeckPrice(deckPrice);
         }
@@ -245,6 +245,7 @@ public class DeckServiceImpl implements DeckService {
 
     @Override
     public List<Deck> findAllDecksBySearch(String searchString) {
+        searchString = searchString.replace("_", "\\_").replace("%", "\\%");
         return deckRepository.findByNameIgnoreCaseContainingOrDescriptionIgnoreCaseContaining(searchString, searchString);
     }
 }

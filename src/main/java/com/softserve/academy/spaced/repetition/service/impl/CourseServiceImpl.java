@@ -77,8 +77,7 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public List<Course> getTopCourse() {
-        List<Course> courses = courseRepository.findTop4ByOrderByRating();
-        return courses;
+        return courseRepository.findTop4ByOrderByRating();
     }
 
     @Override
@@ -232,6 +231,7 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public List<Course> findAllCoursesBySearch(String searchString) {
+        searchString = searchString.replace("_", "\\_").replace("%", "\\%");
         return courseRepository.findByNameIgnoreCaseContainingOrDescriptionIgnoreCaseContaining(searchString, searchString);
     }
 
